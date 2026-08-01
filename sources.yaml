@@ -1,0 +1,119 @@
+# Publications the scraper reads.
+#
+# This is the file you will edit most. Add a publication by giving it a feed and
+# saying where the rating lives. Set `enabled: false` (with a note) rather than
+# deleting a site, so you don't re-investigate it in six months.
+#
+# `backfill` is a WordPress trick: most WordPress sites expose a date archive as
+# a feed, so /2025/08/feed/ returns August 2025 posts. That is how we test
+# against real Fringe data out of season.
+
+defaults:
+  user_agent: "FringeLeaderboardBot/0.1 (+https://github.com/YOURNAME/fringe-leaderboard)"
+  delay_seconds: 1.0        # be polite: max ~1 request per second per site
+  timeout_seconds: 25
+
+publications:
+
+  # ---------------------------------------------------------------- verified
+  - name: All Edinburgh Theatre
+    slug: alledinburghtheatre
+    homepage: https://www.alledinburghtheatre.com/
+    feed: https://www.alledinburghtheatre.com/feed/
+    backfill: https://www.alledinburghtheatre.com/{year}/{month:02d}/feed/
+    rating:
+      type: auto            # ★★★★☆ sits in the feed's content:encoded
+    fetch_page: false       # everything we need is already in the feed
+    pages: 10               # 10 items per page; 10 pages covers a busy month
+    verified: 2026-08-01
+    notes: >
+      Cleanest source. Stars appear in content:encoded as ★★★★☆ followed by a
+      one-word verdict. Covers theatre broadly, plus a Made-in-Edinburgh strand.
+
+  - name: One4Review
+    slug: one4review
+    homepage: https://www.one4review.co.uk/
+    feed: https://www.one4review.co.uk/feed/
+    backfill: https://www.one4review.co.uk/{year}/{month:02d}/feed/
+    rating:
+      type: auto            # rating is in the post TITLE, in inconsistent forms
+    fetch_page: false
+    pages: 10
+    verified: 2026-08-01
+    notes: >
+      Ratings live in the headline and the format varies review to review:
+      "4⭐⭐⭐⭐", "3***", "***** 5 stars". The star/asterisk/word strategies in
+      ratings.py all exist because of this site. High volume during the Fringe.
+
+  - name: ThreeWeeks Edinburgh
+    slug: threeweeks
+    homepage: https://threeweeksedinburgh.com/
+    feed: https://threeweeks.co.uk/feed/
+    # No date archive: /2025/08/feed/ returns 404. Not needed — the main feed
+    # serves ~150 items in one response, which covers a whole festival.
+    rating:
+      type: auto            # "4/5" in the page text
+    fetch_page: true        # rating is on the page, not in the feed
+    pages: 1
+    verified: 2026-08-01
+    notes: >
+      Long-running Fringe publication. Ratings render as plain "4/5" text.
+
+  # ------------------------------------------- included to exercise conversion
+  - name: The Reviews Hub
+    slug: reviewshub
+    homepage: https://www.thereviewshub.com/
+    feed: https://www.thereviewshub.com/feed/
+    backfill: https://www.thereviewshub.com/{year}/{month:02d}/feed/
+    rating:
+      type: css
+      selector: "span.number.rating .value"
+      scale: 100           # they publish a percentage, e.g. 80%
+    fetch_page: true
+    require_edinburgh: true   # their feed is UK-wide; filter to Edinburgh shows
+    pages: 3
+    verified: 2026-08-01
+    notes: >
+      Rates out of 100 (shown as a percentage and as a /10 figure), which means
+      odd values land on half-stars: 90% is 4.5 stars. Those get rounded DOWN to
+      4 and flagged on the site, so we never invent a five-star review. High
+      volume but only about a third of its output is Edinburgh during August.
+
+  # ------------------------------------------------------ deliberately excluded
+  - name: FringeReview
+    slug: fringereview
+    homepage: https://fringereview.co.uk/
+    feed: https://fringereview.co.uk/feed/
+    rating:
+      type: none
+    enabled: false
+    verified: 2026-08-01
+    notes: >
+      EXCLUDED: uses ordinal word grades ("Outstanding", "Highly Recommended")
+      rather than stars. There is no honest numeric mapping for those, so
+      converting them would be inventing data. Revisit only if they add stars.
+
+  - name: Broadway Baby
+    slug: broadwaybaby
+    homepage: https://broadwaybaby.com/
+    feed: https://broadwaybaby.com/feed
+    rating:
+      type: auto
+    enabled: false
+    verified: 2026-08-01
+    notes: >
+      EXCLUDED: returns HTTP 403 to automated requests. Worth emailing them to
+      ask permission and for a feed URL before enabling — do not work around it.
+
+  - name: The Wee Review
+    slug: weereview
+    homepage: https://theweereview.com/
+    feed: https://theweereview.com/feed/
+    rating:
+      type: auto
+    enabled: false
+    verified: 2026-08-01
+    notes: >
+      NOT YET WORKING: feed is valid but the sampled items were interviews with
+      no rating markup found. Needs a look at a real review page during the
+      festival to find where the stars live, then set an appropriate rule.
