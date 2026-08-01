@@ -18,10 +18,21 @@ import unicodedata
 
 from .ratings import EMPTY_STARS, FILLED_STARS
 
-# Words publications bolt onto the front of a headline.
+# Words publications bolt onto the front of a headline, e.g.
+# "Review:", "Edinburgh Fringe 2025:", "Edinburgh International Film Festival 2025:".
+#
+# The optional year matters more than it looks. Without it, every headline from a
+# publication that prefixes "Edinburgh Fringe 2025:" keeps that boilerplate in its
+# title — and since fuzzy matching compares whole strings, two unrelated shows then
+# score ~75% against each other purely on the shared prefix. That produces garbage
+# candidate shortlists and, worse, risks merging different shows.
 PREFIXES = re.compile(
-    r"^\s*(review|edinburgh fringe|edfringe|fringe|edinburgh|theatre|comedy"
-    r"|ed fringe \d{4}|edinburgh festival(?: fringe)?|eif)\s*[:\-–—]\s*",
+    r"^\s*(?:"
+    r"review|preview"
+    r"|ed\s*fringe|edfringe|eif"
+    r"|edinburgh(?:\s+international)?(?:\s+(?:film\s+festival|festival|fringe))*"
+    r"|fringe|theatre|comedy"
+    r")\s*(?:\d{4})?\s*[:\-–—]\s*",
     re.I,
 )
 
@@ -53,7 +64,13 @@ def clean_title(raw: str) -> str:
     text = unicodedata.normalize("NFKC", raw or "")
     text = _unify_punctuation(text)
     text = RATING_FRAGMENT.sub(" ", text)
-    text = PREFIXES.sub("", text)
+    # Headlines can stack prefixes ("Review: Edinburgh Fringe 2025: Diva"), so
+    # strip repeatedly until nothing more comes off.
+    for _ in range(3):
+        stripped = PREFIXES.sub("", text)
+        if stripped == text:
+            break
+        text = stripped
     text = VENUE_TAIL.sub("", text)
     text = re.sub(r"\s*\(\s*(WIP|work in progress|preview)\s*\)\s*", " ", text, flags=re.I)
     return re.sub(r"\s+", " ", text).strip(" -–—:,|")

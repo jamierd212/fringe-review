@@ -20,10 +20,12 @@ from pathlib import Path
 
 from rapidfuzz import fuzz, process
 
+from .ai_match import Matcher
 from .normalise import alias_forms, clean_title, normalise, split_performer
 
 ACCEPT = 92      # fuzzy score at or above this is taken automatically
-CONSIDER = 74    # between CONSIDER and ACCEPT: record it, but flag for a human
+CONSIDER = 74    # between CONSIDER and ACCEPT: ambiguous — ask the AI
+SHORTLIST = 5    # how many candidates to put in front of the model
 
 QUEUE_PATH = Path(__file__).resolve().parent.parent / "review_queue.md"
 
@@ -37,8 +39,9 @@ def run(conn: sqlite3.Connection, year: int) -> dict[str, int]:
         "SELECT url, headline, publication FROM reviews WHERE show_id IS NULL"
     ).fetchall()
 
-    counts = {"exact": 0, "fuzzy": 0, "new": 0, "flagged": 0}
+    counts = {"exact": 0, "fuzzy": 0, "ai": 0, "new": 0, "flagged": 0}
     flagged: list[tuple] = []
+    matcher = Matcher(conn)
 
     for row in unmatched:
         headline = row["headline"] or ""
@@ -46,7 +49,7 @@ def run(conn: sqlite3.Connection, year: int) -> dict[str, int]:
         if not aliases:
             continue
 
-        show_id, confidence, how = _resolve(conn, aliases, headline, year)
+        show_id, confidence, how = _resolve(conn, aliases, headline, year, matcher)
         counts[how] = counts.get(how, 0) + 1
 
         conn.execute(
@@ -70,10 +73,12 @@ def run(conn: sqlite3.Connection, year: int) -> dict[str, int]:
 
     conn.commit()
     _write_queue(flagged)
+    counts["ai_report"] = matcher.report()
     return counts
 
 
-def _resolve(conn, aliases: list[str], headline: str, year: int) -> tuple[str, float, str]:
+def _resolve(conn, aliases: list[str], headline: str, year: int,
+             matcher: Matcher) -> tuple[str, float, str]:
     """Return (show_id, confidence, method)."""
 
     # 1. Exact hit on a spelling we already know.
@@ -88,24 +93,53 @@ def _resolve(conn, aliases: list[str], headline: str, year: int) -> tuple[str, f
     known = conn.execute("SELECT alias, show_id FROM aliases").fetchall()
     if known:
         lookup = {r["alias"]: r["show_id"] for r in known}
-        best_id, best_score = None, 0.0
+        scored: dict[str, float] = {}
         for alias in aliases:
-            match = process.extractOne(
-                alias, lookup.keys(), scorer=fuzz.token_sort_ratio, score_cutoff=CONSIDER
-            )
-            if match and match[1] > best_score:
-                best_score = match[1]
-                best_id = lookup[match[0]]
+            for candidate, score, _ in process.extract(
+                alias, lookup.keys(), scorer=fuzz.token_sort_ratio,
+                score_cutoff=CONSIDER, limit=SHORTLIST,
+            ):
+                scored[candidate] = max(scored.get(candidate, 0.0), score)
 
-        if best_id and best_score >= ACCEPT:
-            return best_id, best_score / 100.0, "fuzzy"
-        if best_id and best_score >= CONSIDER:
-            # Plausible but not certain. Create a NEW show rather than risk a
-            # false merge, and let the queue tell a human to link them.
-            return _create(conn, headline, year), best_score / 100.0, "new"
+        ranked = sorted(scored.items(), key=lambda kv: kv[1], reverse=True)
 
-    # 3. Genuinely new.
+        if ranked and ranked[0][1] >= ACCEPT:
+            return lookup[ranked[0][0]], ranked[0][1] / 100.0, "fuzzy"
+
+        # 3. Ambiguous band. Fuzzy matching can't separate a dropped subtitle
+        #    from a genuinely different production, so hand the shortlist to the
+        #    model. It answers 0 when unsure, which falls through to "new".
+        if ranked:
+            # Several aliases can point at shows with identical titles. Offering
+            # the model the same title twice is confusing and wastes a call, so
+            # keep only the best-scoring alias per distinct title.
+            shortlist, titles, seen = [], [], set()
+            for alias, _score in ranked:
+                title = _title_for(conn, lookup[alias])
+                if title.casefold() in seen:
+                    continue
+                seen.add(title.casefold())
+                shortlist.append(alias)
+                titles.append(title)
+                if len(shortlist) == SHORTLIST:
+                    break
+
+            decision = matcher.choose(headline, titles)
+            if decision and decision.choice > 0:
+                chosen = lookup[shortlist[decision.choice - 1]]
+                return chosen, decision.confidence, "ai"
+
+            # Either the model declined or AI matching is off. Create a new show
+            # rather than risk a false merge, and flag it for a human.
+            return _create(conn, headline, year), ranked[0][1] / 100.0, "new"
+
+    # 4. Genuinely new.
     return _create(conn, headline, year), 1.0, "new"
+
+
+def _title_for(conn, show_id: str) -> str:
+    row = conn.execute("SELECT title FROM shows WHERE id = ?", (show_id,)).fetchone()
+    return row["title"] if row else show_id
 
 
 def _create(conn, headline: str, year: int) -> str:
