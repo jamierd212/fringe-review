@@ -79,19 +79,32 @@ publications:
       4 and flagged on the site, so we never invent a five-star review. High
       volume but only about a third of its output is Edinburgh during August.
 
-  # ------------------------------------------------------ deliberately excluded
   - name: FringeReview
     slug: fringereview
     homepage: https://fringereview.co.uk/
-    feed: https://fringereview.co.uk/feed/
+    # Their site-wide feed is mostly interviews and other festivals (Brighton,
+    # Colchester, Durham). This Edinburgh-only feed is the one you want.
+    feed: https://fringereview.co.uk/festival/edinburgh-fringe/feed/
     rating:
-      type: none
-    enabled: false
+      type: badge
+      vocabulary: fringereview
+    fetch_page: true        # the badge is on the page, not in the feed
+    pages: 2
     verified: 2026-08-01
     notes: >
-      EXCLUDED: uses ordinal word grades ("Outstanding", "Highly Recommended")
-      rather than stars. There is no honest numeric mapping for those, so
-      converting them would be inventing data. Revisit only if they add stars.
+      Awards named badges rather than stars, encoded in an image filename
+      (HIGHLY_RECOMMENDED_SHOW.png). Mapped to stars in ratings.py: Outstanding
+      / Must See / Excellent = 5, Highly Recommended / Very Good = 4,
+      Recommended / Good = 3. Daring, Exciting, Groundbreaking and Hidden Gem
+      are skipped — they describe the kind of work, not its quality.
+
+      TWO CAVEATS. FringeReview explicitly rejects a strict hierarchy between
+      its ratings, so the numbers are our editorial call, not theirs — the badge
+      name is always displayed alongside the stars. And they only publish shows
+      rated "Good" or better, so this source can lift a show up the leaderboard
+      but can never pull one down.
+
+  # ------------------------------------------------------ deliberately excluded
 
   - name: Broadway Baby
     slug: broadwaybaby

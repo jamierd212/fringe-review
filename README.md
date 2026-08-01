@@ -155,7 +155,8 @@ Publications don't all use five stars. Anything on a different scale is converte
 | `80%` or `8/10` | 4★ | `80%` |
 | `90%` or `9/10` | 4★ | `90% rounded down` |
 | `3.5***` | 3★ | `3.5/5 rounded down` |
-| "Highly Recommended" | *not counted* | — |
+| "Highly Recommended" (FringeReview) | 4★ | `Highly Recommended` |
+| "Daring Work" (FringeReview) | *not counted* | — |
 
 **Ties round down, always.** A publication giving 9/10 has said "very good but
 not perfect"; promoting that to five stars would put a show at the top of the
@@ -164,9 +165,33 @@ ever understate a show, which is the safe direction of error when 5-star counts
 decide the ranking. The original figure is always stored and displayed, so
 nothing is hidden.
 
-Word-grade scales ("Outstanding", "Highly Recommended") are **not** converted.
-There's no honest numeric mapping, so those publications are excluded with a
-note in `sources.yaml` rather than guessed at.
+### FringeReview's word grades
+
+FringeReview dropped star ratings deliberately and awards named badges instead.
+Its seven **quality** badges are mapped to stars:
+
+| Badge | Stars |
+|---|---|
+| Outstanding Show, Must See Show, Excellent Show | 5★ |
+| Highly Recommended, Very Good Show | 4★ |
+| Recommended, Good Show | 3★ |
+
+Its four **descriptive** badges — Daring Work, Exciting Work, Groundbreaking
+Work, Hidden Gem — are **not** mapped. They describe the kind of work rather
+than its quality, so there's no honest star value; those reviews are skipped.
+
+Two things to keep in mind:
+
+- FringeReview states there is "deliberate overlap" between its ratings and
+  rejects a strict hierarchy. **The numbers are our editorial call, not theirs**,
+  which is why the badge name is always shown next to the stars on the page.
+- They only publish shows rated "Good" or better — weaker shows get private
+  feedback instead. So FringeReview can lift a show up the leaderboard but never
+  pull one down. In the 2025 test data this mattered less than expected: 22% of
+  their reviews landed at 5★ against 20% for the other publications.
+
+To change the mapping, edit `FRINGEREVIEW_BADGES` in `src/ratings.py`, then run
+`run.py --reset` to re-score everything.
 
 ---
 

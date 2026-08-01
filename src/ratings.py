@@ -248,6 +248,65 @@ def from_numeric(text: str) -> Rating | None:
 
 
 # --------------------------------------------------------------------------
+# Strategy 4b: word-grade badges (FringeReview)
+#
+# FringeReview dropped star ratings deliberately and awards named badges instead,
+# encoded in an image filename: badges/new/HIGHLY_RECOMMENDED_SHOW.png
+#
+# Two things to keep in mind when reading the mapping below:
+#
+#   * FringeReview states there is "deliberate overlap" between its ratings and
+#     rejects a strict hierarchy. Putting numbers on them is OUR editorial
+#     decision, not theirs, which is why the badge name is always displayed
+#     alongside the stars on the site.
+#   * They only publish "Good" or better; weaker shows get private feedback. So
+#     this publication can never contribute a 1- or 2-star rating. It can lift a
+#     show up the leaderboard but never pull one down.
+# --------------------------------------------------------------------------
+
+FRINGEREVIEW_BADGES = {
+    "OUTSTANDING_SHOW":                 (5, "Outstanding Show"),
+    "MUST_SEE_SHOW":                    (5, "Must See Show"),
+    "EXCELLENT_SHOW":                   (5, "Excellent Show"),
+    "HIGHLY_RECOMMENDED_SHOW":          (4, "Highly Recommended"),
+    "VERY_GOOD_SHOW":                   (4, "Very Good Show"),
+    "RECOMMENDED_SHOW":                 (3, "Recommended"),
+    "GOOD_SHOW":                        (3, "Good Show"),
+    # Youth theatre strand uses its own badge art for the same grades.
+    "OUTSTANDING_YOUTH_THEATRE":        (5, "Outstanding Youth Theatre"),
+    "HIGHLY_RECOMMENDED_YOUTH_THEATRE": (4, "Highly Recommended Youth Theatre"),
+    "VERY_GOOD_YOUTH_THEATRE":          (4, "Very Good Youth Theatre"),
+    "RECOMMENDED_YOUTH_THEATRE":        (3, "Recommended Youth Theatre"),
+}
+
+# These describe the KIND of work rather than its quality. "Daring Work" sits on
+# a different axis from "Excellent Show", not above or below it, so there is no
+# honest star value for them and the review is skipped.
+UNRANKED_BADGES = {
+    "DARING_WORK", "EXCITING_WORK", "GROUNDBREAKING_WORK", "HIDDEN_GEM",
+}
+
+BADGE_VOCABULARIES = {"fringereview": FRINGEREVIEW_BADGES}
+
+
+def from_badge(html: str, rule: dict) -> Rating | None:
+    vocabulary = BADGE_VOCABULARIES.get(rule.get("vocabulary", "fringereview"), {})
+    for name in re.findall(r"badges/[^\"']*?/([A-Z_0-9]+)\.(?:png|jpg|svg)", html):
+        if name in UNRANKED_BADGES:
+            return None
+        if name in vocabulary:
+            stars, label = vocabulary[name]
+            return Rating(
+                stars=stars,
+                original=label,
+                converted=True,     # ensures the badge name shows on the site
+                rounded=False,
+                method="badge",
+            )
+    return None
+
+
+# --------------------------------------------------------------------------
 # Strategy 5: a per-publication CSS rule from sources.yaml
 # --------------------------------------------------------------------------
 
@@ -310,6 +369,9 @@ def find_rating(*, title: str = "", summary: str = "", html: str = "",
 
     if kind == "css":
         return from_css_rule(html, rule)
+
+    if kind == "badge":
+        return from_badge(html, rule)
 
     if html:
         found = from_jsonld(html)
