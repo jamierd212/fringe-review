@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS shows (
     year         INTEGER,
     edfringe_url TEXT,
     genre        TEXT,
-    subgenre     TEXT
+    subgenre     TEXT,
+    venue        TEXT
 );
 
 CREATE TABLE IF NOT EXISTS aliases (
@@ -57,7 +58,7 @@ CREATE INDEX IF NOT EXISTS idx_aliases_alias ON aliases(alias);
 def _add_missing_columns(conn: sqlite3.Connection) -> None:
     """Add columns introduced after a database was first created."""
     have = {r[1] for r in conn.execute("PRAGMA table_info(shows)")}
-    for name in ("genre", "subgenre"):
+    for name in ("genre", "subgenre", "venue"):
         if name not in have:
             conn.execute(f"ALTER TABLE shows ADD COLUMN {name} TEXT")
 

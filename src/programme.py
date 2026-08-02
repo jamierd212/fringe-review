@@ -60,18 +60,22 @@ def _fringe_details(html: str) -> dict:
     sub = re.search(r'"subGenre"\s*:\s*"([^"]*)"', html)
     if not genre:
         return {}
+    # "venues" is an array; the first entry's title is the venue name.
+    venue = re.search(r'"venues"\s*:\s*\[\s*\{\s*"title"\s*:\s*"([^"]{2,80})"', html)
     return {"genre": genre.group(1).strip(),
-            "subgenre": (sub.group(1).strip() if sub else "")}
+            "subgenre": (sub.group(1).strip() if sub else ""),
+            "venue": (venue.group(1).strip() if venue else "")}
 
 
 def _eif_details(html: str) -> dict:
     """
-    EIF publishes no machine-readable genre — the words only appear inside prose
-    descriptions, where "a night of dance and song" would be read as Dance for a
-    concert. Rather than invent a classification and print it as fact, we record
-    that the show is EIF and leave the genre empty.
+    EIF publishes neither a machine-readable genre nor a venue. Both appear only
+    inside prose descriptions, where "a night of dance and song" would be read as
+    Dance for a concert, and a venue named in passing may not be the one playing.
+    Rather than invent either and print it as fact, we record that the show is
+    EIF and leave both empty.
     """
-    return {"genre": "", "subgenre": ""}
+    return {"genre": "", "subgenre": "", "venue": ""}
 
 
 FESTIVALS = [
@@ -173,10 +177,10 @@ def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dic
 
         details = fest["details"](html)
         conn.execute(
-            """UPDATE shows SET edfringe_url = ?, festival = ?, genre = ?, subgenre = ?
-                WHERE id = ?""",
+            """UPDATE shows SET edfringe_url = ?, festival = ?, genre = ?,
+                                 subgenre = ?, venue = ? WHERE id = ?""",
             (url, fest["key"], details.get("genre", ""),
-             details.get("subgenre", ""), row["id"]),
+             details.get("subgenre", ""), details.get("venue", ""), row["id"]),
         )
         matched += 1
         per_festival[fest["label"]] = per_festival.get(fest["label"], 0) + 1

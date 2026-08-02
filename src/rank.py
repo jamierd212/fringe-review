@@ -42,6 +42,7 @@ class Show:
     performer: str | None
     url: str | None = None       # official programme entry
     genre: str = ""             # e.g. "Comedy · Sketch"
+    venue: str = ""
     reviews: list[ReviewRef] = field(default_factory=list)
 
     @property
@@ -118,10 +119,10 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
     shows: dict[str, Show] = {}
     if year is None:
         rows = conn.execute(
-            "SELECT id, title, performer, edfringe_url, festival, genre, subgenre FROM shows")
+            "SELECT id, title, performer, edfringe_url, festival, genre, subgenre, venue FROM shows")
     else:
         rows = conn.execute(
-            """SELECT id, title, performer, edfringe_url, festival, genre, subgenre
+            """SELECT id, title, performer, edfringe_url, festival, genre, subgenre, venue
                  FROM shows WHERE year = ?""", (year,))
     from .programme import label
     for row in rows:
@@ -130,6 +131,7 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
             url=row["edfringe_url"] or None,
             genre=label(row["festival"] or "", row["genre"] or "", row["subgenre"] or "")
             if row["edfringe_url"] else "",
+            venue=row["venue"] or "",
         )
 
     # One review per publication per show: a re-review should not count twice.
