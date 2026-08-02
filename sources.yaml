@@ -188,8 +188,10 @@ publications:
     enabled: false
     verified: 2026-08-02
     notes: >
-      BLOCKED: returns HTTP 403 to automated requests on both the homepage and
-      article pages. The RSS feed is readable but carries only features, with no
+      BLOCKED AT THE SERVER: returns HTTP 403 to our User-Agent on both the
+      homepage and article pages. Note their robots.txt does not forbid these
+      paths for a generic crawler — the block is enforced above robots.txt, and
+      a 403 is an explicit refusal to serve us. Do not work around it. The RSS feed is readable but carries only features, with no
       star ratings in the titles or descriptions, so the ratings are only on
       pages we cannot fetch. Their "every 4 and 5 star review" round-up would be
       the ideal single source — worth emailing to ask permission rather than
@@ -220,9 +222,11 @@ publications:
     enabled: false
     verified: 2026-08-02
     notes: >
-      NOT VIABLE VIA RSS: the declared feed is a 3-item news feed, not reviews.
-      Chortle reviews hundreds of Fringe shows but publishes them only as HTML
-      under /review/. Would need a site-specific scraper rather than a feed.
+      NO USABLE FEED, BUT SCRAPING IS PERMITTED. The declared feed is a 3-item
+      news feed, not reviews. Chortle reviews hundreds of Fringe shows and
+      publishes them as HTML under /review/. robots.txt allows /review/ and the
+      site serves our User-Agent normally, so a site-specific scraper walking
+      their festival review index is the route in. Not blocked — just unfed.
 
   - name: The List
     slug: thelist
@@ -233,9 +237,10 @@ publications:
     enabled: false
     verified: 2026-08-02
     notes: >
-      NO FEED: the homepage declares no RSS or Atom feed at all. A major Fringe
-      reviewer, so worth revisiting with an HTML scraper or by asking whether
-      they have an unlisted feed.
+      NO FEED, BUT SCRAPING IS PERMITTED. The homepage declares no RSS or Atom
+      feed. robots.txt carries no restriction on the paths we need and the site
+      serves our User-Agent normally, so an HTML scraper is viable. A major
+      Fringe reviewer, so worth the work.
 
   - name: The Wee Review
     slug: weereview
