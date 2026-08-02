@@ -216,17 +216,31 @@ publications:
   - name: Chortle
     slug: chortle
     homepage: https://www.chortle.co.uk/
-    feed: https://www.chortle.co.uk/rss/
+    # No usable feed — the declared RSS is a three-item news feed. Chortle
+    # instead publishes every festival review on one index page, which is
+    # updated as reviews appear, so re-fetching it daily picks up what is new.
+    discovery: index
+    index_urls:
+      - https://www.chortle.co.uk/about/2025/07/07/58413/edinburgh_fringe_2025_comedy_reviews
+    link_pattern: 'href="(https://www\.chortle\.co\.uk/review/\d{4}/\d{2}/\d{2}/\d+/[^"]+)"[^>]*>(.*?)</a>'
     rating:
-      type: auto
-    enabled: false
+      type: marker_count
+      marker: 'alt="review star"'
+    fetch_page: true
     verified: 2026-08-02
     notes: >
-      NO USABLE FEED, BUT SCRAPING IS PERMITTED. The declared feed is a 3-item
-      news feed, not reviews. Chortle reviews hundreds of Fringe shows and
-      publishes them as HTML under /review/. robots.txt allows /review/ and the
-      site serves our User-Agent normally, so a site-specific scraper walking
-      their festival review index is the route in. Not blocked — just unfed.
+      Ratings are drawn as one <img alt="review star"> per star with the empty
+      ones omitted, so the rating is simply how many times that marker appears.
+
+      robots.txt permits /review/ and the site serves our User-Agent normally —
+      Chortle is not blocking us, it just has no feed.
+
+      The index URL carries an unpredictable numeric id (58413) that cannot be
+      derived, so ADD A NEW index_urls ENTRY EACH YEAR. Without the 2026 entry
+      this source silently contributes nothing.
+
+      The index also lists non-Edinburgh reviews (Melbourne in April), which the
+      date in each review URL filters out.
 
   - name: The List
     slug: thelist

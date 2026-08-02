@@ -307,6 +307,26 @@ def from_badge(html: str, rule: dict) -> Rating | None:
 
 
 # --------------------------------------------------------------------------
+# Strategy 4c: count repeated markers
+#
+# Some sites draw the rating as N copies of a star image and simply omit the
+# empty ones, so the rating is the number of times a marker appears. Chortle
+# renders <img src="/images/layout/star.png" alt="review star"/> once per star.
+# --------------------------------------------------------------------------
+
+def from_marker_count(html: str, rule: dict) -> Rating | None:
+    marker = rule.get("marker")
+    if not marker:
+        return None
+    count = len(re.findall(marker, html))
+    if not 1 <= count <= 5:
+        # Zero means no rating on this page; more than five means the marker is
+        # matching something else and the number cannot be trusted.
+        return None
+    return _make(count, 5, f"{count}/5", "marker_count")
+
+
+# --------------------------------------------------------------------------
 # Strategy 5: a per-publication CSS rule from sources.yaml
 # --------------------------------------------------------------------------
 
@@ -372,6 +392,9 @@ def find_rating(*, title: str = "", summary: str = "", html: str = "",
 
     if kind == "badge":
         return from_badge(html, rule)
+
+    if kind == "marker_count":
+        return from_marker_count(html, rule)
 
     if html:
         found = from_jsonld(html)

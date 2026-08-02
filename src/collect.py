@@ -163,9 +163,50 @@ class Collector:
             page += 1
         return found
 
+    def discover_index(self, pub: dict,
+                       backfill: tuple[int, int] | None) -> list[Candidate]:
+        """
+        Publications with no usable feed, discovered by walking an index page.
+
+        Chortle publishes every festival review on one page but offers only a
+        three-item news RSS, so the index is the only route in — and it is a
+        good one: link, title and date all come from a single request, and the
+        page is updated as new reviews are published, so re-fetching it daily
+        picks up whatever is new.
+
+        The index URL contains an unpredictable numeric id, so it cannot be
+        derived and has to be configured per festival year.
+        """
+        import re as _re
+
+        pattern = pub.get("link_pattern")
+        if not pattern:
+            return []
+
+        found: list[Candidate] = []
+        for index_url in pub.get("index_urls", []):
+            raw = self._get(index_url)
+            if raw is None:
+                continue
+            for url, label in dict.fromkeys(_re.findall(pattern, raw, _re.S)):
+                # The date sits in the URL, which is the only date this source
+                # gives us — without it every review would fall back to the
+                # current year and land on the wrong leaderboard.
+                m = _re.search(r"/(\d{4})/(\d{2})/(\d{2})/", url)
+                published = f"{m.group(1)}-{m.group(2)}-{m.group(3)}T12:00:00Z" if m else None
+                if backfill and m:
+                    if (int(m.group(1)), int(m.group(2))) != backfill:
+                        continue
+                title = _re.sub(r"\s+", " ", _re.sub(r"<[^>]+>", "", label)).strip()
+                found.append(Candidate(url=url, title=title, summary="",
+                                       published=published, publication=pub["name"]))
+        return found
+
     def discover(self, pub: dict, backfill: tuple[int, int] | None) -> list[Candidate]:
         if pub.get("api") == "guardian":
             return self.discover_guardian(pub, backfill)
+        if pub.get("discovery") == "index":
+            return self.discover_index(pub, backfill)
 
         found: list[Candidate] = []
         for feed_url in self.feed_urls(pub, backfill):
