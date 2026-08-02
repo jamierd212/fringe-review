@@ -3,17 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Edinburgh Festival Review Leaderboard {{ year }}</title>
-<meta name="description" content="Star-rated reviews of Edinburgh Festival shows, collated and ranked.">
+<title>Edinburgh Festival Review of Reviews {{ year }}</title>
+<meta name="description" content="Edinburgh Festival shows ranked by highest reviews, featuring every published review we can find.">
 <style>
   :root {
-    --ink: #1a1a1a; --muted: #6b6b6b; --rule: #e3e3e3;
-    --gold: #c8a02c; --bg: #fbfaf8; --card: #ffffff;
+    --ink: #1a1a1a; --muted: #6b6b6b; --rule: #ecdcd9;
+    --star: #c62828;            /* red, replaces the old gold */
+    --bg: #fdf1ef;              /* light red page background */
+    --card: #ffffff;            /* boxes deliberately left white */
   }
   * { box-sizing: border-box; }
   body {
     margin: 0; padding: 2rem 1rem 4rem; background: var(--bg); color: var(--ink);
-    font: 16px/1.5 ui-serif, Georgia, "Times New Roman", serif;
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
   }
   .wrap { max-width: 820px; margin: 0 auto; }
   header { border-bottom: 3px double var(--ink); padding-bottom: 1rem; margin-bottom: .5rem; }
@@ -29,10 +32,22 @@
     font-size: 1.5rem; font-weight: 700; color: var(--muted);
     min-width: 2.4rem; text-align: right; font-variant-numeric: tabular-nums;
   }
-  .show.top .pos { color: var(--gold); }
+  .show.top .pos { color: var(--star); }
   .body { flex: 1; min-width: 0; }
+  .titlerow { display: flex; gap: 1rem; align-items: baseline; justify-content: space-between; }
   h2 { font-size: 1.15rem; margin: 0 0 .1rem; }
+  h2 a { text-decoration: none; border-bottom: 1px solid var(--rule); }
+  h2 a:hover { border-bottom-color: var(--star); }
+  .genre {
+    flex: none; font-size: .72rem; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--star); border: 1px solid var(--rule); border-radius: 999px;
+    padding: .12rem .55rem; white-space: nowrap;
+  }
   .performer { color: var(--muted); font-size: .9rem; margin-bottom: .6rem; }
+  @media (max-width: 560px) {
+    .titlerow { flex-direction: column; gap: .2rem; }
+    .genre { align-self: flex-start; }
+  }
 
   ul.reviews { list-style: none; margin: 0; padding: 0; }
   ul.reviews li {
@@ -41,8 +56,9 @@
   }
   ul.reviews li:first-child { border-top: 0; }
   .rating {
-    font-family: ui-monospace, Menlo, monospace; letter-spacing: .06em;
-    white-space: nowrap; color: var(--gold);
+    font-family: ui-monospace, Menlo, monospace; letter-spacing: .08em;
+    white-space: nowrap; color: var(--star);
+    font-size: 1.15rem;         /* slightly larger than the surrounding text */
   }
   .s3 .rating, .s2 .rating, .s1 .rating { color: var(--muted); }
   .pub { flex: 1; min-width: 0; }
@@ -78,11 +94,10 @@
 <div class="wrap">
 
 <header>
-  <h1>Edinburgh Festival Review Leaderboard {{ year }}</h1>
+  <h1>Edinburgh Festival Review of Reviews {{ year }}</h1>
   <p class="sub">
-    Every star-rated review we can find, ranked Olympic-style: one 5-star review
-    outranks any number of 4-star reviews. Lower ratings are shown for reference
-    but do not affect position.
+    Edinburgh Festival shows ranked by highest reviews, featuring every
+    published review we can find.
   </p>
   {% if nav|length > 1 %}
   <nav class="years" aria-label="Festival year">
@@ -103,7 +118,16 @@
 <article class="show{% if position <= 3 %} top{% endif %}">
   <div class="pos">{{ position }}</div>
   <div class="body">
-    <h2>{{ show.title }}</h2>
+    <div class="titlerow">
+      <h2>
+        {%- if show.url -%}
+          <a href="{{ show.url }}" rel="noopener" title="Official Fringe programme entry">{{ show.title }}</a>
+        {%- else -%}
+          {{ show.title }}
+        {%- endif -%}
+      </h2>
+      {% if show.genre %}<span class="genre">{{ show.genre }}</span>{% endif %}
+    </div>
     {% if show.performer %}<div class="performer">{{ show.performer }}</div>{% endif %}
     <ul class="reviews">
       {% for level in [5, 4, 3, 2, 1] %}

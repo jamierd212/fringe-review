@@ -40,6 +40,8 @@ class Show:
     id: str
     title: str
     performer: str | None
+    url: str | None = None       # official programme entry
+    genre: str = ""             # e.g. "Comedy · Sketch"
     reviews: list[ReviewRef] = field(default_factory=list)
 
     @property
@@ -96,13 +98,19 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
     """Read shows and their reviews, keeping one review per publication."""
     shows: dict[str, Show] = {}
     if year is None:
-        rows = conn.execute("SELECT id, title, performer FROM shows")
+        rows = conn.execute(
+            "SELECT id, title, performer, edfringe_url, genre, subgenre FROM shows")
     else:
         rows = conn.execute(
-            "SELECT id, title, performer FROM shows WHERE year = ?", (year,)
-        )
+            """SELECT id, title, performer, edfringe_url, genre, subgenre
+                 FROM shows WHERE year = ?""", (year,))
+    from .programme import label
     for row in rows:
-        shows[row["id"]] = Show(row["id"], row["title"], row["performer"])
+        shows[row["id"]] = Show(
+            row["id"], row["title"], row["performer"],
+            url=row["edfringe_url"] or None,
+            genre=label(row["genre"] or "", row["subgenre"] or ""),
+        )
 
     # One review per publication per show: a re-review should not count twice.
     # `published DESC` keeps the most recent.

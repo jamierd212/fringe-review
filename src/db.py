@@ -17,7 +17,9 @@ CREATE TABLE IF NOT EXISTS shows (
     performer    TEXT,
     festival     TEXT,
     year         INTEGER,
-    edfringe_url TEXT
+    edfringe_url TEXT,
+    genre        TEXT,
+    subgenre     TEXT
 );
 
 CREATE TABLE IF NOT EXISTS aliases (
@@ -52,12 +54,21 @@ CREATE INDEX IF NOT EXISTS idx_aliases_alias ON aliases(alias);
 """
 
 
+def _add_missing_columns(conn: sqlite3.Connection) -> None:
+    """Add columns introduced after a database was first created."""
+    have = {r[1] for r in conn.execute("PRAGMA table_info(shows)")}
+    for name in ("genre", "subgenre"):
+        if name not in have:
+            conn.execute(f"ALTER TABLE shows ADD COLUMN {name} TEXT")
+
+
 def connect(path: Path | str = DB_PATH) -> sqlite3.Connection:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(path)
     conn.row_factory = sqlite3.Row
     conn.executescript(SCHEMA)
+    _add_missing_columns(conn)
     return conn
 
 

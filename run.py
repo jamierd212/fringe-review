@@ -15,7 +15,7 @@ import argparse
 import sys
 from datetime import date
 
-from src import collect, db, match, render
+from src import collect, db, match, programme, render
 
 
 def main() -> int:
@@ -77,6 +77,15 @@ def main() -> int:
         counts = match.run(conn, year)
         print(f"  {counts['exact']} exact, {counts['fuzzy']} fuzzy, "
               f"{counts['new']} new shows, {counts['flagged']} flagged for checking")
+
+    # Link this year's shows to their official programme entries and read the
+    # Fringe's own genre/subGenre. Past years are skipped: their programme pages
+    # are taken down once the shows stop selling.
+    if not args.render:
+        current = date.today().year
+        counts = programme.enrich(conn, current)
+        if counts["matched"] or counts["missed"]:
+            print(f"  programme: {counts['matched']} linked, {counts['missed']} not found")
 
     paths = render.run(conn, year)
     stats = db.stats(conn)
