@@ -120,8 +120,7 @@
 
 <p class="meta">
   Updated {{ updated }} &middot;
-  {{ rated }} rated reviews across {{ show_count }} shows &middot;
-  Sources: {{ publications|join(", ") }}
+  {{ rated }} rated reviews across {{ show_count }} shows
 </p>
 
 {% for position, show in placed %}
@@ -170,6 +169,9 @@
 {% endif %}
 
 <footer>
+  <p>
+    <strong>Sources:</strong> {{ publications|join(", ") }}.
+  </p>
   <p>
     Ratings are collated automatically from publicly available reviews and link
     back to the publication. Ratings given on other scales are converted to
