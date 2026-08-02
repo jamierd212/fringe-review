@@ -29,13 +29,15 @@
     padding: 1rem 1.1rem; margin-bottom: .75rem; display: flex; gap: 1rem;
   }
   .pos {
-    font-size: 1.5rem; font-weight: 700; color: var(--muted);
-    min-width: 2.4rem; text-align: right; font-variant-numeric: tabular-nums;
+    /* Matched to h2 so the number and the show title sit on the same line and
+       at the same weight — the number is a label, not the headline. */
+    font-size: 1.15rem; font-weight: 700; color: var(--muted);
+    line-height: 1.35; min-width: 1.9rem;
+    text-align: right; font-variant-numeric: tabular-nums;
   }
-  .show.top .pos { color: var(--star); }
   .body { flex: 1; min-width: 0; }
   .titlerow { display: flex; gap: 1rem; align-items: baseline; justify-content: space-between; }
-  h2 { font-size: 1.15rem; margin: 0 0 .1rem; }
+  h2 { font-size: 1.15rem; margin: 0 0 .1rem; line-height: 1.35; }
   h2 a { text-decoration: none; border-bottom: 1px solid var(--rule); }
   h2 a:hover { border-bottom-color: var(--star); }
   .genre {
@@ -87,7 +89,7 @@
   .rest div { break-inside: avoid; margin-bottom: .4rem; }
   footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule);
            color: var(--muted); font-size: .8rem; }
-  @media (max-width: 560px) { .rest { columns: 1; } .pos { font-size: 1.2rem; min-width: 1.8rem; } }
+  @media (max-width: 560px) { .rest { columns: 1; } }
 </style>
 </head>
 <body>
@@ -111,7 +113,7 @@
 </header>
 
 <p class="meta">
-  Updated 2 August 2026, 19:22 BST &middot;
+  Updated 2 August 2026, 19:25 BST &middot;
   1043 rated reviews across 814 shows &middot;
   Sources: All Edinburgh Theatre, Chortle, Fest Magazine, FringeReview, One4Review, The Guardian, The Reviews Hub, ThreeWeeks Edinburgh
 </p>
