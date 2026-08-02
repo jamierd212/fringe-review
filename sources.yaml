@@ -251,10 +251,20 @@ publications:
     enabled: false
     verified: 2026-08-02
     notes: >
-      NO FEED, BUT SCRAPING IS PERMITTED. The homepage declares no RSS or Atom
-      feed. robots.txt carries no restriction on the paths we need and the site
-      serves our User-Agent normally, so an HTML scraper is viable. A major
-      Fringe reviewer, so worth the work.
+      DEFERRED — bigger job than it looks. Permitted (robots.txt is clear and
+      the site serves our User-Agent), but the site is a Nuxt single-page app:
+      the HTML contains no review links, no star characters and no rating keys,
+      because everything renders client-side.
+
+      Progress made, for whoever picks this up: the page config exposes a CMS
+      API at https://cms.list.co.uk/api/v2 — but the endpoint names are not
+      guessable. Wagtail-style /pages/ and fourteen other plausible paths all
+      return 404. Finding the real endpoints means reading their JS bundle for
+      the fetch calls, or driving a headless browser and watching the network
+      tab. Either is viable, neither is quick.
+
+      Worth returning to: The List is a major Fringe reviewer, and a JSON API
+      would be as clean a source as the Guardian's once the paths are known.
 
   - name: The Wee Review
     slug: weereview
