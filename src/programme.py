@@ -1,15 +1,24 @@
 """
-Linking our shows to their official Fringe programme entries, and reading the
-genre from them.
+Linking shows to their official programme entry, and reading the genre from it.
 
-Two things come from the same place. The programme sitemap lists every show as
-a slug derived from its title, so matching our titles against it gives us the
-canonical URL to link to. Fetching that page then yields the Fringe's own
-`genre` and `subGenre` fields — which is how we can say "Comedy / Sketch"
-rather than guessing from a headline.
+Each festival publishes a sitemap listing every show as a title-derived slug, so
+matching our titles against it gives the canonical URL to link to without
+fetching thousands of pages. Fetching a matched page then yields whatever
+classification that festival exposes.
 
-Only the current festival is enriched. Past years' shows are no longer sold, so
-their programme pages disappear.
+How much comes back varies by festival, and the difference is worth knowing:
+
+    Fringe   4,200 shows, with `genre` and `subGenre` in the page JSON.
+             This is what makes "Comedy · Stand-up" possible — the Fringe's own
+             classification, not our inference.
+
+    EIF      ~90 events plus ~1,400 archived ones. No structured genre anywhere:
+             the words appear only in prose descriptions, and inferring
+             "Opera" from a paragraph is guesswork we would then present as
+             fact. So EIF shows are labelled by festival alone.
+
+Only the current festival is enriched. Past programme pages are taken down once
+the shows stop selling.
 """
 
 from __future__ import annotations
@@ -25,7 +34,6 @@ import certifi
 
 from .normalise import normalise
 
-SITEMAP = "https://www.edfringe.com/tickets/sitemap.xml"
 UA = {"User-Agent": "FringeLeaderboardBot/0.1 "
                     "(+https://github.com/jamierd212/fringe-review)"}
 DELAY = 1.0          # edfringe.com's robots.txt asks for Crawl-delay: 1
@@ -46,63 +54,89 @@ def _get(url: str, timeout: int = 25) -> str | None:
         return None
 
 
-def programme_index() -> dict[str, str]:
-    """
-    {normalised title: programme URL} for every show in the current programme.
+def _fringe_details(html: str) -> dict:
+    """The Fringe states genre and subGenre outright in the page JSON."""
+    genre = re.search(r'"genre"\s*:\s*"([^"]*)"', html)
+    sub = re.search(r'"subGenre"\s*:\s*"([^"]*)"', html)
+    if not genre:
+        return {}
+    return {"genre": genre.group(1).strip(),
+            "subgenre": (sub.group(1).strip() if sub else "")}
 
-    The slug is generated from the show's title, so normalising it back gives a
-    key our own titles can be matched against without fetching 4,000 pages.
+
+def _eif_details(html: str) -> dict:
     """
-    raw = _get(SITEMAP, timeout=40)
+    EIF publishes no machine-readable genre — the words only appear inside prose
+    descriptions, where "a night of dance and song" would be read as Dance for a
+    concert. Rather than invent a classification and print it as fact, we record
+    that the show is EIF and leave the genre empty.
+    """
+    return {"genre": "", "subgenre": ""}
+
+
+FESTIVALS = [
+    {
+        "key": "fringe",
+        "label": "Fringe",
+        "sitemap": "https://www.edfringe.com/tickets/sitemap.xml",
+        "paths": ("/whats-on/",),
+        "details": _fringe_details,
+    },
+    {
+        "key": "eif",
+        "label": "EIF",
+        "sitemap": "https://www.eif.co.uk/sitemap.xml",
+        # /archive/ holds past years, which is how an EIF show reviewed before
+        # this year's programme went live can still resolve.
+        "paths": ("/events/", "/archive/"),
+        "details": _eif_details,
+    },
+]
+
+
+def programme_index(festival: dict) -> dict[str, str]:
+    """{normalised title: URL} for one festival's programme."""
+    raw = _get(festival["sitemap"], timeout=40)
     if raw is None:
         return {}
 
     index: dict[str, str] = {}
     for url in re.findall(r"<loc>(.*?)</loc>", raw):
-        if "/whats-on/" not in url:
+        if not any(p in url for p in festival["paths"]):
             continue
         slug = url.rstrip("/").rsplit("/", 1)[-1]
         key = normalise(slug.replace("-", " "))
-        if key:
-            index.setdefault(key, url)
+        if not key:
+            continue
+        index.setdefault(key, url)
+
+        # EIF disambiguates some slugs with a trailing year ("inala-2026"), which
+        # no review headline will carry. Index the bare form too so the show is
+        # still findable, without letting it overwrite an exact match.
+        stripped = re.sub(r"\s+(19|20)\d\d$", "", key)
+        if stripped != key:
+            index.setdefault(stripped, url)
     return index
 
 
-def show_details(url: str) -> dict | None:
-    """Pull genre, subGenre and title out of a programme page's embedded JSON."""
-    html = _get(url)
-    if html is None:
-        return None
-
-    # The page is a Next.js app; the show record sits in the embedded props.
-    m = re.search(r'"genre"\s*:\s*"([^"]*)"', html)
-    if not m:
-        return None
-    sub = re.search(r'"subGenre"\s*:\s*"([^"]*)"', html)
-    title = re.search(r'"title"\s*:\s*"([^"]{2,120})"', html)
-    return {
-        "genre": m.group(1).strip(),
-        "subgenre": (sub.group(1).strip() if sub else ""),
-        "title": (title.group(1).strip() if title else ""),
-    }
-
-
-def label(genre: str, subgenre: str) -> str:
+def label(festival: str, genre: str, subgenre: str) -> str:
     """
-    What to print on the page.
+    The badge text.
 
-    The Fringe's top-level genres are broad — everything from a stand-up hour to
-    a sketch troupe is "COMEDY" — so the sub-genre is the informative half and
-    goes first where it exists.
+    Where a festival gives us a real classification we show it, because that is
+    the informative part. Where it does not, the festival name still tells a
+    reader something useful — that this is the International Festival rather
+    than the Fringe.
     """
     genre = (genre or "").title().replace("And", "&")
-    if subgenre and subgenre.lower() not in genre.lower():
-        return f"{genre} · {subgenre}"
-    return genre
+    parts = [p for p in (genre, subgenre) if p]
+    if not parts:
+        return (festival or "").upper()
+    return " · ".join(parts)
 
 
 def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dict[str, int]:
-    """Attach programme URL and genre to this year's shows that lack them."""
+    """Attach programme URL, festival and genre to this year's unlinked shows."""
     pending = conn.execute(
         """SELECT id, title FROM shows
             WHERE year = ? AND (edfringe_url IS NULL OR edfringe_url = '')
@@ -112,30 +146,42 @@ def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dic
     if not pending:
         return {"matched": 0, "missed": 0}
 
-    print(f"  fetching the {year} programme index")
-    index = programme_index()
-    print(f"    {len(index)} shows in the programme")
-    if not index:
+    indexes = []
+    for fest in FESTIVALS:
+        idx = programme_index(fest)
+        print(f"    {fest['label']}: {len(idx)} shows in the programme")
+        if idx:
+            indexes.append((fest, idx))
+    if not indexes:
         return {"matched": 0, "missed": len(pending)}
 
     matched = missed = 0
+    per_festival: dict[str, int] = {}
     for row in pending[: limit or len(pending)]:
-        url = index.get(normalise(row["title"]))
-        if not url:
+        key = normalise(row["title"])
+        hit = next(((f, i[key]) for f, i in indexes if key in i), None)
+        if hit is None:
             missed += 1
             continue
 
+        fest, url = hit
         time.sleep(DELAY)
-        details = show_details(url)
-        if details is None:
+        html = _get(url)
+        if html is None:
             missed += 1
             continue
 
+        details = fest["details"](html)
         conn.execute(
-            "UPDATE shows SET edfringe_url = ?, genre = ?, subgenre = ? WHERE id = ?",
-            (url, details["genre"], details["subgenre"], row["id"]),
+            """UPDATE shows SET edfringe_url = ?, festival = ?, genre = ?, subgenre = ?
+                WHERE id = ?""",
+            (url, fest["key"], details.get("genre", ""),
+             details.get("subgenre", ""), row["id"]),
         )
         matched += 1
+        per_festival[fest["label"]] = per_festival.get(fest["label"], 0) + 1
 
     conn.commit()
+    if per_festival:
+        print("    linked: " + ", ".join(f"{v} {k}" for k, v in per_festival.items()))
     return {"matched": matched, "missed": missed}
