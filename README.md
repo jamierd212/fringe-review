@@ -78,7 +78,7 @@ to `main` and folder to `/site`. Click **Save**.
 Two minutes later your leaderboard is live at:
 
 ```
-https://YOUR-USERNAME.github.io/fringe-leaderboard/
+https://jamierd212.github.io/fringe-leaderboard/
 ```
 
 **5. Turn the daily robot on.** Go to the **Actions** tab and enable workflows if
