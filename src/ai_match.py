@@ -78,11 +78,16 @@ class Matcher:
     re-pay for) questions already answered.
     """
 
-    def __init__(self, conn: sqlite3.Connection):
+    def __init__(self, conn: sqlite3.Connection, model: str = MODEL,
+                 use_cache: bool = True):
         self.conn = conn
+        self.model = model
+        self.use_cache = use_cache
         self.client = None
         self.calls = 0
         self.cache_hits = 0
+        self.input_tokens = 0
+        self.output_tokens = 0
 
         conn.execute(
             """CREATE TABLE IF NOT EXISTS ai_decisions (
@@ -124,7 +129,7 @@ class Matcher:
         cached = self.conn.execute(
             "SELECT choice, confidence, reason FROM ai_decisions WHERE question = ?",
             (question,),
-        ).fetchone()
+        ).fetchone() if self.use_cache else None
         if cached:
             self.cache_hits += 1
             return MatchDecision(
@@ -138,7 +143,7 @@ class Matcher:
 
         try:
             response = self.client.messages.parse(
-                model=MODEL,
+                model=self.model,
                 max_tokens=2000,
                 system=SYSTEM_PROMPT,
                 thinking={"type": "adaptive"},
@@ -146,6 +151,8 @@ class Matcher:
                 output_format=MatchDecision,
             )
             decision = response.parsed_output
+            self.input_tokens += response.usage.input_tokens
+            self.output_tokens += response.usage.output_tokens
         except Exception as exc:  # noqa: BLE001 - never let one bad call stop the run
             print(f"      ! AI match failed ({type(exc).__name__}): {exc}")
             return None
