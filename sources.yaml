@@ -9,6 +9,12 @@
 # against real Fringe data out of season.
 
 defaults:
+  # Where corrections go. Shown in the page footer and used as the contact point
+  # for publications. Defaults to GitHub Issues so no personal address is
+  # published; swap in "mailto:something@example.com" if you set up an alias.
+  contact_url: "https://github.com/jamierd212/fringe-leaderboard/issues/new"
+  contact_label: "open an issue on GitHub"
+
   user_agent: "FringeLeaderboardBot/0.1 (+https://github.com/jamierd212/fringe-leaderboard)"
   delay_seconds: 1.0        # be polite: max ~1 request per second per site
   timeout_seconds: 25
