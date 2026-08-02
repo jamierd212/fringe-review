@@ -44,6 +44,7 @@ class Collector:
         self.delay = float(self.defaults.get("delay_seconds", 1.0))
         self.timeout = float(self.defaults.get("timeout_seconds", 25))
         self._last_request = 0.0
+        self.last_status = 0
 
     # -- HTTP ---------------------------------------------------------------
 
@@ -55,6 +56,7 @@ class Collector:
         self._last_request = time.monotonic()
         try:
             r = self.session.get(url, timeout=self.timeout)
+            self.last_status = r.status_code
             if r.status_code != 200:
                 print(f"      ! HTTP {r.status_code}  {url}")
                 return None
@@ -94,6 +96,12 @@ class Collector:
         for feed_url in self.feed_urls(pub, backfill):
             raw = self._get(feed_url)
             if raw is None:
+                # A 404 while walking ?paged=N means we ran past the last page.
+                # Fest returns a whole month on page 1 then 404s, so without this
+                # every backfill burns 39 pointless requests per source. Other
+                # failures may be transient, so only 404 ends the walk.
+                if self.last_status == 404:
+                    break
                 continue
             parsed = feedparser.parse(raw)
             if not parsed.entries:
@@ -148,8 +156,22 @@ class Collector:
     )
 
     @classmethod
-    def looks_like_review(cls, cand: Candidate) -> bool:
-        title = cand.title.lower()
+    def looks_like_review(cls, cand: Candidate, pub: dict | None = None) -> bool:
+        """
+        A publication that titles every review the same way gives us something far
+        better than a blocklist: `require_title_prefix` keeps only those items.
+
+        This matters more than it looks. Fest's end-of-festival round-up carries
+        39 star glyphs from the shows it lists, so the rating cascade happily
+        scores it 5 stars — and a phantom show called "The Very Best of the
+        Edinburgh Festivals 2025" lands at the top of the leaderboard. A
+        blocklist can only chase those one phrase at a time; an allowlist of
+        title shapes cannot be surprised.
+        """
+        title = cand.title.strip().lower()
+        if pub and (prefix := pub.get("require_title_prefix")):
+            if not title.startswith(prefix.strip().lower()):
+                return False
         return not any(phrase in title for phrase in cls.NOT_A_REVIEW)
 
     def in_festival_window(self, cand: Candidate, pub: dict | None = None) -> bool:
@@ -240,7 +262,7 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None)
         print(f"    {len(new)} not seen before")
 
         before = len(new)
-        new = [c for c in new if collector.looks_like_review(c)]
+        new = [c for c in new if collector.looks_like_review(c, pub)]
         if before != len(new):
             print(f"    {before - len(new)} dropped as news/interviews")
 

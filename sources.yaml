@@ -74,6 +74,28 @@ publications:
     notes: >
       Long-running Fringe publication. Ratings render as plain "4/5" text.
 
+  - name: Fest Magazine
+    slug: fest
+    homepage: https://www.festmag.com/
+    feed: https://www.festmag.com/feed/
+    backfill: https://www.festmag.com/{year}/{month:02d}/feed/
+    rating:
+      type: auto            # ★★★★★ on the review page
+    fetch_page: true        # stars are on the page, not in the feed
+    require_title_prefix: "Review:"
+    pages: 3
+    verified: 2026-08-02
+    notes: >
+      The highest-volume source available: 264 items in August 2025, of which
+      227 are reviews, and the whole month arrives in ONE request rather than
+      paginated ten at a time.
+
+      require_title_prefix is load-bearing, not tidiness. Fest's round-up posts
+      ("The Very Best of the Edinburgh Festivals 2025") repeat the star ratings
+      of every show they mention, so the rating cascade scores the round-up
+      itself 5 stars and invents a show with that title. Only items titled
+      "Review: ..." are real reviews.
+
   # ------------------------------------------- included to exercise conversion
   - name: The Reviews Hub
     slug: reviewshub
