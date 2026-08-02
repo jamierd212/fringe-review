@@ -41,15 +41,22 @@
   h2 { font-size: 1.15rem; margin: 0 0 .1rem; line-height: 1.35; }
   h2 a { text-decoration: none; border-bottom: 1px solid var(--rule); }
   h2 a:hover { border-bottom-color: var(--star); }
+  .meta-right { flex: none; display: flex; gap: .45rem; align-items: baseline; }
   .genre {
-    flex: none; font-size: .72rem; letter-spacing: .04em; text-transform: uppercase;
+    font-size: .72rem; letter-spacing: .04em; text-transform: uppercase;
     color: var(--star); border: 1px solid var(--rule); border-radius: 999px;
     padding: .12rem .55rem; white-space: nowrap;
   }
+  .proglink {
+    font-size: .72rem; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--muted); white-space: nowrap; text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .proglink:hover { color: var(--star); border-bottom-color: var(--star); }
   .performer { color: var(--muted); font-size: .9rem; margin-bottom: .6rem; }
   @media (max-width: 560px) {
     .titlerow { flex-direction: column; gap: .2rem; }
-    .genre { align-self: flex-start; }
+    .meta-right { align-self: flex-start; }
   }
 
   ul.reviews { list-style: none; margin: 0; padding: 0; }
@@ -114,7 +121,7 @@
 </header>
 
 <p class="meta">
-  Updated 2 August 2026, 19:44 BST &middot;
+  Updated 2 August 2026, 20:00 BST &middot;
   5 rated reviews across 5 shows &middot;
   Sources: All Edinburgh Theatre, The Reviews Hub, ThreeWeeks Edinburgh
 </p>
@@ -127,7 +134,8 @@
       <h2>
         <a href="show/2026-henry-maynard-endgame/" title="All reviews for Endgame">Endgame</a>
       </h2>
-      
+      <span class="meta-right">
+        </span>
     </div>
     <div class="performer">Henry Maynard</div>
     <ul class="reviews">
@@ -159,7 +167,8 @@
       <h2>
         <a href="show/2026-king-s-theatre-reopening-celebration/" title="All reviews for King's Theatre Reopening Celebration">King's Theatre Reopening Celebration</a>
       </h2>
-      
+      <span class="meta-right">
+        </span>
     </div>
     
     <ul class="reviews">
@@ -191,7 +200,8 @@
       <h2>
         <a href="show/2026-tynecastle-drama/" title="All reviews for Tynecastle drama">Tynecastle drama</a>
       </h2>
-      
+      <span class="meta-right">
+        </span>
     </div>
     
     <ul class="reviews">
@@ -223,7 +233,8 @@
       <h2>
         <a href="show/2026-stag-named-angus/" title="All reviews for A Stag Named Angus">A Stag Named Angus</a>
       </h2>
-      
+      <span class="meta-right">
+        </span>
     </div>
     
     <ul class="reviews">
@@ -255,7 +266,8 @@
       <h2>
         <a href="show/2026-everybody-s-talking-about-jamie/" title="All reviews for Everybody's Talking About Jamie">Everybody's Talking About Jamie</a>
       </h2>
-      
+      <span class="meta-right">
+        </span>
     </div>
     
     <ul class="reviews">
