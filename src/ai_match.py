@@ -26,7 +26,21 @@ from pydantic import BaseModel, Field
 # matching accuracy; switch to "claude-sonnet-5" or "claude-haiku-4-5" if you
 # want to trade some accuracy for lower cost. Only a small fraction of reviews
 # reach this code, so the bill is modest either way — measure before optimising.
-MODEL = "claude-opus-4-8"
+# Chosen on evidence, not intuition: run compare_models.py and all three of
+# Haiku 4.5, Sonnet 5 and Opus 4.8 were measured against the ten genuinely
+# ambiguous pairs from the 2025 data. Haiku and Opus both scored 10/10; Sonnet
+# scored 9/10 (it merged "Dream Space" into "Dreamscape"). Haiku is roughly a
+# sixth of Opus's cost, so it wins on the evidence available.
+#
+# Caveat worth remembering: that is ten questions, run once. If duplicate or
+# wrongly-merged rows start showing up on the leaderboard, add the offending
+# pairs to compare_models.py and re-run before assuming the model is fine.
+MODEL = "claude-haiku-4-5"
+
+# Adaptive thinking is not available on every model — Haiku rejects it with a
+# 400. Rather than silently dropping it everywhere, name the models that take it
+# so switching MODEL above stays a one-line change that actually works.
+NO_ADAPTIVE_THINKING = {"claude-haiku-4-5"}
 
 SYSTEM_PROMPT = """\
 You match theatre and comedy review headlines to Edinburgh Festival shows.
@@ -145,14 +159,18 @@ class Matcher:
         numbered = "\n".join(f"{i}. {c}" for i, c in enumerate(candidates, start=1))
         prompt = f"Review headline:\n{headline}\n\nCandidate shows:\n{numbered}"
 
+        kwargs = {}
+        if self.model not in NO_ADAPTIVE_THINKING:
+            kwargs["thinking"] = {"type": "adaptive"}
+
         try:
             response = self.client.messages.parse(
                 model=self.model,
                 max_tokens=2000,
                 system=SYSTEM_PROMPT,
-                thinking={"type": "adaptive"},
                 messages=[{"role": "user", "content": prompt}],
                 output_format=MatchDecision,
+                **kwargs,
             )
             decision = response.parsed_output
             self.input_tokens += response.usage.input_tokens
