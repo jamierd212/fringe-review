@@ -14,7 +14,7 @@ from .collect import load_config
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES = ROOT / "templates"
-OUTPUT = ROOT / "site" / "index.html"
+OUTPUT = ROOT / "docs" / "index.html"
 
 
 def stars_html(n: int) -> str:

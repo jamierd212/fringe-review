@@ -42,7 +42,7 @@ jobs:
         run: |
           git config user.name  "fringe-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/reviews.db site/ review_queue.md
+          git add data/reviews.db docs/ review_queue.md
           # "git commit" fails when nothing changed, which is a normal quiet day,
           # so only commit if the index actually has something staged.
           if git diff --staged --quiet; then

@@ -2,3 +2,7 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# Stray clones of the GitHub repo made during setup — not part of the project
+fring-review/
+fringe-review/

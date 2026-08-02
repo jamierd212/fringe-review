@@ -33,7 +33,7 @@ That takes a few minutes (it deliberately waits a second between requests to be
 polite to the websites). When it finishes:
 
 ```bash
-open site/index.html
+open docs/index.html
 ```
 
 **3. Normal daily run**, once the festival is on:
@@ -90,7 +90,7 @@ personal repos default to a read-only token, which makes the daily job do all
 its work and then fail on the final push.
 
 **6. Turn the website on.** **Settings → Pages** → Source: *Deploy from a
-branch* → Branch `main`, folder `/site` → **Save**.
+branch* → Branch `main`, folder `/docs` → **Save**.
 
 Two minutes later your leaderboard is live at:
 
