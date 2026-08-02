@@ -81,10 +81,27 @@ def rank_key(show: Show) -> tuple:
     )
 
 
-def load(conn: sqlite3.Connection) -> list[Show]:
+def years(conn: sqlite3.Connection) -> list[int]:
+    """Festival years we hold rated reviews for, newest first."""
+    rows = conn.execute(
+        """SELECT DISTINCT s.year FROM shows s
+             JOIN reviews r ON r.show_id = s.id
+            WHERE r.stars IS NOT NULL AND s.year IS NOT NULL
+            ORDER BY s.year DESC"""
+    )
+    return [r["year"] for r in rows]
+
+
+def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
     """Read shows and their reviews, keeping one review per publication."""
     shows: dict[str, Show] = {}
-    for row in conn.execute("SELECT id, title, performer FROM shows"):
+    if year is None:
+        rows = conn.execute("SELECT id, title, performer FROM shows")
+    else:
+        rows = conn.execute(
+            "SELECT id, title, performer FROM shows WHERE year = ?", (year,)
+        )
+    for row in rows:
         shows[row["id"]] = Show(row["id"], row["title"], row["performer"])
 
     # One review per publication per show: a re-review should not count twice.
@@ -115,9 +132,10 @@ def load(conn: sqlite3.Connection) -> list[Show]:
     return [s for s in shows.values() if s.reviews]
 
 
-def leaderboard(conn: sqlite3.Connection) -> tuple[list[Show], list[Show]]:
+def leaderboard(conn: sqlite3.Connection,
+                year: int | None = None) -> tuple[list[Show], list[Show]]:
     """Returns (ranked shows in order, unranked shows alphabetically)."""
-    shows = load(conn)
+    shows = load(conn, year)
     ranked = sorted([s for s in shows if s.ranked], key=rank_key)
     rest = sorted([s for s in shows if not s.ranked], key=lambda s: s.title.casefold())
     return ranked, rest

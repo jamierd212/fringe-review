@@ -26,6 +26,9 @@ def main() -> int:
                         help="only process N items per publication (quick tests)")
     parser.add_argument("--render", action="store_true", help="only rebuild the HTML")
     parser.add_argument("--match", action="store_true", help="only redo show matching")
+    parser.add_argument("--rematch", action="store_true",
+                        help="discard all show assignments and match again from scratch "
+                             "(keeps the collected reviews; use after changing matching)")
     parser.add_argument("--reset", action="store_true", help="wipe the database first")
     args = parser.parse_args()
 
@@ -35,19 +38,39 @@ def main() -> int:
 
     conn = db.connect()
 
-    backfill = None
+    # A festival's coverage runs from mid-July previews to September stragglers,
+    # so a bare year walks all three months rather than August alone.
+    months: list[tuple[int, int]] = []
     year = date.today().year
     if args.backfill:
         try:
-            y, m = args.backfill.split("-")
-            backfill, year = (int(y), int(m)), int(y)
-        except ValueError:
-            print("--backfill needs the form YYYY-MM, e.g. 2025-08", file=sys.stderr)
+            parts = args.backfill.split("-")
+            year = int(parts[0])
+            months = ([(year, int(parts[1]))] if len(parts) > 1
+                      else [(year, 7), (year, 8), (year, 9)])
+        except (ValueError, IndexError):
+            print("--backfill needs YYYY or YYYY-MM, e.g. 2025 or 2025-08",
+                  file=sys.stderr)
             return 2
 
+    if args.rematch:
+        # Reviews are expensive to collect and cheap to re-match, so throw away
+        # only the derived layer: which show each review belongs to.
+        conn.execute("UPDATE reviews SET show_id = NULL, confidence = NULL")
+        conn.execute("DELETE FROM aliases")
+        conn.execute("DELETE FROM shows")
+        conn.commit()
+        print("Cleared all show assignments; re-matching from scratch.")
+        args.match = True
+
     if not (args.render or args.match):
-        print("\nCollecting reviews" + (f" from {args.backfill}" if backfill else "") + "\n")
-        collect.run(conn, backfill=backfill, limit=args.limit)
+        if months:
+            for y, m in months:
+                print(f"\nCollecting reviews from {y}-{m:02d}\n")
+                collect.run(conn, backfill=(y, m), limit=args.limit)
+        else:
+            print("\nCollecting reviews\n")
+            collect.run(conn, backfill=None, limit=args.limit)
 
     if not args.render:
         print("\nMatching reviews to shows")
@@ -55,12 +78,12 @@ def main() -> int:
         print(f"  {counts['exact']} exact, {counts['fuzzy']} fuzzy, "
               f"{counts['new']} new shows, {counts['flagged']} flagged for checking")
 
-    path = render.run(conn, year)
+    paths = render.run(conn, year)
     stats = db.stats(conn)
-    print(f"\nWrote {path}")
+    print("\nWrote " + ", ".join(p.name for p in paths))
     print(f"  {stats['shows']} shows, {stats['rated']} rated reviews, "
           f"{stats['seen']} URLs seen")
-    print(f"\nOpen it with:  open {path}\n")
+    print(f"\nOpen it with:  open {paths[0]}\n")
 
     conn.close()
     return 0

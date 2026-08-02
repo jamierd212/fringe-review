@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 import feedparser
@@ -78,7 +79,10 @@ class Collector:
             year, month = backfill
             base = pub["backfill"].format(year=year, month=month)
 
-        pages = int(pub.get("pages", 1))
+        # A daily run only needs the newest page or two. A backfill wants
+        # everything, so walk deep and let discover() stop at the first empty
+        # page rather than guessing how many there are.
+        pages = int(pub.get("backfill_pages", 40)) if backfill else int(pub.get("pages", 1))
         if pages <= 1:
             return [base]
 
@@ -92,6 +96,10 @@ class Collector:
             if raw is None:
                 continue
             parsed = feedparser.parse(raw)
+            if not parsed.entries:
+                # WordPress returns an empty channel past the last page, which is
+                # the only reliable signal that an archive is exhausted.
+                break
             for entry in parsed.entries:
                 link = (entry.get("link") or "").strip()
                 if not link:
@@ -143,6 +151,34 @@ class Collector:
     def looks_like_review(cls, cand: Candidate) -> bool:
         title = cand.title.lower()
         return not any(phrase in title for phrase in cls.NOT_A_REVIEW)
+
+    def in_festival_window(self, cand: Candidate, pub: dict | None = None) -> bool:
+        """
+        Was this published during a festival, rather than the rest of the year?
+
+        Skipped entirely for publications whose feed is already Fringe-only
+        (`festival_feed: true`). FringeReview posts Edinburgh reviews for weeks
+        after the festival ends — one arrived in October — and those are still
+        Fringe reviews. Applying a date window to a feed that is Fringe-by-
+        definition just throws away late coverage.
+
+        Reviews with no parseable date are kept — a missing date is a feed quirk,
+        not evidence the show isn't a Fringe show, and dropping them would lose
+        real reviews silently.
+        """
+        if pub and pub.get("festival_feed"):
+            return True
+        window = self.defaults.get("festival_window")
+        if not window or not cand.published:
+            return True
+        try:
+            published = parsedate_to_datetime(cand.published)
+        except (TypeError, ValueError):
+            return True
+
+        start_m, start_d = (int(x) for x in str(window["start"]).split("-"))
+        end_m, end_d = (int(x) for x in str(window["end"]).split("-"))
+        return (start_m, start_d) <= (published.month, published.day) <= (end_m, end_d)
 
     @classmethod
     def is_edinburgh(cls, cand: Candidate) -> bool:
@@ -207,6 +243,11 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None)
         new = [c for c in new if collector.looks_like_review(c)]
         if before != len(new):
             print(f"    {before - len(new)} dropped as news/interviews")
+
+        before = len(new)
+        new = [c for c in new if collector.in_festival_window(c, pub)]
+        if before != len(new):
+            print(f"    {before - len(new)} dropped as outside the festival window")
 
         if pub.get("require_edinburgh"):
             before = len(new)

@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import re
 import sqlite3
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 from rapidfuzz import fuzz, process
@@ -34,9 +35,31 @@ def slugify(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", normalise(text)).strip("-")[:80] or "unknown"
 
 
+def festival_year(published: str | None, fallback: int) -> int:
+    """
+    Which festival a review belongs to, taken from its own publication date.
+
+    Deriving this from the run mode instead — "we passed --backfill 2025-08, so
+    everything in this run is 2025" — is what corrupted the first database: a
+    later `--match` with no flag defaulted to the current year and silently
+    relabelled every 2025 show as 2026. The review's own date cannot drift like
+    that.
+
+    Calendar year is the right granularity: the Fringe runs in August, and
+    reviews trickle in from late July to early September without ever crossing
+    a year boundary.
+    """
+    if published:
+        try:
+            return parsedate_to_datetime(published).year
+        except (TypeError, ValueError):
+            pass
+    return fallback
+
+
 def run(conn: sqlite3.Connection, year: int) -> dict[str, int]:
     unmatched = conn.execute(
-        "SELECT url, headline, publication FROM reviews WHERE show_id IS NULL"
+        "SELECT url, headline, publication, published FROM reviews WHERE show_id IS NULL"
     ).fetchall()
 
     counts = {"exact": 0, "fuzzy": 0, "ai": 0, "new": 0, "flagged": 0}
@@ -49,7 +72,11 @@ def run(conn: sqlite3.Connection, year: int) -> dict[str, int]:
         if not aliases:
             continue
 
-        show_id, confidence, how = _resolve(conn, aliases, headline, year, matcher)
+        # `year` is only a fallback for reviews whose feed gave no usable date.
+        review_year = festival_year(row["published"], year)
+        show_id, confidence, how = _resolve(
+            conn, aliases, headline, review_year, matcher
+        )
         counts[how] = counts.get(how, 0) + 1
 
         conn.execute(
@@ -81,16 +108,28 @@ def _resolve(conn, aliases: list[str], headline: str, year: int,
              matcher: Matcher) -> tuple[str, float, str]:
     """Return (show_id, confidence, method)."""
 
+    # Every lookup is scoped to the same festival year. A show that returns in a
+    # later year is a different run with different reviews, and merging the two
+    # would silently pool this year's ratings with last year's.
+
     # 1. Exact hit on a spelling we already know.
     placeholders = ",".join("?" * len(aliases))
     hit = conn.execute(
-        f"SELECT show_id FROM aliases WHERE alias IN ({placeholders}) LIMIT 1", aliases
+        f"""SELECT a.show_id FROM aliases a
+              JOIN shows s ON s.id = a.show_id
+             WHERE a.alias IN ({placeholders}) AND s.year = ? LIMIT 1""",
+        (*aliases, year),
     ).fetchone()
     if hit:
         return hit["show_id"], 1.0, "exact"
 
-    # 2. Fuzzy against every alias we know about.
-    known = conn.execute("SELECT alias, show_id FROM aliases").fetchall()
+    # 2. Fuzzy against every alias from the same year.
+    known = conn.execute(
+        """SELECT a.alias, a.show_id FROM aliases a
+             JOIN shows s ON s.id = a.show_id
+            WHERE s.year = ?""",
+        (year,),
+    ).fetchall()
     if known:
         lookup = {r["alias"]: r["show_id"] for r in known}
         scored: dict[str, float] = {}

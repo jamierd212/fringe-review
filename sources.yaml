@@ -19,6 +19,15 @@ defaults:
   delay_seconds: 1.0        # be polite: max ~1 request per second per site
   timeout_seconds: 25
 
+  # Only reviews published inside this window count as festival reviews.
+  # Several sources (One4Review, All Edinburgh Theatre) cover Scottish arts all
+  # year, so without this a February folk-club gig lands on the Fringe
+  # leaderboard. Deliberately generous at both ends: previews start appearing in
+  # late July and stragglers are still posted into September.
+  festival_window:
+    start: "07-15"          # 15 July
+    end: "09-15"            # 15 September
+
 publications:
 
   # ---------------------------------------------------------------- verified
@@ -95,6 +104,7 @@ publications:
       type: badge
       vocabulary: fringereview
     fetch_page: true        # the badge is on the page, not in the feed
+    festival_feed: true     # feed is Edinburgh-only, so no date window applies
     pages: 2
     verified: 2026-08-01
     notes: >

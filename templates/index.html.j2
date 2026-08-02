@@ -53,6 +53,18 @@
   a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 2px; }
   a:hover { text-decoration-color: var(--ink); }
 
+  nav.years { display: flex; gap: .4rem; margin: .9rem 0 0; flex-wrap: wrap; }
+  nav.years a {
+    display: inline-block; padding: .3rem .85rem; border: 1px solid var(--rule);
+    border-radius: 999px; text-decoration: none; font-size: .9rem;
+    color: var(--muted); background: var(--card);
+  }
+  nav.years a:hover { border-color: var(--ink); color: var(--ink); }
+  nav.years a[aria-current="page"] {
+    background: var(--ink); border-color: var(--ink); color: var(--bg);
+    font-weight: 700;
+  }
+
   h3.section { margin: 2.5rem 0 .75rem; font-size: 1rem; text-transform: uppercase;
                letter-spacing: .08em; color: var(--muted); }
   .rest { columns: 2; column-gap: 1.5rem; font-size: .9rem; }
@@ -72,11 +84,18 @@
     outranks any number of 4-star reviews. Lower ratings are shown for reference
     but do not affect position.
   </p>
+  {% if nav|length > 1 %}
+  <nav class="years" aria-label="Festival year">
+    {% for entry in nav %}
+    <a href="{{ entry.href }}"{% if entry.current %} aria-current="page"{% endif %}>{{ entry.year }}</a>
+    {% endfor %}
+  </nav>
+  {% endif %}
 </header>
 
 <p class="meta">
   Updated {{ updated }} &middot;
-  {{ stats.rated }} rated reviews across {{ stats.shows }} shows &middot;
+  {{ rated }} rated reviews across {{ show_count }} shows &middot;
   Sources: {{ publications|join(", ") }}
 </p>
 
