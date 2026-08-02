@@ -18,7 +18,7 @@ You only need to do steps 1-2 once.
 Open Terminal, then paste these one at a time:
 
 ```bash
-cd ~/fringe-leaderboard
+cd /Users/Shared/fringe-leaderboard
 python3 -m venv .venv
 ./.venv/bin/pip install -r requirements.txt
 ```
@@ -61,13 +61,21 @@ open site/index.html
 
 **2. Install GitHub Desktop** (desktop.github.com) and sign in.
 
-**3. Publish.** `File → Add Local Repository`, pick your `fringe-leaderboard`
-folder. The history is already committed, so there is nothing to commit — click
-**Publish repository**. Name it `fringe-leaderboard` and **untick "Keep this
-code private"** (Pages needs a public repo on a free account).
+**3. Connect and push.** `File → Add Local Repository`, pick your project folder.
+The history is already committed, so there is nothing to commit.
 
-> Do NOT create the repository on github.com first. Publish creates it for you,
-> and a repo that already exists will make Publish fail with a name clash.
+- If the repo does **not** yet exist on github.com: click **Publish repository**,
+  and **untick "Keep this code private"** (Pages needs a public repo on a free
+  account).
+- If you already created an **empty** repo on github.com: Publish will fail with
+  a name clash. Connect to the existing one instead, from Terminal:
+
+  ```bash
+  git remote add origin https://github.com/jamierd212/fringe-review.git
+  git push -u origin main
+  ```
+
+  After that, GitHub Desktop shows **Push origin** instead of Publish.
 
 > From now on, "pushing a change" means: make your edit, open GitHub Desktop,
 > type a short description, click **Commit to main**, then **Push origin**.
@@ -87,19 +95,11 @@ branch* → Branch `main`, folder `/site` → **Save**.
 Two minutes later your leaderboard is live at:
 
 ```
-https://jamierd212.github.io/fringe-leaderboard/
+https://jamierd212.github.io/fringe-review/
 ```
 
 **7. Test the robot.** **Actions** tab → *Daily review sweep* → **Run workflow**.
 Watch it run rather than waiting until 8am.
-
-### Before you go live
-
-- **Add your API key.** Repo → **Settings → Secrets and variables → Actions →
-  New repository secret**. Name it `ANTHROPIC_API_KEY`. Without it the daily run
-  still works, but show matching falls back to fuzzy-only and the leaderboard
-  gets more duplicate rows.
-- The bot's `user_agent` and the corrections address are already filled in.
 
 ### Things that will trip you up
 

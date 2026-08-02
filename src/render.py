@@ -47,7 +47,7 @@ def run(conn: sqlite3.Connection, year: int) -> Path:
         stats=db.stats(conn),
         publications=publications,
         contact_url=defaults.get(
-            "contact_url", "https://github.com/jamierd212/fringe-leaderboard/issues/new"
+            "contact_url", "https://github.com/jamierd212/fringe-review/issues/new"
         ),
         contact_label=defaults.get("contact_label", "let us know"),
     )
