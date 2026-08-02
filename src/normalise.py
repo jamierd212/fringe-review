@@ -56,6 +56,10 @@ RATING_FRAGMENT = re.compile(
     re.I,
 )
 
+# Newspapers title reviews "Show Name review – witty summary of the verdict".
+# Everything from " review" onwards is the paper's editorialising, not the show.
+REVIEW_TAIL = re.compile(r"\s+review\b.*$", re.I)
+
 SEPARATORS = re.compile(r"\s*[:–—]\s*|\s+-\s+")
 
 
@@ -71,6 +75,7 @@ def clean_title(raw: str) -> str:
         if stripped == text:
             break
         text = stripped
+    text = REVIEW_TAIL.sub("", text)
     text = VENUE_TAIL.sub("", text)
     text = re.sub(r"\s*\(\s*(WIP|work in progress|preview)\s*\)\s*", " ", text, flags=re.I)
     return re.sub(r"\s+", " ", text).strip(" -–—:,|")

@@ -14,6 +14,7 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 | FringeReview | [Steffan Alun: Stand Up](https://fringereview.co.uk/review/edinburgh-fringe/2025/steffan-alun-stand-up/) | Stand Up | 77% |
 | Fest Magazine | [Review: Kate Dolan: The Critic](https://festmag.com/2025/08/07/review-kate-dolan-the-critic/) | The Critic | 77% |
 | Fest Magazine | [Review: KINDER](https://festmag.com/2025/08/03/review-kinder/) | KINDER | 77% |
+| The Guardian | [Ordinary Decent Criminal review – Mark Thomas powers through tense prison drama](https://www.theguardian.com/stage/2025/aug/09/ordinary-decent-criminal-review-mark-thomas-summerhall-edinburgh) | Ordinary Decent Criminal | 77% |
 | Fest Magazine | [Review: Mary, Queen of Scots](https://festmag.com/2025/08/16/review-mary-queen-of-scots/) | Mary, Queen of Scots | 81% |
 | Fest Magazine | [Review: Betty Grumble’s Enemies of Grooviness Eat Sh!t](https://festmag.com/2025/08/04/review-betty-grumbles-enemies-of-grooviness-eat-sht/) | Betty Grumble's Enemies of Grooviness Eat Sh!t | 81% |
 | FringeReview | [Nerds: The Bill Gates vs. Steve Jobs Comedy Musical](https://fringereview.co.uk/review/edinburgh-fringe/2025/nerds-the-bill-gates-vs-steve-jobs-comedy-musical/) | The Bill Gates vs. Steve Jobs Comedy Musical | 83% |

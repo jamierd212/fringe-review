@@ -96,6 +96,29 @@ publications:
       itself 5 stars and invents a show with that title. Only items titled
       "Review: ..." are real reviews.
 
+  # ------------------------------------------------- national newspapers
+  - name: The Guardian
+    slug: guardian
+    homepage: https://www.theguardian.com/culture/edinburghfestival
+    api: guardian            # Open Platform API, not RSS — see collect.py
+    tag: culture/edinburghfestival
+    feed: https://content.guardianapis.com/search   # documentation only
+    api_pages: 20
+    verified: 2026-08-02
+    notes: >
+      Uses the Guardian's Open Platform API rather than their RSS feed, for two
+      reasons. Their star ratings render as SVG components with nothing
+      scrapable in the HTML, but the API returns starRating as an integer. And
+      their RSS is a rolling ~4-month window with no archive, so a 2025
+      backfill is impossible from it; the API takes an explicit date range.
+
+      Runs on the Guardian's public "test" key by default, which needs no
+      registration but is rate-limited. Set GUARDIAN_API_KEY to a free
+      developer key (12,000 calls/day) before relying on it daily.
+
+      Items with no starRating are features and interviews and are skipped
+      automatically, so no title filtering is needed.
+
   # ------------------------------------------- included to exercise conversion
   - name: The Reviews Hub
     slug: reviewshub
@@ -155,6 +178,64 @@ publications:
     notes: >
       EXCLUDED: returns HTTP 403 to automated requests. Worth emailing them to
       ask permission and for a feed URL before enabling — do not work around it.
+
+  - name: The Scotsman
+    slug: scotsman
+    homepage: https://www.scotsman.com/
+    feed: https://www.scotsman.com/arts-and-culture/edinburgh-festivals/rss
+    rating:
+      type: auto
+    enabled: false
+    verified: 2026-08-02
+    notes: >
+      BLOCKED: returns HTTP 403 to automated requests on both the homepage and
+      article pages. The RSS feed is readable but carries only features, with no
+      star ratings in the titles or descriptions, so the ratings are only on
+      pages we cannot fetch. Their "every 4 and 5 star review" round-up would be
+      the ideal single source — worth emailing to ask permission rather than
+      working around the block.
+
+  - name: The Telegraph
+    slug: telegraph
+    homepage: https://www.telegraph.co.uk/theatre/
+    feed: https://www.telegraph.co.uk/theatre/rss.xml
+    rating:
+      type: css
+      selector: ".e-rating__star--active"
+    enabled: false
+    verified: 2026-08-02
+    notes: >
+      NOT WORTH IT: pages are fetchable and the star markup is countable
+      (.e-rating__star--active), but the theatre feed carries almost no Fringe
+      content — 7 of 102 items mentioned Edinburgh and those were listicles from
+      2021-2023, not reviews. Content is also paywalled. Revisit if they publish
+      a dedicated Edinburgh feed during the festival.
+
+  - name: Chortle
+    slug: chortle
+    homepage: https://www.chortle.co.uk/
+    feed: https://www.chortle.co.uk/rss/
+    rating:
+      type: auto
+    enabled: false
+    verified: 2026-08-02
+    notes: >
+      NOT VIABLE VIA RSS: the declared feed is a 3-item news feed, not reviews.
+      Chortle reviews hundreds of Fringe shows but publishes them only as HTML
+      under /review/. Would need a site-specific scraper rather than a feed.
+
+  - name: The List
+    slug: thelist
+    homepage: https://www.list.co.uk/
+    feed: ""
+    rating:
+      type: auto
+    enabled: false
+    verified: 2026-08-02
+    notes: >
+      NO FEED: the homepage declares no RSS or Atom feed at all. A major Fringe
+      reviewer, so worth revisiting with an HTML scraper or by asking whether
+      they have an unlisted feed.
 
   - name: The Wee Review
     slug: weereview

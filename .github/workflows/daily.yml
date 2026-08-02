@@ -37,6 +37,10 @@ jobs:
           # Used only for the ambiguous show matches. If the secret is missing the
           # run still succeeds — it falls back to fuzzy matching alone.
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Guardian Open Platform. Without it the code falls back to their
+          # public "test" key, which works but is rate-limited and will start
+          # dropping requests once the festival is busy.
+          GUARDIAN_API_KEY: ${{ secrets.GUARDIAN_API_KEY }}
 
       - name: Commit the day's results
         run: |

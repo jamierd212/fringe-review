@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
+from datetime import datetime
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 
@@ -29,6 +30,9 @@ class Candidate:
     summary: str
     published: str | None
     publication: str
+    # Set when the source hands us the rating outright (the Guardian's API has a
+    # starRating field). Saves a page fetch and removes any guesswork.
+    known_stars: int | None = None
 
 
 class Collector:
@@ -91,7 +95,78 @@ class Collector:
         joiner = "&" if "?" in base else "?"
         return [base if p == 1 else f"{base}{joiner}paged={p}" for p in range(1, pages + 1)]
 
+    def discover_guardian(self, pub: dict,
+                          backfill: tuple[int, int] | None) -> list[Candidate]:
+        """
+        The Guardian's Open Platform API instead of its RSS feed.
+
+        Two reasons this is the right route for a national. Their star ratings
+        render as SVG components, so nothing in the HTML is scrapable — but the
+        API returns `starRating` as an integer field. And their RSS feed is a
+        rolling four-month window with no archive, so a backfill is impossible
+        from it; the API takes an explicit date range.
+
+        `test` is the Guardian's own public trial key and works without
+        registration, but it is rate-limited. Set GUARDIAN_API_KEY to a free
+        developer key (12,000 calls/day) before relying on this daily.
+        """
+        import calendar
+        import json
+        import os
+        import urllib.parse
+
+        key = os.environ.get("GUARDIAN_API_KEY", "test")
+        if backfill:
+            year, month = backfill
+            last = calendar.monthrange(year, month)[1]
+            date_range = {"from-date": f"{year}-{month:02d}-01",
+                          "to-date": f"{year}-{month:02d}-{last}"}
+        else:
+            date_range = {}
+
+        found: list[Candidate] = []
+        page = 1
+        while page <= int(pub.get("api_pages", 20)):
+            params = {
+                "api-key": key,
+                "tag": pub.get("tag", "culture/edinburghfestival"),
+                "show-fields": "starRating,headline",
+                "page-size": 50,
+                "page": page,
+                **date_range,
+            }
+            raw = self._get("https://content.guardianapis.com/search?"
+                            + urllib.parse.urlencode(params))
+            if raw is None:
+                break
+            try:
+                resp = json.loads(raw)["response"]
+            except (ValueError, KeyError):
+                break
+
+            for item in resp.get("results", []):
+                fields = item.get("fields", {})
+                stars = fields.get("starRating")
+                if stars is None:
+                    continue          # a feature or interview, not a review
+                found.append(Candidate(
+                    url=item["webUrl"],
+                    title=fields.get("headline") or item.get("webTitle", ""),
+                    summary="",
+                    published=item.get("webPublicationDate"),
+                    publication=pub["name"],
+                    known_stars=int(stars),
+                ))
+
+            if page >= resp.get("pages", 1):
+                break
+            page += 1
+        return found
+
     def discover(self, pub: dict, backfill: tuple[int, int] | None) -> list[Candidate]:
+        if pub.get("api") == "guardian":
+            return self.discover_guardian(pub, backfill)
+
         found: list[Candidate] = []
         for feed_url in self.feed_urls(pub, backfill):
             raw = self._get(feed_url)
@@ -196,7 +271,10 @@ class Collector:
         try:
             published = parsedate_to_datetime(cand.published)
         except (TypeError, ValueError):
-            return True
+            try:
+                published = datetime.fromisoformat(cand.published.replace("Z", "+00:00"))
+            except (TypeError, ValueError, AttributeError):
+                return True
 
         start_m, start_d = (int(x) for x in str(window["start"]).split("-"))
         end_m, end_d = (int(x) for x in str(window["end"]).split("-"))
@@ -221,6 +299,11 @@ class Collector:
     # -- Stage 2: rating extraction ----------------------------------------
 
     def rate(self, pub: dict, cand: Candidate) -> Rating | None:
+        # An API that states the rating outright beats anything we could infer.
+        if cand.known_stars is not None:
+            return Rating(stars=cand.known_stars, original=f"{cand.known_stars}/5",
+                          converted=False, rounded=False, method="api")
+
         rule = pub.get("rating", {})
 
         # Try the feed contents first — it costs nothing and describes only

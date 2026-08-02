@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import re
 import sqlite3
+from datetime import datetime
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 
@@ -50,9 +51,17 @@ def festival_year(published: str | None, fallback: int) -> int:
     a year boundary.
     """
     if published:
+        # RSS uses RFC 2822 ("Wed, 27 Aug 2025 10:34:44 +0000"); JSON APIs use
+        # ISO 8601 ("2025-08-27T10:34:44Z"). Try both — parsing only one meant
+        # every Guardian review silently fell back to the current year and
+        # landed on the wrong leaderboard.
         try:
             return parsedate_to_datetime(published).year
         except (TypeError, ValueError):
+            pass
+        try:
+            return datetime.fromisoformat(published.replace("Z", "+00:00")).year
+        except (TypeError, ValueError, AttributeError):
             pass
     return fallback
 
