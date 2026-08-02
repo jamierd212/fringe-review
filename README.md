@@ -237,6 +237,17 @@ you don't re-investigate it in six months.
   for permission rather than working around it.
 - There's a corrections link in the page footer. Keep it working.
 
+## Licence
+
+All rights reserved — see [LICENSE](LICENSE). The repository is public so the
+method is open to inspection, and because GitHub Pages requires a public repo on
+a free account. That is not a grant of permission to reuse the code or the
+collated database.
+
+The star ratings themselves belong to the publications that awarded them; this
+project only counts them and links back. To permit reuse instead, replace
+LICENSE with an MIT licence.
+
 ## Not built yet (Phase 2+)
 
 - **AI fallback** for pages where the rules find nothing, and for the ambiguous
