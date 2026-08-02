@@ -138,7 +138,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
             publications=publications,
             contact_url=defaults.get(
                 "contact_url",
-                "https://github.com/jamierd212/fringe-review/issues/new",
+                "mailto:corrections@fringestars.com",
             ),
             contact_label=defaults.get("contact_label", "let us know"),
         )
@@ -163,7 +163,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 jsonld=show_jsonld(show, this_year, festival_name),
                 contact_url=defaults.get(
                     "contact_url",
-                    "https://github.com/jamierd212/fringe-review/issues/new"),
+                    "mailto:corrections@fringestars.com"),
                 contact_label=defaults.get("contact_label", "let us know"),
             )
             out = OUTPUT_DIR / show.page / "index.html"

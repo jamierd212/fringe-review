@@ -10,10 +10,10 @@
 
 defaults:
   # Where corrections go. Shown in the page footer and used as the contact point
-  # for publications. Defaults to GitHub Issues so no personal address is
-  # published; swap in "mailto:something@example.com" if you set up an alias.
-  contact_url: "https://github.com/jamierd212/fringe-review/issues/new"
-  contact_label: "open an issue on GitHub"
+  # for publications. A forwarding address on our own domain: it keeps the
+  # personal inbox private and does not point readers at the source repository.
+  contact_url: "mailto:corrections@fringestars.com"
+  contact_label: "email corrections@fringestars.com"
 
   user_agent: "FringeLeaderboardBot/0.1 (+https://github.com/jamierd212/fringe-review)"
   delay_seconds: 1.0        # be polite: max ~1 request per second per site
