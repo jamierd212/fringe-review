@@ -107,7 +107,7 @@
       {% for review in show.at(level) %}
       <li class="s{{ level }}">
         <span class="rating" title="{{ level }} out of 5">{{ level|stars }}</span>
-        <span class="pub"><a href="{{ review.url }}" rel="nofollow noopener">{{ review.publication }}</a></span>
+        <span class="pub"><a href="{{ review.url }}" target="_blank" rel="nofollow noopener">{{ review.publication }}</a></span>
         {% if review.note %}<span class="note">{{ review.note }}</span>{% endif %}
       </li>
       {% endfor %}
