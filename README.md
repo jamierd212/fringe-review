@@ -87,10 +87,11 @@ test it immediately rather than waiting until 8am.
 
 ### Before you go live
 
-- In `sources.yaml`, put your own GitHub URL in the `user_agent` line so
-  publications can see who's requesting their pages.
-- In `templates/index.html.j2`, replace `YOUR-EMAIL-HERE` with a real address so
-  publications can report mistakes.
+- **Add your API key.** Repo → **Settings → Secrets and variables → Actions →
+  New repository secret**. Name it `ANTHROPIC_API_KEY`. Without it the daily run
+  still works, but show matching falls back to fuzzy-only and the leaderboard
+  gets more duplicate rows.
+- The bot's `user_agent` and the corrections address are already filled in.
 
 ### Things that will trip you up
 
