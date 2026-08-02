@@ -50,6 +50,18 @@ PRICING = {
 
 
 def main() -> int:
+    # Fail once, clearly, rather than repeating the same auth error per question.
+    try:
+        import anthropic
+
+        anthropic.Anthropic()
+    except Exception as exc:  # noqa: BLE001
+        print(f"No Anthropic credentials found ({type(exc).__name__}).\n\n"
+              "Get a key from console.anthropic.com, then:\n"
+              "  export ANTHROPIC_API_KEY=sk-ant-...\n"
+              "  ./.venv/bin/python compare_models.py")
+        return 1
+
     models = sys.argv[1:] or list(PRICING)
     conn = db.connect()
     results: dict[str, dict] = {}
