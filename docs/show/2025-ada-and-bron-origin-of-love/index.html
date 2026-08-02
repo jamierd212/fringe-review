@@ -61,7 +61,12 @@
   .note {
     font-size: .72rem; color: var(--muted); font-style: italic;
     border: 1px solid var(--rule); border-radius: 3px; padding: 0 .3rem;
+    flex: none;
   }
+  /* min-width:0 lets .pub shrink below its own text, which made the badge sit
+     on top of the publication name on a phone. Wrapping the name fixes the
+     overlap while keeping the badge on the same line. */
+  .pub { overflow-wrap: anywhere; }
   .official { display: inline-block; margin-top: 1rem; font-size: .9rem; }
   a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 2px; }
   a:hover { text-decoration-color: var(--ink); }
