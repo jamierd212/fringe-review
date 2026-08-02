@@ -163,6 +163,47 @@ class Collector:
             page += 1
         return found
 
+    def find_index_urls(self, pub: dict,
+                        backfill: tuple[int, int] | None) -> list[str]:
+        """
+        Locate this year's index page instead of hard-coding it.
+
+        Chortle's index lives at a URL carrying an unguessable numeric id
+        (.../58413/edinburgh_fringe_2025_comedy_reviews), so a config entry has
+        to be added by hand every year — and if it is forgotten the source
+        silently contributes nothing, with no error to notice.
+
+        The *slug* is predictable though. So we scan a couple of hub pages for
+        any link containing `edinburgh_fringe_<year>_comedy_reviews` and use
+        whatever we find. The moment Chortle publishes and links this year's
+        index, it starts working on its own.
+        """
+        import datetime as _dt
+        import re as _re
+
+        discovery = pub.get("index_discovery")
+        if not discovery:
+            return []
+
+        year = backfill[0] if backfill else _dt.date.today().year
+        slug = str(discovery.get("slug", "")).format(year=year)
+        if not slug:
+            return []
+
+        found: list[str] = []
+        for hub in discovery.get("hubs", []):
+            raw = self._get(hub.format(year=year))
+            if raw is None:
+                continue
+            for href in _re.findall(r'href="([^"]+)"', raw):
+                if slug in href:
+                    url = href if href.startswith("http") else \
+                        "https://www.chortle.co.uk" + href
+                    found.append(url)
+        if found:
+            print(f"    found {len(set(found))} index page(s) for {year}")
+        return found
+
     def discover_index(self, pub: dict,
                        backfill: tuple[int, int] | None) -> list[Candidate]:
         """
@@ -183,8 +224,11 @@ class Collector:
         if not pattern:
             return []
 
+        index_urls = list(pub.get("index_urls", []))
+        index_urls += self.find_index_urls(pub, backfill)
+
         found: list[Candidate] = []
-        for index_url in pub.get("index_urls", []):
+        for index_url in dict.fromkeys(index_urls):
             raw = self._get(index_url)
             if raw is None:
                 continue
@@ -381,6 +425,13 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None)
         if limit:
             candidates = candidates[:limit]
         print(f"    {len(candidates)} items in feed")
+
+        if not candidates and pub.get("discovery") == "index":
+            # An index-based source finding nothing means the index URL is stale
+            # or this year's has not been configured — not that there is no news.
+            # Without this the source contributes zero, silently, for a year.
+            print(f"    !! NO CANDIDATES — check index_urls for {pub['name']}; "
+                  f"a new one is needed each festival")
 
         new = [c for c in candidates if not db.already_seen(conn, c.url)]
         print(f"    {len(new)} not seen before")

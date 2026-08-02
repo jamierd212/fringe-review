@@ -222,6 +222,15 @@ publications:
     discovery: index
     index_urls:
       - https://www.chortle.co.uk/about/2025/07/07/58413/edinburgh_fringe_2025_comedy_reviews
+    # Each year's index sits at an unguessable numeric id, but the slug is
+    # predictable — so rather than needing a hand-added entry every August (and
+    # silently collecting nothing if it is forgotten), look for the link.
+    index_discovery:
+      slug: "edinburgh_fringe_{year}_comedy_reviews"
+      hubs:
+        - https://www.chortle.co.uk/
+        - https://www.chortle.co.uk/shows/edinburgh_fringe_{year}/
+        - https://www.chortle.co.uk/review
     link_pattern: 'href="(https://www\.chortle\.co\.uk/review/\d{4}/\d{2}/\d{2}/\d+/[^"]+)"[^>]*>(.*?)</a>'
     rating:
       type: marker_count
