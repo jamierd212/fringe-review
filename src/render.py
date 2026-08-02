@@ -19,7 +19,7 @@ OUTPUT_DIR = ROOT / "docs"
 
 # Used for canonical URLs and the sitemap. A custom domain only needs changing
 # here — nothing else in the codebase hard-codes the site address.
-SITE_URL = "https://jamierd212.github.io/fringe-review"
+SITE_URL = "https://fringestars.com"
 
 FESTIVAL_NAMES = {"fringe": "Fringe", "eif": "Edinburgh International Festival"}
 
