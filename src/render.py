@@ -81,7 +81,14 @@ def page_name(year: int, newest: int) -> str:
 
 
 def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
-    available = rank.years(conn) or [year or datetime.now().year]
+    # The current festival always gets a page, even before it has any reviews —
+    # otherwise index.html silently becomes last year's board, and anyone
+    # arriving at the bare domain during festival week sees 2025.
+    available = rank.years(conn)
+    current = year or datetime.now().year
+    if current not in available:
+        available.append(current)
+    available.sort(reverse=True)
     newest = available[0]
 
     env = Environment(

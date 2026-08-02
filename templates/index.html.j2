@@ -93,6 +93,7 @@
     font-weight: 700;
   }
 
+  .placeholder { color: var(--muted); font-size: 1.05rem; margin: 2rem 0 3rem; }
   h3.section { margin: 2.5rem 0 .75rem; font-size: 1rem; text-transform: uppercase;
                letter-spacing: .08em; color: var(--muted); }
   .rest { columns: 2; column-gap: 1.5rem; font-size: .9rem; }
@@ -121,8 +122,8 @@
 </header>
 
 <p class="meta">
-  Updated {{ updated }} &middot;
-  {{ rated }} rated reviews across {{ show_count }} shows
+  Updated {{ updated }}{% if rated %} &middot;
+  {{ rated }} rated reviews across {{ show_count }} shows{% endif %}
 </p>
 
 {% for position, show in placed %}
@@ -153,7 +154,7 @@
   </div>
 </article>
 {% else %}
-<p><em>No rated reviews yet. The leaderboard fills up once the festival starts.</em></p>
+<p class="placeholder"><em>2026 reviews go live Wednesday 5th August</em></p>
 {% endfor %}
 
 {% if rest %}
@@ -171,9 +172,9 @@
 {% endif %}
 
 <footer>
-  <p>
+  {% if publications %}<p>
     <strong>Sources:</strong> {{ publications|join(", ") }}.
-  </p>
+  </p>{% endif %}
   <p>
     Ratings are collated automatically from publicly available reviews and link
     back to the publication. Ratings given on other scales are converted to
