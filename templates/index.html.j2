@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Edinburgh Festival Review of Reviews {{ year }}</title>
+<title>Edinburgh Festivals &amp; Fringe: Review of Reviews {{ year }}</title>
 <meta name="description" content="Edinburgh Festival shows ranked by highest reviews, featuring every published review we can find.">
 <style>
   :root {
@@ -20,7 +20,8 @@
   }
   .wrap { max-width: 820px; margin: 0 auto; }
   header { border-bottom: 3px double var(--ink); padding-bottom: 1rem; margin-bottom: .5rem; }
-  h1 { font-size: 2rem; margin: 0 0 .25rem; letter-spacing: -.01em; }
+  h1 { font-size: 2rem; margin: 0 0 .25rem; letter-spacing: -.01em; line-height: 1.15; }
+  h1 .line2 { display: block; font-weight: 400; color: var(--muted); font-size: .82em; }
   .sub, .meta { color: var(--muted); font-size: .85rem; }
   .meta { margin: .75rem 0 2rem; }
 
@@ -96,7 +97,7 @@
 <div class="wrap">
 
 <header>
-  <h1>Edinburgh Festival Review of Reviews {{ year }}</h1>
+  <h1>Edinburgh Festivals &amp; Fringe<span class="line2">Review of Reviews &ndash; {{ year }}</span></h1>
   <p class="sub">
     Edinburgh Festival shows ranked by highest reviews, featuring every
     published review we can find.
@@ -122,11 +123,7 @@
   <div class="body">
     <div class="titlerow">
       <h2>
-        {%- if show.url -%}
-          <a href="{{ show.url }}" rel="noopener" title="Official Fringe programme entry">{{ show.title }}</a>
-        {%- else -%}
-          {{ show.title }}
-        {%- endif -%}
+        <a href="{{ show.page }}" title="All reviews for {{ show.title }}">{{ show.title }}</a>
       </h2>
       {% if show.genre %}<span class="genre">{{ show.genre }}</span>{% endif %}
     </div>

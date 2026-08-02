@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://jamierd212.github.io/fringe-review/sitemap.xml

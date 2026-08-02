@@ -63,6 +63,25 @@ class Show:
         return len(self.reviews)
 
     @property
+    def average(self) -> str:
+        """
+        Mean star rating, one decimal place.
+
+        This is NOT what the leaderboard ranks on — that is the Olympic count of
+        5s and 4s. It exists because search engines expect an aggregate rating,
+        and it is displayed on the show page so the structured data matches what
+        a reader actually sees.
+        """
+        if not self.reviews:
+            return ""
+        return f"{sum(r.stars for r in self.reviews) / len(self.reviews):.1f}"
+
+    @property
+    def page(self) -> str:
+        """Path of this show's own page, relative to the site root."""
+        return f"show/{self.id}/"
+
+    @property
     def ranked(self) -> bool:
         """Shows with no 4- or 5-star reviews are listed separately, not ranked."""
         c = self.counts
