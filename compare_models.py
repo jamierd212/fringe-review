@@ -50,13 +50,15 @@ PRICING = {
 
 
 def main() -> int:
-    # Fail once, clearly, rather than repeating the same auth error per question.
+    # Verify credentials before running anything. Constructing the client is not
+    # enough — it succeeds even with no credentials and only fails on the first
+    # request. models.list() is a real authenticated call that costs no tokens.
     try:
         import anthropic
 
-        anthropic.Anthropic()
+        anthropic.Anthropic().models.list(limit=1)
     except Exception as exc:  # noqa: BLE001
-        print(f"No Anthropic credentials found ({type(exc).__name__}).\n\n"
+        print(f"Could not authenticate ({type(exc).__name__}).\n\n"
               "Get a key from console.anthropic.com, then:\n"
               "  export ANTHROPIC_API_KEY=sk-ant-...\n"
               "  ./.venv/bin/python compare_models.py")

@@ -88,6 +88,7 @@ class Matcher:
         self.cache_hits = 0
         self.input_tokens = 0
         self.output_tokens = 0
+        self._reported_errors: set[str] = set()
 
         conn.execute(
             """CREATE TABLE IF NOT EXISTS ai_decisions (
@@ -157,7 +158,14 @@ class Matcher:
             self.input_tokens += response.usage.input_tokens
             self.output_tokens += response.usage.output_tokens
         except Exception as exc:  # noqa: BLE001 - never let one bad call stop the run
-            print(f"      ! AI match failed ({type(exc).__name__}): {exc}")
+            # Report each distinct failure once. A missing credential or an
+            # expired key fails identically on every question, and 500 copies of
+            # the same traceback buries anything useful in the run log.
+            key = type(exc).__name__
+            if key not in self._reported_errors:
+                self._reported_errors.add(key)
+                print(f"      ! AI match failed ({key}): {str(exc)[:140]}")
+                print("        (further errors of this kind will be suppressed)")
             return None
 
         if decision is None:
