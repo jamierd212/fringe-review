@@ -28,8 +28,11 @@ QUESTIONS: list[tuple[str, list[str], int]] = [
      ["You Wait. Time Passes."], 1),
     ("Joe Tracini: Ten Things I Hate About Me (Joe Tracini and Norwich Theatre)",
      ["Ten Things I Hate About Me"], 1),
+    # Candidate strings must match what the pipeline actually generates, or the
+    # harness measures a question nobody asks. This one is copied verbatim from
+    # the ai_decisions table after a live run.
     ("Nerds: The Bill Gates vs. Steve Jobs Comedy Musical",
-     ["The Bill Gates vs Steve Jobs Comedy Musical (Paul Taylor)"], 1),
+     ["The Bill Gates vs Steve Jobs Comedy Musical (Paul Taylor-Mills)"], 1),
     ("Juliet and Romeo", ["Pantomeo and Juliet"], 0),
     ("The Burton Brothers: 1925", ["1902"], 0),
     ("Steffan Alun: Stand Up", ["The Stand"], 0),
@@ -42,6 +45,8 @@ QUESTIONS: list[tuple[str, list[str], int]] = [
 
 # $ per million tokens (input, output). Sonnet 5 is on an introductory rate
 # through 2026-08-31, which covers essentially all of the 2026 Fringe.
+REPEATS = 3   # ask each question this many times to expose non-determinism
+
 PRICING = {
     "claude-opus-4-8": (5.00, 25.00),
     "claude-sonnet-5": (2.00, 10.00),   # intro rate; reverts to 3.00 / 15.00
@@ -79,14 +84,24 @@ def main() -> int:
 
         correct = 0
         for headline, candidates, expected in QUESTIONS:
-            decision = matcher.choose(headline, candidates)
-            got = decision.choice if decision else None
-            hit = got == expected
-            correct += hit
-            mark = "ok  " if hit else "MISS"
-            print(f"  {mark} {headline[:46]:<48} want={expected} got={got}")
-            if decision and not hit:
-                print(f"       reason: {decision.reason}")
+            # These models are not deterministic — the same question can get
+            # different answers on different runs. Asking REPEATS times shows
+            # which answers are stable and which are coin-flips, which a single
+            # pass would hide behind a clean-looking score.
+            answers = []
+            for _ in range(REPEATS):
+                decision = matcher.choose(headline, candidates)
+                answers.append(decision.choice if decision else None)
+
+            hits = sum(a == expected for a in answers)
+            correct += hits / REPEATS
+            stable = len(set(answers)) == 1
+            mark = "ok  " if hits == REPEATS else ("MISS" if hits == 0 else "FLAKY")
+            detail = "" if stable else f"  answers={answers}"
+            print(f"  {mark} {headline[:44]:<46} want={expected} "
+                  f"got={hits}/{REPEATS}{detail}")
+            if decision and hits < REPEATS:
+                print(f"       reason: {decision.reason[:100]}")
 
         rate_in, rate_out = PRICING.get(model, (0, 0))
         cost = (matcher.input_tokens * rate_in
