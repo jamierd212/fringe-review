@@ -9,7 +9,7 @@
 # against real Fringe data out of season.
 
 defaults:
-  user_agent: "FringeLeaderboardBot/0.1 (+https://github.com/YOURNAME/fringe-leaderboard)"
+  user_agent: "FringeLeaderboardBot/0.1 (+https://github.com/jamierd212/fringe-leaderboard)"
   delay_seconds: 1.0        # be polite: max ~1 request per second per site
   timeout_seconds: 25
 
