@@ -99,16 +99,19 @@ class Matcher:
                )"""
         )
 
-        if not os.environ.get("ANTHROPIC_API_KEY"):
-            print("    (no ANTHROPIC_API_KEY — AI matching disabled)")
-            return
-
+        # Let the SDK resolve credentials rather than checking for the env var
+        # ourselves: it also accepts ANTHROPIC_AUTH_TOKEN and an `ant auth login`
+        # profile, and gating on ANTHROPIC_API_KEY alone would silently disable
+        # AI matching for anyone using those.
         try:
             import anthropic
 
             self.client = anthropic.Anthropic()
         except ImportError:
             print("    (anthropic package not installed — AI matching disabled)")
+        except Exception as exc:  # noqa: BLE001 - unauthenticated is a normal state
+            print(f"    (no Anthropic credentials — AI matching disabled: "
+                  f"{type(exc).__name__})")
 
     @property
     def enabled(self) -> bool:

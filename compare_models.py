@@ -16,7 +16,7 @@ with the answer a human would give. Add your own as you find them.
 
 from __future__ import annotations
 
-import os
+
 import sys
 
 from src import db
@@ -50,10 +50,6 @@ PRICING = {
 
 
 def main() -> int:
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        print("Set ANTHROPIC_API_KEY first:\n  export ANTHROPIC_API_KEY=sk-ant-...")
-        return 1
-
     models = sys.argv[1:] or list(PRICING)
     conn = db.connect()
     results: dict[str, dict] = {}
