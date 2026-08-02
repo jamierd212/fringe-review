@@ -178,9 +178,14 @@ def from_star_chars(text: str) -> Rating | None:
 
 # NFKC normalisation rewrites "½" as "1⁄2" using U+2044 FRACTION SLASH, not an
 # ASCII "/", so both slashes have to be accepted here.
+#
+# The trailing lookaheads are load-bearing. Without them "21/22" in a listings
+# date range ("21/22, 25 - 27, 29/30 Aug") parses as 2 followed by 1/2, and a
+# venue listing page is scored two and a half stars. Requiring that nothing
+# numeric follows keeps real half-star notation and rejects date ranges.
 HALF_PATTERNS = (
-    r"\b([1-4])\s*[.,]\s*5\b",                  # 3.5
-    r"\b([1-4])\s*(?:1\s*[/⁄]\s*2|½)",     # 3 1/2  or  3½
+    r"\b([1-4])\s*[.,]\s*5\b(?![\d/⁄.,])",           # 3.5
+    r"\b([1-4])\s*(?:1\s*[/⁄]\s*2|½)(?![\d/⁄])",  # 3 1/2  or  3½
 )
 
 
@@ -401,12 +406,22 @@ def find_rating(*, title: str = "", summary: str = "", html: str = "",
         if found:
             return found
 
+    # Half-star notation is only ever trusted in the TITLE. One4Review writes
+    # "3.5***" there, which is unambiguous — but the same shapes occur constantly
+    # in article prose ("runs 2 1/2 hours", "21/22 Aug", "£3.50"), and several
+    # feeds put the whole article in the summary. Scanning body text for half
+    # stars scored a venue listings page 2.5 stars.
+    if title:
+        found = from_half_stars(unicodedata.normalize("NFKC", title))
+        if found:
+            return found
+
     # Titles and summaries are high-signal: they describe THIS review only.
     for text in (title, summary):
         if not text:
             continue
         clean = unicodedata.normalize("NFKC", text)
-        for strategy in (from_half_stars, from_star_chars, from_asterisks, from_numeric):
+        for strategy in (from_star_chars, from_asterisks, from_numeric):
             found = strategy(clean)
             if found:
                 return found
