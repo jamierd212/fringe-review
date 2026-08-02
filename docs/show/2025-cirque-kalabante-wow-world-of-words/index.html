@@ -69,6 +69,10 @@
   .pub { overflow-wrap: anywhere; }
   .official { display: inline-block; margin-top: 1rem; font-size: .9rem; }
   a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 2px; }
+  /* Publication names are links, but a column of underlines competes with the
+     stars beside them. Underline only on hover, so they still read as links. */
+  .pub a { text-decoration: none; }
+  .pub a:hover { text-decoration: underline; text-decoration-color: var(--ink); }
   a:hover { text-decoration-color: var(--ink); }
   footer { margin-top: 2rem; color: var(--muted); font-size: .8rem; }
 </style>

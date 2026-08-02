@@ -79,6 +79,10 @@
   .pub { flex: 1; min-width: 0; }
   .pub { overflow-wrap: anywhere; }
   a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 2px; }
+  /* Publication names are links, but a column of underlines competes with the
+     stars beside them. Underline only on hover, so they still read as links. */
+  .pub a { text-decoration: none; }
+  .pub a:hover { text-decoration: underline; text-decoration-color: var(--ink); }
   a:hover { text-decoration-color: var(--ink); }
 
   nav.years { display: flex; gap: .4rem; margin: .9rem 0 0; flex-wrap: wrap; }
@@ -124,7 +128,7 @@
 </header>
 
 <p class="meta">
-  Updated 2 August 2026, 21:47 BST
+  Updated 2 August 2026, 21:49 BST
 </p>
 
 
