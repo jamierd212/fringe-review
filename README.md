@@ -59,21 +59,30 @@ open site/index.html
 
 **1. Make a GitHub account** at github.com if you don't have one.
 
-**2. Create the repository.** Click the green **New** button. Name it
-`fringe-leaderboard`. Choose **Public** — GitHub Pages is free on public repos.
-Don't tick "Add a README", you already have one.
+**2. Install GitHub Desktop** (desktop.github.com) and sign in.
 
-**3. Install GitHub Desktop** (desktop.github.com). Sign in. Choose
-`File → Add Local Repository` and pick your `fringe-leaderboard` folder. You'll
-see all your files listed as changes. Write "First commit" in the box at the
-bottom left, click **Commit to main**, then **Publish repository**.
+**3. Publish.** `File → Add Local Repository`, pick your `fringe-leaderboard`
+folder. The history is already committed, so there is nothing to commit — click
+**Publish repository**. Name it `fringe-leaderboard` and **untick "Keep this
+code private"** (Pages needs a public repo on a free account).
+
+> Do NOT create the repository on github.com first. Publish creates it for you,
+> and a repo that already exists will make Publish fail with a name clash.
 
 > From now on, "pushing a change" means: make your edit, open GitHub Desktop,
 > type a short description, click **Commit to main**, then **Push origin**.
 
-**4. Turn the website on.** In your repo on github.com go to
-**Settings → Pages**. Under *Source* choose **Deploy from a branch**. Set Branch
-to `main` and folder to `/site`. Click **Save**.
+**4. Add your API key.** Repo → **Settings → Secrets and variables → Actions →
+New repository secret**. Name `ANTHROPIC_API_KEY`, paste the key, **Add secret**.
+Do this before the first run or matching falls back to fuzzy-only.
+
+**5. Allow the robot to commit.** Repo → **Settings → Actions → General →
+Workflow permissions** → select **Read and write permissions** → Save. New
+personal repos default to a read-only token, which makes the daily job do all
+its work and then fail on the final push.
+
+**6. Turn the website on.** **Settings → Pages** → Source: *Deploy from a
+branch* → Branch `main`, folder `/site` → **Save**.
 
 Two minutes later your leaderboard is live at:
 
@@ -81,9 +90,8 @@ Two minutes later your leaderboard is live at:
 https://jamierd212.github.io/fringe-leaderboard/
 ```
 
-**5. Turn the daily robot on.** Go to the **Actions** tab and enable workflows if
-prompted. You'll see *Daily review sweep*. Click it, then **Run workflow** to
-test it immediately rather than waiting until 8am.
+**7. Test the robot.** **Actions** tab → *Daily review sweep* → **Run workflow**.
+Watch it run rather than waiting until 8am.
 
 ### Before you go live
 
