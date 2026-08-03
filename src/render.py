@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
@@ -133,6 +134,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
 
     show_tpl = env.get_template("show.html.j2")
     written: list[Path] = []
+    rendered_shows = []
     sitemap: list[str] = [SITE_URL + "/"]
 
     for this_year in available:
@@ -189,6 +191,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
         # a leaderboard ranks 800 shows on two pages, but nobody searches for
         # "leaderboard" — they search for a show's name. It also gives a
         # performer something of their own to share.
+        rendered_shows.extend(ranked + rest)
         for show in ranked + rest:
             festival_name = FESTIVAL_NAMES.get(
                 conn.execute("SELECT festival FROM shows WHERE id = ?",
@@ -206,6 +209,17 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
             out.parent.mkdir(parents=True, exist_ok=True)
             out.write_text(page, encoding="utf-8")
             sitemap.append(f"{SITE_URL}/{show.page}")
+
+    # Show pages for shows that no longer exist — a year removed from the data,
+    # or an entry deleted as junk. Nothing overwrites these, so left alone they
+    # stay live and reachable forever, and the sitemap stops being the only
+    # place the site disagrees with itself.
+    live = {(OUTPUT_DIR / s.page).resolve() for s in rendered_shows}
+    show_root = OUTPUT_DIR / "show"
+    if show_root.is_dir():
+        for stale in show_root.iterdir():
+            if stale.is_dir() and stale.resolve() not in live:
+                shutil.rmtree(stale)
 
     _write_sitemap(sitemap, now)
     return written

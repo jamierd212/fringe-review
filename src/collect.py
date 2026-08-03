@@ -122,7 +122,12 @@ class Collector:
             date_range = {"from-date": f"{year}-{month:02d}-01",
                           "to-date": f"{year}-{month:02d}-{last}"}
         else:
-            date_range = {}
+            # An unbounded search walks the whole tag: 20 pages of 50 reaches
+            # back to 2019, and every August in it passes a window filter that
+            # only compares month and day. Daily runs see this year only.
+            today = datetime.now()
+            date_range = {"from-date": f"{today.year}-01-01",
+                          "to-date": today.strftime("%Y-%m-%d")}
 
         found: list[Candidate] = []
         page = 1
@@ -334,6 +339,43 @@ class Collector:
                 return False
         return not any(phrase in title for phrase in cls.NOT_A_REVIEW)
 
+    @staticmethod
+    def _published_at(cand: Candidate) -> datetime | None:
+        """
+        A candidate's publication date, or None if it has none we can read.
+
+        RSS uses RFC 2822 ("Wed, 27 Aug 2025 10:34:44 +0000"), JSON APIs use ISO
+        8601 ("2025-08-27T10:34:44Z"). Both callers need both formats, and when
+        they disagreed about which to parse the Guardian's dates silently fell
+        through to a fallback year.
+        """
+        if not cand.published:
+            return None
+        try:
+            return parsedate_to_datetime(cand.published)
+        except (TypeError, ValueError):
+            pass
+        try:
+            return datetime.fromisoformat(cand.published.replace("Z", "+00:00"))
+        except (TypeError, ValueError, AttributeError):
+            return None
+
+    def in_target_year(self, cand: Candidate, target: int) -> bool:
+        """
+        Does this review belong to the festival we are actually collecting?
+
+        The window filter only compares month and day, so 12 August 2019 sits
+        inside it exactly as 12 August 2026 does. That is deliberate — the window
+        answers "is this festival season?" — but on its own it lets a source with
+        a deep archive backfill itself. A daily sweep once walked the Guardian's
+        entire Edinburgh tag and published leaderboards back to 2019.
+
+        A review with no readable date is kept, matching in_festival_window: a
+        missing date is a feed quirk, not evidence of the wrong year.
+        """
+        published = self._published_at(cand)
+        return published is None or published.year == target
+
     def in_festival_window(self, cand: Candidate, pub: dict | None = None) -> bool:
         """
         Was this published during a festival, rather than the rest of the year?
@@ -351,15 +393,9 @@ class Collector:
         if pub and pub.get("festival_feed"):
             return True
         window = self.defaults.get("festival_window")
-        if not window or not cand.published:
+        published = self._published_at(cand)
+        if not window or published is None:
             return True
-        try:
-            published = parsedate_to_datetime(cand.published)
-        except (TypeError, ValueError):
-            try:
-                published = datetime.fromisoformat(cand.published.replace("Z", "+00:00"))
-            except (TypeError, ValueError, AttributeError):
-                return True
 
         start_m, start_d = (int(x) for x in str(window["start"]).split("-"))
         end_m, end_d = (int(x) for x in str(window["end"]).split("-"))
@@ -418,6 +454,9 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None)
     """Collect and rate everything new. Returns the number of rated reviews added."""
     collector = Collector(load_config())
     added = 0
+    # A backfill is explicitly asked for one festival; anything else collects
+    # the current one. Nothing else may enter the database.
+    target_year = backfill[0] if backfill else datetime.now().year
 
     for pub in collector.publications:
         print(f"  {pub['name']}")
@@ -445,6 +484,12 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None)
         new = [c for c in new if collector.in_festival_window(c, pub)]
         if before != len(new):
             print(f"    {before - len(new)} dropped as outside the festival window")
+
+        before = len(new)
+        new = [c for c in new if collector.in_target_year(c, target_year)]
+        if before != len(new):
+            print(f"    {before - len(new)} dropped as another festival year "
+                  f"(collecting {target_year})")
 
         if pub.get("require_edinburgh"):
             before = len(new)
