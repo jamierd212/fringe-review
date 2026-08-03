@@ -117,18 +117,6 @@ FESTIVALS = [
         "details": _no_details,
     },
     {
-        # Their robots.txt blocks ClaudeBot, GPTBot and CCBot by name but allows
-        # User-agent: *. Included on the owner's decision that those rules target
-        # training crawlers, which we are not: we read one sitemap, store no
-        # text, and every entry links back to them. A 403 would be a different
-        # matter and is still never worked around.
-        "key": "book",
-        "label": "Book Festival",
-        "sitemap": "https://www.edbookfest.co.uk/sitemap.xml",
-        "paths": ("/events/",),
-        "details": _no_details,
-    },
-    {
         "key": "art",
         "label": "Art Festival",
         "sitemap": "https://edinburghartfestival.com/sitemap_index.xml",
