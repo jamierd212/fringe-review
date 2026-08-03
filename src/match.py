@@ -22,6 +22,7 @@ from pathlib import Path
 
 from rapidfuzz import fuzz, process
 
+from . import admit
 from .ai_match import Matcher
 from .normalise import alias_forms, clean_title, normalise, split_performer
 
@@ -66,14 +67,29 @@ def festival_year(published: str | None, fallback: int) -> int:
     return fallback
 
 
-def run(conn: sqlite3.Connection, year: int) -> dict[str, int]:
+def run(conn: sqlite3.Connection, year: int, gate: bool = True) -> dict[str, int]:
+    # Reviews already refused admission are not reconsidered: the answer would
+    # not change, and re-asking the model about every held headline every day is
+    # the kind of cost that creeps up unnoticed.
     unmatched = conn.execute(
-        "SELECT url, headline, publication, published FROM reviews WHERE show_id IS NULL"
+        """SELECT url, headline, publication, published FROM reviews
+            WHERE show_id IS NULL
+              AND url NOT IN (SELECT url FROM holds)"""
     ).fetchall()
 
-    counts = {"exact": 0, "fuzzy": 0, "ai": 0, "new": 0, "flagged": 0}
+    counts = {"exact": 0, "fuzzy": 0, "ai": 0, "new": 0, "flagged": 0, "held": 0}
     flagged: list[tuple] = []
     matcher = Matcher(conn)
+    # Built once: it costs a handful of requests, and skipped entirely when
+    # there is nothing to admit or the caller asked for matching only.
+    keeper = admit.Gatekeeper(matcher) if (gate and unmatched) else None
+    if keeper is not None and not matcher.enabled:
+        # Without the model only tier 1 works, so every show not listed in a
+        # festival programme is held. That is the safe direction to fail, but it
+        # is not a small effect and it must not happen quietly.
+        print("    !! NO AI CHECK AVAILABLE — only shows listed in a festival "
+              "programme can be admitted; everything else will be held. "
+              "Check ANTHROPIC_API_KEY.")
 
     for row in unmatched:
         headline = row["headline"] or ""
@@ -84,8 +100,20 @@ def run(conn: sqlite3.Connection, year: int) -> dict[str, int]:
         # `year` is only a fallback for reviews whose feed gave no usable date.
         review_year = festival_year(row["published"], year)
         show_id, confidence, how = _resolve(
-            conn, aliases, headline, review_year, matcher
+            conn, aliases, headline, review_year, matcher, keeper
         )
+        if show_id is None:
+            # Refused admission. The review row stays, with no show attached, so
+            # nothing is lost and the decision can be reversed by deleting the
+            # hold and re-running --match.
+            verdict = keeper.last_verdict
+            conn.execute(
+                """INSERT OR REPLACE INTO holds (url, headline, publication, reason)
+                   VALUES (?, ?, ?, ?)""",
+                (row["url"], headline, row["publication"], verdict.reason),
+            )
+            counts["held"] += 1
+            continue
         counts[how] = counts.get(how, 0) + 1
 
         conn.execute(
@@ -108,14 +136,24 @@ def run(conn: sqlite3.Connection, year: int) -> dict[str, int]:
             counts["flagged"] += 1
 
     conn.commit()
-    _write_queue(flagged)
+    held = conn.execute(
+        """SELECT publication, headline, reason, url FROM holds
+            ORDER BY decided_at DESC LIMIT 200"""
+    ).fetchall()
+    _write_queue(flagged, held)
     counts["ai_report"] = matcher.report()
     return counts
 
 
 def _resolve(conn, aliases: list[str], headline: str, year: int,
-             matcher: Matcher) -> tuple[str, float, str]:
-    """Return (show_id, confidence, method)."""
+             matcher: Matcher, keeper=None) -> tuple[str | None, float, str]:
+    """
+    Return (show_id, confidence, method), or (None, ...) if refused admission.
+
+    The gate applies only where a NEW show would be created. Matching onto a
+    show already on the board is safe by definition — it was admitted once, and
+    re-checking it would just spend a model call to reach the same answer.
+    """
 
     # Every lookup is scoped to the same festival year. A show that returns in a
     # later year is a different run with different reviews, and merging the two
@@ -179,10 +217,22 @@ def _resolve(conn, aliases: list[str], headline: str, year: int,
 
             # Either the model declined or AI matching is off. Create a new show
             # rather than risk a false merge, and flag it for a human.
-            return _create(conn, headline, year), ranked[0][1] / 100.0, "new"
+            return _admit(conn, headline, year, aliases, keeper), ranked[0][1] / 100.0, "new"
 
     # 4. Genuinely new.
-    return _create(conn, headline, year), 1.0, "new"
+    return _admit(conn, headline, year, aliases, keeper), 1.0, "new"
+
+
+def _admit(conn, headline: str, year: int, aliases: list[str], keeper) -> str | None:
+    """Create the show only if it earns a place. None means held."""
+    if keeper is None:
+        return _create(conn, headline, year)
+    verdict = keeper.verdict(headline, aliases)
+    keeper.last_verdict = verdict
+    if not verdict.admit:
+        return None
+    return _create(conn, headline, year, festival=verdict.festival or "fringe",
+                   url=verdict.url)
 
 
 def _title_for(conn, show_id: str) -> str:
@@ -190,20 +240,21 @@ def _title_for(conn, show_id: str) -> str:
     return row["title"] if row else show_id
 
 
-def _create(conn, headline: str, year: int) -> str:
+def _create(conn, headline: str, year: int, festival: str = "fringe",
+            url: str | None = None) -> str:
     performer, title = split_performer(headline)
     title = title or clean_title(headline)
     show_id = f"{year}-{slugify(headline)}"
     conn.execute(
-        """INSERT INTO shows (id, title, performer, festival, year)
-           VALUES (?, ?, ?, ?, ?)
+        """INSERT INTO shows (id, title, performer, festival, year, edfringe_url)
+           VALUES (?, ?, ?, ?, ?, ?)
            ON CONFLICT(id) DO NOTHING""",
-        (show_id, title, performer, "fringe", year),
+        (show_id, title, performer, festival, year, url),
     )
     return show_id
 
 
-def _write_queue(flagged: list[tuple]) -> None:
+def _write_queue(flagged: list[tuple], held: list | None = None) -> None:
     """
     A plain markdown file you skim over coffee. Anything listed here was matched
     with less than full confidence — usually it is right, occasionally two rows
@@ -226,4 +277,22 @@ def _write_queue(flagged: list[tuple]) -> None:
             lines.append(
                 f"| {pub} | [{headline}]({url}) | {title} | {conf:.0%} |"
             )
+
+    lines += [
+        "",
+        "## Held \u2014 not on the leaderboard",
+        "",
+        "These matched no festival programme and did not look like a review of a",
+        "single Edinburgh show. If one is wrong, delete its row from the `holds`",
+        "table and re-run `python run.py --match` to let it back in.",
+        "",
+    ]
+    if not held:
+        lines.append("_Nothing held._")
+    else:
+        lines.append("| Publication | Headline | Why held |")
+        lines.append("|---|---|---|")
+        for row in held:
+            lines.append(f"| {row['publication']} | [{row['headline']}]({row['url']}) "
+                         f"| {row['reason']} |")
     QUEUE_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")

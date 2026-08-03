@@ -22,7 +22,8 @@ OUTPUT_DIR = ROOT / "docs"
 # here — nothing else in the codebase hard-codes the site address.
 SITE_URL = "https://fringestars.com"
 
-FESTIVAL_NAMES = {"fringe": "Fringe", "eif": "Edinburgh International Festival"}
+FESTIVAL_NAMES = {"fringe": "Fringe", "eif": "Edinburgh International Festival",
+                  "freefringe": "Free Fringe", "art": "Art Festival"}
 
 
 def show_jsonld(show, year: int, festival_name: str) -> str:

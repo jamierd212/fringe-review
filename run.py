@@ -77,6 +77,9 @@ def main() -> int:
         counts = match.run(conn, year)
         print(f"  {counts['exact']} exact, {counts['fuzzy']} fuzzy, "
               f"{counts['new']} new shows, {counts['flagged']} flagged for checking")
+        if counts.get("held"):
+            print(f"  {counts['held']} held — not on the leaderboard "
+                  f"(see review_queue.md)")
 
     # Link this year's shows to their official programme entries and read the
     # Fringe's own genre/subGenre. Past years are skipped: their programme pages

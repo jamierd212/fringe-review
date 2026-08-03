@@ -54,6 +54,16 @@ def _get(url: str, timeout: int = 25) -> str | None:
         return None
 
 
+def _no_details(html: str) -> dict:
+    """
+    For festivals that publish no machine-readable classification.
+
+    Inferring "Comedy" from a prose description is guesswork, and guesswork
+    presented as the festival's own label is worse than no label at all.
+    """
+    return {}
+
+
 def _fringe_details(html: str) -> dict:
     """The Fringe states genre and subGenre outright in the page JSON."""
     genre = re.search(r'"genre"\s*:\s*"([^"]*)"', html)
@@ -95,22 +105,65 @@ FESTIVALS = [
         "paths": ("/events/", "/archive/"),
         "details": _eif_details,
     },
+    {
+        # The other half of the Fringe. Only 31% of PBH's shows appear in the
+        # official edfringe programme (measured: 209 of 673, fuzzy included), so
+        # without this index the free fringe is largely invisible to the gate —
+        # and those are the acts least likely to have press elsewhere.
+        "key": "freefringe",
+        "label": "Free Fringe",
+        "sitemap": "https://freefringe.org.uk/sitemap_index.xml",
+        "paths": ("/shows/",),
+        "details": _no_details,
+    },
+    {
+        "key": "art",
+        "label": "Art Festival",
+        "sitemap": "https://edinburghartfestival.com/sitemap_index.xml",
+        "paths": ("/event/",),
+        "details": _no_details,
+    },
 ]
+
+
+def _sitemap_urls(sitemap: str, paths: tuple[str, ...]) -> list[str]:
+    """
+    Every page URL under a sitemap, following one level of sitemap index.
+
+    The Fringe and EIF publish a flat sitemap; the Free Fringe and Art Festival
+    publish an index pointing at sub-sitemaps. Reading only the top level of
+    those returns sitemap URLs and no shows at all.
+    """
+    raw = _get(sitemap, timeout=40)
+    if raw is None:
+        return []
+    locs = re.findall(r"<loc>(.*?)</loc>", raw)
+    if not any(u.endswith(".xml") for u in locs):
+        return locs
+
+    urls: list[str] = []
+    for sub in locs:
+        if not sub.endswith(".xml"):
+            urls.append(sub)
+            continue
+        time.sleep(DELAY)
+        child = _get(sub, timeout=40)
+        if child:
+            urls += re.findall(r"<loc>(.*?)</loc>", child)
+    return urls
 
 
 def programme_index(festival: dict) -> dict[str, str]:
     """{normalised title: URL} for one festival's programme."""
-    raw = _get(festival["sitemap"], timeout=40)
-    if raw is None:
-        return {}
-
     index: dict[str, str] = {}
-    for url in re.findall(r"<loc>(.*?)</loc>", raw):
+    for url in _sitemap_urls(festival["sitemap"], festival["paths"]):
         if not any(p in url for p in festival["paths"]):
             continue
         slug = url.rstrip("/").rsplit("/", 1)[-1]
         key = normalise(slug.replace("-", " "))
-        if not key:
+        # The section page itself ("/event/") slugs to the section name, which
+        # would then match any review headline containing that word.
+        if not key or any(p.strip("/") == slug for p in festival["paths"]):
             continue
         index.setdefault(key, url)
 
@@ -121,6 +174,33 @@ def programme_index(festival: dict) -> dict[str, str]:
         if stripped != key:
             index.setdefault(stripped, url)
     return index
+
+
+_KNOWN: dict[str, tuple[str, str]] | None = None
+
+
+def known_shows(refresh: bool = False) -> dict[str, tuple[str, str]]:
+    """
+    {normalised title: (festival key, URL)} across every festival we index.
+
+    This is the admission list: a real show appears in its own festival's
+    programme, an article *about* the festival never does. Built once per run
+    and cached, because it costs a handful of requests.
+
+    Fringe first so its entry wins a collision — it carries genre data the
+    others do not, and a show listed in both is a Fringe show either way.
+    """
+    global _KNOWN
+    if _KNOWN is not None and not refresh:
+        return _KNOWN
+    combined: dict[str, tuple[str, str]] = {}
+    for festival in FESTIVALS:
+        index = programme_index(festival)
+        print(f"      {festival['label']}: {len(index)} listed")
+        for key, url in index.items():
+            combined.setdefault(key, (festival["key"], url))
+    _KNOWN = combined
+    return combined
 
 
 def label(festival: str, genre: str, subgenre: str) -> str:
@@ -135,15 +215,29 @@ def label(festival: str, genre: str, subgenre: str) -> str:
     genre = (genre or "").title().replace("And", "&")
     parts = [p for p in (genre, subgenre) if p]
     if not parts:
-        return (festival or "").upper()
+        # The festival's own name, not its internal key: "FREEFRINGE" is not a
+        # thing anyone calls it.
+        names = {f["key"]: f["label"] for f in FESTIVALS}
+        return names.get(festival, (festival or "").upper()).upper()
     return " · ".join(parts)
 
 
 def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dict[str, int]:
-    """Attach programme URL, festival and genre to this year's unlinked shows."""
+    """
+    Attach programme URL, festival and genre to this year's unlinked shows.
+
+    Also picks up shows the admission gate linked but could not classify. The
+    gate matches against the sitemap alone, which is cheap and gives a URL and a
+    festival but no genre — that only exists on the show page. Selecting purely
+    on a missing URL would skip exactly those shows and quietly cost every
+    tier-1 admission its genre badge. Only the Fringe publishes a genre, so no
+    other festival is re-fetched looking for one that is never there.
+    """
     pending = conn.execute(
-        """SELECT id, title FROM shows
-            WHERE year = ? AND (edfringe_url IS NULL OR edfringe_url = '')
+        """SELECT id, title, edfringe_url, festival FROM shows
+            WHERE year = ?
+              AND (edfringe_url IS NULL OR edfringe_url = ''
+                   OR (festival = 'fringe' AND (genre IS NULL OR genre = '')))
             ORDER BY title""",
         (year,),
     ).fetchall()
@@ -164,6 +258,11 @@ def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dic
     for row in pending[: limit or len(pending)]:
         key = normalise(row["title"])
         hit = next(((f, i[key]) for f, i in indexes if key in i), None)
+        if hit is None and row["edfringe_url"]:
+            # Linked by the gate under a spelling the title alone does not
+            # reproduce; the URL it found is still the right page to read.
+            hit = next(((f, row["edfringe_url"]) for f in FESTIVALS
+                        if f["key"] == row["festival"]), None)
         if hit is None:
             missed += 1
             continue

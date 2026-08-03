@@ -71,6 +71,45 @@ The second mistake is much worse than the first. Prefer 0.
 """
 
 
+ADMISSION_PROMPT = """\
+You decide whether a headline is a review of a single show at an Edinburgh
+festival: the Fringe, the Free Fringe, the International Festival, or the Art,
+Book or Film festivals.
+
+Answer true only if BOTH are true:
+- it reviews ONE named show, performance, exhibition or act, and
+- that show is on at a festival in EDINBURGH.
+
+Answer false for:
+- round-ups and lists ("The best comedy of the Fringe", "Our five-star shows",
+  "All our Made in Edinburgh reviews"). These quote many ratings and are the
+  main thing this check exists to stop.
+- news, previews, announcements, obituaries, cancellations, award reports
+  ("Trainspotting tour cancelled", "Fringe announces 2026 line-up").
+- interviews and profiles, even of a performer appearing at the festival.
+- reviews of shows playing ELSEWHERE - London, Melbourne, Brighton, Camden -
+  even when the piece mentions Edinburgh or an upcoming Fringe run.
+
+A show being unfamiliar is not a reason to answer false. Most Fringe shows are
+obscure, many are debut hours by unknown acts, and free-fringe shows rarely
+appear in any programme. Judge the KIND of article, not whether you recognise
+the show.
+
+When genuinely torn, answer false: a held item is reviewed by a person, whereas
+a wrongly admitted round-up ranks at the top of the leaderboard with five stars.
+"""
+
+
+class ShowVerdict(BaseModel):
+    """Whether a headline is a review of one Edinburgh festival show."""
+
+    is_show: bool = Field(
+        description="True only if this reviews one named show at an Edinburgh festival."
+    )
+    confidence: float = Field(ge=0.0, le=1.0, description="How sure you are.")
+    reason: str = Field(description="One short sentence explaining the decision.")
+
+
 class MatchDecision(BaseModel):
     """The model's answer. Kept deliberately small and explicit."""
 
@@ -132,6 +171,57 @@ class Matcher:
     def enabled(self) -> bool:
         return self.client is not None
 
+    def is_festival_show(self, headline: str) -> ShowVerdict | None:
+        """
+        Is this headline a review of one Edinburgh festival show?
+
+        Asked only for headlines that matched no festival programme, so the call
+        volume is a fraction of the day's reviews. Returns None when unavailable,
+        which the caller treats as "hold" rather than "admit" — an outage must
+        not reopen the gate.
+        """
+        if not self.enabled:
+            return None
+
+        question = json.dumps({"admission": headline})
+        cached = self.conn.execute(
+            "SELECT choice, confidence, reason FROM ai_decisions WHERE question = ?",
+            (question,),
+        ).fetchone() if self.use_cache else None
+        if cached:
+            self.cache_hits += 1
+            return ShowVerdict(is_show=bool(cached["choice"]),
+                               confidence=cached["confidence"],
+                               reason=cached["reason"])
+
+        kwargs = {}
+        if self.model not in NO_ADAPTIVE_THINKING:
+            kwargs["thinking"] = {"type": "adaptive"}
+        try:
+            response = self.client.messages.parse(
+                model=self.model,
+                max_tokens=1000,
+                system=ADMISSION_PROMPT,
+                messages=[{"role": "user", "content": f"Headline:\n{headline}"}],
+                output_format=ShowVerdict,
+                **kwargs,
+            )
+            verdict = response.parsed_output
+            self.calls += 1
+            self.input_tokens += response.usage.input_tokens
+            self.output_tokens += response.usage.output_tokens
+        except Exception as exc:  # noqa: BLE001
+            self._report(exc)
+            return None
+
+        if verdict is not None:
+            self.conn.execute(
+                """INSERT OR REPLACE INTO ai_decisions
+                       (question, choice, confidence, reason) VALUES (?, ?, ?, ?)""",
+                (question, int(verdict.is_show), verdict.confidence, verdict.reason),
+            )
+        return verdict
+
     def choose(self, headline: str, candidates: list[str]) -> MatchDecision | None:
         """
         Ask which candidate the headline refers to.
@@ -179,11 +269,7 @@ class Matcher:
             # Report each distinct failure once. A missing credential or an
             # expired key fails identically on every question, and 500 copies of
             # the same traceback buries anything useful in the run log.
-            key = type(exc).__name__
-            if key not in self._reported_errors:
-                self._reported_errors.add(key)
-                print(f"      ! AI match failed ({key}): {str(exc)[:140]}")
-                print("        (further errors of this kind will be suppressed)")
+            self._report(exc)
             return None
 
         if decision is None:
@@ -202,6 +288,21 @@ class Matcher:
             (question, decision.choice, decision.confidence, decision.reason),
         )
         return decision
+
+    def _report(self, exc: Exception) -> None:
+        """
+        Report each distinct failure once.
+
+        A missing credential or an expired key fails identically on every
+        question, and 500 copies of the same traceback buries anything useful in
+        the run log.
+        """
+        key = type(exc).__name__
+        if key in self._reported_errors:
+            return
+        self._reported_errors.add(key)
+        print(f"      ! AI call failed ({key}): {str(exc)[:140]}")
+        print("        (further errors of this kind will be suppressed)")
 
     def report(self) -> str:
         if not self.enabled:
