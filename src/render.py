@@ -104,9 +104,13 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
     # arriving at the bare domain during festival week sees 2025.
     populated = rank.years(conn)
     available = list(populated)
-    current = year or datetime.now().year
-    if current not in available:
-        available.append(current)
+    # The real calendar year ALWAYS gets a page, whatever this run was scoped
+    # to. Deriving "current" from the caller's year meant `--backfill 2025-08
+    # --render` treated 2025 as current, so 2026 was not in `available` and the
+    # stale-page prune deleted the live 2026 board — the page the domain serves.
+    for candidate in (datetime.now().year, year):
+        if candidate and candidate not in available:
+            available.append(candidate)
     available.sort(reverse=True)
     # Land on the newest year with content; fall back to the newest year at all.
     landing = landing_year(populated, available)
