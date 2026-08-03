@@ -446,6 +446,17 @@ class Collector:
         "fringe by the sea", "pittenweem", "celtic connections", "hebridean",
     )
 
+    # Venues that carry an Edinburgh brand but are not in Edinburgh. Underbelly
+    # runs Boulevard Soho in London and Pleasance has an Islington theatre, so
+    # the brand alone is not evidence: a five-star review of Laura Benanti at
+    # Underbelly Boulevard Soho reached the 2026 board this way. Checked before
+    # the markers, which would otherwise match on the brand.
+    NOT_EDINBURGH_VENUES = (
+        "underbelly boulevard", "boulevard soho", "soho theatre",
+        "pleasance islington", "pleasance theatre", "southwark playhouse",
+        "peacock theatre", "kibble palace",
+    )
+
     # Markers too short to match as substrings: "eif" would fire on "Eiffel".
     # Checked with word boundaries instead.
     EDINBURGH_MARKER_WORDS = (r"\beif\b",)
@@ -572,6 +583,8 @@ class Collector:
         """
         title = cand.title.lower()
         if any(other in title for other in cls.OTHER_FESTIVALS):
+            return False
+        if any(place in title for place in cls.NOT_EDINBURGH_VENUES):
             return False
         if any(marker in title for marker in cls.EDINBURGH_MARKERS):
             return True

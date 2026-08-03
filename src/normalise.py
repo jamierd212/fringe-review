@@ -41,6 +41,22 @@ VENUE_TAIL = re.compile(
     r"\s*[–—\-|,]\s*[^,–—|]{0,60}?,?\s*Edinburgh\s*$", re.I
 )
 
+# UK-wide publications title reviews "Show - Venue", so the tail is a place, not
+# part of the name. Without this "Ordinary Elephant - Edinburgh Traverse Bar"
+# split into performer "Ordinary Elephant" and show "Edinburgh Traverse Bar",
+# and the venue went on the leaderboard as the show.
+#
+# Only distinctive venue words are listed. Generic ones (hall, bar, club,
+# centre) would strip real titles: "Raise the Bar" is a show, not a venue.
+VENUE_WORDS = (
+    r"(?:theatre|theater|playhouse|summerhall|traverse|assembly|pleasance|"
+    r"underbelly|gilded\s+balloon|zoo\s+southside|roxy|bristo|cowgate|"
+    r"courtyard|boulevard|printmakers|monkey\s+barrel|dome|arena)"
+)
+VENUE_TAIL_NAMED = re.compile(
+    rf"\s*[–—\-|,]\s*[^–—|,]{{0,40}}\b{VENUE_WORDS}\b[^–—|,]{{0,30}}$", re.I
+)
+
 # Rating fragments embedded in titles, e.g. "4⭐⭐⭐⭐", "3.5***", "5 stars", "(4/5)".
 #
 # Asterisk runs are only stripped when a digit is attached or they sit at the end
@@ -77,6 +93,7 @@ def clean_title(raw: str) -> str:
         text = stripped
     text = REVIEW_TAIL.sub("", text)
     text = VENUE_TAIL.sub("", text)
+    text = VENUE_TAIL_NAMED.sub("", text)
     text = re.sub(r"\s*\(\s*(WIP|work in progress|preview)\s*\)\s*", " ", text, flags=re.I)
     return re.sub(r"\s+", " ", text).strip(" -–—:,|")
 
