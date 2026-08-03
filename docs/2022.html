@@ -1,0 +1,2559 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edinburgh Festivals Top-Rated Shows 2022</title>
+<meta name="description" content="Edinburgh Fringe &amp; festivals shows ranked by highest rating, featuring every published review we can find.">
+<link rel="canonical" href="https://fringestars.com/2022.html">
+<style>
+  :root {
+    --ink: #1a1a1a; --muted: #6b6b6b; --rule: #ecdcd9;
+    --star: #c62828;            /* red, replaces the old gold */
+    --bg: #f9e4e0;              /* light red page background */
+    --card: #ffffff;            /* boxes deliberately left white */
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 2rem .6rem 4rem; background: var(--bg); color: var(--ink);
+    font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; }
+  header { border-bottom: 3px solid #ccc; padding-bottom: .8rem; margin-bottom: .5rem; }
+  h1 { font-size: 2rem; margin: 0 0 .25rem; letter-spacing: -.01em; line-height: 1.15; }
+  h1 .line2 { display: block; }   /* inherits h1's size, weight and colour */
+  .sub { color: var(--muted); font-size: .85rem; }
+  .meta {
+    color: var(--muted); font-size: .7rem; line-height: 1.3;
+    margin: .55rem 0 1.2rem;
+  }
+
+  .show {
+    background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+    padding: .4rem .7rem; margin-bottom: .27rem; display: flex; gap: .6rem;
+  }
+  .pos {
+    /* Matched to h2 so the number and the show title sit on the same line and
+       at the same weight — the number is a label, not the headline. */
+    font-size: 1.15rem; font-weight: 700; color: var(--muted);
+    line-height: 1.35; min-width: 1.9rem;
+    text-align: right; font-variant-numeric: tabular-nums;
+  }
+  .body { flex: 1; min-width: 0; }
+  .titlerow { display: flex; gap: .7rem; align-items: baseline; justify-content: space-between; }
+  .titlewrap { display: flex; gap: .5rem; align-items: baseline; flex-wrap: wrap; min-width: 0; }
+  h2 { font-size: 1.15rem; margin: 0 0 .05rem; line-height: 1.35; }
+  h2 a { text-decoration: none; }
+  h2 a:hover { text-decoration: underline; text-decoration-color: var(--star); }
+  .meta-right { flex: none; display: flex; gap: .45rem; align-items: baseline; }
+  .genre {
+    font-size: .72rem; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--star); border: 1px solid var(--rule); border-radius: 999px;
+    padding: .12rem .55rem; white-space: nowrap;
+  }
+  .proglink {
+    font-size: .72rem; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--muted); white-space: nowrap; text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .proglink:hover { color: var(--star); border-bottom-color: var(--star); }
+  .performer { color: var(--muted); font-size: .85rem; }
+  @media (max-width: 560px) {
+    .titlerow { flex-direction: column; gap: .2rem; }
+    .meta-right { align-self: flex-start; }
+  }
+
+  ul.reviews { list-style: none; margin: .08rem 0 0; padding: 0; }
+  ul.reviews li {
+    display: flex; gap: .7rem; align-items: baseline;
+    padding: .09rem 0; line-height: 1.2; border-top: 1px solid var(--rule);
+    flex-wrap: wrap;
+  }
+  ul.reviews li:first-child { border-top: 0; }
+  .rating {
+    font-family: ui-monospace, Menlo, monospace; letter-spacing: .08em;
+    white-space: nowrap; color: var(--star);
+    font-size: 1.15rem;         /* slightly larger than the surrounding text */
+  }
+  .s3 .rating, .s2 .rating, .s1 .rating { color: var(--muted); }
+  .pub { flex: 1; min-width: 0; }
+  .pub { overflow-wrap: anywhere; }
+  a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 2px; }
+  /* Publication names are links, but a column of underlines competes with the
+     stars beside them. Underline only on hover, so they still read as links. */
+  .pub a { text-decoration: none; }
+  .pub a:hover { text-decoration: underline; text-decoration-color: var(--ink); }
+  a:hover { text-decoration-color: var(--ink); }
+
+  nav.years { display: flex; gap: .4rem; margin: .9rem 0 0; flex-wrap: wrap; }
+  nav.years a {
+    display: inline-block; padding: .3rem .85rem; border: 1px solid var(--rule);
+    border-radius: 999px; text-decoration: none; font-size: .9rem;
+    color: var(--muted); background: var(--card);
+  }
+  nav.years a:hover { border-color: var(--ink); color: var(--ink); }
+  nav.years a[aria-current="page"] {
+    background: var(--ink); border-color: var(--ink); color: var(--bg);
+    font-weight: 700;
+  }
+
+  .placeholder { color: var(--muted); font-size: 1.05rem; margin: 2rem 0 3rem; }
+  h3.section { margin: 2.5rem 0 .75rem; font-size: 1rem; text-transform: uppercase;
+               letter-spacing: .08em; color: var(--muted); }
+  .rest { columns: 2; column-gap: 1.5rem; font-size: .9rem; }
+  .rest div { break-inside: avoid; margin-bottom: .4rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule);
+           color: var(--muted); font-size: .8rem; }
+  @media (max-width: 560px) { .rest { columns: 1; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Edinburgh Festivals<span class="line2">Top-Rated Shows</span></h1>
+  <p class="sub">
+    Edinburgh Fringe &amp; festivals shows ranked by highest rating, featuring
+    every published review we can find.
+  </p>
+  
+  <nav class="years" aria-label="Festival year">
+    
+    <a href="2026.html">2026</a>
+    
+    <a href="2025.html">2025</a>
+    
+    <a href="2024.html">2024</a>
+    
+    <a href="2023.html">2023</a>
+    
+    <a href="2022.html" aria-current="page">2022</a>
+    
+    <a href="2021.html">2021</a>
+    
+    <a href="2020.html">2020</a>
+    
+    <a href="2019.html">2019</a>
+    
+  </nav>
+  
+</header>
+
+<p class="meta">
+  Updated 3 August 2026, 17:10 BST &middot;
+  119 rated reviews across 119 shows
+</p>
+
+
+<article class="show top">
+  <div class="pos">1</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-age-is-feeling/" title="All reviews for Age Is a Feeling">Age Is a Feeling</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+        <li class="s5">
+          <span class="rating" title="5 out of 5">★★★★★</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/10/age-is-a-feeling-review-haley-mcgee-summerhall-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show top">
+  <div class="pos">1</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-jordan-gray/" title="All reviews for Jordan Gray">Jordan Gray</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+        <li class="s5">
+          <span class="rating" title="5 out of 5">★★★★★</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/05/jordan-gray-review-a-standup-superhero" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show top">
+  <div class="pos">1</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-learning-to-fly/" title="All reviews for Learning to Fly">Learning to Fly</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+        <li class="s5">
+          <span class="rating" title="5 out of 5">★★★★★</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/14/learning-to-fly-review-james-rowland-summerhall-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show top">
+  <div class="pos">1</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-medea/" title="All reviews for Medea">Medea</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+        <li class="s5">
+          <span class="rating" title="5 out of 5">★★★★★</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/14/medea-review-adura-onashile-liz-lochhead-the-hub-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-little-life/" title="All reviews for A Little Life">A Little Life</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/21/a-little-life-review-festival-theatre-edinburgh-ivo-van-hove-hanya-yanagihara" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-cassie-workman-aberdeen/" title="All reviews for Aberdeen">Aberdeen</a></h2>
+        <span class="performer">Cassie Workman</span>
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/11/cassie-workman-aberdeen-review-a-voyage-around-kurt-cobain" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-amy-gledhill/" title="All reviews for Amy Gledhill">Amy Gledhill</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/09/amy-gledhill-review-monkey-barrel-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-untitled-love/" title="All reviews for An Untitled Love">An Untitled Love</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/21/an-untitled-love-review-kings-theatre-edinburgh-kyle-abrahham" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-ania-magliano/" title="All reviews for Ania Magliano">Ania Magliano</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/06/ania-magliano-review-skilled-off-key-laughs-from-affable-rising-star" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-bergen-phil-gardner-olafsson/" title="All reviews for Bergen Phil/Gardner/Ólafsson">Bergen Phil/Gardner/Ólafsson</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/music/2022/aug/16/bergen-philgardner-olafsson-review-crowd-pleasing-but-never-dangerous" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-boom/" title="All reviews for Boom">Boom</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/07/boom-review-powerful-circus-collaboration-ukraine" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-boy/" title="All reviews for Boy">Boy</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/09/boy-review-summerhall-edinburgh-festival" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-britanick/" title="All reviews for BriTANick">BriTANick</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/30/britanick-review-dazzling-mirth-from-two-snl-sketch-masters" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-brown-boys-swim/" title="All reviews for Brown Boys Swim">Brown Boys Swim</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/07/brown-boys-swim-review-friends-stay-afloat-against-a-tide-of-racism" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-burn/" title="All reviews for Burn">Burn</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/07/burn-review-alan-cumming-is-extraordinary-as-scotlands-rockstar-poet" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-cassie-and-lights/" title="All reviews for Cassie and the Lights">Cassie and the Lights</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/15/cassie-and-the-lights-review-underbelly-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-colin-hoult/" title="All reviews for Colin Hoult">Colin Hoult</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/21/colin-hoult-review-pleasance-courtyard-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-scottish-ballet-coppelia/" title="All reviews for Coppélia">Coppélia</a></h2>
+        <span class="performer">Scottish Ballet</span>
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/15/scottish-ballet-coppelia-review-hi-tech-makeover-for-dusty-ballet" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-counting-and-cracking/" title="All reviews for Counting and Cracking">Counting and Cracking</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/10/counting-and-cracking-review-royal-lyceum-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-crizards/" title="All reviews for Crizards">Crizards</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/11/crizards-review-classic-double-act-outlawin-all-over-the-wild-west" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-you-re-safe-til-2024-deep-history/" title="All reviews for Deep History">Deep History</a></h2>
+        <span class="performer">You're Safe Til 2024</span>
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/15/youre-safe-til-2024-deep-history-review-gripping-crisis-talks" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-emily-wilson/" title="All reviews for Emily Wilson">Emily Wilson</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/20/emily-wilson-review-pleasance-courtyard-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-every-word-was-once-animal/" title="All reviews for Every Word Was Once an Animal">Every Word Was Once an Animal</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/07/every-word-was-once-an-animal-review-ontroerend-goed" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-everything-has-changed/" title="All reviews for Everything Has Changed">Everything Has Changed</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/10/everything-has-changed-review-pleasance-courtyard-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-feeling-afraid-as-if-something-terrible-is-going-to-happen/" title="All reviews for Feeling Afraid As If Something Terrible Is Going to Happen">Feeling Afraid As If Something Terrible Is Going to Happen</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/16/feeling-afraid-as-if-something-terrible-is-going-to-happen-review-edinburgh-fringe" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-frankie-boyle/" title="All reviews for Frankie Boyle">Frankie Boyle</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/08/frankie-boyle-review-breathtakingly-rude-jokes-assembly-rooms-edinburgh-lap-of-shame" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-frankie-thompson/" title="All reviews for Frankie Thompson">Frankie Thompson</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/07/frankie-thompson-review-all-the-feline-feels-with-a-magnetic-performer" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-from-junkie-poets-to-jailtime-august-wilson-s-how-i-learned-what-i-learned/" title="All reviews for From junkie poets to jailtime: August Wilson's How I Learned What I Learned">From junkie poets to jailtime: August Wilson's How I Learned What I Learned</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/22/august-wilson-how-i-learned-what-i-learned-review-assembly-rooms-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-half-empty-glasses/" title="All reviews for Half-Empty Glasses">Half-Empty Glasses</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/16/half-empty-glasses-review-activism-in-all-its-messy-complexities" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-happy-meal/" title="All reviews for Happy Meal">Happy Meal</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/06/happy-meal-review-romance-blooms-online-and-irl" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-how-to-build-wax-figure/" title="All reviews for How to Build a Wax Figure">How to Build a Wax Figure</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/18/how-to-build-a-wax-figure-review-edinburgh-festival" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-ivo-graham/" title="All reviews for Ivo Graham">Ivo Graham</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/19/ivo-graham-review-bashful-posh-comic-grows-up-with-a-skilful-new-show" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-jessica-fostekew/" title="All reviews for Jessica Fostekew">Jessica Fostekew</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/sep/01/jessica-fostekew-review-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-josh-pugh/" title="All reviews for Josh Pugh">Josh Pugh</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/26/josh-pugh-review-edinburgh-2022" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-kahlo-s-corset-dippy-dinosaur-and-blasted-garments-of-hiroshima-edinburgh-art-fe/" title="All reviews for Kahlo's corset, dippy the dinosaur and the blasted garments of Hiroshima - Edinburgh Art festival">Kahlo's corset, dippy the dinosaur and the blasted garments of Hiroshima - Edinburgh Art festival</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/artanddesign/2022/aug/02/kahlos-corset-dippy-dinosaur-blasted-garments-hiroshima-edinburgh-art-festival" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-kathy-and-stella-solve-murder/" title="All reviews for Kathy and Stella Solve a Murder">Kathy and Stella Solve a Murder</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/09/kathy-and-stella-solve-a-review-hapless-podcast-hosts-play-detectives-roundabout-summerhall-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-lara-ricote/" title="All reviews for Lara Ricote">Lara Ricote</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/12/lara-ricote-review-edinbugh-2022" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-muster-station-leith/" title="All reviews for Leith">Leith</a></h2>
+        <span class="performer">Muster Station</span>
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/19/muster-station-leith-review-edinburgh-2022" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-leo-reich/" title="All reviews for Leo Reich">Leo Reich</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/06/leo-reich-review-uproarious-gen-z-narcissist-blazes-through" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-maisie-adam/" title="All reviews for Maisie Adam">Maisie Adam</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/17/maisie-adam-review-an-embarrassment-of-fun" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-manic-street-creature/" title="All reviews for Manic Street Creature">Manic Street Creature</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/09/manic-street-creature-review-roundabout-summerhall-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-masterclass/" title="All reviews for Masterclass">Masterclass</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/10/masterclass-review-pleasance-dome-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-olga-koch/" title="All reviews for Olga Koch">Olga Koch</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/08/olga-koch-review-break-up-sex-and-getting-left-on-read" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-phil-wang/" title="All reviews for Phil Wang">Phil Wang</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/18/phil-wang-review-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-psychodrama/" title="All reviews for Psychodrama">Psychodrama</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/08/psychodrama-review-abuse-of-male-power-in-show-business-leads-to-murder-mystery-edinburgh-alfred-hitchcock" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-runners/" title="All reviews for Runners">Runners</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/11/runners-review-zoo-southside-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-sam-campbell/" title="All reviews for Sam Campbell">Sam Campbell</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/25/sam-campbell-review-loopiness-underpinned-by-sharp-observations" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-sami-abu-wardeh/" title="All reviews for Sami Abu Wardeh">Sami Abu Wardeh</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/21/sami-abu-wardeh-review-underbelly-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-samsara/" title="All reviews for Samsara">Samsara</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/19/samsara-review-edinburgh-festival-2022" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-sap/" title="All reviews for Sap">Sap</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/08/sap-review-ovids-transformation-myth-gloriously-retold-roundabout-summerhall-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-seann-walsh/" title="All reviews for Seann Walsh">Seann Walsh</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/08/seann-walsh-review-an-eye-opening-and-bitterly-funny-show" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-shelf/" title="All reviews for Shelf">Shelf</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/08/shelf-review-pleasance-courtyard-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-book-of-life/" title="All reviews for The Book of Life">The Book of Life</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/15/the-book-of-life-review-theatre-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-last-return/" title="All reviews for The Last Return">The Last Return</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/jul/17/the-last-return-review-mick-lally-theatre-queuing-etiquette-sonya-kelly" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-rest-of-our-lives/" title="All reviews for The Rest of Our Lives">The Rest of Our Lives</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/21/the-rest-of-our-lives-review-summerhall-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-week-in-classical-at-edinburgh-festival-from-salome-to-madame-chandelier/" title="All reviews for The week in classical at the Edinburgh festival, from Salome to Madame Chandelier">The week in classical at the Edinburgh festival, from Salome to Madame Chandelier</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/music/2022/aug/20/salome-usher-hall-edinburgh-festival-2022-review-malin-bystrom-bergen-philharmonic-gardner-vikingur-olafsson-takacs-quartet-queens-hall-dunedin-consort-butt-nicholas-mulroy-madame-chandelier-opera-house-party" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-this-is-memorial-device/" title="All reviews for This Is Memorial Device">This Is Memorial Device</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/17/this-is-memorial-device-review-wee-red-bar-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-tim-crouch-truth-s-dog-must-to-kennel/" title="All reviews for Truth's a Dog Must to Kennel">Truth's a Dog Must to Kennel</a></h2>
+        <span class="performer">Tim Crouch</span>
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/12/tim-crouch-truths-a-dog-must-to-kennel-review-virtual-king-lear" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-we-were-promised-honey/" title="All reviews for We Were Promised Honey!">We Were Promised Honey!</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/14/we-were-promised-honey-review-glimpses-into-uncertain-futures" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-when-you-walk-over-my-grave/" title="All reviews for When You Walk Over My Grave">When You Walk Over My Grave</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/26/when-you-walk-over-my-grave-review-church-hill-edinburgh-2022" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-with-devil-s-assistance/" title="All reviews for With the Devil's Assistance">With the Devil's Assistance</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/18/with-the-devils-assistance-review-shape-shifting-woman-links-past-and-present" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+<article class="show">
+  <div class="pos">5</div>
+  <div class="body">
+    <div class="titlerow">
+      <span class="titlewrap">
+        <h2><a href="show/2022-yippee-ki-yay/" title="All reviews for Yippee Ki Yay">Yippee Ki Yay</a></h2>
+        
+      </span>
+      <span class="meta-right">
+        </span>
+    </div>
+    <ul class="reviews">
+      
+        
+      
+        
+        <li class="s4">
+          <span class="rating" title="4 out of 5">★★★★☆</span>
+          <span class="pub"><a href="https://www.theguardian.com/stage/2022/aug/14/yippee-ki-yay-review-die-hard-richard-marsh-gilded-balloon-edinburgh" target="_blank" rel="nofollow noopener">The Guardian</a></span>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</article>
+
+
+
+<h3 class="section">Also reviewed &mdash; no 4 or 5 star reviews yet</h3>
+<div class="rest">
+  
+  <div>
+    A Sudden Violent Burst of Rain
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/09/a-sudden-violent-burst-of-rain-review-roundabout-summerhall-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Anthony DeVito
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/19/anthony-devito-review-edinburgh-2022" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    As British as a Watermelon
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/24/as-british-as-a-watermelon-review-festival-theatre-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">2&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Atsuko Okatsuka
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/20/atsuko-okatsuka-review-pleasance-courtyard-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Autopilot
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/11/autopilot-review-pleasance-courtyard-edinburgh-ben-norris" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Ballet Freedom
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/06/ballet-freedom-review-slapstick-generic-dance-cabaret" target="_blank" rel="nofollow noopener" title="The Guardian">2&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Black Sheep
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/06/black-sheep-review-circus-song-memoir-livia-kojo-alour" target="_blank" rel="nofollow noopener" title="The Guardian">2&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Bogeyman
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/07/bogeyman-review-haiti-and-the-price-of-revolution-emily-aboud" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Boris the Third
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/12/boris-the-third-review-the-greased-piglet-antics-of-a-schoolboy-pm" target="_blank" rel="nofollow noopener" title="The Guardian">2&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Breathless
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/15/breathless-review-a-hoarder-of-clothes-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Caste-ing
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/10/caste-ing-review-roundabout-summerhall-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Charlie Russell Aims to Please
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/16/charlie-russell-aims-to-please-review-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">2&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Coming Out of My Cage (and I've Been Doing Just Fine)
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/09/coming-out-of-my-cage-and-ive-been-doing-just-fine-review-killer-karaoke-mr-brightside-underbelly-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Emmanuel Sonubi
+    
+      <a href="https://www.theguardian.com/culture/2022/aug/28/emmanuel-sonubi-review-between-beefcake-and-beta-male" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Eunice Olumide
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/10/eunice-olumide-review" target="_blank" rel="nofollow noopener" title="The Guardian">2&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Exodus
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/08/exodus-review-home-secretary-launches-leadership-bid-in-satirical-farce" target="_blank" rel="nofollow noopener" title="The Guardian">2&#9733;</a>
+    
+  </div>
+  
+  <div>
+    False Start
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/10/false-start-review-summerhall-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Finlay Christie
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/16/finlay-christie-review-tiktokers-vindication-of-gen-z" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Guide to Surviving Masculinist Territory
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/04/guide-to-surviving-masculinist-territory-review-walking-tour-of-misogyny" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Hamlet
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/05/hamlet-review-ian-mckellen-holds-court-in-a-dumb-ballet-take-on-the-bard" target="_blank" rel="nofollow noopener" title="The Guardian">2&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Head Set
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/13/head-set-review-pleasance-courtyard-edinburgh-victoria-melody" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Humans 2.0
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/18/circa-humans-20-review-edinburgh-festival-underbelly-circus" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Irvine Welsh's Porno
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/14/irvine-welsh-porno-review-gutsy-trainspotting-sequel-pleasance-courtyard-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Jamali Maddix
+    
+      <a href="https://www.theguardian.com/culture/2022/aug/31/jamali-maddix-review-the-somewhat-funny-side-of-sex-addiction-king-crud" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Javelin
+    
+      <a href="https://www.theguardian.com/stage/2022/sep/04/tom-walker-javelin-review-edinburgh-festival-soho-theatre" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Jayde Adams
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/17/jayde-adams-review-pleasance-courtyard-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Kylie Brakeman
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/05/kylie-brakeman-review-edinburgh-festival-linda-hollywoods-big-hollywood-night" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Larry Dean
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/25/larry-dean-review-fudnut-edinburgh-festival" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Lauren Pattison
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/26/lauren-pattison-review-edinburgh-2022" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Lizard Boy
+    
+      <a href="https://www.theguardian.com/stage/2022/jul/20/lizard-boy-review-manchester-edinburgh-fringe" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Lots and Not Lots
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/17/lots-and-not-lots-review-visually-striking-physical-music-theatre-greg-sinclair-summerhall-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Mind Mangler
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/13/mind-mangler-review-pleasance-courtyard-edinburgh-mischief-theatre-magic-goes-wrong" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    NewsRevue
+    
+      <a href="https://www.theguardian.com/stage/2022/jul/18/newsrevue-review-43-year-old-formula-is-still-good-fun" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Night Dances
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/20/night-dances-review-zoo-southside-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Nightlands
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/05/nightlands-review-talking-through-whats-become-of-russia" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    One of Two
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/08/one-of-two-review-twins-living-with-cerebral-palsy-jack-hunter-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Payday Party
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/25/payday-party-review-pleasance-dome-edinburgh-festival" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Please, Feel Free to Share
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/07/please-feel-free-to-share-review-rachel-causer-roisin-bevan" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Rachel Parris
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/12/rachel-parris-review-all-change-please-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Red
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/21/liz-lea-red-review-dance-base-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Rosie Holt
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/09/rosie-holt-review-pleasance-courtyard-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">2&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Sarah Sherman
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/18/sarah-sherman-review-snl" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    She Wolf
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/11/she-wolf-review-one-woman-show-isla-cowan" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Sikisa
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/07/sikisa-bostwick-barnes-review-sparkling-comedy" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Silkworm
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/13/silkworm-review-assembly-roxy-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Snort
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/15/snort-review-rose-matafeo-mucks-in-with-merry-improv-team" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Still Floating
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/14/still-floating-review-poignant-and-troubling-return-to-an-island-adrift" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Svengali
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/06/svengali-review-absorbing-gender-swap-power-play" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Thanyia Moore
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/19/thanyia-moore-review-edinburgh-2022" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    The Bush
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/18/the-bush-review-summerhall-edinburgh-environmental-action" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    The Great Almighty Gill
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/13/the-great-almighty-gill-review-assembly-george-square-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    The Not So Ugly Duckling: A Play for Grown-Ups
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/18/the-not-so-ugly-duckling-a-play-for-grown-ups-review" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    This Is Not a Show About Hong Kong
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/17/this-is-not-a-show-about-hong-kong-review-startling-view-of-life-lived-under-duress-underbelly-cowgate-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Today I Killed My Very First Bird
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/04/today-i-killed-my-very-first-bird-review-gangsters-life-pleasance-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Tomato
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/16/tomato-review-summerhall-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    Troy Hawke
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/06/troy-hawke-review-raffish-fop-puzzles-modernity-milo-mccabe" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+  <div>
+    We Are Monchichi
+    
+      <a href="https://www.theguardian.com/stage/2022/aug/21/we-are-monchichi-review-the-studio-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
+    
+  </div>
+  
+</div>
+
+
+<footer>
+  <p>
+    <strong>Sources:</strong> The Guardian.
+  </p>
+  <p>
+    Ratings are collated automatically from publicly available reviews and link
+    back to the publication. Ratings given on other scales are converted to
+    stars, rounded down, and labelled. Star ratings are the publications&rsquo;
+    own; this page only counts them.
+  </p>
+  <p>
+    Spotted a mistake? <a href="mailto:corrections@fringestars.com" rel="noopener">email corrections@fringestars.com</a>
+    and we&rsquo;ll fix it. Publications wanting a rating amended or removed:
+    same route &mdash; it will be actioned.
+  </p>
+</footer>
+
+</div>
+</body>
+</html>
