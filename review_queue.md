@@ -6,6 +6,15 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| The Guardian | [Shelf review – peppy journeys through gender and sexuality](https://www.theguardian.com/stage/2022/aug/08/shelf-review-pleasance-courtyard-edinburgh) | Shelf | 77% |
-| The Guardian | [Funeral review – hushed rituals provide deep communal catharsis](https://www.theguardian.com/stage/2023/aug/17/funeral-review-zoo-southside-edinburgh-festival-ontroerend-goed) | Funeral | 83% |
-| Chortle | [Stuart McPherson: Crisps And A Lie Down](https://www.chortle.co.uk/review/2025/07/31/58630/stuart_mcpherson%3A_crisps_and_a_lie_down) | Crisps And A Lie Down (A Lovely Time) | 95% |
+| Binge Fringe | [REVIEW: Club NVRLND, David Adkin & RJG Productions, with Midnight Theatricals and NewYorkRep, EdFringe 2025 ★★★★](https://www.bingefringe.com/2025/08/30/review-club-nvrlnd-david-adkin-rjg-productions-with-midnight-theatricals-and-newyorkrep-edfringe-2025-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | David Adkin & RJG Productions, with Midnight Theatricals and NewYorkRep | 93% |
+
+## Held — not on the leaderboard
+
+These matched no festival programme and did not look like a review of a
+single Edinburgh show. If one is wrong, delete its row from the `holds`
+table and re-run `python run.py --match` to let it back in.
+
+| Publication | Headline | Why held |
+|---|---|---|
+| The Scotsman | [Artist Rooms: Bourgeois, Chadwick, Mapplethorpe, Edinburgh review: 'confusing'](https://www.scotsman.com/arts-and-culture/art/artist-rooms-bourgeois-chadwick-mapplethorpe-edinburgh-review-confusing-5287441) | This is a review of an art exhibition featuring multiple artists, not a single named show or performance at an Edinburgh festival. |
+| The Scotsman | [Aqsa Arif: Raindrops of Rani, Edinburgh Printmakers](https://www.scotsman.com/arts-and-culture/art/edinburgh-art-festival-reviews-robert-powell-aqsa-arif-victoria-crowe-sian-davey-5278190#aqsa-arif-raindrops-of-rani-edinburgh-printmakers) | This appears to be a visual art exhibition at Edinburgh Printmakers rather than a performance or show at an Edinburgh festival. |
