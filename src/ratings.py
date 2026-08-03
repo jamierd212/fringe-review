@@ -438,6 +438,52 @@ def find_rating(*, title: str = "", summary: str = "", html: str = "",
     return None
 
 
+def split_roundup(html: str) -> list[tuple[str, Rating]]:
+    """
+    Pull the individual shows out of a multi-show round-up.
+
+    A round-up reviews three to five shows in one article, each with its own
+    star rating. Read as a single review it is worse than useless: the cascade
+    finds the first rating and pins it to a headline naming five shows, which is
+    how "All #EdFringe 2025 Made in Edinburgh reviews" ended up on the board.
+
+    The shape is consistent because the rating is printed alongside the show it
+    belongs to: "Melbourne Symphony Orchestra ★★★★★" in its own element. So each
+    element ending in stars is one review, and the text before them is the show.
+
+    Returns (show title, rating) pairs. Titles repeat within an article - the
+    same heading often appears in a summary list and again above the copy - so
+    the first occurrence of each wins.
+    """
+    from bs4 import BeautifulSoup
+
+    soup = BeautifulSoup(html, "lxml")
+    out: list[tuple[str, Rating]] = []
+    seen: set[str] = set()
+
+    for tag in soup.find_all(["strong", "b", "h2", "h3", "h4"]):
+        text = " ".join(tag.get_text().split())
+        if not text or not any(ch in text for ch in FILLED_STARS):
+            continue
+
+        # Everything before the first star is the show; everything after is the
+        # star run itself. A trailing venue stays attached deliberately - it is
+        # part of how the publication names the show, and the matcher already
+        # copes with "Show, Venue".
+        first = min(i for i, ch in enumerate(text) if ch in FILLED_STARS)
+        title = text[:first].strip(" -–—:,|").strip()
+        rating = from_star_chars(text[first:])
+        if rating is None or not title or len(title) < 3:
+            continue
+
+        key = title.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append((title, rating))
+    return out
+
+
 def _tidy(n: float) -> str:
     """Render 5.0 as '5' but 4.5 as '4.5'."""
     return str(int(n)) if float(n).is_integer() else str(n)

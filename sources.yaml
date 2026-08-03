@@ -208,15 +208,7 @@ publications:
     fetch_page: true
     title_from_page: true     # the slug is a poor headline; read og:title instead
     require_edinburgh: true   # the URL filter admits Fringe by the Sea, Pittenweem etc.
-    exclude_title_patterns:
-      # 119 of their 140 August 2025 festival articles are multi-show round-ups
-      # ("EIF music reviews: Canvas of Sound | BBC SSO | Bernstein"), each
-      # covering three to five shows with a separate star rating for each. This
-      # pipeline reads one rating per article, so a round-up would attach a
-      # single rating to a headline naming several shows. Excluded until
-      # round-up splitting exists; the plural is a reliable signal, singular
-      # "review" is always one show.
-      - "\\breviews\\b"
+    roundups: true            # split multi-show articles into one review each
     verified: 2026-08-03
     notes: >
       NO LONGER BLOCKED. Previously recorded as a deliberate server block after

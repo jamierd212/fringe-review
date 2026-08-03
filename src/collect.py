@@ -19,9 +19,15 @@ import requests
 import yaml
 
 from . import db
-from .ratings import Rating, find_rating
+from .normalise import normalise
+from .ratings import Rating, find_rating, split_roundup
 
 CONFIG_PATH = Path(__file__).resolve().parent.parent / "sources.yaml"
+
+
+def _fragment(title: str) -> str:
+    """A URL-safe, stable key for one show within a round-up article."""
+    return re.sub(r"[^a-z0-9]+", "-", normalise(title)).strip("-")[:60] or "show"
 
 
 @dataclass
@@ -256,6 +262,27 @@ class Collector:
                 found.append(Candidate(url=url, title=title, summary="",
                                        published=published, publication=pub["name"]))
         return found
+
+    def expand_roundup(self, pub: dict,
+                       cand: Candidate) -> list[tuple[Candidate, Rating]]:
+        """
+        Turn one multi-show round-up into one candidate per show.
+
+        Each piece keeps the article's URL with a fragment appended, because
+        reviews are keyed by URL and five shows from one article need five keys.
+        The fragment is also honest: the link still opens the article the rating
+        was published in.
+        """
+        html = self._get(cand.url)
+        if html is None:
+            return []
+        out = []
+        for title, rating in split_roundup(html):
+            out.append((Candidate(
+                url=f"{cand.url}#{_fragment(title)}", title=title, summary="",
+                published=cand.published, publication=pub["name"],
+            ), rating))
+        return out
 
     def discover_sitemap(self, pub: dict, backfill: tuple[int, int] | None) -> list[Candidate]:
         """
@@ -586,13 +613,7 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None)
             new = [c for c in new if collector.is_edinburgh(c)]
             print(f"    {len(new)} look like Edinburgh shows (of {before})")
 
-        rated = 0
-        for cand in new:
-            rating = collector.rate(pub, cand)
-            if rating is None:
-                db.mark_seen(conn, cand.url, "no_rating")
-                continue
-
+        def store(cand: Candidate, rating: Rating) -> None:
             conn.execute(
                 """INSERT INTO reviews
                      (url, publication, headline, stars, original,
@@ -605,11 +626,36 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None)
                     cand.published, rating.method,
                 ),
             )
+
+        rated = split_out = 0
+        roundup_pattern = pub.get("roundup_pattern", r"\breviews\b")
+        for cand in new:
+            # A round-up reviews several shows in one article, each with its own
+            # rating. Rated as one review it would pin a single score to a
+            # headline naming five shows; split, it is five real reviews.
+            if pub.get("roundups") and re.search(roundup_pattern, cand.title, re.I):
+                pieces = collector.expand_roundup(pub, cand)
+                if pieces:
+                    for piece, rating in pieces:
+                        store(piece, rating)
+                    db.mark_seen(conn, cand.url, "roundup")
+                    rated += len(pieces)
+                    split_out += 1
+                    continue
+                # Nothing extractable: fall through and treat it as one review
+                # rather than silently dropping a page that may carry a rating.
+
+            rating = collector.rate(pub, cand)
+            if rating is None:
+                db.mark_seen(conn, cand.url, "no_rating")
+                continue
+            store(cand, rating)
             db.mark_seen(conn, cand.url, "review")
             rated += 1
 
         conn.commit()
-        print(f"    {rated} with a star rating")
+        print(f"    {rated} with a star rating"
+              + (f" ({split_out} round-ups split out)" if split_out else ""))
         added += rated
 
     return added
