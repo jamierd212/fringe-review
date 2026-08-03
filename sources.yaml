@@ -287,3 +287,133 @@ publications:
       NOT YET WORKING: feed is valid but the sampled items were interviews with
       no rating markup found. Needs a look at a real review page during the
       festival to find where the stars live, then set an appropriate rule.
+
+  # ------------------------------------------------- added for 2026 (probed)
+  - name: Binge Fringe
+    slug: bingefringe
+    homepage: https://bingefringe.com/
+    feed: https://bingefringe.com/feed/
+    backfill: https://bingefringe.com/{year}/{month:02d}/feed/
+    rating:
+      type: auto            # stars sit in the feed title, e.g. "... EdFringe 2025 ★★★★"
+    fetch_page: false
+    require_title_prefix: "REVIEW:"
+    pages: 6
+    verified: 2026-08-03
+    notes: >
+      Edinburgh-focused and the cleanest source found in the 2026 sweep: 6 of 6
+      sampled items carried an extractable rating, and it is in the feed, so no
+      page fetch is needed. Titles are "REVIEW: <show>, <company>, EdFringe
+      2025 ★★★★", hence the prefix filter.
+
+  - name: Corr Blimey
+    slug: corrblimey
+    homepage: https://corrblimey.uk/
+    feed: https://corrblimey.uk/feed/
+    backfill: https://corrblimey.uk/{year}/{month:02d}/feed/
+    rating:
+      type: auto            # stars in the feed title
+    fetch_page: false
+    require_title_prefix: "Review:"
+    pages: 6
+    verified: 2026-08-03
+    notes: >
+      6 of 6 sampled items rated, from the feed alone. Titles name the festival
+      outright ("Review: Edinburgh Festival Fringe 2025 - ..."), and it covers
+      the International Festival too.
+
+  - name: North West End
+    slug: northwestend
+    homepage: https://northwestend.com/
+    feed: https://northwestend.com/feed/
+    backfill: https://northwestend.com/{year}/{month:02d}/feed/
+    rating:
+      type: auto            # "4 out of 5" style, on the page not in the feed
+    fetch_page: true
+    require_edinburgh: true
+    pages: 8
+    verified: 2026-08-03
+    notes: >
+      UK-wide: the August 2025 sample was largely Southwark Playhouse and other
+      London venues, so require_edinburgh is doing real work here rather than
+      being a precaution. 4 of 6 sampled items rated.
+
+  - name: Musical Theatre Review
+    slug: musicaltheatrereview
+    homepage: https://musicaltheatrereview.com/
+    feed: https://musicaltheatrereview.com/feed/
+    backfill: https://musicaltheatrereview.com/{year}/{month:02d}/feed/
+    rating:
+      type: auto            # word grades in the feed ("four stars")
+    fetch_page: false
+    require_edinburgh: true
+    pages: 6
+    exclude_title_patterns:
+      # They post award announcements in the same feed, worded like reviews and
+      # naming a real show: "Hot Mess wins Musical Theatre Review Best Musical
+      # Award" scored five stars against the actual Hot Mess, which is second on
+      # the 2025 board. The programme check cannot catch this - the show IS
+      # real - so it has to be stopped here.
+      - "\\b(wins|won|receives|awarded|announces)\\b"
+    verified: 2026-08-03
+    notes: >
+      5 of 6 sampled items rated, via the word-grade strategy. UK-wide, so
+      require_edinburgh applies. Narrow genre, but it reviews the musicals the
+      general theatre sites often skip.
+
+  - name: WhatsOnStage
+    slug: whatsonstage
+    homepage: https://www.whatsonstage.com/
+    feed: https://www.whatsonstage.com/rss.xml
+    rating:
+      type: auto            # star characters on the review page
+    fetch_page: true
+    require_edinburgh: true
+    pages: 1
+    verified: 2026-08-03
+    notes: >
+      A rolling 50-item feed with no date archive, mostly casting news and
+      listicles — only 1 of 6 sampled items was a rated review. Included because
+      it is a significant theatre publication and the cost of checking is one
+      request a day, not because the yield is high.
+
+  - name: Voice Magazine
+    slug: voicemag
+    homepage: https://www.voicemag.uk/
+    feed: https://www.voicemag.uk/feed
+    rating:
+      type: auto
+    enabled: false
+    verified: 2026-08-03
+    notes: >
+      EXCLUDED: returns HTTP 403 to our User-Agent, on robots.txt itself as well
+      as on pages. A young-people's arts magazine with substantial Fringe
+      coverage. Same position as the Scotsman and Broadway Baby: worth asking
+      permission, not worth working around.
+
+  - name: Theatre Weekly
+    slug: theatreweekly
+    homepage: https://theatreweekly.com/
+    feed: https://theatreweekly.com/feed/
+    rating:
+      type: auto
+    enabled: false
+    verified: 2026-08-03
+    notes: >
+      NOT YET WORKING: feed is readable and robots.txt is clear, but all ten
+      August 2025 items sampled were casting announcements and press releases,
+      not reviews, so where the rating lives is still unknown. Recheck during
+      the festival, when there will be real reviews to look at.
+
+  - name: Reviews Gate
+    slug: reviewsgate
+    homepage: https://reviewsgate.com/
+    feed: https://reviewsgate.com/feed/
+    rating:
+      type: auto
+    enabled: false
+    verified: 2026-08-03
+    notes: >
+      EXCLUDED: the feed now carries SEO spam ("Costa Rica Crypto Business Setup
+      Lawyers") alongside theatre content, which suggests the site is
+      compromised or sold on. Not a source to rely on.

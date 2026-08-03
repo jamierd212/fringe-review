@@ -7,6 +7,7 @@ delay. Nothing here needs an API key.
 
 from __future__ import annotations
 
+import re
 import time
 from dataclasses import dataclass
 from datetime import datetime
@@ -81,7 +82,12 @@ class Collector:
         whole month needs more.
         """
         base = pub["feed"]
-        if backfill and pub.get("backfill"):
+        if backfill:
+            if not pub.get("backfill"):
+                # No date archive. Walking the live feed 40 times returns the
+                # same current items on every request - 40 pointless fetches at
+                # a site that never asked to be crawled that hard, for nothing.
+                return []
             year, month = backfill
             base = pub["backfill"].format(year=year, month=month)
 
@@ -334,6 +340,16 @@ class Collector:
         title shapes cannot be surprised.
         """
         title = cand.title.strip().lower()
+
+        # Per-publication exclusions, for sources with no consistent review
+        # prefix to allowlist. Deliberately scoped to one publication each:
+        # global keyword rules were measured against the 2025 data and flagged
+        # "The 39 Steps" and "A Broken Man's Guide to Fixing Others" as junk,
+        # so a pattern is only ever applied where it has been checked.
+        if pub:
+            for pattern in pub.get("exclude_title_patterns", []) or []:
+                if re.search(pattern, cand.title, re.I):
+                    return False
         if pub and (prefix := pub.get("require_title_prefix")):
             if not title.startswith(prefix.strip().lower()):
                 return False
