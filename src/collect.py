@@ -263,6 +263,61 @@ class Collector:
                                        published=published, publication=pub["name"]))
         return found
 
+    def discover_listing(self, pub: dict,
+                         backfill: tuple[int, int] | None) -> list[Candidate]:
+        """
+        Paginated section listings, where each card carries link, title and date.
+
+        The Skinny needs this: it publishes no feed, and its sitemap ignores the
+        ?page= parameter entirely - every page returns the same 500 articles from
+        2015 - so neither of the other two discovery modes can reach it.
+
+        The date has to come from the listing, because the article pages carry no
+        published-time metadata at all. That matters more than convenience: page
+        five of a section is last year's festival, and without a date every one
+        of those reviews would fall back to the current year and land on the
+        wrong leaderboard.
+
+        Cards are matched by content rather than by class - one article link and
+        one date - because the markup gives them no class to select on.
+        """
+        from bs4 import BeautifulSoup
+        from urllib.parse import urljoin
+
+        link_match = pub.get("link_match", "/")
+        date_re = re.compile(r"(\d{1,2} [A-Za-z]{3} \d{4})")
+        found: list[Candidate] = []
+
+        for template in pub.get("listing_urls", []):
+            for page in range(1, int(pub.get("pages", 1)) + 1):
+                url = template.format(page=page)
+                raw = self._get(url)
+                if raw is None:
+                    break
+                soup = BeautifulSoup(raw, "lxml")
+                before = len(found)
+                for card in soup.select(pub.get("card_selector", "li")):
+                    links = [a for a in card.find_all("a", href=True)
+                             if link_match in a["href"]]
+                    dates = date_re.findall(card.get_text(" ", strip=True))
+                    if len(links) != 1 or len(dates) != 1:
+                        continue
+                    try:
+                        when = datetime.strptime(dates[0], "%d %b %Y")
+                    except ValueError:
+                        continue
+                    title = links[0].get_text(" ", strip=True)
+                    if not title:
+                        continue
+                    found.append(Candidate(
+                        url=urljoin(url, links[0]["href"]), title=title, summary="",
+                        published=when.strftime("%Y-%m-%dT12:00:00Z"),
+                        publication=pub["name"],
+                    ))
+                if len(found) == before:
+                    break        # nothing on this page: past the end of the section
+        return found
+
     def expand_roundup(self, pub: dict,
                        cand: Candidate) -> list[tuple[Candidate, Rating]]:
         """
@@ -312,7 +367,7 @@ class Collector:
         patterns = [re.compile(p, re.I) for p in pub.get("url_must_match", [])]
         found: list[Candidate] = []
         for block in re.findall(r"<url>(.*?)</url>", raw, re.S):
-            loc = re.search(r"<loc>(.*?)</loc>", block)
+            loc = re.search(r"<loc>\s*(.*?)\s*</loc>", block, re.S)
             if not loc:
                 continue
             url = loc.group(1)
@@ -323,7 +378,7 @@ class Collector:
             # would fall back to whatever the run was invoked with, which is
             # precisely how a --match run once relabelled every 2025 show as
             # 2026, and the festival-window filter would pass everything.
-            mod = re.search(r"<lastmod>(.*?)</lastmod>", block)
+            mod = re.search(r"<lastmod>\s*(.*?)\s*</lastmod>", block, re.S)
             slug = re.sub(r"-\d{5,}$", "", url.rstrip("/").rsplit("/", 1)[-1])
             found.append(Candidate(
                 url=url, title=slug.replace("-", " ").strip(),
@@ -340,6 +395,8 @@ class Collector:
             return self.discover_index(pub, backfill)
         if pub.get("discovery") == "sitemap":
             return self.discover_sitemap(pub, backfill)
+        if pub.get("discovery") == "listing":
+            return self.discover_listing(pub, backfill)
 
         found: list[Candidate] = []
         for feed_url in self.feed_urls(pub, backfill):
@@ -556,6 +613,15 @@ class Collector:
                     import html as _html
                     cand.title = _html.unescape(m.group(1)).strip()
                     break
+
+        # Publication boilerplate in a headline is not harmless padding: it is
+        # shared by every review from that source, so it dominates the fuzzy
+        # score and makes unrelated shows look alike. Worse here — splitting
+        # "Pickled Republic @ Summerhall: Edinburgh Fringe review" on the colon
+        # left the show name as "Edinburgh Fringe", an alias that would match
+        # almost anything.
+        for pattern in pub.get("title_strip_patterns", []) or []:
+            cand.title = re.sub(pattern, "", cand.title, flags=re.I).strip(" -–—:|")
 
         return find_rating(
             title=cand.title, summary=cand.summary, html=html, rule=rule

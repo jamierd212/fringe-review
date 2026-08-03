@@ -364,6 +364,20 @@ def from_css_rule(html: str, rule: dict) -> Rating | None:
         value = float(m.group(1))
         return _make(value, 100, f"{_tidy(value)}%", "css_width")
 
+    if rule.get("count_stars"):
+        # The element holds glyphs rather than a number:
+        # <div class="star-rating"><span>&#x2605;</span> x4</div>
+        # Entity-encoded, so nothing survives a plain text scan of the HTML —
+        # it has to be parsed and counted inside the element that owns it,
+        # which also stops a sidebar of other reviews being counted too.
+        text = node.get_text("", strip=True)
+        filled = sum(1 for ch in text if ch in FILLED_STARS)
+        empty = sum(1 for ch in text if ch in EMPTY_STARS)
+        if not filled:
+            return None
+        out_of = filled + empty if empty else 5
+        return _make(filled, out_of, f"{filled}/{_tidy(out_of)}", "css_stars")
+
     raw = node.get_text(" ", strip=True)
     m = re.search(r"\d+(?:\.\d+)?", raw)
     if not m:

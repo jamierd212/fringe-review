@@ -450,3 +450,43 @@ publications:
       EXCLUDED: the feed now carries SEO spam ("Costa Rica Crypto Business Setup
       Lawyers") alongside theatre content, which suggests the site is
       compromised or sold on. Not a source to rely on.
+
+  - name: The Skinny
+    slug: theskinny
+    homepage: https://www.theskinny.co.uk/
+    # No feed of any kind, and the sitemap ignores its own ?page= parameter —
+    # every page returns the same 500 articles from 2015 — so the paginated
+    # section listings are the only route in. They are a good one: link, title
+    # and date all come from a single request.
+    discovery: listing
+    listing_urls:
+      - https://www.theskinny.co.uk/festivals/edinburgh-fringe/theatre?page={page}
+      - https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy?page={page}
+      - https://www.theskinny.co.uk/festivals/edinburgh-fringe/cabaret?page={page}
+    link_match: "/festivals/edinburgh-fringe/"
+    pages: 3                  # a daily run only needs the newest; raise to backfill
+    rating:
+      type: css
+      selector: ".star-rating"
+      count_stars: true       # <div class="star-rating"><span>&#x2605;</span>...
+    fetch_page: true
+    title_from_page: true     # card text prepends the section ("Theatre ...")
+    title_strip_patterns:
+      - ":?\\s*Edinburgh (Fringe|Festival)[^:]*review\\b.*$"
+      - "\\s*[-–]\\s*The Skinny\\s*$"
+    festival_feed: true       # the sections are Edinburgh Fringe by definition
+    verified: 2026-08-03
+    notes: >
+      Major Scottish arts publication with heavy Fringe coverage. robots.txt
+      allows everything bar /admin, /api and one numeric path.
+
+      The rating is entity-encoded star glyphs inside a div, which no text scan
+      of the HTML can see — hence the count_stars mode, which parses the element
+      and counts what is inside it. Verified on ten real 2025 reviews: 8 rated,
+      and both misses were "The Besties 2025" award posts rather than reviews.
+
+      Only theatre, comedy and cabaret exist as Fringe sections; music, dance,
+      art and books all 404. Dates come from the listing card because the
+      article pages carry no published-time metadata at all — and without a date
+      page five of a section, which is last year's festival, would be filed
+      under the current year.
