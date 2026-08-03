@@ -193,36 +193,46 @@ publications:
   - name: The Scotsman
     slug: scotsman
     homepage: https://www.scotsman.com/
-    feed: https://www.scotsman.com/arts-and-culture/edinburgh-festivals/rss
+    # Their RSS is a rolling nine items with no archive. The month sitemap lists
+    # the whole newspaper — 2,677 articles for August 2025, 175 of them festival
+    # reviews — so it is both the only route to a backfill and the better source
+    # for a daily run.
+    discovery: sitemap
+    sitemap: https://www.scotsman.com/sitemaps/sitemap-articles-{year}-{month:02d}.xml
+    url_must_match:
+      - "review"
+      - "fringe|festival|edinburgh"
+    feed: https://www.scotsman.com/arts-and-culture/edinburgh-festivals/rss  # unused, kept for reference
     rating:
-      type: auto
+      type: auto              # ★★★★ characters in the page
     fetch_page: true
-    festival_feed: true       # the feed is the Edinburgh festivals section
-    pages: 1
+    title_from_page: true     # the slug is a poor headline; read og:title instead
+    require_edinburgh: true   # the URL filter admits Fringe by the Sea, Pittenweem etc.
     exclude_title_patterns:
-      # Pre-festival the section is almost all listicles, and they carry numbers
-      # the cascade reads as ratings: "Edinburgh Fringe 2026: Here are all 12
-      # Last One Laughing acts" scored 4 stars. These patterns are scoped to
-      # this publication and were checked against its live feed.
-      - "\\bhere are\\b"
-      - "\\bhot tickets\\b"
-      - "\\bsurvival guide\\b"
-      - "\\bhighlights\\b"
+      # 119 of their 140 August 2025 festival articles are multi-show round-ups
+      # ("EIF music reviews: Canvas of Sound | BBC SSO | Bernstein"), each
+      # covering three to five shows with a separate star rating for each. This
+      # pipeline reads one rating per article, so a round-up would attach a
+      # single rating to a headline naming several shows. Excluded until
+      # round-up splitting exists; the plural is a reliable signal, singular
+      # "review" is always one show.
+      - "\\breviews\\b"
     verified: 2026-08-03
     notes: >
-      NO LONGER BLOCKED. This previously returned HTTP 403 and was recorded as a
-      server block; on retest the homepage, robots.txt, the festival RSS feed
-      and full article pages all return 200. The 403 was Cloudflare bot
-      management, which is dynamic - not an editorial decision - so the earlier
-      note claiming a deliberate block was wrong.
+      NO LONGER BLOCKED. Previously recorded as a deliberate server block after
+      HTTP 403s; on retest everything returns 200. That was Cloudflare bot
+      management, which is dynamic — the earlier note was wrong.
 
       robots.txt disallows only /internal-api/, /newsletter-app/ and a
-      parsely-api query string. Nothing relevant to us.
+      parsely-api query string. Nothing relevant.
 
-      NOT YET VERIFIED ON REAL REVIEWS: the festival had not started when this
-      was enabled, so every feed item was a preview or listicle and no genuine
-      review page has been through the rating cascade. Check the first run after
-      the festival opens before trusting the output.
+      Ratings verified against eight real August 2025 festival reviews: 8 of 8
+      extracted, all via star characters on the page.
+
+      Their round-up reviews ("Edinburgh Art Festival reviews: Robert Powell |
+      Aqsa Arif") cover several shows under one headline and will not match a
+      programme entry, so the admission gate holds them rather than inventing a
+      show. That is the intended behaviour, not a gap.
 
   - name: The Telegraph
     slug: telegraph

@@ -257,11 +257,62 @@ class Collector:
                                        published=published, publication=pub["name"]))
         return found
 
+    def discover_sitemap(self, pub: dict, backfill: tuple[int, int] | None) -> list[Candidate]:
+        """
+        Discovery from a publisher's own month-by-month article sitemap.
+
+        Some publications have no usable feed but do publish dated sitemaps.
+        The Scotsman is the case in point: its RSS is a rolling nine items with
+        no archive, while sitemap-articles-2025-08.xml lists 2,677 articles for
+        that month alone, 175 of them festival reviews. So the sitemap is not a
+        fallback here, it is the better source - it makes a real backfill
+        possible and gives a daily run the whole month rather than whatever
+        happens to be on the front of the feed.
+
+        Only URLs matching `url_must_match` are returned, because a month
+        sitemap is the entire newspaper. Titles come from the slug; the real
+        headline is read from the page when it is fetched for its rating.
+        """
+        import calendar as _cal
+
+        when = backfill or (datetime.now().year, datetime.now().month)
+        year, month = when
+        template = pub["sitemap"]
+        raw = self._get(template.format(year=year, month=month))
+        if raw is None:
+            return []
+
+        patterns = [re.compile(p, re.I) for p in pub.get("url_must_match", [])]
+        found: list[Candidate] = []
+        for block in re.findall(r"<url>(.*?)</url>", raw, re.S):
+            loc = re.search(r"<loc>(.*?)</loc>", block)
+            if not loc:
+                continue
+            url = loc.group(1)
+            if patterns and not all(p.search(url) for p in patterns):
+                continue
+
+            # Take <lastmod> as the publication date. Without a date the year
+            # would fall back to whatever the run was invoked with, which is
+            # precisely how a --match run once relabelled every 2025 show as
+            # 2026, and the festival-window filter would pass everything.
+            mod = re.search(r"<lastmod>(.*?)</lastmod>", block)
+            slug = re.sub(r"-\d{5,}$", "", url.rstrip("/").rsplit("/", 1)[-1])
+            found.append(Candidate(
+                url=url, title=slug.replace("-", " ").strip(),
+                summary="", published=mod.group(1) if mod else None,
+                publication=pub["name"],
+            ))
+        _ = _cal
+        return found
+
     def discover(self, pub: dict, backfill: tuple[int, int] | None) -> list[Candidate]:
         if pub.get("api") == "guardian":
             return self.discover_guardian(pub, backfill)
         if pub.get("discovery") == "index":
             return self.discover_index(pub, backfill)
+        if pub.get("discovery") == "sitemap":
+            return self.discover_sitemap(pub, backfill)
 
         found: list[Candidate] = []
         for feed_url in self.feed_urls(pub, backfill):
@@ -306,7 +357,14 @@ class Collector:
     OTHER_FESTIVALS = (
         "camden fringe", "brighton fringe", "buxton fringe", "greater manchester fringe",
         "prague fringe", "adelaide fringe", "vault festival", "off-west end",
+        # Scottish, festival-season, and not what this leaderboard covers. The
+        # Scotsman reviews all of them alongside the Edinburgh festivals.
+        "fringe by the sea", "pittenweem", "celtic connections", "hebridean",
     )
+
+    # Markers too short to match as substrings: "eif" would fire on "Eiffel".
+    # Checked with word boundaries instead.
+    EDINBURGH_MARKER_WORDS = (r"\beif\b",)
 
     EDINBURGH_MARKERS = (
         "edinburgh", "edfringe", "ed fringe", "summerhall", "pleasance",
@@ -431,7 +489,9 @@ class Collector:
         title = cand.title.lower()
         if any(other in title for other in cls.OTHER_FESTIVALS):
             return False
-        return any(marker in title for marker in cls.EDINBURGH_MARKERS)
+        if any(marker in title for marker in cls.EDINBURGH_MARKERS):
+            return True
+        return any(re.search(w, title) for w in cls.EDINBURGH_MARKER_WORDS)
 
     # -- Stage 2: rating extraction ----------------------------------------
 
@@ -456,6 +516,20 @@ class Collector:
         html = self._get(cand.url)
         if html is None:
             return None
+
+        # Sitemap discovery only has the slug to go on, and a slug makes a poor
+        # headline to match shows against ("chappell-roan-edinburgh-review-
+        # joyous"). The page is already in hand, so take the real headline from
+        # it rather than fetching twice or matching on punctuation-stripped mush.
+        if pub.get("title_from_page"):
+            for pattern in (r'<meta[^>]+property="og:title"[^>]+content="([^"]+)"',
+                            r"<title>(.*?)</title>"):
+                m = re.search(pattern, html, re.S | re.I)
+                if m:
+                    import html as _html
+                    cand.title = _html.unescape(m.group(1)).strip()
+                    break
+
         return find_rating(
             title=cand.title, summary=cand.summary, html=html, rule=rule
         )
