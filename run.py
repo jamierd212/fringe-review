@@ -92,7 +92,9 @@ def main() -> int:
     print("\nWrote " + ", ".join(p.name for p in paths))
     print(f"  {stats['shows']} shows, {stats['rated']} rated reviews, "
           f"{stats['seen']} URLs seen")
-    print(f"\nOpen it with:  open {paths[0]}\n")
+    # index.html, not paths[0] — that is the newest year, which before the
+    # festival opens is the empty placeholder rather than what visitors see.
+    print(f"\nOpen it with:  open {paths[0].parent / 'index.html'}\n")
 
     conn.close()
     return 0

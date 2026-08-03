@@ -71,25 +71,43 @@ def stars_html(n: int) -> str:
     return "★" * n + "☆" * (5 - n)
 
 
-def page_name(year: int, newest: int) -> str:
+def page_name(year: int) -> str:
     """
-    The newest year lives at index.html so the bare URL always shows the current
-    festival. Older years get their own page, which also means last year's
-    leaderboard keeps a stable link once a new festival starts.
+    Every year has one permanent URL, and it never moves.
+
+    index.html is a COPY of whichever year we want people to land on, not the
+    home of that year. An earlier version moved the landing year to index.html,
+    which meant 2025 lived at /2025.html until it became the landing year, then
+    at / — so any link anyone had already shared broke, and the file left behind
+    at the old name went stale and kept serving wrong navigation.
     """
-    return "index.html" if year == newest else f"{year}.html"
+    return f"{year}.html"
+
+
+def landing_year(populated: list[int], available: list[int]) -> int:
+    """
+    The year the bare domain shows: the newest one that actually HAS reviews.
+
+    Before a festival opens, its board is an empty placeholder — sending everyone
+    arriving at fringestars.com to a page with nothing on it wastes the visit.
+    This flips to the new festival by itself the moment the first review lands,
+    with no code change and nothing to remember to switch over.
+    """
+    return populated[0] if populated else available[0]
 
 
 def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
     # The current festival always gets a page, even before it has any reviews —
     # otherwise index.html silently becomes last year's board, and anyone
     # arriving at the bare domain during festival week sees 2025.
-    available = rank.years(conn)
+    populated = rank.years(conn)
+    available = list(populated)
     current = year or datetime.now().year
     if current not in available:
         available.append(current)
     available.sort(reverse=True)
-    newest = available[0]
+    # Land on the newest year with content; fall back to the newest year at all.
+    landing = landing_year(populated, available)
 
     env = Environment(
         loader=FileSystemLoader(TEMPLATES),
@@ -100,14 +118,22 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
 
     now = datetime.now(timezone.utc).astimezone(ZoneInfo("Europe/London"))
     defaults = load_config().get("defaults", {})
-    nav = [{"year": y, "href": page_name(y, newest)} for y in available]
+    nav = [{"year": y, "href": page_name(y)} for y in available]
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUTPUT_DIR / ".nojekyll").touch()
 
+    # Year pages left behind by an earlier run — a year that dropped out of the
+    # data, or a file written under a naming scheme we no longer use. Left in
+    # place they keep serving stale content and stale navigation.
+    keep = {page_name(y) for y in available} | {"index.html"}
+    for stale in OUTPUT_DIR.glob("[0-9][0-9][0-9][0-9].html"):
+        if stale.name not in keep:
+            stale.unlink()
+
     show_tpl = env.get_template("show.html.j2")
     written: list[Path] = []
-    sitemap: list[str] = []
+    sitemap: list[str] = [SITE_URL + "/"]
 
     for this_year in available:
         ranked, rest = rank.leaderboard(conn, this_year)
@@ -127,27 +153,37 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
             (this_year,),
         ).fetchone()[0]
 
-        html = template.render(
-            placed=rank.positions(ranked),
-            rest=rest,
-            year=this_year,
-            nav=[dict(n, current=(n["year"] == this_year)) for n in nav],
-            updated=now.strftime("%-d %B %Y, %H:%M %Z"),
-            rated=rated,
-            show_count=len(ranked) + len(rest),
-            publications=publications,
-            contact_url=defaults.get(
-                "contact_url",
-                "mailto:corrections@fringestars.com",
-            ),
-            contact_label=defaults.get("contact_label", "let us know"),
-        )
+        def build(canonical: str) -> str:
+            return template.render(
+                canonical=canonical,
+                placed=rank.positions(ranked),
+                rest=rest,
+                year=this_year,
+                nav=[dict(n, current=(n["year"] == this_year)) for n in nav],
+                updated=now.strftime("%-d %B %Y, %H:%M %Z"),
+                rated=rated,
+                show_count=len(ranked) + len(rest),
+                publications=publications,
+                contact_url=defaults.get(
+                    "contact_url",
+                    "mailto:corrections@fringestars.com",
+                ),
+                contact_label=defaults.get("contact_label", "let us know"),
+            )
 
-        path = OUTPUT_DIR / page_name(this_year, newest)
-        path.write_text(html, encoding="utf-8")
+        # The landing year is served at two URLs — its own page and the bare
+        # domain. Both name the domain as canonical so search engines rank one
+        # page rather than splitting the same content across two.
+        is_landing = this_year == landing
+        canonical = SITE_URL + "/" if is_landing else f"{SITE_URL}/{page_name(this_year)}"
+
+        path = OUTPUT_DIR / page_name(this_year)
+        path.write_text(build(canonical), encoding="utf-8")
         written.append(path)
-        sitemap.append(f"{SITE_URL}/{page_name(this_year, newest)}"
-                       .replace("/index.html", "/"))
+        if is_landing:
+            (OUTPUT_DIR / "index.html").write_text(build(canonical), encoding="utf-8")
+        else:
+            sitemap.append(canonical)
 
         # One page per show. This is the bulk of the site's searchable surface:
         # a leaderboard ranks 800 shows on two pages, but nobody searches for
@@ -159,7 +195,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                              (show.id,)).fetchone()["festival"] or "", "Fringe")
             page = show_tpl.render(
                 show=show, year=this_year, festival_name=festival_name,
-                site_url=SITE_URL, back_href="../../" + page_name(this_year, newest),
+                site_url=SITE_URL, back_href="../../" + page_name(this_year),
                 jsonld=show_jsonld(show, this_year, festival_name),
                 contact_url=defaults.get(
                     "contact_url",

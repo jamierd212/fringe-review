@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Edinburgh Festivals Top-Rated Shows {{ year }}</title>
+<title>Edinburgh Festivals Top-Rated Shows 2026</title>
 <meta name="description" content="Edinburgh Fringe &amp; festivals shows ranked by highest rating, featuring every published review we can find.">
-{% if canonical %}<link rel="canonical" href="{{ canonical }}">{% endif %}
+<link rel="canonical" href="https://fringestars.com/2026.html">
 <style>
   :root {
     --ink: #1a1a1a; --muted: #6b6b6b; --rule: #ecdcd9;
@@ -117,69 +117,29 @@
     Edinburgh Fringe &amp; festivals shows ranked by highest rating, featuring
     every published review we can find.
   </p>
-  {% if nav|length > 1 %}
+  
   <nav class="years" aria-label="Festival year">
-    {% for entry in nav %}
-    <a href="{{ entry.href }}"{% if entry.current %} aria-current="page"{% endif %}>{{ entry.year }}</a>
-    {% endfor %}
+    
+    <a href="2026.html" aria-current="page">2026</a>
+    
+    <a href="2025.html">2025</a>
+    
   </nav>
-  {% endif %}
+  
 </header>
 
 <p class="meta">
-  Updated {{ updated }}{% if rated %} &middot;
-  {{ rated }} rated reviews across {{ show_count }} shows{% endif %}
+  Updated 3 August 2026, 08:17 BST
 </p>
 
-{% for position, show in placed %}
-<article class="show{% if position <= 3 %} top{% endif %}">
-  <div class="pos">{{ position }}</div>
-  <div class="body">
-    <div class="titlerow">
-      <span class="titlewrap">
-        <h2><a href="{{ show.page }}" title="All reviews for {{ show.title }}">{{ show.title }}</a></h2>
-        {% if show.performer %}<span class="performer">{{ show.performer }}</span>{% endif %}
-      </span>
-      <span class="meta-right">
-        {% if show.genre %}<span class="genre">{{ show.genre }}</span>{% endif %}
-        {%- if show.url %}<a class="proglink" href="{{ show.url }}" target="_blank" rel="noopener"
-           title="Official programme entry">[Link]</a>{% endif -%}
-      </span>
-    </div>
-    <ul class="reviews">
-      {% for level in [5, 4, 3, 2, 1] %}
-        {% for review in show.at(level) %}
-        <li class="s{{ level }}">
-          <span class="rating" title="{{ level }} out of 5">{{ level|stars }}</span>
-          <span class="pub"><a href="{{ review.url }}" target="_blank" rel="nofollow noopener">{{ review.publication }}</a></span>
-        </li>
-        {% endfor %}
-      {% endfor %}
-    </ul>
-  </div>
-</article>
-{% else %}
-<p class="placeholder"><em>2026 reviews go live Wednesday 5th August</em></p>
-{% endfor %}
 
-{% if rest %}
-<h3 class="section">Also reviewed &mdash; no 4 or 5 star reviews yet</h3>
-<div class="rest">
-  {% for show in rest %}
-  <div>
-    {{ show.title }}
-    {% for review in show.reviews %}
-      <a href="{{ review.url }}" target="_blank" rel="nofollow noopener" title="{{ review.publication }}">{{ review.stars }}&#9733;</a>{% if not loop.last %}, {% endif %}
-    {% endfor %}
-  </div>
-  {% endfor %}
-</div>
-{% endif %}
+<p class="placeholder"><em>2026 reviews go live Wednesday 5th August</em></p>
+
+
+
 
 <footer>
-  {% if publications %}<p>
-    <strong>Sources:</strong> {{ publications|join(", ") }}.
-  </p>{% endif %}
+  
   <p>
     Ratings are collated automatically from publicly available reviews and link
     back to the publication. Ratings given on other scales are converted to
@@ -187,7 +147,7 @@
     own; this page only counts them.
   </p>
   <p>
-    Spotted a mistake? <a href="{{ contact_url }}" rel="noopener">{{ contact_label }}</a>
+    Spotted a mistake? <a href="mailto:corrections@fringestars.com" rel="noopener">email corrections@fringestars.com</a>
     and we&rsquo;ll fix it. Publications wanting a rating amended or removed:
     same route &mdash; it will be actioned.
   </p>
