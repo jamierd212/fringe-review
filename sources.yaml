@@ -170,14 +170,25 @@ publications:
   - name: Broadway Baby
     slug: broadwaybaby
     homepage: https://broadwaybaby.com/
-    feed: https://broadwaybaby.com/feed
+    feed: ""
     rating:
       type: auto
     enabled: false
-    verified: 2026-08-01
+    verified: 2026-08-03
     notes: >
-      EXCLUDED: returns HTTP 403 to automated requests. Worth emailing them to
-      ask permission and for a feed URL before enabling — do not work around it.
+      NOT BLOCKED, but not yet usable. The earlier HTTP 403 has gone: the site
+      serves us 200 and its robots.txt has no Disallow rules at all. So this is
+      a technical gap, not a permission one, and no email is needed.
+
+      Two things are missing. There is no feed - none declared in the page head,
+      and /feed and sitemap.xml both 404 - though https://broadwaybaby.com/reviews
+      is a single listing page carrying 517 review links, which suits the same
+      index-based discovery Chortle uses.
+
+      And the rating is not in the HTML: review pages carry no star glyphs, no
+      schema ratingValue and no star images, so the cascade returns nothing.
+      Same shape of problem as The List; it likely renders client-side. Worth
+      the work, as this is one of the highest-volume Fringe reviewers.
 
   - name: The Scotsman
     slug: scotsman
@@ -185,17 +196,33 @@ publications:
     feed: https://www.scotsman.com/arts-and-culture/edinburgh-festivals/rss
     rating:
       type: auto
-    enabled: false
-    verified: 2026-08-02
+    fetch_page: true
+    festival_feed: true       # the feed is the Edinburgh festivals section
+    pages: 1
+    exclude_title_patterns:
+      # Pre-festival the section is almost all listicles, and they carry numbers
+      # the cascade reads as ratings: "Edinburgh Fringe 2026: Here are all 12
+      # Last One Laughing acts" scored 4 stars. These patterns are scoped to
+      # this publication and were checked against its live feed.
+      - "\\bhere are\\b"
+      - "\\bhot tickets\\b"
+      - "\\bsurvival guide\\b"
+      - "\\bhighlights\\b"
+    verified: 2026-08-03
     notes: >
-      BLOCKED AT THE SERVER: returns HTTP 403 to our User-Agent on both the
-      homepage and article pages. Note their robots.txt does not forbid these
-      paths for a generic crawler — the block is enforced above robots.txt, and
-      a 403 is an explicit refusal to serve us. Do not work around it. The RSS feed is readable but carries only features, with no
-      star ratings in the titles or descriptions, so the ratings are only on
-      pages we cannot fetch. Their "every 4 and 5 star review" round-up would be
-      the ideal single source — worth emailing to ask permission rather than
-      working around the block.
+      NO LONGER BLOCKED. This previously returned HTTP 403 and was recorded as a
+      server block; on retest the homepage, robots.txt, the festival RSS feed
+      and full article pages all return 200. The 403 was Cloudflare bot
+      management, which is dynamic - not an editorial decision - so the earlier
+      note claiming a deliberate block was wrong.
+
+      robots.txt disallows only /internal-api/, /newsletter-app/ and a
+      parsely-api query string. Nothing relevant to us.
+
+      NOT YET VERIFIED ON REAL REVIEWS: the festival had not started when this
+      was enabled, so every feed item was a preview or listicle and no genuine
+      review page has been through the rating cascade. Check the first run after
+      the festival opens before trusting the output.
 
   - name: The Telegraph
     slug: telegraph
@@ -386,10 +413,14 @@ publications:
     enabled: false
     verified: 2026-08-03
     notes: >
-      EXCLUDED: returns HTTP 403 to our User-Agent, on robots.txt itself as well
-      as on pages. A young-people's arts magazine with substantial Fringe
-      coverage. Same position as the Scotsman and Broadway Baby: worth asking
-      permission, not worth working around.
+      BLOCKED, and the only one of the three that genuinely is. Cloudflare
+      returns 403 with "Cf-Mitigated: challenge" on every path including
+      robots.txt, so we cannot even read their crawling rules. Getting past a
+      challenge means defeating a bot check - that is, presenting ourselves as
+      something we are not - which is different in kind from reading a robots
+      rule that already permits us. Ask; do not work around.
+
+      A young people's arts magazine with substantial Fringe coverage.
 
   - name: Theatre Weekly
     slug: theatreweekly
