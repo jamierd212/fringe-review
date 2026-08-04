@@ -267,11 +267,20 @@ def positions(ranked: list[Show]) -> list[tuple[int, Show]]:
     """
     Attach positions, sharing a number between genuinely tied shows
     (two shows on 3x5 and 1x4 are both 2nd, and the next show is 4th).
+
+    Tied means the whole ranking key matches, not just the medal counts. Testing
+    only the 5- and 4-star counts made every tiebreak invisible: two shows could
+    be deliberately ordered — one of them carrying two 3-star reviews the other
+    did not — and still be shown as equal. A reader comparing them would see one
+    above the other with the same number beside it and no way to tell why.
+
+    The title is excluded because it is only there to keep the sort stable;
+    being alphabetically earlier is not a way of being better.
     """
     out: list[tuple[int, Show]] = []
     last_key, last_pos = None, 0
     for index, show in enumerate(ranked, start=1):
-        key = rank_key(show)[:2]        # tied means same 5- and 4-star counts
+        key = rank_key(show)[:-1]       # everything except the alphabetical tiebreak
         if key != last_key:
             last_pos, last_key = index, key
         out.append((last_pos, show))
