@@ -64,12 +64,16 @@ class Show:
         return len(self.reviews)
 
     @property
+    def mean(self) -> float:
+        """Mean star rating as a number, for ranking. See `average` for display."""
+        return sum(r.stars for r in self.reviews) / len(self.reviews) if self.reviews else 0.0
+
+    @property
     def average(self) -> str:
         """
         Mean star rating, one decimal place.
 
-        This is NOT what the leaderboard ranks on — that is the Olympic count of
-        5s and 4s. It exists because search engines expect an aggregate rating,
+        This is NOT what the leaderboard ranks on — see rank_key. It exists because search engines expect an aggregate rating,
         and it is displayed on the show page so the structured data matches what
         a reader actually sees.
         """
@@ -93,12 +97,33 @@ def rank_key(show: Show) -> tuple:
     """
     Sort key. Python compares tuples left to right, and negating a number turns
     an ascending sort into a descending one.
+
+    Olympic, with medals that can be taken away. A 5-star review is a gold and a
+    4-star a silver, exactly as before — any gold still outranks any number of
+    silvers. What is new is that poor reviews cancel them: a 1-star cancels a
+    gold, a 2-star cancels a silver, and 3-stars break ties. So a show with two
+    5-star reviews and a 1-star now ranks below a show with a single clean
+    5-star, which is the honest reading of its record.
+
+    This replaces total review count as the tiebreak, which had it backwards:
+    among shows with identical 5- and 4-star records, the one with an EXTRA
+    3-star review ranked higher, because more reviews counted as better. That
+    put a show averaging 4.0 above one averaging 4.5.
+
+    Deliberately NOT a points sum. Scoring 5s and 4s as +3/+2 and summing lets
+    three silvers outrank a gold: on the 2025 data it put a show with no 5-star
+    reviews at all into the top 12, and pushed a perfect three-5-star record
+    into second place. Lexicographic ordering is what makes this Olympic.
+
+    The displayed figure stays the plain average, which is a fact about the
+    show. This key decides order only — it is not a score anyone is shown.
     """
     c = show.counts
     return (
-        -c[5],                      # most 5-star reviews wins outright
-        -c[4],                      # then most 4-star
-        -show.total,                # then the most widely reviewed
+        -(c[5] - c[1]),             # golds, less the 1-star reviews that cancel them
+        -(c[4] - c[2]),             # then silvers, less the 2-stars
+        c[3],                       # then fewest 3-star reviews
+        -show.mean,                 # then the better average
         show.title.casefold(),      # then alphabetical, so the order is stable
     )
 
