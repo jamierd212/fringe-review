@@ -76,6 +76,39 @@ RATING_FRAGMENT = re.compile(
 # Everything from " review" onwards is the paper's editorialising, not the show.
 REVIEW_TAIL = re.compile(r"\s+review\b.*$", re.I)
 
+# Words that describe a SECTION rather than name a show. A headline made only of
+# these before the word "review" is a label, not a title.
+SECTION_WORDS = {
+    "edinburgh", "international", "festival", "festivals", "fringe", "eif",
+    "music", "theatre", "dance", "art", "comedy", "books", "book", "opera",
+    "classical", "musicals", "musical", "circus", "cabaret", "kids",
+    "children", "spoken", "word", "review", "reviews", "and", "the", "at",
+}
+
+SECTION_REVIEW = re.compile(r"^(?P<head>[^:]{0,70}?)\s+reviews?\s*:\s*(?P<tail>.+)$", re.I)
+
+
+def _prefer_after_review(text: str) -> str:
+    """
+    "Edinburgh International Festival music review: Closing Concert" names the
+    show AFTER the colon, not before it.
+
+    Stripping from the word "review" onwards — right for "Chappell Roan,
+    Edinburgh review: 'joyous'", where a pull-quote follows — threw the show
+    name away here and left the section label, which then ranked 23rd on the
+    board with five stars.
+
+    So the head is only discarded when it says nothing: every word in it is a
+    festival or section word. A real title contains something else.
+    """
+    m = SECTION_REVIEW.match(text)
+    if not m:
+        return text
+    head_words = re.findall(r"[A-Za-z]+", m.group("head").lower())
+    if head_words and all(w in SECTION_WORDS for w in head_words):
+        return m.group("tail").strip()
+    return text
+
 SEPARATORS = re.compile(r"\s*[:–—]\s*|\s+-\s+")
 
 
@@ -91,6 +124,7 @@ def clean_title(raw: str) -> str:
         if stripped == text:
             break
         text = stripped
+    text = _prefer_after_review(text)
     text = REVIEW_TAIL.sub("", text)
     text = VENUE_TAIL.sub("", text)
     text = VENUE_TAIL_NAMED.sub("", text)
