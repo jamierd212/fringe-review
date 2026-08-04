@@ -17,6 +17,55 @@ import sqlite3
 from dataclasses import dataclass, field
 
 
+# How many reviews a publication needs before we trust its own rate rather than
+# the site-wide one. A source three reviews old, all of them five stars, is not
+# evidence that it never gives five stars away.
+SELECTIVITY_PRIOR = 20
+
+
+def selectivity(conn: sqlite3.Connection, year: int | None = None) -> dict[tuple[str, int], float]:
+    """
+    {(publication, level): how often that publication awards AT LEAST that level}.
+
+    Publications differ enormously in how freely they give stars. On the 2025
+    data Chortle awarded five stars to 1% of the shows it reviewed and North
+    West End to 33% — so the same five stars mean very different things, and a
+    show's reviews read better with the scarcest first.
+
+    "At least the level" rather than "exactly", because it has to work at every
+    level: for a four-star review what matters is how often that publication
+    goes that high at all, not how often it goes higher.
+
+    Rates are shrunk toward the site-wide rate so a publication with a handful
+    of reviews does not look maximally selective on no evidence.
+    """
+    rows = conn.execute(
+        """SELECT r.publication, r.stars FROM reviews r
+             JOIN shows s ON s.id = r.show_id
+            WHERE r.stars IS NOT NULL AND (? IS NULL OR s.year = ?)""",
+        (year, year),
+    ).fetchall()
+
+    totals: dict[str, int] = {}
+    hits: dict[tuple[str, int], int] = {}
+    overall: dict[int, int] = {}
+    for pub, stars in rows:
+        totals[pub] = totals.get(pub, 0) + 1
+        for level in range(1, 6):
+            if stars >= level:
+                hits[(pub, level)] = hits.get((pub, level), 0) + 1
+                overall[level] = overall.get(level, 0) + 1
+
+    n = len(rows) or 1
+    out: dict[tuple[str, int], float] = {}
+    for pub, total in totals.items():
+        for level in range(1, 6):
+            site = overall.get(level, 0) / n
+            got = hits.get((pub, level), 0)
+            out[(pub, level)] = (got + SELECTIVITY_PRIOR * site) / (total + SELECTIVITY_PRIOR)
+    return out
+
+
 @dataclass
 class ReviewRef:
     publication: str
@@ -44,6 +93,8 @@ class Show:
     genre: str = ""             # e.g. "Comedy · Sketch"
     venue: str = ""
     reviews: list[ReviewRef] = field(default_factory=list)
+    # {(publication, level): rate} — see selectivity(). Empty means alphabetical.
+    selectivity: dict = field(default_factory=dict, repr=False)
 
     @property
     def counts(self) -> dict[int, int]:
@@ -53,10 +104,23 @@ class Show:
         return out
 
     def at(self, stars: int) -> list[ReviewRef]:
-        """Reviews at a given star level, best-known publications first."""
+        """
+        Reviews at a given star level, scarcest verdict first.
+
+        Four stars from Chortle, which gives them to a quarter of what it sees,
+        is a different statement from four stars from a publication that gives
+        them to four fifths. Listing the hardest-won first tells the reader
+        something true without ranking one publication above another as a matter
+        of editorial opinion — the order comes from their own record.
+
+        Falls back to alphabetical when no rates are available, so this stays
+        deterministic rather than arbitrary.
+        """
+        here = [r for r in self.reviews if r.stars == stars]
         return sorted(
-            [r for r in self.reviews if r.stars == stars],
-            key=lambda r: r.publication.casefold(),
+            here,
+            key=lambda r: (self.selectivity.get((r.publication, stars), 1.0),
+                           r.publication.casefold()),
         )
 
     @property
@@ -191,6 +255,9 @@ def leaderboard(conn: sqlite3.Connection,
                 year: int | None = None) -> tuple[list[Show], list[Show]]:
     """Returns (ranked shows in order, unranked shows alphabetically)."""
     shows = load(conn, year)
+    rates = selectivity(conn, year)
+    for show in shows:
+        show.selectivity = rates
     ranked = sorted([s for s in shows if s.ranked], key=rank_key)
     rest = sorted([s for s in shows if not s.ranked], key=lambda s: s.title.casefold())
     return ranked, rest
