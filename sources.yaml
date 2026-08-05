@@ -303,22 +303,33 @@ publications:
     rating:
       type: auto
     enabled: false
-    verified: 2026-08-02
+    verified: 2026-08-05
     notes: >
-      DEFERRED — bigger job than it looks. Permitted (robots.txt is clear and
-      the site serves our User-Agent), but the site is a Nuxt single-page app:
-      the HTML contains no review links, no star characters and no rating keys,
-      because everything renders client-side.
+      CLOSED, and not for the reason previously recorded. The API was found and
+      mapped; the problem is that there is no rating to read.
 
-      Progress made, for whoever picks this up: the page config exposes a CMS
-      API at https://cms.list.co.uk/api/v2 — but the endpoint names are not
-      guessable. Wagtail-style /pages/ and fourteen other plausible paths all
-      return 404. Finding the real endpoints means reading their JS bundle for
-      the fetch calls, or driving a headless browser and watching the network
-      tab. Either is viable, neither is quick.
+      Their CMS API is at https://cms.list.co.uk/api/v2 and its robots.txt is
+      "Disallow:" with nothing after it — fully permitted. The endpoints are not
+      guessable but are visible in the route's JS chunks, where $fetch calls
+      build them from a runtime apiBase. Working ones, for whoever needs them:
 
-      Worth returning to: The List is a major Fringe reviewer, and a JSON API
-      would be as clean a source as the Guardian's once the paths are known.
+        /news                                      paginated, ~2,400 pages
+        /news/featured?microsite=edinburgh-festival
+        /projects/featured?microsite=edinburgh-festival    (shows)
+        /projects/{id}   /projects/{slug}
+        /highlights/homepage?microsite=edinburgh-festival
+        /tiles/home_page_cta
+
+      News items carry an `article_rating` field, so they clearly rated articles
+      at some point. It is null on every one of 320 items sampled across 16
+      pages of the archive, `article_type` is "none" throughout, and no filter
+      parameter tried (type, article_type, filter[...], rating, sort, order)
+      changes what comes back. Project objects have no rating field at all, and
+      the rendered pages contain no star glyphs and no schema ratingValue.
+
+      So The List appears to have stopped publishing star ratings. Nothing in
+      the pipeline can fix that. Revisit only if a rated review is spotted on
+      their site — at which point the endpoints above make it a short job.
 
   - name: The Wee Review
     slug: weereview
