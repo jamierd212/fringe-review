@@ -249,7 +249,17 @@ class Collector:
             raw = self._get(index_url)
             if raw is None:
                 continue
-            for url, label in dict.fromkeys(_re.findall(pattern, raw, _re.S)):
+            # Dedupe by URL, not by (url, label): a listing links the same
+            # review from its thumbnail and its headline, and the thumbnail
+            # anchor has no text — so keeping pairs yields the review twice,
+            # once with an empty title.
+            best: dict[str, str] = {}
+            for url, label in _re.findall(pattern, raw, _re.S):
+                text = _re.sub(r"\s+", " ", _re.sub(r"<[^>]+>", "", label)).strip()
+                if url not in best or (not best[url] and text):
+                    best[url] = text
+
+            for url, label in best.items():
                 # The date sits in the URL, which is the only date this source
                 # gives us — without it every review would fall back to the
                 # current year and land on the wrong leaderboard.
@@ -258,8 +268,7 @@ class Collector:
                 if backfill and m:
                     if (int(m.group(1)), int(m.group(2))) != backfill:
                         continue
-                title = _re.sub(r"\s+", " ", _re.sub(r"<[^>]+>", "", label)).strip()
-                found.append(Candidate(url=url, title=title, summary="",
+                found.append(Candidate(url=url, title=label, summary="",
                                        published=published, publication=pub["name"]))
         return found
 
@@ -636,6 +645,21 @@ class Collector:
         for pattern in pub.get("title_strip_patterns", []) or []:
             cand.title = re.sub(pattern, "", cand.title, flags=re.I).strip(" -–—:|")
 
+        # Some listings carry no date at all — Broadway Baby's show "3 hours
+        # ago" or nothing — but the review page states one outright. Without it
+        # the year falls back to whatever the run was invoked with, which is how
+        # leaderboards for 2019 appeared on the site. The page is already in
+        # hand, so read it here; the sweep re-checks the window once it knows.
+        if pattern_date := pub.get("date_from_page"):
+            m = re.search(pattern_date, html, re.I)
+            if m:
+                try:
+                    cand.published = datetime.strptime(
+                        m.group(1).strip(), pub.get("date_format", "%d %b %Y")
+                    ).strftime("%Y-%m-%dT12:00:00Z")
+                except ValueError:
+                    pass
+
         return find_rating(
             title=cand.title, summary=cand.summary, html=html, rule=rule
         )
@@ -724,10 +748,21 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None)
                 # Nothing extractable: fall through and treat it as one review
                 # rather than silently dropping a page that may carry a rating.
 
+            had_date = cand.published is not None
             rating = collector.rate(pub, cand)
             if rating is None:
                 db.mark_seen(conn, cand.url, "no_rating")
                 continue
+
+            # The date may only have arrived with the page. The window and year
+            # filters ran before that and pass anything undated, so re-apply
+            # them now rather than storing a review from the wrong festival.
+            if not had_date and cand.published:
+                if not (collector.in_festival_window(cand, pub)
+                        and collector.in_target_year(cand, target_year)):
+                    db.mark_seen(conn, cand.url, "outside_festival")
+                    continue
+
             store(cand, rating)
             db.mark_seen(conn, cand.url, "review")
             rated += 1

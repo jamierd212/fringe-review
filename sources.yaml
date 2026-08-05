@@ -170,25 +170,41 @@ publications:
   - name: Broadway Baby
     slug: broadwaybaby
     homepage: https://broadwaybaby.com/
-    feed: ""
+    # No feed of any kind, and pagination is ignored on every listing — /reviews
+    # returns the same 517 items whatever ?page= says. Their EdFringe section is
+    # the right entry point: Edinburgh only, and refreshed as reviews appear.
+    discovery: index
+    index_urls:
+      - https://broadwaybaby.com/edfringe
+    link_pattern: 'href="(https://broadwaybaby\.com/shows/[^"]+/\d+)"[^>]*>(.*?)</a>'
     rating:
-      type: auto
-    enabled: false
-    verified: 2026-08-03
+      type: css
+      selector: "i.fa-star + span"   # <i class="fa-solid fa-star"></i><span>4</span>
+      scale: 5
+    fetch_page: true
+    # The link text is the review's pull-quote ("See it for the central
+    # relationship, leave with a sweet melancholy..."), not the show. The page
+    # names the show in og:title, prefixed with the publication.
+    title_from_page: true
+    title_strip_patterns:
+      - "^\\s*Broadway Baby\\s*:\\s*"
+    # Listing cards show "3 hours ago" or nothing at all, so the date has to come
+    # off the review page, which states it outright.
+    date_from_page: "Published:\\s*(\\d{1,2} [A-Za-z]{3} \\d{4})"
+    date_format: "%d %b %Y"
+    verified: 2026-08-05
     notes: >
-      NOT BLOCKED, but not yet usable. The earlier HTTP 403 has gone: the site
-      serves us 200 and its robots.txt has no Disallow rules at all. So this is
-      a technical gap, not a permission one, and no email is needed.
+      One of the highest-volume Fringe reviewers, and previously recorded as
+      blocked. It is not: it serves us 200 and its robots.txt has no Disallow
+      rules at all.
 
-      Two things are missing. There is no feed - none declared in the page head,
-      and /feed and sitemap.xml both 404 - though https://broadwaybaby.com/reviews
-      is a single listing page carrying 517 review links, which suits the same
-      index-based discovery Chortle uses.
+      The rating defeated three earlier attempts because it is neither a glyph
+      nor an image nor schema markup — it is a Font Awesome icon followed by a
+      bare number, <i class="fa-solid fa-star"></i><span>4</span>. Searching for
+      stars found only Tailwind's "text-start" classes.
 
-      And the rating is not in the HTML: review pages carry no star glyphs, no
-      schema ratingValue and no star images, so the cascade returns nothing.
-      Same shape of problem as The List; it likely renders client-side. Worth
-      the work, as this is one of the highest-volume Fringe reviewers.
+      Their /reviews listing is UK-wide (Frinton, Brighton, the West End), which
+      is why the EdFringe section is used instead.
 
   - name: The Scotsman
     slug: scotsman
