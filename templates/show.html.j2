@@ -24,21 +24,33 @@
     background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
     padding: 1.4rem 1.5rem; margin-top: 1rem;
   }
-  .titlerow { display: flex; gap: 1.2rem; align-items: baseline; justify-content: space-between; }
-  h1 { font-size: 1.5rem; margin: 0 0 .2rem; line-height: 1.25; }
-  .venue {
-    flex: none; font-size: .8rem; color: var(--muted); text-align: right;
-    max-width: 40%;
+  .titlerow {
+    display: flex; gap: 1.2rem; align-items: flex-start;
+    justify-content: space-between;
   }
-  @media (max-width: 560px) {
-    .titlerow { flex-direction: column; gap: .15rem; }
-    .venue { text-align: left; max-width: none; }
+  .titlewrap { min-width: 0; }
+  h1 { font-size: 1.5rem; margin: 0 0 .15rem; line-height: 1.2; }
+  .performer { color: var(--muted); font-size: .9rem; }
+  /* Genre and the programme link stack on the right. Their combined height is
+     tuned to sit close to the title block's, so the two columns read as one
+     header rather than as a heading with something bolted beside it. */
+  .meta-right {
+    flex: none; display: flex; flex-direction: column; align-items: flex-end;
+    gap: .3rem; text-align: right; max-width: 45%;
   }
-  .performer { color: var(--muted); margin-bottom: .8rem; }
   .genre {
     display: inline-block; font-size: .72rem; letter-spacing: .04em;
     text-transform: uppercase; color: var(--star); border: 1px solid var(--rule);
-    border-radius: 999px; padding: .12rem .55rem; margin-bottom: .8rem;
+    border-radius: 999px; padding: .12rem .55rem; white-space: nowrap;
+  }
+  .proglink {
+    font-size: .8rem; color: var(--muted); text-decoration: none;
+    white-space: nowrap;
+  }
+  .proglink:hover { color: var(--star); text-decoration: underline; }
+  @media (max-width: 560px) {
+    .titlerow { flex-direction: column; gap: .35rem; }
+    .meta-right { align-items: flex-start; text-align: left; max-width: none; }
   }
   .summary {
     border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
@@ -67,7 +79,6 @@
      on top of the publication name on a phone. Wrapping the name fixes the
      overlap while keeping the badge on the same line. */
   .pub { overflow-wrap: anywhere; }
-  .official { display: inline-block; margin-top: 1rem; font-size: .9rem; }
   a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 2px; }
   /* Publication names are links, but a column of underlines competes with the
      stars beside them. Underline only on hover, so they still read as links. */
@@ -87,11 +98,22 @@
 
 <div class="card">
   <div class="titlerow">
-    <h1>{{ show.title }}</h1>
-    {% if show.venue %}<span class="venue">{{ show.venue }}</span>{% endif %}
+    <div class="titlewrap">
+      <h1>{{ show.title }}</h1>
+      {% if show.performer or show.venue %}
+      <div class="performer">
+        {{ show.performer or "" }}{% if show.performer and show.venue %} &middot; {% endif %}{{ show.venue or "" }}
+      </div>
+      {% endif %}
+    </div>
+    {% if show.genre or show.url %}
+    <div class="meta-right">
+      {% if show.genre %}<span class="genre">{{ show.genre }}</span>{% endif %}
+      {% if show.url %}<a class="proglink" href="{{ show.url }}" target="_blank"
+         rel="noopener" title="Official programme entry">Programme &rarr;</a>{% endif %}
+    </div>
+    {% endif %}
   </div>
-  {% if show.performer %}<div class="performer">{{ show.performer }}</div>{% endif %}
-  {% if show.genre %}<span class="genre">{{ show.genre }}</span>{% endif %}
 
   <div class="summary">
     {% if show.average %}
@@ -114,9 +136,6 @@
     {% endfor %}
   </ul>
 
-  {% if show.url %}
-  <a class="official" href="{{ show.url }}" target="_blank" rel="noopener">Official {{ festival_name }} programme entry &rarr;</a>
-  {% endif %}
 </div>
 
 <footer>

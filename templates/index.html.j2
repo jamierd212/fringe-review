@@ -57,12 +57,6 @@
     color: var(--star); border: 1px solid var(--rule); border-radius: 999px;
     padding: .12rem .55rem; white-space: nowrap;
   }
-  .proglink {
-    font-size: .72rem; letter-spacing: .04em; text-transform: uppercase;
-    color: var(--muted); white-space: nowrap; text-decoration: none;
-    border-bottom: 1px solid var(--rule);
-  }
-  .proglink:hover { color: var(--star); border-bottom-color: var(--star); }
   .performer { color: var(--muted); font-size: .85rem; }
   @media (max-width: 560px) {
     .titlerow { flex-direction: column; gap: .2rem; }
@@ -168,8 +162,6 @@
       </span>
       <span class="meta-right">
         {% if show.genre %}<span class="genre">{{ show.genre }}</span>{% endif %}
-        {%- if show.url %}<a class="proglink" href="{{ show.url }}" target="_blank" rel="noopener"
-           title="Official programme entry">[Link]</a>{% endif -%}
       </span>
     </div>
     <ul class="reviews">
