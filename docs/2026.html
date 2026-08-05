@@ -14,6 +14,11 @@
     --card: #ffffff;            /* boxes deliberately left white */
   }
   * { box-sizing: border-box; }
+  /* The `hidden` attribute is only `display: none` in the user-agent
+     stylesheet, so ANY author rule setting display beats it — `.show` is
+     display:flex, which meant search hid rows in the DOM while leaving every
+     one of them on screen. */
+  [hidden] { display: none !important; }
   body {
     margin: 0; padding: 2rem .6rem 4rem; background: var(--bg); color: var(--ink);
     font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -98,6 +103,21 @@
     font-weight: 700;
   }
 
+  nav.years .search { margin-left: auto; }
+  nav.years input[type="search"] {
+    padding: .3rem .85rem; border: 1px solid var(--rule); border-radius: 999px;
+    font-size: .9rem; font-family: inherit; color: var(--ink);
+    background: var(--card); width: 11rem; -webkit-appearance: none;
+  }
+  nav.years input[type="search"]:focus {
+    outline: none; border-color: var(--ink);
+  }
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  .nomatch { color: var(--muted); font-style: italic; margin: 1.5rem 0; }
+
   .placeholder { color: var(--muted); font-size: 1.05rem; margin: 2rem 0 3rem; }
   h3.section { margin: 2.5rem 0 .75rem; font-size: 1rem; text-transform: uppercase;
                letter-spacing: .08em; color: var(--muted); }
@@ -124,12 +144,17 @@
     
     <a href="2025.html">2025</a>
     
+    <label class="search" hidden>
+      <span class="visually-hidden">Search shows</span>
+      <input type="search" id="q" placeholder="Search shows&hellip;"
+             autocomplete="off" spellcheck="false">
+    </label>
   </nav>
   
 </header>
 
 <p class="meta">
-  Updated 5 August 2026, 16:14 BST
+  Updated 5 August 2026, 20:30 BST
 </p>
 
 
@@ -154,5 +179,52 @@
 </footer>
 
 </div>
+
+<p class="nomatch" id="nomatch" hidden></p>
+
+<script>
+// Search is client-side because the site is static files on a CDN. The box is
+// hidden in the markup and revealed here, so it never appears as a dead control
+// for anyone without JavaScript.
+(function () {
+  var box = document.querySelector('.search');
+  var input = document.getElementById('q');
+  var none = document.getElementById('nomatch');
+  if (!box || !input) return;
+  box.hidden = false;
+
+  // Read the text once. Doing it per keystroke means touching a thousand
+  // elements' DOM text on every character typed.
+  var rows = [].map.call(document.querySelectorAll('[data-find]'), function (el) {
+    return { el: el, text: el.getAttribute('data-find') };
+  });
+  var section = document.querySelector('h3.section');
+  var rest = document.querySelector('.rest');
+
+  function apply() {
+    var q = input.value.trim().toLowerCase();
+    var hits = 0;
+    for (var i = 0; i < rows.length; i++) {
+      var show = !q || rows[i].text.indexOf(q) !== -1;
+      rows[i].el.hidden = !show;
+      if (show) hits++;
+    }
+    // The "also reviewed" heading and its column are meaningless when nothing
+    // in them matches.
+    if (rest) {
+      var anyRest = [].some.call(rest.querySelectorAll('[data-find]'), function (e) {
+        return !e.hidden;
+      });
+      rest.hidden = !anyRest;
+      if (section) section.hidden = !anyRest;
+    }
+    none.hidden = !(q && hits === 0);
+    if (!none.hidden) none.textContent = 'No shows match \u201c' + input.value.trim() + '\u201d.';
+  }
+
+  input.addEventListener('input', apply);
+  input.addEventListener('search', apply);   // the clear (x) button
+})();
+</script>
 </body>
 </html>
