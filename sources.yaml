@@ -28,7 +28,7 @@ defaults:
   # Chosen over Google Analytics because it sets no cookies and collects no
   # personal data, so it does not drag a consent banner onto a page people are
   # mostly glancing at on a phone.
-  analytics_token: ""
+  analytics_token: "0730ec74a6644f20aeb877089108726f"
   delay_seconds: 1.0        # be polite: max ~1 request per second per site
   timeout_seconds: 25
 
