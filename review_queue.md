@@ -4,9 +4,7 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-| Publication | Headline | Matched to | Confidence |
-|---|---|---|---|
-| Musical Theatre Review | [Jess Robinson: Elton Reimagined – Edinburgh Festival Fringe](https://musicaltheatrereview.com/jess-robinson-elton-reimagined-edinburgh-festival-fringe/) | Elton Reimagined - Edinburgh Festival Fringe | 75% |
+_Nothing to check. 🎉_
 
 ## Held — not on the leaderboard
 
