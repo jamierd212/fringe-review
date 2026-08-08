@@ -248,15 +248,22 @@ def label(festival: str, genre: str, subgenre: str) -> str:
     """
     # The Fringe's own values are machine-shaped: "Childrens_Shows", "Theatre".
     genre = (genre or "").replace("_", " ").title().replace("And", "&")
-    # The Fringe returns multiple subgenres comma-joined with no space
-    # ("Stand-up,Storytelling"), which reads as a typo on the page.
-    subgenre = re.sub(r"\s*,\s*", ", ", subgenre or "")
+    # The Fringe comma-joins every subgenre it holds, so a badge could read
+    # "Childrens Shows · Musical comedy, Family-friendly" — 48 characters, wider
+    # than a phone, and the page scrolled sideways because of it. The first is
+    # the one that says most; the rest are noise on a row that already has a
+    # title, a performer and a row of stars.
+    subgenre = (subgenre or "").split(",")[0].strip()
     parts = [p for p in (genre, subgenre) if p]
     if not parts:
-        # The festival's own name, not its internal key: "FREEFRINGE" is not a
-        # thing anyone calls it.
+        # With no classification, the festival's name is worth showing only when
+        # it is NOT the Fringe: "EIF" tells a reader this is the International
+        # Festival, whereas "FRINGE" on a site about the Edinburgh festivals
+        # says nothing at all and is just one more thing on the row.
+        if not festival or festival == "fringe":
+            return ""
         names = {f["key"]: f["label"] for f in FESTIVALS}
-        return names.get(festival, (festival or "").upper()).upper()
+        return names.get(festival, festival.upper()).upper()
     return " · ".join(parts)
 
 
