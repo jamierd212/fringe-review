@@ -13,6 +13,7 @@ is the performer and which is the show.
 
 from __future__ import annotations
 
+import html as html_lib
 import re
 import unicodedata
 
@@ -131,7 +132,12 @@ SEPARATORS = re.compile(r"\s*[:–—]\s*|\s+-\s+")
 
 def clean_title(raw: str) -> str:
     """Strip ratings, prefixes and venue tails, leaving the human-readable title."""
-    text = unicodedata.normalize("NFKC", raw or "")
+    # Index and listing discovery read titles straight out of HTML with a regex,
+    # so entities survive where a feed parser would have decoded them. Left
+    # alone they reach the page as "Rat&#39;s Ass" and stop the show matching
+    # its programme entry.
+    text = html_lib.unescape(raw or "")
+    text = unicodedata.normalize("NFKC", text)
     text = _unify_punctuation(text)
     text = RATING_FRAGMENT.sub(" ", text)
     # Headlines can stack prefixes ("Review: Edinburgh Fringe 2025: Diva"), so

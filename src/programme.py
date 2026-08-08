@@ -279,7 +279,7 @@ def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dic
     other festival is re-fetched looking for one that is never there.
     """
     pending = conn.execute(
-        """SELECT id, title, edfringe_url, festival FROM shows
+        """SELECT id, title, performer, edfringe_url, festival FROM shows
             WHERE year = ?
               AND (edfringe_url IS NULL OR edfringe_url = ''
                    OR (festival = 'fringe' AND (genre IS NULL OR genre = '')))
@@ -301,8 +301,15 @@ def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dic
     matched = missed = 0
     per_festival: dict[str, int] = {}
     for row in pending[: limit or len(pending)]:
-        key = normalise(row["title"])
-        hit = next(((f, i[key]) for f, i in indexes if key in i), None)
+        # The programme frequently lists a show under its performer as well
+        # ("Leo Hincks: Emotional Cowboy"), while publications review it by
+        # title alone. Trying both costs nothing and is the difference between
+        # a genre and a blank badge.
+        candidates = [normalise(row["title"])]
+        if row["performer"]:
+            candidates.append(normalise(f"{row['performer']} {row['title']}"))
+        hit = next(((f, i[k]) for k in candidates for f, i in indexes if k in i), None)
+        key = candidates[0]
         if hit is None and row["edfringe_url"]:
             # Linked by the gate under a spelling the title alone does not
             # reproduce; the URL it found is still the right page to read.
