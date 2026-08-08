@@ -56,7 +56,29 @@ DELAY = 1.0          # edfringe.com's robots.txt asks for Crawl-delay: 1
 _SSL = ssl.create_default_context(cafile=certifi.where())
 
 
+_GATE = None
+
+
+def _allowed(url: str) -> bool:
+    """
+    Consult the same robots.txt gate the collector uses.
+
+    This module fetches festival sitemaps and show pages through its own
+    urlopen, so without this it was the one part of the crawler exempt from the
+    rules the site publicly promises to follow. All four festival sites permit
+    us today; the point is that they would still be asked tomorrow.
+    """
+    global _GATE
+    if _GATE is None:
+        from .collect import Collector, load_config
+        _GATE = Collector(load_config())
+    return _GATE.allowed(url)
+
+
 def _get(url: str, timeout: int = 25) -> str | None:
+    if not _allowed(url):
+        print(f"      ! robots.txt disallows  {url[:70]}")
+        return None
     try:
         req = urllib.request.Request(url, headers=UA)
         return urllib.request.urlopen(req, timeout=timeout,
