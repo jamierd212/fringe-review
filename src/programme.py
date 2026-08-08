@@ -246,7 +246,8 @@ def label(festival: str, genre: str, subgenre: str) -> str:
     reader something useful — that this is the International Festival rather
     than the Fringe.
     """
-    genre = (genre or "").title().replace("And", "&")
+    # The Fringe's own values are machine-shaped: "Childrens_Shows", "Theatre".
+    genre = (genre or "").replace("_", " ").title().replace("And", "&")
     # The Fringe returns multiple subgenres comma-joined with no space
     # ("Stand-up,Storytelling"), which reads as a typo on the page.
     subgenre = re.sub(r"\s*,\s*", ", ", subgenre or "")

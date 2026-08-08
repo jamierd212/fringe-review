@@ -365,6 +365,10 @@ publications:
       # "Lady Macbeth Played Wing Defence, Crash Theatre Co and House of Oz"
       # were two entries on the 2025 board. Scoped here because it is this
       # publication's house style, not a general rule.
+      # Two patterns, and the order matters. The festival tail has to go first:
+      # a single "drop the last comma group" rule removes ", EdFringe 2026" and
+      # leaves the company sitting in the show's name.
+      - ",\\s*edfringe[^,]*$"
       - ",\\s*[^,]+$"
     verified: 2026-08-03
     notes: >

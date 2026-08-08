@@ -4,7 +4,9 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-_Nothing to check. 🎉_
+| Publication | Headline | Matched to | Confidence |
+|---|---|---|---|
+| Musical Theatre Review | [Jess Robinson: Elton Reimagined – Edinburgh Festival Fringe](https://musicaltheatrereview.com/jess-robinson-elton-reimagined-edinburgh-festival-fringe/) | Elton Reimagined - Edinburgh Festival Fringe | 75% |
 
 ## Held — not on the leaderboard
 
@@ -14,6 +16,7 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The Scotsman | [best edinburgh fringe comedy 2026 four five star shows reviews](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/best-edinburgh-fringe-comedy-2026-four-five-star-shows-reviews-8840196) | This is a round-up of multiple shows with ratings, not a review of a single named show. |
 | WhatsOnStage | [Ariana Grande’s stage exit, Trainspotting’s fate and top shows at the Edinburgh Festivals](https://www.whatsonstage.com/news/ariana-grandes-stage-exit-trainspottings-fate-and-top-shows-at-the-edinburgh-festivals_1728828/) | This is a round-up covering multiple topics and shows rather than a review of a single named show. |
 | All Edinburgh Theatre | [EdFringe 2026: Cabaret, Comedy, Dance and Spoken Word](https://www.alledinburghtheatre.com/edfringe-2026-cabaret-comedy-dance-spoken-word-made-in-edinburgh-listings/) | This is an announcement or preview of the Fringe programme categories, not a review of a single named show. |
 | All Edinburgh Theatre | [Dragon Tales & Dragon Babies](https://www.alledinburghtheatre.com/dragon-tales-dragon-babies-lifecare-centre-edfringe-2026-review/) | This appears to be a generic title without clear review language, show context, or Edinburgh festival attribution. |
@@ -213,4 +216,3 @@ table and re-run `python run.py --match` to let it back in.
 | All Edinburgh Theatre | [Confessions of a Lunatic](https://www.alledinburghtheatre.com/confessions-of-a-lunatic-nightshade-theatre-edfringe-2025-review/) | This appears to be a generic title without clear indication it reviews a specific named show at an Edinburgh festival, and lacks context suggesting a festival review rather than general content. |
 | All Edinburgh Theatre | [The Dahlia Files](https://www.alledinburghtheatre.com/the-dahlia-files-hey-thanks-theatre-collective-edfringe-2025-review/) | Headline alone lacks sufficient context to confirm this reviews a specific Edinburgh festival show rather than being a title, announcement, or other non-review content. |
 | All Edinburgh Theatre | [A Woman of No Importance](https://www.alledinburghtheatre.com/a-woman-of-no-importance-edinburgh-theatre-arts-st-ninians-hall-edfringe-2025-review/) | This appears to be a title rather than a review headline, lacking review language or context indicating it reviews a specific Edinburgh festival show. |
-| All Edinburgh Theatre | [Flora Macdonald and Zombies](https://www.alledinburghtheatre.com/flora-macdonald-and-zombies-debbie-cannon-scottish-storytelling-centre-edfringe-2025-review/) | This appears to be a title or work rather than a review headline, with no clear indication it reviews a specific show at an Edinburgh festival. |
