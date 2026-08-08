@@ -6,3 +6,6 @@ __pycache__/
 # Stray clones of the GitHub repo made during setup — not part of the project
 fring-review/
 fringe-review/
+
+# Kept locally as a working reference, deliberately not published.
+README.md
