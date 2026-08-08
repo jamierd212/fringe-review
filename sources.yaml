@@ -355,6 +355,14 @@ publications:
     fetch_page: false
     require_title_prefix: "REVIEW:"
     pages: 6
+    title_strip_patterns:
+      # Their headline is "REVIEW: <show>, <company>, EdFringe <year> ★★★★".
+      # The festival tail is handled centrally; the company is not, and left on
+      # it splits the show in two — "Lady Macbeth Played Wing Defence" and
+      # "Lady Macbeth Played Wing Defence, Crash Theatre Co and House of Oz"
+      # were two entries on the 2025 board. Scoped here because it is this
+      # publication's house style, not a general rule.
+      - ",\\s*[^,]+$"
     verified: 2026-08-03
     notes: >
       Edinburgh-focused and the cleanest source found in the 2026 sweep: 6 of 6

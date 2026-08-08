@@ -730,6 +730,14 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None)
                 ),
             )
 
+        # Per-publication title cleanups, applied before rating as well as
+        # after. A source whose rating sits in the feed never reaches the
+        # post-fetch cleanup inside rate(), because rate() returns as soon as
+        # the feed yields a rating.
+        for cand in new:
+            for pattern in pub.get("title_strip_patterns", []) or []:
+                cand.title = re.sub(pattern, "", cand.title, flags=re.I).strip(" -–—:|,")
+
         rated = split_out = 0
         roundup_pattern = pub.get("roundup_pattern", r"\breviews\b")
         for cand in new:

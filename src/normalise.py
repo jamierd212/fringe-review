@@ -54,7 +54,22 @@ VENUE_WORDS = (
     r"courtyard|boulevard|printmakers|monkey\s+barrel|dome|arena)"
 )
 VENUE_TAIL_NAMED = re.compile(
-    rf"\s*[–—\-|,]\s*[^–—|,]{{0,40}}\b{VENUE_WORDS}\b[^–—|,]{{0,30}}$", re.I
+    # The tail may itself contain commas — "Pleasance Courtyard, Bunker 1" is
+    # one venue, not a venue and something else — so only the SEPARATOR is
+    # restricted, not the text after the venue word.
+    rf"\s*[–—|@]\s*[^–—|@]{{0,40}}\b{VENUE_WORDS}\b.{{0,40}}$"
+    rf"|\s*[-,]\s*[^–—|@]{{0,40}}\b{VENUE_WORDS}\b.{{0,40}}$", re.I
+)
+
+# Publications append the festival to the headline ("Little Pink Dress –
+# Edinburgh Festival Fringe"). Left in place, split_performer reads the dash as
+# performer/show and files the review under a show called "Edinburgh Festival
+# Fringe" — which is exactly what reached first place on the 2026 board.
+FESTIVAL_TAIL = re.compile(
+    r"\s*[–—\-|,]\s*(?:the\s+)?"
+    r"(?:edinburgh\s+)?(?:international\s+)?(?:festival\s+)?"
+    r"(?:fringe|festivals?|edfringe|eif)"
+    r"(?:\s+\d{4})?\s*$", re.I
 )
 
 # Rating fragments embedded in titles, e.g. "4⭐⭐⭐⭐", "3.5***", "5 stars", "(4/5)".
@@ -63,7 +78,9 @@ VENUE_TAIL_NAMED = re.compile(
 # of the headline. A bare run mid-sentence is usually a censored word — stripping
 # it would turn "You Are All C**ts" into "You Are All C ts".
 RATING_FRAGMENT = re.compile(
-    rf"[\(\[]?\s*(?:\d\s*)?[{FILLED_STARS}{EMPTY_STARS}]+\s*[\)\]]?"
+    # (?<!\d) so the digit swallowed before a star run cannot be the last digit
+    # of a year: "EdFringe 2025 ★★★★" was being reduced to "EdFringe 202".
+    rf"[\(\[]?\s*(?:(?<!\d)\d\s*)?[{FILLED_STARS}{EMPTY_STARS}]+\s*[\)\]]?"
     rf"|[\(\[]?\s*\d\s*(?:[.,]\s*5|1\s*[/⁄]\s*2|½)?\s*\*{{1,5}}\s*[\)\]]?"
     rf"|\s\d\s*(?:[.,]5|1\s*[/⁄]\s*2|½)\s*$"
     rf"|\*{{2,5}}\s*$"
@@ -128,6 +145,7 @@ def clean_title(raw: str) -> str:
     text = REVIEW_TAIL.sub("", text)
     text = VENUE_TAIL.sub("", text)
     text = VENUE_TAIL_NAMED.sub("", text)
+    text = FESTIVAL_TAIL.sub("", text)
     text = re.sub(r"\s*\(\s*(WIP|work in progress|preview)\s*\)\s*", " ", text, flags=re.I)
     return re.sub(r"\s+", " ", text).strip(" -–—:,|")
 
