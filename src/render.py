@@ -226,8 +226,77 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
             if stale.is_dir() and stale.resolve() not in live:
                 shutil.rmtree(stale)
 
+    _write_bot_page(defaults)
     _write_sitemap(sitemap, now)
     return written
+
+
+def _write_bot_page(defaults: dict) -> None:
+    """
+    What the crawler is, for whoever looks up the User-Agent.
+
+    Deliberately not linked from the site: its readers arrive from a server log,
+    not from the leaderboard. It answers the three questions a sysadmin actually
+    has - who is this, how hard are they hitting me, and how do I stop them.
+    """
+    agent = defaults.get("user_agent", "FringeLeaderboardBot/0.1")
+    contact = defaults.get("contact_url", "mailto:corrections@fringestars.com")
+    label = defaults.get("contact_label", "get in touch")
+    (OUTPUT_DIR / "bot.html").write_text(f"""<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>About FringeLeaderboardBot</title>
+<style>
+  body {{ margin: 0; padding: 2rem 1rem 4rem; background: #f9e4e0; color: #1a1a1a;
+         font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif; }}
+  main {{ max-width: 40rem; margin: 0 auto; background: #fff; border: 1px solid #ecdcd9;
+          border-radius: 6px; padding: 1.5rem; }}
+  h1 {{ font-size: 1.4rem; margin: 0 0 1rem; }}
+  h2 {{ font-size: 1rem; margin: 1.6rem 0 .4rem; }}
+  code {{ background: #f6f6f6; padding: .1rem .3rem; border-radius: 3px; font-size: .9em; }}
+  a {{ color: inherit; }}
+</style>
+</head>
+<body>
+<main>
+<h1>FringeLeaderboardBot</h1>
+
+<p>If you have seen <code>{agent}</code> in your
+server logs, this is us.</p>
+
+<p>It collects <strong>star ratings</strong> for Edinburgh festival shows and
+collates them into a leaderboard at <a href="{SITE_URL}/">fringestars.com</a>.
+Every rating is attributed to the publication that gave it and links straight
+back to the review on your own site. We publish no review text, no extracts and
+no images.</p>
+
+<h2>How it behaves</h2>
+<ul>
+  <li>At most one request per second, and only to pages we have reason to think
+      are reviews.</li>
+  <li>It reads <code>robots.txt</code> and obeys it.</li>
+  <li>It runs once a day, and only during the festival season for most sources.</li>
+  <li>If your server refuses us, we stop. We do not disguise the user-agent or
+      work around a block.</li>
+</ul>
+
+<h2>If you would rather we did not</h2>
+<p>Add this to your <code>robots.txt</code> and we will stop on the next run:</p>
+<p><code>User-agent: FringeLeaderboardBot<br>Disallow: /</code></p>
+<p>Or <a href="{contact}">{label}</a> and we will remove you by hand, along with
+any ratings of yours already published. No explanation needed.</p>
+
+<h2>Corrections</h2>
+<p>If a rating of yours is recorded wrongly,
+<a href="{contact}">{label}</a> and it will be fixed.</p>
+</main>
+</body>
+</html>
+""", encoding="utf-8")
 
 
 def _write_sitemap(urls: list[str], now) -> None:

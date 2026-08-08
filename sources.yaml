@@ -15,7 +15,10 @@ defaults:
   contact_url: "mailto:corrections@fringestars.com"
   contact_label: "email corrections@fringestars.com"
 
-  user_agent: "FringeLeaderboardBot/0.1 (+https://github.com/jamierd212/fringe-review)"
+  # The +URL in a User-Agent exists so anyone seeing us in their logs can find
+  # out who we are and how to stop us. It points at a page written for exactly
+  # that, rather than at a source repository which answers a different question.
+  user_agent: "FringeLeaderboardBot/0.1 (+https://fringestars.com/bot.html)"
   delay_seconds: 1.0        # be polite: max ~1 request per second per site
   timeout_seconds: 25
 

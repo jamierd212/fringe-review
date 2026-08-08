@@ -18,6 +18,9 @@ import feedparser
 import requests
 import yaml
 
+from urllib.parse import urlsplit
+from urllib.robotparser import RobotFileParser
+
 from . import db
 from .normalise import normalise
 from .ratings import Rating, find_rating, split_roundup
@@ -56,12 +59,108 @@ class Collector:
         self.timeout = float(self.defaults.get("timeout_seconds", 25))
         self._last_request = 0.0
         self.last_status = 0
+        self._robots: dict[str, RobotFileParser | None] = {}
+        # Hosts we reach through a documented API with a registered key, rather
+        # than by crawling. robots.txt governs crawlers; it does not govern an
+        # authorised API client, and applying it here is actively wrong:
+        # content.guardianapis.com answers 401 on every path including
+        # robots.txt, because it wants an API key, and reading that as "no bots"
+        # would have quietly removed the Guardian from the leaderboard.
+        self._api_hosts = {
+            urlsplit(p["feed"]).netloc
+            for p in config["publications"]
+            if p.get("api") and p.get("feed")
+        }
+        # The name a publication would write in its robots.txt. Matched
+        # case-insensitively by RobotFileParser, and it is the token rather than
+        # the full User-Agent string that belongs in a rule.
+        self.robots_token = self.session.headers["User-Agent"].split("/")[0]
 
     # -- HTTP ---------------------------------------------------------------
 
+    def _robots_for(self, url: str) -> RobotFileParser | None:
+        """
+        The parsed robots.txt for this URL's host, fetched once per run.
+
+        Fetched with our own session rather than RobotFileParser.read(), for two
+        reasons. It sends our real User-Agent, and a site that blocks urllib's
+        default one would otherwise look like it had no robots.txt at all. And
+        it gives us the status code, so the cases RFC 9309 distinguishes can
+        actually be distinguished:
+
+            200        obey what it says
+            401 / 403  disallow everything - a server that will not show us its
+                       rules is not inviting us in
+            other 4xx  no robots.txt exists, so nothing is forbidden
+            5xx, error disallow everything, and say so loudly
+
+        Returning None means "no restrictions"; a parser with disallow_all set
+        means the opposite, and the two must not be confused.
+        """
+        parts = urlsplit(url)
+        host = f"{parts.scheme}://{parts.netloc}"
+        if host in self._robots:
+            return self._robots[host]
+
+        parser = RobotFileParser()
+        try:
+            r = self.session.get(host + "/robots.txt", timeout=self.timeout)
+            if r.status_code == 200:
+                parser.parse(r.text.splitlines())
+            elif r.status_code in (401, 403):
+                parser.disallow_all = True
+                print(f"      ! robots.txt refused (HTTP {r.status_code}) — treating "
+                      f"{host} as off-limits")
+            elif 400 <= r.status_code < 500:
+                parser = None            # no robots.txt: nothing is forbidden
+            else:
+                parser.disallow_all = True
+                print(f"      ! robots.txt unavailable (HTTP {r.status_code}) — "
+                      f"skipping {host} this run")
+        except requests.RequestException as exc:
+            parser.disallow_all = True
+            print(f"      ! robots.txt unreachable ({type(exc).__name__}) — "
+                  f"skipping {host} this run")
+
+        self._robots[host] = parser
+        return parser
+
+    def allowed(self, url: str) -> bool:
+        """
+        May we fetch this?
+
+        The site tells publications they can stop us with a robots.txt rule, so
+        that has to be true in the code and not merely intended. Note the
+        standard library treats a 401 or 403 on robots.txt itself as "disallow
+        everything", which is the reading we want: a server refusing to show us
+        its rules is not inviting us in.
+
+        An unreachable robots.txt is not a refusal and does not block the fetch.
+        """
+        if urlsplit(url).netloc in self._api_hosts:
+            return True
+        parser = self._robots_for(url)
+        return True if parser is None else parser.can_fetch(self.robots_token, url)
+
+    def crawl_delay(self, url: str) -> float:
+        """A publication's own Crawl-delay, if it asks for more than our default."""
+        if urlsplit(url).netloc in self._api_hosts:
+            return self.delay
+        parser = self._robots_for(url)
+        if parser is None:
+            return self.delay
+        try:
+            asked = parser.crawl_delay(self.robots_token)
+        except Exception:  # noqa: BLE001
+            return self.delay
+        return max(self.delay, float(asked)) if asked else self.delay
+
     def _get(self, url: str) -> str | None:
-        """Fetch a URL, never raising. Rate-limited to one request per `delay`."""
-        wait = self.delay - (time.monotonic() - self._last_request)
+        """Fetch a URL, never raising. Rate-limited, and gated on robots.txt."""
+        if not self.allowed(url):
+            print(f"      ! robots.txt disallows  {url}")
+            return None
+        wait = self.crawl_delay(url) - (time.monotonic() - self._last_request)
         if wait > 0:
             time.sleep(wait)
         self._last_request = time.monotonic()

@@ -34,8 +34,20 @@ import certifi
 
 from .normalise import normalise
 
-UA = {"User-Agent": "FringeLeaderboardBot/0.1 "
-                    "(+https://github.com/jamierd212/fringe-review)"}
+def _user_agent() -> dict:
+    """
+    The configured User-Agent, so there is exactly one of them.
+
+    This module used to hold its own copy of the string. Two copies drift, and a
+    crawler that identifies itself differently depending on which part of the
+    code is running is worse than one that does not identify itself at all.
+    """
+    from .collect import load_config
+    return {"User-Agent": load_config().get("defaults", {}).get(
+        "user_agent", "FringeLeaderboardBot/0.1")}
+
+
+UA = _user_agent()
 DELAY = 1.0          # edfringe.com's robots.txt asks for Crawl-delay: 1
 
 # macOS Python ships without a usable system CA bundle, so verification fails
