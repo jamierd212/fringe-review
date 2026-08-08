@@ -176,6 +176,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                     "mailto:corrections@fringestars.com",
                 ),
                 contact_label=defaults.get("contact_label", "let us know"),
+                analytics_token=defaults.get("analytics_token", ""),
             )
 
         # The landing year is served at two URLs — its own page and the bare
@@ -209,6 +210,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                     "contact_url",
                     "mailto:corrections@fringestars.com"),
                 contact_label=defaults.get("contact_label", "let us know"),
+                analytics_token=defaults.get("analytics_token", ""),
             )
             out = OUTPUT_DIR / show.page / "index.html"
             out.parent.mkdir(parents=True, exist_ok=True)

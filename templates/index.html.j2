@@ -259,5 +259,9 @@
   input.addEventListener('search', apply);   // the clear (x) button
 })();
 </script>
+{% if analytics_token %}
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "{{ analytics_token }}"}'></script>
+{% endif %}
 </body>
 </html>
