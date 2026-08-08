@@ -6,6 +6,21 @@
 <title>{{ show.title }} &ndash; reviews and star ratings, Edinburgh {{ year }}</title>
 <meta name="description" content="Every star-rated review we can find for {{ show.title }} at the Edinburgh {{ festival_name }} {{ year }}{% if show.average %}, averaging {{ show.average }} out of 5 across {{ show.total }} reviews{% endif %}.">
 <link rel="canonical" href="{{ site_url }}/{{ show.page }}">
+{#- A shared link with no card is a bare URL, and this site's realistic audience
+    is performers sharing their own ratings. The description leads with the
+    verdict rather than the boilerplate, because that is the shareable part. -#}
+{% set card -%}
+{{ show.title }} &mdash; {% for level in [5,4,3,2,1] %}{% if show.counts[level] %}{{ show.counts[level] }}&times;{{ level }}&#9733; {% endif %}{% endfor %}
+{%- if show.average %}({{ show.average }}/5 across {{ show.total }} review{{ '' if show.total == 1 else 's' }}){% endif %}
+{%- endset %}
+<meta property="og:site_name" content="Edinburgh Festivals Top-Rated Shows">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ site_url }}/{{ show.page }}">
+<meta property="og:title" content="{{ show.title }} &ndash; Edinburgh {{ year }} reviews">
+<meta property="og:description" content="{{ card|trim }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ show.title }} &ndash; Edinburgh {{ year }}">
+<meta name="twitter:description" content="{{ card|trim }}">
 <style>
   :root {
     --ink: #1a1a1a; --muted: #6b6b6b; --rule: #ecdcd9;
