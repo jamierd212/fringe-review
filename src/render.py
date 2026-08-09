@@ -160,6 +160,10 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
             (this_year,),
         ).fetchone()[0]
 
+        # Only the current festival has a live programme, so past years have no
+        # venues to offer and the filter is left out of those pages entirely.
+        venues = sorted({s.venue for s in ranked + rest if s.venue})
+
         def build(canonical: str) -> str:
             return template.render(
                 canonical=canonical,
@@ -177,6 +181,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 ),
                 contact_label=defaults.get("contact_label", "let us know"),
                 analytics_token=defaults.get("analytics_token", ""),
+                venues=venues,
             )
 
         # The landing year is served at two URLs — its own page and the bare

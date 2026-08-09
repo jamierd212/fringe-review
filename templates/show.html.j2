@@ -115,9 +115,10 @@
   <div class="titlerow">
     <div class="titlewrap">
       <h1>{{ show.title }}</h1>
-      {% if show.performer or show.venue %}
+      {% if show.performer or show.venue or show.start_time %}
       <div class="performer">
-        {{ show.performer or "" }}{% if show.performer and show.venue %} &middot; {% endif %}{{ show.venue or "" }}
+        {%- set bits = [show.performer, show.venue, show.start_time]|select|list -%}
+        {{ bits|join(" &middot; ")|safe }}
       </div>
       {% endif %}
     </div>

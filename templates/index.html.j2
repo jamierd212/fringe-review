@@ -105,11 +105,40 @@
     font-weight: 700;
   }
 
-  nav.years .search { margin-left: auto; }
+  nav.years .filter-toggle {
+    margin-left: auto; padding: .3rem .85rem; border: 1px solid var(--rule);
+    border-radius: 999px; font: inherit; font-size: .9rem; color: var(--muted);
+    background: var(--card); cursor: pointer;
+  }
+  nav.years .filter-toggle:hover { border-color: var(--ink); color: var(--ink); }
+  nav.years .filter-toggle[aria-expanded="true"] {
+    background: var(--ink); border-color: var(--ink); color: var(--bg);
+  }
+  nav.years .search { margin-left: .4rem; }
+  .filters {
+    display: flex; flex-wrap: wrap; gap: .9rem 1.2rem; align-items: end;
+    background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+    padding: .7rem .9rem; margin: .5rem 0 0; font-size: .85rem;
+  }
+  .filters label { display: flex; flex-direction: column; gap: .25rem; color: var(--muted); }
+  .filters select, .filters input[type="time"] {
+    font: inherit; padding: .25rem .4rem; border: 1px solid var(--rule);
+    border-radius: 4px; background: #fff; color: var(--ink); max-width: 15rem;
+  }
+  .filters .times { display: flex; align-items: center; gap: .35rem; }
+  .filters #f-clear {
+    font: inherit; padding: .3rem .7rem; border: 1px solid var(--rule);
+    border-radius: 999px; background: var(--card); color: var(--muted); cursor: pointer;
+  }
+  .filters #f-clear:hover { border-color: var(--ink); color: var(--ink); }
+  @media (max-width: 560px) {
+    nav.years .search { margin-left: 0; }
+    nav.years input[type="search"] { width: 100%; }
+  }
   nav.years input[type="search"] {
     padding: .3rem .85rem; border: 1px solid var(--rule); border-radius: 999px;
     font-size: .9rem; font-family: inherit; color: var(--ink);
-    background: var(--card); width: 11rem; -webkit-appearance: none;
+    background: var(--card); width: 8.5rem; -webkit-appearance: none;
   }
   nav.years input[type="search"]:focus {
     outline: none; border-color: var(--ink);
@@ -144,12 +173,38 @@
     {% for entry in nav %}
     <a href="{{ entry.href }}"{% if entry.current %} aria-current="page"{% endif %}>{{ entry.year }}</a>
     {% endfor %}
+    {#- No programme, no filter. Past years lose their venues and times when the
+        festival takes its pages down, so offering the control there would open
+        an empty panel. -#}
+    {% if venues %}
+    <button type="button" class="filter-toggle" id="filter-toggle" aria-expanded="false"
+            aria-controls="filters" hidden>Filter</button>
+    {% endif %}
     <label class="search" hidden>
       <span class="visually-hidden">Search shows</span>
       <input type="search" id="q" placeholder="Search shows&hellip;"
              autocomplete="off" spellcheck="false">
     </label>
   </nav>
+  {# Populated from the festival's own programme; absent for past years, whose
+     programme pages come down once the shows stop selling. #}
+  {% if venues %}
+  <div class="filters" id="filters" hidden>
+    <label>Venue
+      <select id="f-venue">
+        <option value="">Any venue</option>
+        {% for v in venues %}<option value="{{ v }}">{{ v }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Starts between
+      <span class="times">
+        <input type="time" id="f-from" step="300"> <span>and</span>
+        <input type="time" id="f-to" step="300">
+      </span>
+    </label>
+    <button type="button" id="f-clear">Clear</button>
+  </div>
+  {% endif %}
   {% endif %}
 </header>
 
@@ -160,7 +215,8 @@
 
 {% for position, show in placed %}
 <article class="show{% if position <= 3 %} top{% endif %}"
-         data-find="{{ (show.title ~ ' ' ~ (show.performer or '') ~ ' ' ~ show.genre)|lower }}">
+         data-find="{{ (show.title ~ ' ' ~ (show.performer or '') ~ ' ' ~ show.genre)|lower }}"
+         data-venue="{{ show.venue }}" data-start="{{ show.start_minutes }}">
   <div class="pos">{{ position }}</div>
   <div class="body">
     <div class="titlerow">
@@ -192,7 +248,8 @@
 <h3 class="section">Also reviewed &mdash; no 4 or 5 star reviews yet</h3>
 <div class="rest">
   {% for show in rest %}
-  <div data-find="{{ show.title|lower }}">
+  <div data-find="{{ show.title|lower }}"
+       data-venue="{{ show.venue }}" data-start="{{ show.start_minutes }}">
     {{ show.title }}
     {% for review in show.reviews %}
       <a href="{{ review.url }}" target="_blank" rel="nofollow noopener" title="{{ review.publication }}">{{ review.stars }}&#9733;</a>{% if not loop.last %}, {% endif %}
@@ -242,12 +299,45 @@
   var section = document.querySelector('h3.section');
   var rest = document.querySelector('.rest');
 
+  // Filters. The panel only exists where the festival programme supplied
+  // venues and times, so every reference below is optional.
+  var toggle = document.getElementById('filter-toggle');
+  var panel = document.getElementById('filters');
+  var fVenue = document.getElementById('f-venue');
+  var fFrom = document.getElementById('f-from');
+  var fTo = document.getElementById('f-to');
+  var fClear = document.getElementById('f-clear');
+
+  rows.forEach(function (r) {
+    r.venue = r.el.getAttribute('data-venue') || '';
+    r.start = parseInt(r.el.getAttribute('data-start'), 10);
+  });
+
+  function minutes(value) {
+    if (!value) return null;
+    var bits = value.split(':');
+    return parseInt(bits[0], 10) * 60 + parseInt(bits[1], 10);
+  }
+
   function apply() {
     var q = input.value.trim().toLowerCase();
+    var venue = fVenue ? fVenue.value : '';
+    var from = fFrom ? minutes(fFrom.value) : null;
+    var to = fTo ? minutes(fTo.value) : null;
     var hits = 0;
     for (var i = 0; i < rows.length; i++) {
-      var show = !q || rows[i].text.indexOf(q) !== -1;
-      rows[i].el.hidden = !show;
+      var r = rows[i];
+      var show = !q || r.text.indexOf(q) !== -1;
+      if (show && venue) show = r.venue === venue;
+      // A show with no known time cannot satisfy a time window. Hiding it is
+      // the honest answer: we do not know when it is on, so we cannot claim
+      // it starts in the hour someone asked for.
+      if (show && (from !== null || to !== null)) {
+        show = r.start >= 0
+            && (from === null || r.start >= from)
+            && (to === null || r.start <= to);
+      }
+      r.el.hidden = !show;
       if (show) hits++;
     }
     // The "also reviewed" heading and its column are meaningless when nothing
@@ -259,12 +349,33 @@
       rest.hidden = !anyRest;
       if (section) section.hidden = !anyRest;
     }
-    none.hidden = !(q && hits === 0);
-    if (!none.hidden) none.textContent = 'No shows match \u201c' + input.value.trim() + '\u201d.';
+    var filtering = q || venue || from !== null || to !== null;
+    none.hidden = !(filtering && hits === 0);
+    if (!none.hidden) none.textContent = 'No shows match those filters.';
   }
 
   input.addEventListener('input', apply);
   input.addEventListener('search', apply);   // the clear (x) button
+
+  if (toggle && panel) {
+    toggle.hidden = false;
+    toggle.addEventListener('click', function () {
+      var open = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!open));
+      panel.hidden = open;
+    });
+  }
+  [fVenue, fFrom, fTo].forEach(function (el) {
+    if (el) el.addEventListener('change', apply);
+  });
+  if (fClear) {
+    fClear.addEventListener('click', function () {
+      if (fVenue) fVenue.value = '';
+      if (fFrom) fFrom.value = '';
+      if (fTo) fTo.value = '';
+      apply();
+    });
+  }
 })();
 </script>
 {% if analytics_token %}

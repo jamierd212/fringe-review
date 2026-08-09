@@ -105,11 +105,40 @@
     font-weight: 700;
   }
 
-  nav.years .search { margin-left: auto; }
+  nav.years .filter-toggle {
+    margin-left: auto; padding: .3rem .85rem; border: 1px solid var(--rule);
+    border-radius: 999px; font: inherit; font-size: .9rem; color: var(--muted);
+    background: var(--card); cursor: pointer;
+  }
+  nav.years .filter-toggle:hover { border-color: var(--ink); color: var(--ink); }
+  nav.years .filter-toggle[aria-expanded="true"] {
+    background: var(--ink); border-color: var(--ink); color: var(--bg);
+  }
+  nav.years .search { margin-left: .4rem; }
+  .filters {
+    display: flex; flex-wrap: wrap; gap: .9rem 1.2rem; align-items: end;
+    background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+    padding: .7rem .9rem; margin: .5rem 0 0; font-size: .85rem;
+  }
+  .filters label { display: flex; flex-direction: column; gap: .25rem; color: var(--muted); }
+  .filters select, .filters input[type="time"] {
+    font: inherit; padding: .25rem .4rem; border: 1px solid var(--rule);
+    border-radius: 4px; background: #fff; color: var(--ink); max-width: 15rem;
+  }
+  .filters .times { display: flex; align-items: center; gap: .35rem; }
+  .filters #f-clear {
+    font: inherit; padding: .3rem .7rem; border: 1px solid var(--rule);
+    border-radius: 999px; background: var(--card); color: var(--muted); cursor: pointer;
+  }
+  .filters #f-clear:hover { border-color: var(--ink); color: var(--ink); }
+  @media (max-width: 560px) {
+    nav.years .search { margin-left: 0; }
+    nav.years input[type="search"] { width: 100%; }
+  }
   nav.years input[type="search"] {
     padding: .3rem .85rem; border: 1px solid var(--rule); border-radius: 999px;
     font-size: .9rem; font-family: inherit; color: var(--ink);
-    background: var(--card); width: 11rem; -webkit-appearance: none;
+    background: var(--card); width: 8.5rem; -webkit-appearance: none;
   }
   nav.years input[type="search"]:focus {
     outline: none; border-color: var(--ink);
@@ -146,6 +175,9 @@
     
     <a href="2025.html">2025</a>
     
+    <button type="button" class="filter-toggle" id="filter-toggle" aria-expanded="false"
+            aria-controls="filters" hidden>Filter</button>
+    
     <label class="search" hidden>
       <span class="visually-hidden">Search shows</span>
       <input type="search" id="q" placeholder="Search shows&hellip;"
@@ -153,16 +185,35 @@
     </label>
   </nav>
   
+  
+  <div class="filters" id="filters" hidden>
+    <label>Venue
+      <select id="f-venue">
+        <option value="">Any venue</option>
+        <option value="Assembly @ St Andrew Square">Assembly @ St Andrew Square</option><option value="Assembly George Square">Assembly George Square</option><option value="Assembly George Square Gardens">Assembly George Square Gardens</option><option value="Assembly Roxy">Assembly Roxy</option><option value="C ARTS | C venues | C aquila">C ARTS | C venues | C aquila</option><option value="Gilded Balloon Patter House">Gilded Balloon Patter House</option><option value="Gilded Balloon Teviot">Gilded Balloon Teviot</option><option value="Just The Tonic at The Caves">Just The Tonic at The Caves</option><option value="Just The Tonic at The Mash House">Just The Tonic at The Mash House</option><option value="Monkey Barrel Comedy">Monkey Barrel Comedy</option><option value="Monkey Barrel Comedy (Cabaret Voltaire)">Monkey Barrel Comedy (Cabaret Voltaire)</option><option value="Monkey Barrel Comedy (Niddry Street)">Monkey Barrel Comedy (Niddry Street)</option><option value="Pleasance Courtyard">Pleasance Courtyard</option><option value="St Bride's Community Centre">St Bride's Community Centre</option><option value="The Edinburgh Academy">The Edinburgh Academy</option><option value="The Stand Comedy Club">The Stand Comedy Club</option><option value="The Stand Comedy Club 2">The Stand Comedy Club 2</option><option value="The Stand Comedy Club 3 \u0026 4">The Stand Comedy Club 3 \u0026 4</option><option value="Underbelly, Bristo Square">Underbelly, Bristo Square</option><option value="Underbelly, Cowgate">Underbelly, Cowgate</option><option value="theSpace @ Surgeons' Hall">theSpace @ Surgeons' Hall</option>
+      </select>
+    </label>
+    <label>Starts between
+      <span class="times">
+        <input type="time" id="f-from" step="300"> <span>and</span>
+        <input type="time" id="f-to" step="300">
+      </span>
+    </label>
+    <button type="button" id="f-clear">Clear</button>
+  </div>
+  
+  
 </header>
 
 <p class="meta">
-  Updated 8 August 2026, 11:35 BST &middot;
+  Updated 9 August 2026, 20:29 BST &middot;
   51 rated reviews across 47 shows
 </p>
 
 
 <article class="show top"
-         data-find="better than revenge amanda dwyer comedy · stand-up">
+         data-find="better than revenge amanda dwyer comedy · stand-up"
+         data-venue="The Stand Comedy Club 2" data-start="1020">
   <div class="pos">1</div>
   <div class="body">
     <div class="titlerow">
@@ -196,7 +247,8 @@
 </article>
 
 <article class="show top"
-         data-find="brave macbeth smashing shakespeare childrens shows · musical comedy">
+         data-find="brave macbeth smashing shakespeare childrens shows · musical comedy"
+         data-venue="Assembly @ St Andrew Square" data-start="585">
   <div class="pos">1</div>
   <div class="body">
     <div class="titlerow">
@@ -230,7 +282,8 @@
 </article>
 
 <article class="show top"
-         data-find="elton reimagined jess robinson cabaret · comedy">
+         data-find="elton reimagined jess robinson cabaret · comedy"
+         data-venue="Assembly George Square Gardens" data-start="1095">
   <div class="pos">1</div>
   <div class="body">
     <div class="titlerow">
@@ -264,7 +317,8 @@
 </article>
 
 <article class="show top"
-         data-find="father christmas chris forbes comedy · stand-up">
+         data-find="father christmas chris forbes comedy · stand-up"
+         data-venue="Monkey Barrel Comedy" data-start="750">
   <div class="pos">1</div>
   <div class="body">
     <div class="titlerow">
@@ -298,7 +352,8 @@
 </article>
 
 <article class="show top"
-         data-find="my grandpa doesn't follow me on instagram  theatre · lgbtq+">
+         data-find="my grandpa doesn't follow me on instagram  theatre · lgbtq+"
+         data-venue="Underbelly, Cowgate" data-start="1165">
   <div class="pos">1</div>
   <div class="body">
     <div class="titlerow">
@@ -332,7 +387,8 @@
 </article>
 
 <article class="show top"
-         data-find="the hunchback of notre dame  opera · musical theatre">
+         data-find="the hunchback of notre dame  opera · musical theatre"
+         data-venue="The Edinburgh Academy" data-start="960">
   <div class="pos">1</div>
   <div class="body">
     <div class="titlerow">
@@ -366,7 +422,8 @@
 </article>
 
 <article class="show top"
-         data-find="the pitch  theatre · new writing">
+         data-find="the pitch  theatre · new writing"
+         data-venue="Pleasance Courtyard" data-start="780">
   <div class="pos">1</div>
   <div class="body">
     <div class="titlerow">
@@ -400,7 +457,8 @@
 </article>
 
 <article class="show top"
-         data-find="youth in flames  ">
+         data-find="youth in flames  "
+         data-venue="" data-start="-1">
   <div class="pos">1</div>
   <div class="body">
     <div class="titlerow">
@@ -434,7 +492,8 @@
 </article>
 
 <article class="show"
-         data-find="you straights are f**ked up!  comedy · alternative comedy">
+         data-find="you straights are f**ked up!  comedy · alternative comedy"
+         data-venue="Just The Tonic at The Caves" data-start="1285">
   <div class="pos">9</div>
   <div class="body">
     <div class="titlerow">
@@ -473,7 +532,8 @@
 </article>
 
 <article class="show"
-         data-find="jenny gorelick- sorry  comedy · stand-up">
+         data-find="jenny gorelick- sorry  comedy · stand-up"
+         data-venue="Monkey Barrel Comedy (Niddry Street)" data-start="1045">
   <div class="pos">10</div>
   <div class="body">
     <div class="titlerow">
@@ -517,7 +577,8 @@
 </article>
 
 <article class="show"
-         data-find="1 big aussie showcase kurt sterling comedy · compilation">
+         data-find="1 big aussie showcase kurt sterling comedy · compilation"
+         data-venue="Just The Tonic at The Mash House" data-start="935">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -551,7 +612,8 @@
 </article>
 
 <article class="show"
-         data-find="11 1⁄2 angry men  ">
+         data-find="11 1⁄2 angry men  "
+         data-venue="" data-start="-1">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -585,7 +647,8 @@
 </article>
 
 <article class="show"
-         data-find="48 flaws of power ifrah qureshi comedy · stand-up">
+         data-find="48 flaws of power ifrah qureshi comedy · stand-up"
+         data-venue="The Stand Comedy Club 3 \u0026 4" data-start="1155">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -619,7 +682,8 @@
 </article>
 
 <article class="show"
-         data-find="a microscopic odyssey  theatre · devised">
+         data-find="a microscopic odyssey  theatre · devised"
+         data-venue="Pleasance Courtyard" data-start="635">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -653,7 +717,8 @@
 </article>
 
 <article class="show"
-         data-find="amazing global solutions rob preston comedy · character comedy">
+         data-find="amazing global solutions rob preston comedy · character comedy"
+         data-venue="Pleasance Courtyard" data-start="1160">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -687,7 +752,8 @@
 </article>
 
 <article class="show"
-         data-find="dàna with ellie beaton  ">
+         data-find="dàna with ellie beaton  "
+         data-venue="" data-start="-1">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -721,7 +787,8 @@
 </article>
 
 <article class="show"
-         data-find="easily distra... harriet dyer comedy · stand-up">
+         data-find="easily distra... harriet dyer comedy · stand-up"
+         data-venue="Monkey Barrel Comedy (Cabaret Voltaire)" data-start="1175">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -755,7 +822,8 @@
 </article>
 
 <article class="show"
-         data-find="edinburgh days  opera · rock">
+         data-find="edinburgh days  opera · rock"
+         data-venue="St Bride's Community Centre" data-start="1110">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -789,7 +857,8 @@
 </article>
 
 <article class="show"
-         data-find="falling from a moon li jin hao comedy · stand-up">
+         data-find="falling from a moon li jin hao comedy · stand-up"
+         data-venue="Pleasance Courtyard" data-start="1140">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -823,7 +892,8 @@
 </article>
 
 <article class="show"
-         data-find="into the woods  opera · musical theatre">
+         data-find="into the woods  opera · musical theatre"
+         data-venue="The Edinburgh Academy" data-start="780">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -857,7 +927,8 @@
 </article>
 
 <article class="show"
-         data-find="linus karp was hit with an umbrella  theatre · lgbtq+">
+         data-find="linus karp was hit with an umbrella  theatre · lgbtq+"
+         data-venue="Underbelly, Bristo Square" data-start="1160">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -891,7 +962,8 @@
 </article>
 
 <article class="show"
-         data-find="little pink dress  opera · lgbtq+">
+         data-find="little pink dress  opera · lgbtq+"
+         data-venue="C ARTS | C venues | C aquila" data-start="995">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -925,7 +997,8 @@
 </article>
 
 <article class="show"
-         data-find="ragnarök mythos ">
+         data-find="ragnarök mythos "
+         data-venue="" data-start="-1">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -959,7 +1032,8 @@
 </article>
 
 <article class="show"
-         data-find="simon munnery  comedy · stand-up">
+         data-find="simon munnery  comedy · stand-up"
+         data-venue="The Stand Comedy Club" data-start="710">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -993,7 +1067,8 @@
 </article>
 
 <article class="show"
-         data-find="target audience  theatre · comedy">
+         data-find="target audience  theatre · comedy"
+         data-venue="Pleasance Courtyard" data-start="950">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -1027,7 +1102,8 @@
 </article>
 
 <article class="show"
-         data-find="the future paul foot comedy · stand-up">
+         data-find="the future paul foot comedy · stand-up"
+         data-venue="Underbelly, Cowgate" data-start="1100">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -1061,7 +1137,8 @@
 </article>
 
 <article class="show"
-         data-find="trout kate dolan comedy · alternative comedy">
+         data-find="trout kate dolan comedy · alternative comedy"
+         data-venue="Monkey Barrel Comedy" data-start="1175">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -1095,7 +1172,8 @@
 </article>
 
 <article class="show"
-         data-find="what a life! andrew white comedy · stand-up">
+         data-find="what a life! andrew white comedy · stand-up"
+         data-venue="Monkey Barrel Comedy (Cabaret Voltaire)" data-start="1005">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -1129,7 +1207,8 @@
 </article>
 
 <article class="show"
-         data-find="what i talk about when i run about, talking john-luke roberts comedy · stand-up">
+         data-find="what i talk about when i run about, talking john-luke roberts comedy · stand-up"
+         data-venue="Monkey Barrel Comedy" data-start="790">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -1163,7 +1242,8 @@
 </article>
 
 <article class="show"
-         data-find="you wouldn't steal a boat pirates comedy · theatre">
+         data-find="you wouldn't steal a boat pirates comedy · theatre"
+         data-venue="Gilded Balloon Patter House" data-start="665">
   <div class="pos">11</div>
   <div class="body">
     <div class="titlerow">
@@ -1201,119 +1281,136 @@
 <h3 class="section">Also reviewed &mdash; no 4 or 5 star reviews yet</h3>
 <div class="rest">
   
-  <div data-find="a very capable man">
+  <div data-find="a very capable man"
+       data-venue="Monkey Barrel Comedy (Cabaret Voltaire)" data-start="1090">
     A Very Capable Man
     
       <a href="https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/edinburgh-fringe-comedy-reviews-li-jin-hao-simon-munnery-paul-hilleard-evaldas-karosas-8845099#evaldas-karosas-very-capable-man" target="_blank" rel="nofollow noopener" title="The Scotsman">3&#9733;</a>
     
   </div>
   
-  <div data-find="be fruitful">
+  <div data-find="be fruitful"
+       data-venue="Gilded Balloon Teviot" data-start="1170">
     Be Fruitful
     
       <a href="https://www.chortle.co.uk/review/2026/08/07/61217/guy_branum%3A_be_fruitful" target="_blank" rel="nofollow noopener" title="Chortle">3&#9733;</a>
     
   </div>
   
-  <div data-find="bean vs the robots: a solo show musical">
+  <div data-find="bean vs the robots: a solo show musical"
+       data-venue="theSpace @ Surgeons' Hall" data-start="585">
     Bean vs The Robots: A Solo Show Musical
     
       <a href="https://www.bingefringe.com/2026/08/07/review-bean-vs-the-robots-a-solo-show-musical-midge-lema-lemabean-productions-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/" target="_blank" rel="nofollow noopener" title="Binge Fringe">3&#9733;</a>
     
   </div>
   
-  <div data-find="coming of rage">
+  <div data-find="coming of rage"
+       data-venue="Assembly George Square" data-start="1185">
     Coming of Rage
     
       <a href="https://festmag.com/2026/08/06/review-susie-mccabe-coming-of-rage/" target="_blank" rel="nofollow noopener" title="Fest Magazine">3&#9733;</a>
     
   </div>
   
-  <div data-find="cyril">
+  <div data-find="cyril"
+       data-venue="Gilded Balloon Patter House" data-start="720">
     Cyril
     
       <a href="https://www.chortle.co.uk/review/2026/08/07/61214/gareth_gwynn%3A_cyril" target="_blank" rel="nofollow noopener" title="Chortle">3&#9733;</a>
     
   </div>
   
-  <div data-find="emotional cowboy">
+  <div data-find="emotional cowboy"
+       data-venue="Gilded Balloon Teviot" data-start="890">
     Emotional Cowboy
     
       <a href="https://www.bingefringe.com/2026/08/07/review-leo-hincks-emotional-cowboy-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/" target="_blank" rel="nofollow noopener" title="Binge Fringe">3&#9733;</a>
     
   </div>
   
-  <div data-find="for one night only">
+  <div data-find="for one night only"
+       data-venue="Underbelly, Bristo Square" data-start="1080">
     For One Night Only
     
       <a href="https://northwestend.com/sara-pascoe-for-one-night-only-underbelly-bristo-square/" target="_blank" rel="nofollow noopener" title="North West End">3&#9733;</a>
     
   </div>
   
-  <div data-find="government approved comedian">
+  <div data-find="government approved comedian"
+       data-venue="Monkey Barrel Comedy (Niddry Street)" data-start="960">
     Government Approved Comedian
     
       <a href="https://www.chortle.co.uk/review/2026/08/06/61197/kate_hammer%3A_government_approved_comedian" target="_blank" rel="nofollow noopener" title="Chortle">3&#9733;</a>
     
   </div>
   
-  <div data-find="grogg">
+  <div data-find="grogg"
+       data-venue="Monkey Barrel Comedy (Niddry Street)" data-start="1300">
     Grogg
     
       <a href="https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/edinburgh-fringe-comedy-reviews-li-jin-hao-simon-munnery-paul-hilleard-evaldas-karosas-8845099#paul-hilleard-grogg" target="_blank" rel="nofollow noopener" title="The Scotsman">3&#9733;</a>
     
   </div>
   
-  <div data-find="i'm not a terrorist - i'm freddie mercury">
+  <div data-find="i'm not a terrorist - i'm freddie mercury"
+       data-venue="Gilded Balloon Patter House" data-start="1200">
     I'm Not A Terrorist - I'm Freddie Mercury
     
       <a href="https://festmag.com/2026/08/07/review-patrick-monahan-im-not-a-terrorist-im-freddie-mercury/" target="_blank" rel="nofollow noopener" title="Fest Magazine">3&#9733;</a>
     
   </div>
   
-  <div data-find="in the black">
+  <div data-find="in the black"
+       data-venue="Underbelly, Bristo Square" data-start="825">
     In the Black
     
       <a href="https://www.theguardian.com/stage/2026/aug/07/in-the-black-review-underbelly-bristo-square-edinburgh" target="_blank" rel="nofollow noopener" title="The Guardian">3&#9733;</a>
     
   </div>
   
-  <div data-find="peregrinations">
+  <div data-find="peregrinations"
+       data-venue="Assembly Roxy" data-start="625">
     Peregrinations
     
       <a href="https://www.bingefringe.com/2026/08/07/review-peregrinations-dutch-kills-theater-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/" target="_blank" rel="nofollow noopener" title="Binge Fringe">3&#9733;</a>
     
   </div>
   
-  <div data-find="rat's ass">
+  <div data-find="rat's ass"
+       data-venue="Monkey Barrel Comedy (Cabaret Voltaire)" data-start="920">
     Rat's Ass
     
       <a href="https://www.chortle.co.uk/review/2026/08/07/61216/tamsyn_kelly%3A_rats_ass" target="_blank" rel="nofollow noopener" title="Chortle">3&#9733;</a>
     
   </div>
   
-  <div data-find="spin cycle">
+  <div data-find="spin cycle"
+       data-venue="Underbelly, Bristo Square" data-start="805">
     Spin Cycle
     
       <a href="https://festmag.com/2026/08/06/review-spin-cycle/" target="_blank" rel="nofollow noopener" title="Fest Magazine">3&#9733;</a>
     
   </div>
   
-  <div data-find="tennish">
+  <div data-find="tennish"
+       data-venue="Underbelly, Bristo Square" data-start="1260">
     Tennish
     
       <a href="https://festmag.com/2026/08/06/review-darryl-j-carrington-tennish/" target="_blank" rel="nofollow noopener" title="Fest Magazine">3&#9733;</a>
     
   </div>
   
-  <div data-find="very hot. very messy.">
+  <div data-find="very hot. very messy."
+       data-venue="Underbelly, Cowgate" data-start="915">
     Very Hot. Very Messy.
     
       <a href="https://www.chortle.co.uk/review/2026/08/02/61150/georgia_polly-taylor%3A_very_hot._very_messy." target="_blank" rel="nofollow noopener" title="Chortle">2&#9733;</a>
     
   </div>
   
-  <div data-find="waiting for wonka">
+  <div data-find="waiting for wonka"
+       data-venue="Gilded Balloon Patter House" data-start="640">
     Waiting for Wonka
     
       <a href="https://www.alledinburghtheatre.com/waiting-for-wonka-half-trick-gilded-balloono-patter-house-edfringe-2026-review/" target="_blank" rel="nofollow noopener" title="All Edinburgh Theatre">3&#9733;</a>
@@ -1363,12 +1460,45 @@
   var section = document.querySelector('h3.section');
   var rest = document.querySelector('.rest');
 
+  // Filters. The panel only exists where the festival programme supplied
+  // venues and times, so every reference below is optional.
+  var toggle = document.getElementById('filter-toggle');
+  var panel = document.getElementById('filters');
+  var fVenue = document.getElementById('f-venue');
+  var fFrom = document.getElementById('f-from');
+  var fTo = document.getElementById('f-to');
+  var fClear = document.getElementById('f-clear');
+
+  rows.forEach(function (r) {
+    r.venue = r.el.getAttribute('data-venue') || '';
+    r.start = parseInt(r.el.getAttribute('data-start'), 10);
+  });
+
+  function minutes(value) {
+    if (!value) return null;
+    var bits = value.split(':');
+    return parseInt(bits[0], 10) * 60 + parseInt(bits[1], 10);
+  }
+
   function apply() {
     var q = input.value.trim().toLowerCase();
+    var venue = fVenue ? fVenue.value : '';
+    var from = fFrom ? minutes(fFrom.value) : null;
+    var to = fTo ? minutes(fTo.value) : null;
     var hits = 0;
     for (var i = 0; i < rows.length; i++) {
-      var show = !q || rows[i].text.indexOf(q) !== -1;
-      rows[i].el.hidden = !show;
+      var r = rows[i];
+      var show = !q || r.text.indexOf(q) !== -1;
+      if (show && venue) show = r.venue === venue;
+      // A show with no known time cannot satisfy a time window. Hiding it is
+      // the honest answer: we do not know when it is on, so we cannot claim
+      // it starts in the hour someone asked for.
+      if (show && (from !== null || to !== null)) {
+        show = r.start >= 0
+            && (from === null || r.start >= from)
+            && (to === null || r.start <= to);
+      }
+      r.el.hidden = !show;
       if (show) hits++;
     }
     // The "also reviewed" heading and its column are meaningless when nothing
@@ -1380,12 +1510,33 @@
       rest.hidden = !anyRest;
       if (section) section.hidden = !anyRest;
     }
-    none.hidden = !(q && hits === 0);
-    if (!none.hidden) none.textContent = 'No shows match \u201c' + input.value.trim() + '\u201d.';
+    var filtering = q || venue || from !== null || to !== null;
+    none.hidden = !(filtering && hits === 0);
+    if (!none.hidden) none.textContent = 'No shows match those filters.';
   }
 
   input.addEventListener('input', apply);
   input.addEventListener('search', apply);   // the clear (x) button
+
+  if (toggle && panel) {
+    toggle.hidden = false;
+    toggle.addEventListener('click', function () {
+      var open = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!open));
+      panel.hidden = open;
+    });
+  }
+  [fVenue, fFrom, fTo].forEach(function (el) {
+    if (el) el.addEventListener('change', apply);
+  });
+  if (fClear) {
+    fClear.addEventListener('click', function () {
+      if (fVenue) fVenue.value = '';
+      if (fFrom) fFrom.value = '';
+      if (fTo) fTo.value = '';
+      apply();
+    });
+  }
 })();
 </script>
 

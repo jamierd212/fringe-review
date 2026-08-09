@@ -98,17 +98,71 @@ def _no_details(html: str) -> dict:
     return {}
 
 
+def _json_array(html: str, key: str):
+    """
+    The array under `key` in the page JSON, matched by balancing brackets.
+
+    A non-greedy regex stops at the first "]", which inside performances is the
+    end of a nested list rather than the end of the array — so it returned a
+    fragment that would not parse.
+    """
+    import json
+
+    start = html.find(f'"{key}"')
+    if start == -1:
+        return None
+    open_at = html.find("[", start)
+    if open_at == -1:
+        return None
+    depth, i = 0, open_at
+    while i < len(html):
+        if html[i] == "[":
+            depth += 1
+        elif html[i] == "]":
+            depth -= 1
+            if depth == 0:
+                break
+        i += 1
+    try:
+        return json.loads(html[open_at:i + 1])
+    except ValueError:
+        return None
+
+
+def _start_time(html: str) -> str:
+    """
+    The show's usual start time as HH:MM.
+
+    A run lists every performance separately, but they share one time — 25
+    performances of Simon Munnery, all at 11:50. The most common wins, so an
+    added late show or a preview at an odd hour does not become the answer.
+    """
+    from collections import Counter
+
+    performances = _json_array(html, "performances") or []
+    times = Counter(
+        p["dateTime"][11:16]
+        for p in performances
+        if isinstance(p, dict) and not p.get("cancelled")
+        and isinstance(p.get("dateTime"), str) and len(p["dateTime"]) >= 16
+    )
+    return times.most_common(1)[0][0] if times else ""
+
+
 def _fringe_details(html: str) -> dict:
     """The Fringe states genre and subGenre outright in the page JSON."""
     genre = re.search(r'"genre"\s*:\s*"([^"]*)"', html)
     sub = re.search(r'"subGenre"\s*:\s*"([^"]*)"', html)
+    duration = re.search(r'"duration"\s*:\s*"?(\d+)', html)
     if not genre:
         return {}
     # "venues" is an array; the first entry's title is the venue name.
     venue = re.search(r'"venues"\s*:\s*\[\s*\{\s*"title"\s*:\s*"([^"]{2,80})"', html)
     return {"genre": genre.group(1).strip(),
             "subgenre": (sub.group(1).strip() if sub else ""),
-            "venue": (venue.group(1).strip() if venue else "")}
+            "venue": (venue.group(1).strip() if venue else ""),
+            "start_time": _start_time(html),
+            "duration": (duration.group(1) if duration else "")}
 
 
 def _eif_details(html: str) -> dict:
@@ -282,7 +336,8 @@ def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dic
         """SELECT id, title, performer, edfringe_url, festival FROM shows
             WHERE year = ?
               AND (edfringe_url IS NULL OR edfringe_url = ''
-                   OR (festival = 'fringe' AND (genre IS NULL OR genre = '')))
+                   OR (festival = 'fringe'
+                       AND (genre IS NULL OR genre = '' OR start_time IS NULL)))
             ORDER BY title""",
         (year,),
     ).fetchall()
@@ -329,9 +384,12 @@ def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dic
         details = fest["details"](html)
         conn.execute(
             """UPDATE shows SET edfringe_url = ?, festival = ?, genre = ?,
-                                 subgenre = ?, venue = ? WHERE id = ?""",
+                                 subgenre = ?, venue = ?, start_time = ?,
+                                 duration = ? WHERE id = ?""",
             (url, fest["key"], details.get("genre", ""),
-             details.get("subgenre", ""), details.get("venue", ""), row["id"]),
+             details.get("subgenre", ""), details.get("venue", ""),
+             details.get("start_time", ""), details.get("duration", ""),
+             row["id"]),
         )
         matched += 1
         per_festival[fest["label"]] = per_festival.get(fest["label"], 0) + 1

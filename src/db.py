@@ -20,7 +20,9 @@ CREATE TABLE IF NOT EXISTS shows (
     edfringe_url TEXT,
     genre        TEXT,
     subgenre     TEXT,
-    venue        TEXT
+    venue        TEXT,
+    start_time   TEXT,      -- "HH:MM", the show's usual start
+    duration     TEXT       -- minutes, as the programme states it
 );
 
 CREATE TABLE IF NOT EXISTS aliases (
@@ -69,7 +71,7 @@ CREATE INDEX IF NOT EXISTS idx_aliases_alias ON aliases(alias);
 def _add_missing_columns(conn: sqlite3.Connection) -> None:
     """Add columns introduced after a database was first created."""
     have = {r[1] for r in conn.execute("PRAGMA table_info(shows)")}
-    for name in ("genre", "subgenre", "venue"):
+    for name in ("genre", "subgenre", "venue", "start_time", "duration"):
         if name not in have:
             conn.execute(f"ALTER TABLE shows ADD COLUMN {name} TEXT")
 
