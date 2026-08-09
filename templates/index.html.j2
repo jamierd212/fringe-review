@@ -198,17 +198,19 @@
     </label>
     <label>Starts between
       <span class="times">
-        {#- Whole hours rather than a time picker: show times are only ever
-            useful to about the hour when you are deciding what to go and see,
-            and a native time input is fiddly on a phone. -#}
+        {#- Whole hours rather than a time picker: show times are only useful
+            to about the hour when you are deciding what to see, and a native
+            time input is fiddly on a phone. The list runs 09:00 round to 08:00
+            so a festival day reads in order — the first show of the day at the
+            top, the small hours at the bottom where they belong. -#}
         <select id="f-from">
           <option value="">Any time</option>
-          {% for h in range(24) %}<option value="{{ "%02d:00"|format(h) }}">{{ "%02d:00"|format(h) }}</option>{% endfor %}
+          {% for h in hours %}<option value="{{ h }}">{{ h }}</option>{% endfor %}
         </select>
         <span>and</span>
         <select id="f-to">
           <option value="">Any time</option>
-          {% for h in range(24) %}<option value="{{ "%02d:00"|format(h) }}">{{ "%02d:00"|format(h) }}</option>{% endfor %}
+          {% for h in hours %}<option value="{{ h }}">{{ h }}</option>{% endfor %}
         </select>
       </span>
     </label>

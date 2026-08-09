@@ -163,6 +163,9 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
         # Only the current festival has a live programme, so past years have no
         # venues to offer and the filter is left out of those pages entirely.
         venues = sorted({s.venue for s in ranked + rest if s.venue})
+        # 09:00 through to 08:00 the next morning: a festival day, in the order
+        # someone lives it, rather than a clock starting at midnight.
+        hours = [f"{(9 + i) % 24:02d}:00" for i in range(24)]
 
         def build(canonical: str) -> str:
             return template.render(
@@ -182,6 +185,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 contact_label=defaults.get("contact_label", "let us know"),
                 analytics_token=defaults.get("analytics_token", ""),
                 venues=venues,
+                hours=hours,
             )
 
         # The landing year is served at two URLs — its own page and the bare
