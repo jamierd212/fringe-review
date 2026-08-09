@@ -22,6 +22,12 @@ OUTPUT_DIR = ROOT / "docs"
 # here — nothing else in the codebase hard-codes the site address.
 SITE_URL = "https://fringestars.com"
 
+# Venue -> geographic group, built from the festivals' own venue pages by
+# tools/venue_groups.py. Kept as data rather than derived at render time: it
+# needs 300 requests to rebuild and changes once a year, not once a day.
+VENUE_GROUPS = json.loads((ROOT / "data" / "venue-groups.json").read_text()) \
+    if (ROOT / "data" / "venue-groups.json").exists() else {}
+
 FESTIVAL_NAMES = {"fringe": "Fringe", "eif": "Edinburgh International Festival",
                   "freefringe": "Free Fringe", "art": "Art Festival"}
 
@@ -120,6 +126,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
         autoescape=select_autoescape(["html"]),
     )
     env.filters["stars"] = stars_html
+    env.globals["venue_group"] = lambda v: VENUE_GROUPS.get(v or "", "")
     template = env.get_template("index.html.j2")
 
     now = datetime.now(timezone.utc).astimezone(ZoneInfo("Europe/London"))
@@ -162,7 +169,11 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
 
         # Only the current festival has a live programme, so past years have no
         # venues to offer and the filter is left out of those pages entirely.
-        venues = sorted({s.venue for s in ranked + rest if s.venue})
+        venues = sorted({s.venue for s in ranked + rest if s.venue}, key=str.casefold)
+        # Only offer a group that actually contains a show this year: picking
+        # "Leith" and getting nothing is worse than not being offered Leith.
+        groups = sorted({VENUE_GROUPS[v] for v in venues if v in VENUE_GROUPS},
+                        key=str.casefold)
         # 09:00 through to 08:00 the next morning: a festival day, in the order
         # someone lives it, rather than a clock starting at midnight.
         hours = [f"{(9 + i) % 24:02d}:00" for i in range(24)]
@@ -185,6 +196,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 contact_label=defaults.get("contact_label", "let us know"),
                 analytics_token=defaults.get("analytics_token", ""),
                 venues=venues,
+                venue_groups=groups,
                 hours=hours,
             )
 

@@ -6,7 +6,7 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| Musical Theatre Review | [Jess Robinson: Elton Reimagined – Edinburgh Festival Fringe](https://musicaltheatrereview.com/jess-robinson-elton-reimagined-edinburgh-festival-fringe/) | Elton Reimagined - Edinburgh Festival Fringe | 75% |
+| Chortle | [11&frac12; Angry Men](https://www.chortle.co.uk/review/2026/08/08/61222/11%C2%BD_angry_men) | 11 1⁄2 Angry Men | 97% |
 
 ## Held — not on the leaderboard
 
@@ -16,6 +16,7 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| All Edinburgh Theatre | [Where Are All the Tall Grandmas?](https://www.alledinburghtheatre.com/where-are-all-the-tall-grandmas-monkey-barrel-comedy-edfringe-2026-review/) | This headline does not identify a specific named show or performance at an Edinburgh festival; it appears to be a generic title that could refer to an article, essay, or round-up rather than a review of one particular show. |
 | The Scotsman | [best edinburgh fringe comedy 2026 four five star shows reviews](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/best-edinburgh-fringe-comedy-2026-four-five-star-shows-reviews-8840196) | This is a round-up of multiple shows with ratings, not a review of a single named show. |
 | WhatsOnStage | [Ariana Grande’s stage exit, Trainspotting’s fate and top shows at the Edinburgh Festivals](https://www.whatsonstage.com/news/ariana-grandes-stage-exit-trainspottings-fate-and-top-shows-at-the-edinburgh-festivals_1728828/) | This is a round-up covering multiple topics and shows rather than a review of a single named show. |
 | All Edinburgh Theatre | [EdFringe 2026: Cabaret, Comedy, Dance and Spoken Word](https://www.alledinburghtheatre.com/edfringe-2026-cabaret-comedy-dance-spoken-word-made-in-edinburgh-listings/) | This is an announcement or preview of the Fringe programme categories, not a review of a single named show. |
@@ -215,4 +216,3 @@ table and re-run `python run.py --match` to let it back in.
 | All Edinburgh Theatre | [Screaming Into the Void](https://www.alledinburghtheatre.com/screaming-into-the-void-piece-of-work-theatre-edfringe-2025-review/) | This appears to be a generic phrase rather than a named show review, with no indication it reviews a specific Edinburgh festival performance. |
 | All Edinburgh Theatre | [Confessions of a Lunatic](https://www.alledinburghtheatre.com/confessions-of-a-lunatic-nightshade-theatre-edfringe-2025-review/) | This appears to be a generic title without clear indication it reviews a specific named show at an Edinburgh festival, and lacks context suggesting a festival review rather than general content. |
 | All Edinburgh Theatre | [The Dahlia Files](https://www.alledinburghtheatre.com/the-dahlia-files-hey-thanks-theatre-collective-edfringe-2025-review/) | Headline alone lacks sufficient context to confirm this reviews a specific Edinburgh festival show rather than being a title, announcement, or other non-review content. |
-| All Edinburgh Theatre | [A Woman of No Importance](https://www.alledinburghtheatre.com/a-woman-of-no-importance-edinburgh-theatre-arts-st-ninians-hall-edfringe-2025-review/) | This appears to be a title rather than a review headline, lacking review language or context indicating it reviews a specific Edinburgh festival show. |

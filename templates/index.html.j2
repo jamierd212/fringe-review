@@ -193,7 +193,14 @@
     <label>Venue
       <select id="f-venue">
         <option value="">Any venue</option>
-        {% for v in venues %}<option value="{{ v }}">{{ v }}</option>{% endfor %}
+        {%- if venue_groups %}
+        <optgroup label="Areas">
+          {% for g in venue_groups %}<option value="g:{{ g }}">{{ g }}</option>{% endfor %}
+        </optgroup>
+        {%- endif %}
+        <optgroup label="All venues">
+          {% for v in venues %}<option value="v:{{ v }}">{{ v }}</option>{% endfor %}
+        </optgroup>
       </select>
     </label>
     <label>Starts between
@@ -228,7 +235,8 @@
 {% for position, show in placed %}
 <article class="show{% if position <= 3 %} top{% endif %}"
          data-find="{{ (show.title ~ ' ' ~ (show.performer or '') ~ ' ' ~ show.genre)|lower }}"
-         data-venue="{{ show.venue }}" data-start="{{ show.start_minutes }}">
+         data-venue="{{ show.venue }}" data-vgroup="{{ venue_group(show.venue) }}"
+         data-start="{{ show.start_minutes }}">
   <div class="pos">{{ position }}</div>
   <div class="body">
     <div class="titlerow">
@@ -261,7 +269,8 @@
 <div class="rest">
   {% for show in rest %}
   <div data-find="{{ show.title|lower }}"
-       data-venue="{{ show.venue }}" data-start="{{ show.start_minutes }}">
+       data-venue="{{ show.venue }}" data-vgroup="{{ venue_group(show.venue) }}"
+       data-start="{{ show.start_minutes }}">
     {{ show.title }}
     {% for review in show.reviews %}
       <a href="{{ review.url }}" target="_blank" rel="nofollow noopener" title="{{ review.publication }}">{{ review.stars }}&#9733;</a>{% if not loop.last %}, {% endif %}
@@ -322,6 +331,7 @@
 
   rows.forEach(function (r) {
     r.venue = r.el.getAttribute('data-venue') || '';
+    r.vgroup = r.el.getAttribute('data-vgroup') || '';
     r.start = parseInt(r.el.getAttribute('data-start'), 10);
   });
 
@@ -340,7 +350,13 @@
     for (var i = 0; i < rows.length; i++) {
       var r = rows[i];
       var show = !q || r.text.indexOf(q) !== -1;
-      if (show && venue) show = r.venue === venue;
+      // "g:" is an area, "v:" a single venue. Each show carries its own area,
+      // so an area match is one comparison rather than a lookup table.
+      if (show && venue) {
+        show = venue.charAt(0) === 'g'
+             ? r.vgroup === venue.slice(2)
+             : r.venue === venue.slice(2);
+      }
       // A show with no known time cannot satisfy a time window. Hiding it is
       // the honest answer: we do not know when it is on, so we cannot claim
       // it starts in the hour someone asked for.
