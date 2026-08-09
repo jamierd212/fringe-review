@@ -34,6 +34,23 @@ VENUE_GROUPS = json.loads((ROOT / "data" / "venue-groups.json").read_text()) \
 AREA_SHOWS = json.loads((ROOT / "data" / "area-shows.json").read_text()) \
     if (ROOT / "data" / "area-shows.json").exists() else {}
 
+# Deliberate exceptions to that ordering. Summerhall has only 96 shows against
+# the Royal Mile's 1,422, but it is a destination people choose on purpose
+# rather than somewhere they happen to be, so burying it eleventh on raw counts
+# reads wrong. An editorial override, kept here where it is visible rather than
+# hidden in the sort.
+PINNED_AFTER = {"Summerhall & The Meadows": "George Square"}
+
+
+def order_areas(areas: set[str]) -> list[str]:
+    """Areas by programme size, then the pinned exceptions moved into place."""
+    ordered = sorted(areas, key=lambda a: (-AREA_SHOWS.get(a, 0), a.casefold()))
+    for area, after in PINNED_AFTER.items():
+        if area in ordered and after in ordered:
+            ordered.remove(area)
+            ordered.insert(ordered.index(after) + 1, area)
+    return ordered
+
 FESTIVAL_NAMES = {"fringe": "Fringe", "eif": "Edinburgh International Festival",
                   "freefringe": "Free Fringe", "art": "Art Festival"}
 
@@ -182,9 +199,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
         # not by how much we have reviewed. Reviews arrive in a trickle and
         # would reorder the list daily; the programme is the stable answer to
         # "where is the most happening", which is what someone scanning wants.
-        present = {VENUE_GROUPS[v] for v in venues if v in VENUE_GROUPS}
-        groups = sorted(present,
-                        key=lambda a: (-AREA_SHOWS.get(a, 0), a.casefold()))
+        groups = order_areas({VENUE_GROUPS[v] for v in venues if v in VENUE_GROUPS})
         # 09:00 through to 08:00 the next morning: a festival day, in the order
         # someone lives it, rather than a clock starting at midnight.
         hours = [f"{(9 + i) % 24:02d}:00" for i in range(24)]
