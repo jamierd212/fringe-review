@@ -38,7 +38,27 @@ NAMED = [
     ("Cowgate",                  r"Cowgate"),
     ("Summerhall & The Meadows", r"Summerhall|Hope Park|Meadow|Sciennes|Buccleuch"),
     ("Royal Mile / Old Town",    r"High St|Royal Mile|Canongate|Lawnmarket|"
-                                 r"Parliament Sq|Niddry|Blair St|Market St|Mound"),
+                                 r"Parliament Sq|Niddry|Blair St|Market St|Mound|"
+                                 r"Cockburn|Victoria St|George IV|Chambers St|"
+                                 r"Infirmary St|South Bridge|Jeffrey St|Bank St"),
+    # The postcode districts are too coarse on their own: EH1 runs from Lothian
+    # Road to Greenside Place, and EH3 covers the West End, Stockbridge,
+    # Canonmills and Broughton. Naming the streets is what keeps the Traverse
+    # out of the Old Town and Stockbridge Church out of Tollcross.
+    ("West End & Tollcross",     r"Lothian Rd|Lothian Road|Cambridge St|Grindlay|"
+                                 r"Castle Terr|Morrison|Fountainbridge|Bread St|"
+                                 r"Home St|Leven St|Semple|Gardner'?s Cres|"
+                                 r"Palmerston|Shandwick|Haymarket|Torphichen|Manor Pl"),
+    ("Broughton & Leith Walk",  r"Greenside|Leith Walk|Broughton|Mansfield Pl|"
+                                 r"Picardy|London Rd|Easter Rd|Montgomery St|"
+                                 r"Annandale|Brunswick"),
+    ("Stockbridge & North West", r"Saxe Coburg|Raeburn|Deanhaugh|Comely Bank|"
+                                 r"Canonmills|Henderson Row|Inverleith|Dundas St|"
+                                 r"St Stephen"),
+    ("New Town",                 r"St James|St Andrew Sq|George St|Rose St|"
+                                 r"Hanover|Frederick|Queen St|Thistle St|"
+                                 r"Charlotte Sq|Princes St|Dublin St|Howe St|"
+                                 r"Castle St|Young St|Hill St|North Bridge"),
 ]
 
 # Everything else falls back to its postcode district, which is still a real
