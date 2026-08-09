@@ -4,7 +4,9 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-_Nothing to check. 🎉_
+| Publication | Headline | Matched to | Confidence |
+|---|---|---|---|
+| Chortle | [11&frac12; Angry Men](https://www.chortle.co.uk/review/2026/08/08/61222/11%C2%BD_angry_men) | 11 1⁄2 Angry Men | 97% |
 
 ## Held — not on the leaderboard
 
