@@ -190,7 +190,7 @@
      programme pages come down once the shows stop selling. #}
   {% if venues %}
   <div class="filters" id="filters" hidden>
-    <label>Venue
+    <label>Location
       <select id="f-venue">
         <option value="">Any venue</option>
         {%- if venue_groups %}
@@ -198,6 +198,9 @@
           {% for g in venue_groups %}<option value="g:{{ g }}">{{ g }}</option>{% endfor %}
         </optgroup>
         {%- endif %}
+        {#- A disabled option is the only separator a <select> reliably renders
+            across browsers; optgroup labels alone did not read as a division. -#}
+        <option value="" disabled>──────────</option>
         <optgroup label="All venues">
           {% for v in venues %}<option value="v:{{ v }}">{{ v }}</option>{% endfor %}
         </optgroup>
