@@ -48,8 +48,10 @@ NAMED = [
     ("West End & Tollcross",     r"Lothian Rd|Lothian Road|Cambridge St|Grindlay|"
                                  r"Castle Terr|Morrison|Fountainbridge|Bread St|"
                                  r"Home St|Leven St|Semple|Gardner'?s Cres|"
-                                 r"Palmerston|Shandwick|Haymarket|Torphichen|Manor Pl"),
+                                 r"Palmerston|Shandwick|Haymarket|Torphichen|Manor Pl|"
+                                 r"Rutland|Belford|Dean Terr|Atholl|Coates|Melville St"),
     ("Broughton & Leith Walk",  r"Greenside|Leith Walk|Broughton|Mansfield Pl|"
+                                 r"Bellevue|"
                                  r"Picardy|London Rd|Easter Rd|Montgomery St|"
                                  r"Annandale|Brunswick"),
     ("Stockbridge & North West", r"Saxe Coburg|Raeburn|Deanhaugh|Comely Bank|"
@@ -58,7 +60,10 @@ NAMED = [
     ("New Town",                 r"St James|St Andrew Sq|George St|Rose St|"
                                  r"Hanover|Frederick|Queen St|Thistle St|"
                                  r"Charlotte Sq|Princes St|Dublin St|Howe St|"
-                                 r"Castle St|Young St|Hill St|North Bridge"),
+                                 r"Castle St|Young St|Hill St|North Bridge|"
+                                 r"Cumberland St|Abercromby|St Vincent|Great King|"
+                                 r"Drummond Pl|Northumberland|Scotland St|London St|"
+                                 r"Heriot Row|India St"),
 ]
 
 # Everything else falls back to its postcode district, which is still a real
