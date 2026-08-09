@@ -116,13 +116,13 @@
   }
   nav.years .search { margin-left: .4rem; }
   .filters {
-    display: flex; flex-wrap: wrap; gap: .9rem 1.2rem; align-items: end;
+    display: flex; flex-wrap: wrap; gap: .45rem .8rem; align-items: end;
     background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
-    padding: .7rem .9rem; margin: .5rem 0 0; font-size: .85rem;
+    padding: .5rem .7rem; margin: .5rem 0 0; font-size: .85rem;
   }
-  .filters label { display: flex; flex-direction: column; gap: .25rem; color: var(--muted); }
+  .filters label { display: flex; flex-direction: column; gap: .1rem; color: var(--muted); }
   .filters select {
-    font: inherit; padding: .25rem .4rem; border: 1px solid var(--rule);
+    font: inherit; padding: .15rem .35rem; border: 1px solid var(--rule);
     border-radius: 4px; background: #fff; color: var(--ink); max-width: 15rem;
   }
   .filters .times { display: flex; align-items: center; gap: .35rem; }
@@ -138,6 +138,9 @@
   nav.years input[type="search"] {
     padding: .3rem .85rem; border: 1px solid var(--rule); border-radius: 999px;
     font-size: .9rem; font-family: inherit; color: var(--ink);
+    /* Inputs default to line-height: normal while the pills inherit the body's
+       1.55, which left the search box 5px shorter than everything beside it. */
+    line-height: inherit;
     background: var(--card); width: 8.5rem; -webkit-appearance: none;
   }
   nav.years input[type="search"]:focus {
@@ -217,7 +220,7 @@
 </header>
 
 <p class="meta">
-  Updated 9 August 2026, 21:42 BST &middot;
+  Updated 9 August 2026, 21:48 BST &middot;
   51 rated reviews across 47 shows
 </p>
 
