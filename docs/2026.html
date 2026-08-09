@@ -121,7 +121,7 @@
     padding: .7rem .9rem; margin: .5rem 0 0; font-size: .85rem;
   }
   .filters label { display: flex; flex-direction: column; gap: .25rem; color: var(--muted); }
-  .filters select, .filters input[type="time"] {
+  .filters select {
     font: inherit; padding: .25rem .4rem; border: 1px solid var(--rule);
     border-radius: 4px; background: #fff; color: var(--ink); max-width: 15rem;
   }
@@ -194,9 +194,15 @@
       </select>
     </label>
     <label>Starts between
-      <span class="times">
-        <input type="time" id="f-from" step="300"> <span>and</span>
-        <input type="time" id="f-to" step="300">
+      <span class="times"><select id="f-from">
+          <option value="">Any time</option>
+          <option value="00:00">00:00</option><option value="01:00">01:00</option><option value="02:00">02:00</option><option value="03:00">03:00</option><option value="04:00">04:00</option><option value="05:00">05:00</option><option value="06:00">06:00</option><option value="07:00">07:00</option><option value="08:00">08:00</option><option value="09:00">09:00</option><option value="10:00">10:00</option><option value="11:00">11:00</option><option value="12:00">12:00</option><option value="13:00">13:00</option><option value="14:00">14:00</option><option value="15:00">15:00</option><option value="16:00">16:00</option><option value="17:00">17:00</option><option value="18:00">18:00</option><option value="19:00">19:00</option><option value="20:00">20:00</option><option value="21:00">21:00</option><option value="22:00">22:00</option><option value="23:00">23:00</option>
+        </select>
+        <span>and</span>
+        <select id="f-to">
+          <option value="">Any time</option>
+          <option value="00:00">00:00</option><option value="01:00">01:00</option><option value="02:00">02:00</option><option value="03:00">03:00</option><option value="04:00">04:00</option><option value="05:00">05:00</option><option value="06:00">06:00</option><option value="07:00">07:00</option><option value="08:00">08:00</option><option value="09:00">09:00</option><option value="10:00">10:00</option><option value="11:00">11:00</option><option value="12:00">12:00</option><option value="13:00">13:00</option><option value="14:00">14:00</option><option value="15:00">15:00</option><option value="16:00">16:00</option><option value="17:00">17:00</option><option value="18:00">18:00</option><option value="19:00">19:00</option><option value="20:00">20:00</option><option value="21:00">21:00</option><option value="22:00">22:00</option><option value="23:00">23:00</option>
+        </select>
       </span>
     </label>
     <button type="button" id="f-clear">Clear</button>
@@ -206,7 +212,7 @@
 </header>
 
 <p class="meta">
-  Updated 9 August 2026, 20:29 BST &middot;
+  Updated 9 August 2026, 20:32 BST &middot;
   51 rated reviews across 47 shows
 </p>
 
