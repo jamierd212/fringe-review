@@ -45,12 +45,18 @@ NAMED = [
     # Road to Greenside Place, and EH3 covers the West End, Stockbridge,
     # Canonmills and Broughton. Naming the streets is what keeps the Traverse
     # out of the Old Town and Stockbridge Church out of Tollcross.
-    ("West End & Tollcross",     r"Lothian Rd|Lothian Road|Cambridge St|Grindlay|"
-                                 r"Castle Terr|Morrison|Fountainbridge|Bread St|"
-                                 r"Home St|Leven St|Semple|Gardner'?s Cres|"
-                                 r"Palmerston|Shandwick|Haymarket|Torphichen|Manor Pl|"
-                                 r"Rutland|Belford|Dean Terr|Atholl|Coates|Melville St"),
-    ("Broughton & Leith Walk",  r"Greenside|Leith Walk|Broughton|Mansfield Pl|"
+    # Tollcross and the West End are a mile apart and were one group; split on
+    # the streets. Lothian Road's theatres — Usher Hall, Lyceum, Traverse — sit
+    # with the West End, which is how they are always described; the King's, on
+    # Leven Street, is Tollcross.
+    ("Tollcross",                r"Home St|Leven St|Bread St|Fountainbridge|"
+                                 r"Earl Grey|Lauriston|Tollcross|Gilmore|"
+                                 r"Semple|Gardner'?s Cres|Brougham"),
+    ("West End",                 r"Lothian Rd|Lothian Road|Cambridge St|Grindlay|"
+                                 r"Castle Terr|Morrison|Palmerston|Shandwick|"
+                                 r"Haymarket|Torphichen|Manor Pl|Rutland|Belford|"
+                                 r"Dean Terr|Atholl|Coates|Melville St|Canning"),
+    ("Leith Walk & Broughton",  r"Greenside|Leith Walk|Broughton|Mansfield Pl|"
                                  r"Bellevue|"
                                  r"Picardy|London Rd|Easter Rd|Montgomery St|"
                                  r"Annandale|Brunswick"),
@@ -72,32 +78,41 @@ NAMED = [
 # offered two options nobody could choose between.
 DISTRICT = {
     "EH1": "Royal Mile / Old Town", "EH2": "New Town",
-    "EH3": "West End & Tollcross", "EH4": "Stockbridge & North West",
-    "EH5": "North Edinburgh", "EH6": "Leith", "EH7": "Broughton & Leith Walk",
-    "EH8": "Southside & Holyrood", "EH9": "Marchmont & Newington",
-    "EH10": "Bruntsfield & Morningside", "EH11": "Gorgie & Dalry",
-    "EH12": "West Edinburgh", "EH14": "South West Edinburgh",
-    "EH15": "Portobello", "EH16": "South Edinburgh",
+    "EH3": "West End", "EH4": "Stockbridge & North West",
+    "EH6": "Leith", "EH7": "Leith Walk & Broughton",
+    "EH8": "Holyrood, Southside & Pleasance Courtyard", "EH9": "Marchmont & Newington",
+    "EH10": "Bruntsfield & Morningside",
+    # EH5, EH11, EH12, EH14, EH15 and EH16 are deliberately absent. One or two
+    # venues each, miles apart, and an area nobody would choose is worse than no
+    # area at all — those venues still appear in the full A-Z list.
 }
 
 # EIF publishes no per-venue pages, and there are only twelve of them.
 EIF = {
     "Church Hill Theatre": "Bruntsfield & Morningside",
-    "Edinburgh Playhouse": "Broughton & Leith Walk",
-    "Festival Theatre": "Southside & Holyrood",
+    "Edinburgh Playhouse": "Leith Walk & Broughton",
+    "Festival Theatre": "Holyrood, Southside & Pleasance Courtyard",
     "The Hub": "Royal Mile / Old Town",
-    "The Lyceum": "West End & Tollcross",
+    "The Lyceum": "West End",
     "Princes Street Gardens (East)": "New Town",
-    "The Queen's Hall": "Southside & Holyrood",
-    "Studio Theatre": "West End & Tollcross",
-    "Usher Hall": "West End & Tollcross",
-    "King's Theatre": "West End & Tollcross",
-    "Playfair Library": "Southside & Holyrood",
-    "Space @ The Broomhouse Hub": "West Edinburgh",
-}
+    "The Queen's Hall": "Holyrood, Southside & Pleasance Courtyard",
+    "Studio Theatre": "West End",
+    "Usher Hall": "West End",
+    "King's Theatre": "Tollcross",
+    "Playfair Library": "Holyrood, Southside & Pleasance Courtyard",
+    }
 
 
 def area(address: str, postcode: str) -> str:
+    """
+    The venue's area, from its street address, falling back to its postcode.
+
+    Deliberately does NOT consult the venue's name, which was tried and made
+    things worse: it fixed two venues whose address omits the street, and broke
+    three whose name merely contains a street word. Broughton High School is in
+    Comely Bank, Lauriston Castle is in Cramond, and Meadowbank Sports Centre is
+    nowhere near the Meadows.
+    """
     for label, pattern in NAMED:
         if re.search(pattern, address, re.I):
             return label

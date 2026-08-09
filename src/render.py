@@ -170,10 +170,17 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
         # Only the current festival has a live programme, so past years have no
         # venues to offer and the filter is left out of those pages entirely.
         venues = sorted({s.venue for s in ranked + rest if s.venue}, key=str.casefold)
-        # Only offer a group that actually contains a show this year: picking
+        # Only offer an area that actually contains a show this year: picking
         # "Leith" and getting nothing is worse than not being offered Leith.
-        groups = sorted({VENUE_GROUPS[v] for v in venues if v in VENUE_GROUPS},
-                        key=str.casefold)
+        # Ordered by how many shows are in each, so the busiest is first —
+        # alphabetical put "Bristo Square" above the Royal Mile, which is not
+        # the order anyone wants to scan.
+        area_counts: dict[str, int] = {}
+        for show in ranked + rest:
+            area = VENUE_GROUPS.get(show.venue or "")
+            if area:
+                area_counts[area] = area_counts.get(area, 0) + 1
+        groups = sorted(area_counts, key=lambda a: (-area_counts[a], a.casefold()))
         # 09:00 through to 08:00 the next morning: a festival day, in the order
         # someone lives it, rather than a clock starting at midnight.
         hours = [f"{(9 + i) % 24:02d}:00" for i in range(24)]
