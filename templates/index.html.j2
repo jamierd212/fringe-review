@@ -343,9 +343,18 @@
       // the honest answer: we do not know when it is on, so we cannot claim
       // it starts in the hour someone asked for.
       if (show && (from !== null || to !== null)) {
-        show = r.start >= 0
-            && (from === null || r.start >= from)
-            && (to === null || r.start <= to);
+        if (r.start < 0) {
+          // No known time cannot satisfy a time window: we do not know when it
+          // is on, so we cannot claim it starts in the hour someone asked for.
+          show = false;
+        } else if (from !== null && to !== null && to < from) {
+          // The window runs past midnight — 22:00 to 00:00 is the one people
+          // actually want at that hour — so it is two ranges, not one.
+          show = r.start >= from || r.start <= to;
+        } else {
+          show = (from === null || r.start >= from)
+              && (to === null || r.start <= to);
+        }
       }
       r.el.hidden = !show;
       if (show) hits++;
@@ -388,9 +397,7 @@
   }
   var nowHour = new Date().getHours();
   setHour(fFrom, nowHour);
-  // Clamped rather than wrapped: 23:00 is the last option, and a window that
-  // ran from 22:00 round to 00:00 would exclude everything between them.
-  setHour(fTo, Math.min(nowHour + 2, 23));
+  setHour(fTo, (nowHour + 2) % 24);
 
   [fVenue, fFrom, fTo].forEach(function (el) {
     if (el) el.addEventListener('change', apply);
