@@ -187,7 +187,7 @@
 </header>
 
 <p class="meta">
-  Updated 9 August 2026, 20:32 BST &middot;
+  Updated 9 August 2026, 20:35 BST &middot;
   2145 rated reviews across 1434 shows
 </p>
 
@@ -42530,6 +42530,21 @@
       panel.hidden = open;
     });
   }
+  // Default the start hour to now. It has to happen here rather than at build
+  // time: the pages are generated once a day and cached, so a server-rendered
+  // "now" would be wrong for almost everyone reading it.
+  //
+  // Only the start. Setting both ends to the current hour reads well but
+  // filters to shows beginning exactly on the hour, and only 10 of 43 do —
+  // the rest start at :15, :25, :45 and so on. Leaving the end open means the
+  // first thing the filter does is answer "what can I still get to tonight".
+  if (fFrom) {
+    var hour = String(new Date().getHours()).padStart(2, '0') + ':00';
+    if ([].some.call(fFrom.options, function (o) { return o.value === hour; })) {
+      fFrom.value = hour;
+    }
+  }
+
   [fVenue, fFrom, fTo].forEach(function (el) {
     if (el) el.addEventListener('change', apply);
   });
@@ -42538,7 +42553,8 @@
       if (fVenue) fVenue.value = '';
       if (fFrom) fFrom.value = '';
       if (fTo) fTo.value = '';
-      apply();
+      apply();          // Clear means clear: back to every show, not back to "from now"
+
     });
   }
 })();
