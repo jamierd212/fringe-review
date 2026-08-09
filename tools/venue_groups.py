@@ -1,5 +1,8 @@
 """
-Rebuild data/venue-groups.json: every festival venue, mapped to its area.
+Rebuild data/venue-groups.json and data/area-shows.json.
+
+The first maps every festival venue to its area; the second counts how many
+shows the programme lists in each area, which is what orders the filter.
 
 Run once a season, not once a day — it fetches about 300 venue pages at one
 request a second, and venues change yearly rather than daily:
@@ -128,8 +131,9 @@ def main() -> None:
     print(f"{len(urls)} Fringe venue pages")
 
     mapping: dict[str, str] = {}
+    shows: Counter[str] = Counter()
     for i, url in enumerate(urls, 1):
-        page = programme._get(url, timeout=30)
+        page = programme._get(url, timeout=45)
         if not page:
             continue
         name = re.search(r"<h1[^>]*>(.*?)</h1>", page, re.S)
@@ -144,6 +148,18 @@ def main() -> None:
                      postcode.group(0) if postcode else "")
         if group:
             mapping[name] = group
+            # The venue page carries its whole programme in the Next.js payload,
+            # so the number of shows on there is a count of that list. Reading
+            # it here avoids fetching 4,300 individual show pages for the same
+            # answer.
+            payload = re.search(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>',
+                                page, re.S)
+            if payload:
+                try:
+                    venue = json.loads(payload.group(1))["props"]["pageProps"]["data"]["venue"]
+                    shows[group] += len(venue.get("events") or [])
+                except (ValueError, KeyError, TypeError):
+                    pass
         if i % 50 == 0:
             print(f"  {i}/{len(urls)}")
 
@@ -152,10 +168,15 @@ def main() -> None:
 
     out = ROOT / "data" / "venue-groups.json"
     out.write_text(json.dumps(mapping, indent=1, sort_keys=True, ensure_ascii=False))
-    counts = Counter(mapping.values())
-    print(f"\nwrote {out.relative_to(ROOT)}: {len(mapping)} venues, {len(counts)} areas")
-    for group, n in counts.most_common():
-        print(f"  {group:28} {n:3}")
+    order = ROOT / "data" / "area-shows.json"
+    order.write_text(json.dumps(dict(shows.most_common()), indent=1, ensure_ascii=False))
+
+    venues = Counter(mapping.values())
+    print(f"\nwrote {out.relative_to(ROOT)} and {order.relative_to(ROOT)}")
+    print(f"{len(mapping)} venues, {len(venues)} areas, {sum(shows.values())} shows\n")
+    print(f"  {'area':44} {'shows':>6}  venues")
+    for group, n in shows.most_common():
+        print(f"  {group:44} {n:6}  {venues[group]:6}")
 
 
 if __name__ == "__main__":

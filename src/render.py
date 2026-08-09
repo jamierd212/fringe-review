@@ -28,6 +28,12 @@ SITE_URL = "https://fringestars.com"
 VENUE_GROUPS = json.loads((ROOT / "data" / "venue-groups.json").read_text()) \
     if (ROOT / "data" / "venue-groups.json").exists() else {}
 
+# How many shows the festival programme lists in each area. Used to order the
+# filter, because ordering by the shows WE have reviewed is unstable and tiny —
+# an area with two reviews would outrank the Royal Mile.
+AREA_SHOWS = json.loads((ROOT / "data" / "area-shows.json").read_text()) \
+    if (ROOT / "data" / "area-shows.json").exists() else {}
+
 FESTIVAL_NAMES = {"fringe": "Fringe", "eif": "Edinburgh International Festival",
                   "freefringe": "Free Fringe", "art": "Art Festival"}
 
@@ -172,15 +178,13 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
         venues = sorted({s.venue for s in ranked + rest if s.venue}, key=str.casefold)
         # Only offer an area that actually contains a show this year: picking
         # "Leith" and getting nothing is worse than not being offered Leith.
-        # Ordered by how many shows are in each, so the busiest is first —
-        # alphabetical put "Bristo Square" above the Royal Mile, which is not
-        # the order anyone wants to scan.
-        area_counts: dict[str, int] = {}
-        for show in ranked + rest:
-            area = VENUE_GROUPS.get(show.venue or "")
-            if area:
-                area_counts[area] = area_counts.get(area, 0) + 1
-        groups = sorted(area_counts, key=lambda a: (-area_counts[a], a.casefold()))
+        # Ordered by how much is ON in each area according to the programme,
+        # not by how much we have reviewed. Reviews arrive in a trickle and
+        # would reorder the list daily; the programme is the stable answer to
+        # "where is the most happening", which is what someone scanning wants.
+        present = {VENUE_GROUPS[v] for v in venues if v in VENUE_GROUPS}
+        groups = sorted(present,
+                        key=lambda a: (-AREA_SHOWS.get(a, 0), a.casefold()))
         # 09:00 through to 08:00 the next morning: a festival day, in the order
         # someone lives it, rather than a clock starting at midnight.
         hours = [f"{(9 + i) % 24:02d}:00" for i in range(24)]
