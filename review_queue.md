@@ -6,7 +6,7 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| Chortle | [11&frac12; Angry Men](https://www.chortle.co.uk/review/2026/08/08/61222/11%C2%BD_angry_men) | 11 1⁄2 Angry Men | 97% |
+| All Edinburgh Theatre | [A Trial – after An Enemy of The People (EIF)](https://www.alledinburghtheatre.com/a-trial-after-an-enemy-of-the-people-lyceum-eif-2026-review/) | After An Enemy of the People | 93% |
 
 ## Held — not on the leaderboard
 
@@ -16,6 +16,7 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Chortle | [Portrait Of A Tom As A Young Neenan](https://www.chortle.co.uk/review/2026/08/09/61233/portrait_of_a_tom_as_a_young_neenan) | This appears to be a title or reference to a work, but without context indicating it's a review of a named show at an Edinburgh festival, it reads more like a headline fragment or artwork title rather than a review article. |
 | FringeReview | [Blizzard (WIP)](https://fringereview.co.uk/review/edinburgh-fringe/2026/blizzard-wip/) | This appears to be a show title only with no review content, publication context, or Edinburgh festival confirmation, making it impossible to verify as a festival review. |
 | ThreeWeeks Edinburgh | [Spencer Jones: Dogs (Soho Theatre)](https://threeweeksedinburgh.com/article/spencer-jones-dogs-soho-theatre/) | This show is at Soho Theatre in London, not at an Edinburgh festival. |
 | ThreeWeeks Edinburgh | [Bigfoot Ripped My Dog In Half I Saw It  (Xhloe and Natasha, Soho Theatre and SoHo Playhouse)](https://threeweeksedinburgh.com/article/bigfoot-ripped-my-dog-in-half-i-saw-it-xhloe-and-natasha-soho-theatre-and-soho-playhouse/) | This reviews a show at Soho Theatre and SoHo Playhouse, which are in London's West End, not at an Edinburgh festival. |
@@ -215,4 +216,3 @@ table and re-run `python run.py --match` to let it back in.
 | All Edinburgh Theatre | [The Kids Always Win](https://www.alledinburghtheatre.com/the-kids-always-win-hooray-productions-pleasance-courtyard-edfringe-2025-review/) | This headline alone lacks sufficient context to confirm it reviews a named show at an Edinburgh festival; it could be a general article, review of a show elsewhere, or commentary without location and show details specified. |
 | All Edinburgh Theatre | [Ringing out the Changes](https://www.alledinburghtheatre.com/ringing-out-the-changes-jo-clifford-st-marys-episcopal-cathedral-edfringe-2025-review/) | This headline does not clearly identify a specific named show at an Edinburgh festival or provide sufficient context to confirm it reviews a single performance. |
 | All Edinburgh Theatre | [Life’s A Drag](https://www.alledinburghtheatre.com/lifes-a-drag-not-today-satan-theatre-edfringe-2025-review/) | This headline is too generic and lacks identifying information about a specific show, venue, or Edinburgh festival context needed to confirm it's a review of one named show. |
-| All Edinburgh Theatre | [Sex, Drugs and…?](https://www.alledinburghtheatre.com/sex-drugs-and-culture-riot-edfringe-2025-review/) | This headline is too generic and lacks the name of a specific show or performer, appearing to be a round-up or general guide rather than a review of one named show. |
