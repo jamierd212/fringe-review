@@ -4,9 +4,7 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-| Publication | Headline | Matched to | Confidence |
-|---|---|---|---|
-| All Edinburgh Theatre | [A Trial – after An Enemy of The People (EIF)](https://www.alledinburghtheatre.com/a-trial-after-an-enemy-of-the-people-lyceum-eif-2026-review/) | After An Enemy of the People | 93% |
+_Nothing to check. 🎉_
 
 ## Held — not on the leaderboard
 
@@ -16,6 +14,7 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| One4Review | [Kool & The Gang 4 ⭐️⭐️⭐️⭐️](https://one4review.co.uk/2026/08/kool-the-gang-4-%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f/) | This is a rating without context, likely part of a round-up or list rather than a review of a single identified show at an Edinburgh festival. |
 | Chortle | [Portrait Of A Tom As A Young Neenan](https://www.chortle.co.uk/review/2026/08/09/61233/portrait_of_a_tom_as_a_young_neenan) | This appears to be a title or reference to a work, but without context indicating it's a review of a named show at an Edinburgh festival, it reads more like a headline fragment or artwork title rather than a review article. |
 | FringeReview | [Blizzard (WIP)](https://fringereview.co.uk/review/edinburgh-fringe/2026/blizzard-wip/) | This appears to be a show title only with no review content, publication context, or Edinburgh festival confirmation, making it impossible to verify as a festival review. |
 | ThreeWeeks Edinburgh | [Spencer Jones: Dogs (Soho Theatre)](https://threeweeksedinburgh.com/article/spencer-jones-dogs-soho-theatre/) | This show is at Soho Theatre in London, not at an Edinburgh festival. |
@@ -215,4 +214,3 @@ table and re-run `python run.py --match` to let it back in.
 | All Edinburgh Theatre | [Calendar Girls](https://www.alledinburghtheatre.com/calendar-girls-leitheatre-st-serfs-edfringe-2025-review/) | This is a generic title without context indicating it reviews a specific Edinburgh festival show rather than the well-known film or stage production. |
 | All Edinburgh Theatre | [The Kids Always Win](https://www.alledinburghtheatre.com/the-kids-always-win-hooray-productions-pleasance-courtyard-edfringe-2025-review/) | This headline alone lacks sufficient context to confirm it reviews a named show at an Edinburgh festival; it could be a general article, review of a show elsewhere, or commentary without location and show details specified. |
 | All Edinburgh Theatre | [Ringing out the Changes](https://www.alledinburghtheatre.com/ringing-out-the-changes-jo-clifford-st-marys-episcopal-cathedral-edfringe-2025-review/) | This headline does not clearly identify a specific named show at an Edinburgh festival or provide sufficient context to confirm it reviews a single performance. |
-| All Edinburgh Theatre | [Life’s A Drag](https://www.alledinburghtheatre.com/lifes-a-drag-not-today-satan-theatre-edfringe-2025-review/) | This headline is too generic and lacks identifying information about a specific show, venue, or Edinburgh festival context needed to confirm it's a review of one named show. |
