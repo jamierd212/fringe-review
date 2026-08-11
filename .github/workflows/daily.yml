@@ -109,3 +109,10 @@ jobs:
             git pull --rebase --autostash
             git push
           fi
+
+      # Deliberately the last step, and deliberately allowed to fail the run:
+      # the day's reviews are already committed and pushed above, so failing
+      # here costs nothing but sends GitHub's "workflow failed" email. A source
+      # that quietly stops collecting is otherwise invisible for weeks.
+      - name: Check no source has fallen silent
+        run: python run.py --health

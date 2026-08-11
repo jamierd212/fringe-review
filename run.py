@@ -15,7 +15,7 @@ import argparse
 import sys
 from datetime import date
 
-from src import collect, db, match, programme, render
+from src import collect, db, health, match, programme, render
 
 
 def main() -> int:
@@ -24,6 +24,10 @@ def main() -> int:
                         help="read a month's archive instead of the live feed")
     parser.add_argument("--limit", type=int,
                         help="only process N items per publication (quick tests)")
+    parser.add_argument("--health", action="store_true",
+                        help="report sources that have stopped collecting, and "
+                             "exit non-zero if any (so the run is marked failed "
+                             "and GitHub emails you)")
     parser.add_argument("--render", action="store_true", help="only rebuild the HTML")
     parser.add_argument("--match", action="store_true", help="only redo show matching")
     parser.add_argument("--rematch", action="store_true",
@@ -63,6 +67,13 @@ def main() -> int:
         print("Cleared all show assignments; re-matching from scratch.")
         args.match = True
 
+    if args.health:
+        cfg = collect.load_config()
+        conn.close()
+        # Non-zero marks the workflow failed, which is what makes GitHub send an
+        # email. The data is already committed by the time this step runs.
+        return 1 if health.report(db.connect(), cfg["publications"]) else 0
+
     if not (args.render or args.match):
         if months:
             for y, m in months:
@@ -98,6 +109,9 @@ def main() -> int:
     # index.html, not paths[0] — that is the newest year, which before the
     # festival opens is the empty placeholder rather than what visitors see.
     print(f"\nOpen it with:  open {paths[0].parent / 'index.html'}\n")
+
+    if not args.render:
+        health.report(conn, collect.load_config()["publications"])
 
     conn.close()
     return 0
