@@ -312,37 +312,41 @@ publications:
   - name: The List
     slug: thelist
     homepage: https://www.list.co.uk/
-    feed: ""
-    rating:
-      type: auto
-    enabled: false
-    verified: 2026-08-05
+    api: list
+    api_base: https://cms.list.co.uk/api/v2
+    public_base: https://www.list.co.uk/edinburgh-festival/news
+    feed: https://cms.list.co.uk/api/v2/news   # documentation only; also marks the API host
+    pages: 4                  # 20 items a page; four covers a busy festival day
+    require_title_match: "\\breview\\b"
+    title_strip_patterns:
+      # Their headline is "<show> <artform> review: <verdict>", so the artform
+      # word sits between the show and the word this pipeline strips from —
+      # leaving "All Rise music" and "Sand dance" as show names. Removed here
+      # because the list of artforms is this publication's house style, not a
+      # general rule.
+      - "\\s+(?:music|dance|theatre|comedy|art|books?|opera|circus|cabaret|musicals?|kids|children'?s|spoken\\s+word|film)\\s+review\\b.*$"
+    verified: 2026-08-11
     notes: >
-      CLOSED, and not for the reason previously recorded. The API was found and
-      mapped; the problem is that there is no rating to read.
+      Their site is a Nuxt app that server-renders nothing useful, but the CMS
+      API behind it is public and cms.list.co.uk/robots.txt is "Disallow:" with
+      nothing after it.
 
-      Their CMS API is at https://cms.list.co.uk/api/v2 and its robots.txt is
-      "Disallow:" with nothing after it — fully permitted. The endpoints are not
-      guessable but are visible in the route's JS chunks, where $fetch calls
-      build them from a runtime apiBase. Working ones, for whoever needs them:
+      PREVIOUSLY CLOSED IN ERROR. An earlier look sampled 320 items from the
+      /news LIST endpoint, found article_rating null on every one, and concluded
+      The List had stopped giving stars. It had not: the field is null on the
+      list endpoint and populated only on /news/{id}. They star reviews as they
+      always did.
 
-        /news                                      paginated, ~2,400 pages
-        /news/featured?microsite=edinburgh-festival
-        /projects/featured?microsite=edinburgh-festival    (shows)
-        /projects/{id}   /projects/{slug}
-        /highlights/homepage?microsite=edinburgh-festival
-        /tiles/home_page_cta
+      One request per new review, and none for ones already seen.
 
-      News items carry an `article_rating` field, so they clearly rated articles
-      at some point. It is null on every one of 320 items sampled across 16
-      pages of the archive, `article_type` is "none" throughout, and no filter
-      parameter tried (type, article_type, filter[...], rating, sort, order)
-      changes what comes back. Project objects have no rating field at all, and
-      the rendered pages contain no star glyphs and no schema ratingValue.
-
-      So The List appears to have stopped publishing star ratings. Nothing in
-      the pipeline can fix that. Revisit only if a rated review is spotted on
-      their site — at which point the endpoints above make it a short job.
+      Nothing in the API says which SECTION a piece is in: the microsite
+      parameter is ignored, there is no section field, and the festival URL path
+      resolves for every article they have ever published — a 2016 nightclub
+      listing returns 200 under it. So festival membership cannot be established
+      at source. Non-festival content is stopped by the title needing to say
+      "review", by the festival date window, and by the admission gate. Worth
+      watching in September, when the window closes and their output goes back
+      to being city-wide.
 
   - name: The Wee Review
     slug: weereview

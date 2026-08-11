@@ -43,6 +43,9 @@ class Candidate:
     # Set when the source hands us the rating outright (the Guardian's API has a
     # starRating field). Saves a page fetch and removes any guesswork.
     known_stars: int | None = None
+    # Identifier in the publication's own API, when the rating has to be looked
+    # up separately from discovery (The List's list endpoint omits it).
+    api_id: int | None = None
 
 
 class Collector:
@@ -371,6 +374,59 @@ class Collector:
                                        published=published, publication=pub["name"]))
         return found
 
+    def discover_list(self, pub: dict,
+                      backfill: tuple[int, int] | None) -> list[Candidate]:
+        """
+        The List's CMS API.
+
+        Their site is a Nuxt app that renders nothing useful server-side, but the
+        API behind it is public and its robots.txt is "Disallow:" with nothing
+        after it. Two quirks shape this:
+
+        `article_rating` is null on the list endpoint and populated only on the
+        per-article one, which is what made an earlier look conclude they had
+        stopped rating reviews altogether. They had not.
+
+        And nothing in the API says which section a piece belongs to. The
+        microsite parameter is ignored, there is no section field, and the
+        festival URL path resolves for every article they have ever published -
+        a 2016 nightclub listing included - so it cannot be used to test
+        membership either. Non-festival content is therefore stopped downstream
+        rather than here: by the title needing to say "review", by the festival
+        date window, and finally by the admission gate, which asks whether the
+        thing is a review of an Edinburgh festival show at all.
+        """
+        import json
+
+        base = pub.get("api_base", "https://cms.list.co.uk/api/v2")
+        public = pub.get("public_base",
+                         "https://www.list.co.uk/edinburgh-festival/news")
+        found: list[Candidate] = []
+        for page in range(1, int(pub.get("pages", 3)) + 1):
+            raw = self._get(f"{base}/news?page={page}")
+            if raw is None:
+                break
+            try:
+                items = json.loads(raw).get("data", [])
+            except ValueError:
+                break
+            if not items:
+                break
+            for item in items:
+                slug = item.get("slug")
+                if not slug:
+                    continue
+                found.append(Candidate(
+                    url=f"{public}/{slug}",
+                    title=item.get("name") or "",
+                    summary="",
+                    published=item.get("display_created_date")
+                              or item.get("start_date"),
+                    publication=pub["name"],
+                    api_id=item.get("id"),
+                ))
+        return found
+
     def discover_listing(self, pub: dict,
                          backfill: tuple[int, int] | None) -> list[Candidate]:
         """
@@ -505,6 +561,8 @@ class Collector:
             return self.discover_sitemap(pub, backfill)
         if pub.get("discovery") == "listing":
             return self.discover_listing(pub, backfill)
+        if pub.get("api") == "list":
+            return self.discover_list(pub, backfill)
 
         found: list[Candidate] = []
         for feed_url in self.feed_urls(pub, backfill):
@@ -611,6 +669,9 @@ class Collector:
             for pattern in pub.get("exclude_title_patterns", []) or []:
                 if re.search(pattern, cand.title, re.I):
                     return False
+        if pub and (must := pub.get("require_title_match")):
+            if not re.search(must, cand.title, re.I):
+                return False
         if pub and (prefix := pub.get("require_title_prefix")):
             if not title.startswith(prefix.strip().lower()):
                 return False
@@ -704,6 +765,22 @@ class Collector:
         # An API that states the rating outright beats anything we could infer.
         if cand.known_stars is not None:
             return Rating(stars=cand.known_stars, original=f"{cand.known_stars}/5",
+                          converted=False, rounded=False, method="api")
+
+        if pub.get("api") == "list" and cand.api_id:
+            import json as _json
+
+            base = pub.get("api_base", "https://cms.list.co.uk/api/v2")
+            raw = self._get(f"{base}/news/{cand.api_id}")
+            if raw is None:
+                return None
+            try:
+                stars = _json.loads(raw)["article"]["article_rating"]
+            except (ValueError, KeyError, TypeError):
+                return None
+            if not stars:
+                return None
+            return Rating(stars=int(stars), original=f"{stars}/5",
                           converted=False, rounded=False, method="api")
 
         rule = pub.get("rating", {})
