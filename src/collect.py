@@ -145,25 +145,33 @@ class Collector:
         parser = self._robots_for(url)
         return True if parser is None else parser.can_fetch(self.robots_token, url)
 
-    def crawl_delay(self, url: str) -> float:
-        """A publication's own Crawl-delay, if it asks for more than our default."""
+    def crawl_delay(self, url: str, pub: dict | None = None) -> float:
+        """
+        How long to wait before this request.
+
+        The largest of: our default, anything the publication asks for in
+        robots.txt, and any per-publication override in sources.yaml. The
+        override exists for sites that serve us happily at a slower rate but
+        start challenging at one request a second.
+        """
+        floor = float((pub or {}).get("delay_seconds") or self.delay)
         if urlsplit(url).netloc in self._api_hosts:
-            return self.delay
+            return floor
         parser = self._robots_for(url)
         if parser is None:
-            return self.delay
+            return floor
         try:
             asked = parser.crawl_delay(self.robots_token)
         except Exception:  # noqa: BLE001
-            return self.delay
-        return max(self.delay, float(asked)) if asked else self.delay
+            return floor
+        return max(floor, float(asked)) if asked else floor
 
-    def _get(self, url: str) -> str | None:
+    def _get(self, url: str, pub: dict | None = None) -> str | None:
         """Fetch a URL, never raising. Rate-limited, and gated on robots.txt."""
         if not self.allowed(url):
             print(f"      ! robots.txt disallows  {url}")
             return None
-        wait = self.crawl_delay(url) - (time.monotonic() - self._last_request)
+        wait = self.crawl_delay(url, pub) - (time.monotonic() - self._last_request)
         if wait > 0:
             time.sleep(wait)
         self._last_request = time.monotonic()
@@ -795,7 +803,7 @@ class Collector:
         if not pub.get("fetch_page"):
             return None
 
-        html = self._get(cand.url)
+        html = self._get(cand.url, pub)
         if html is None:
             return None
 

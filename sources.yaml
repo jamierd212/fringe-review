@@ -232,38 +232,40 @@ publications:
   - name: The Scotsman
     slug: scotsman
     homepage: https://www.scotsman.com/
-    # Their RSS is a rolling nine items with no archive. The month sitemap lists
-    # the whole newspaper — 2,677 articles for August 2025, 175 of them festival
-    # reviews — so it is both the only route to a backfill and the better source
-    # for a daily run.
-    discovery: sitemap
-    sitemap: https://www.scotsman.com/sitemaps/sitemap-articles-{year}-{month:02d}.xml
-    url_must_match:
-      - "review"
-      - "fringe|festival|edinburgh"
-    feed: https://www.scotsman.com/arts-and-culture/edinburgh-festivals/rss  # unused, kept for reference
+    # Their RSS, not their sitemap. Cloudflare now answers the sitemap and every
+    # HTML page with a challenge while leaving robots.txt and the feeds open, so
+    # the sitemap route stopped working on 8 August. The feed also lists MORE
+    # reviews than the month sitemap did - 11 against 7 - and costs one request
+    # instead of a 2.7MB download.
+    feed: https://www.scotsman.com/arts-and-culture/edinburgh-festivals/rss
+    pages: 1
     rating:
-      type: auto              # ★★★★ characters in the page
+      type: auto              # star characters on the page
     fetch_page: true
-    title_from_page: true     # the slug is a poor headline; read og:title instead
-    require_edinburgh: true   # the URL filter admits Fringe by the Sea, Pittenweem etc.
-    roundups: true            # split multi-show articles into one review each
-    verified: 2026-08-03
+    title_from_page: true
+    # The feed IS their Edinburgh festivals section, so every item in it is
+    # Edinburgh by definition. Requiring a marker in the headline threw away 20
+    # of 23 items, because they write "Fringe theatre reviews" and bare "Fringe"
+    # is not a marker - it cannot be, or Camden and Brighton would qualify.
+    festival_feed: true
+    require_title_match: "\\breviews?\\b"   # excludes their daily festivals diary
+    roundups: true            # most of their festival output is multi-show
+    # They challenge at one request a second. Three seconds is slower than we
+    # need for a feed of 23 items and may keep us under whatever trips it.
+    delay_seconds: 3
+    verified: 2026-08-11
     notes: >
-      NO LONGER BLOCKED. Previously recorded as a deliberate server block after
-      HTTP 403s; on retest everything returns 200. That was Cloudflare bot
-      management, which is dynamic — the earlier note was wrong.
+      Their coverage is worth the trouble: 245 reviews in 2025, most of them
+      inside round-ups that carry a separate rating per show.
 
-      robots.txt disallows only /internal-api/, /newsletter-app/ and a
-      parsely-api query string. Nothing relevant.
+      ACCESS IS INTERMITTENT. Cloudflare bot management, not an editorial
+      decision - it 403s a plain curl with no custom user-agent just as readily
+      as it 403s us, so this is about the network rather than about who we say
+      we are. robots.txt and the RSS feeds stay open throughout; it is the HTML
+      pages that carry the rating, and those are what get challenged.
 
-      Ratings verified against eight real August 2025 festival reviews: 8 of 8
-      extracted, all via star characters on the page.
-
-      Their round-up reviews ("Edinburgh Art Festival reviews: Robert Powell |
-      Aqsa Arif") cover several shows under one headline and will not match a
-      programme entry, so the admission gate holds them rather than inventing a
-      show. That is the intended behaviour, not a gap.
+      If the feed keeps finding reviews we cannot then read, the answer is to
+      ask them to allowlist us rather than to try anything cleverer.
 
   - name: The Telegraph
     slug: telegraph
