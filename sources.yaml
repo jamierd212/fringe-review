@@ -380,6 +380,121 @@ publications:
       to the hero overlay that belongs to the article. Verified across six
       reviews: 4, 4, 3, 4, 4, 4.
 
+  - name: Binge Fringe
+    slug: bingefringe
+    homepage: https://bingefringe.com/
+    feed: https://bingefringe.com/feed/
+    backfill: https://bingefringe.com/{year}/{month:02d}/feed/
+    rating:
+      type: auto            # stars sit in the feed title, e.g. "... EdFringe 2025 ★★★★"
+    fetch_page: false
+    require_title_prefix: "REVIEW:"
+    pages: 6
+    title_strip_patterns:
+      # Their headline is "REVIEW: <show>, <company>, EdFringe <year> ★★★★".
+      # The festival tail is handled centrally; the company is not, and left on
+      # it splits the show in two — "Lady Macbeth Played Wing Defence" and
+      # "Lady Macbeth Played Wing Defence, Crash Theatre Co and House of Oz"
+      # were two entries on the 2025 board. Scoped here because it is this
+      # publication's house style, not a general rule.
+      # Two patterns, and the order matters. The festival tail has to go first:
+      # a single "drop the last comma group" rule removes ", EdFringe 2026" and
+      # leaves the company sitting in the show's name.
+      - ",\\s*edfringe[^,]*$"
+      - ",\\s*[^,]+$"
+    verified: 2026-08-03
+    notes: >
+      Edinburgh-focused and the cleanest source found in the 2026 sweep: 6 of 6
+      sampled items carried an extractable rating, and it is in the feed, so no
+      page fetch is needed. Titles are "REVIEW: <show>, <company>, EdFringe
+      2025 ★★★★", hence the prefix filter.
+
+  - name: Corr Blimey
+    slug: corrblimey
+    homepage: https://corrblimey.uk/
+    feed: https://corrblimey.uk/feed/
+    backfill: https://corrblimey.uk/{year}/{month:02d}/feed/
+    rating:
+      type: auto              # star glyphs on the page (they left the headline in 2026)
+    fetch_page: true
+    # They moved the word in 2026: "Review:" used to start the headline and now
+    # sits mid-string, after the festival name. A prefix test silently dropped
+    # every one of their reviews, so this matches wherever it appears.
+    require_title_match: "\\bReview:"
+    title_strip_patterns:
+      # Headlines end "<show> - <venue>", and without removing the venue the
+      # dash split made the VENUE the show: "Next To Normal - Sanctuary,
+      # Paradise in Augustine's" was filed as a show called "Sanctuary".
+      - "\\s+[–—]\\s+[^–—]+$"
+    pages: 6
+    verified: 2026-08-11
+    notes: >
+      Two things changed for 2026 and each broke collection silently.
+
+      The rating left the headline. In 2025 it was "Review: ... ★★★★" and could
+      be read from the feed alone; now the feed carries no stars at all and they
+      are on the page, so fetch_page is on.
+
+      And "Review:" moved from the start of the headline to the middle, after
+      the festival name, which a prefix test rejected outright — 59 of 60 items
+      dropped before anything looked at them.
+
+  - name: North West End
+    slug: northwestend
+    homepage: https://northwestend.com/
+    feed: https://northwestend.com/feed/
+    backfill: https://northwestend.com/{year}/{month:02d}/feed/
+    rating:
+      type: auto            # "4 out of 5" style, on the page not in the feed
+    fetch_page: true
+    require_edinburgh: true
+    pages: 8
+    verified: 2026-08-03
+    notes: >
+      UK-wide: the August 2025 sample was largely Southwark Playhouse and other
+      London venues, so require_edinburgh is doing real work here rather than
+      being a precaution. 4 of 6 sampled items rated.
+
+  - name: Musical Theatre Review
+    slug: musicaltheatrereview
+    homepage: https://musicaltheatrereview.com/
+    feed: https://musicaltheatrereview.com/feed/
+    backfill: https://musicaltheatrereview.com/{year}/{month:02d}/feed/
+    rating:
+      type: auto
+    fetch_page: false
+    require_edinburgh: true
+    pages: 6
+    exclude_title_patterns:
+      - "\\b(wins|won|receives|awarded|announces)\\b"
+    enabled: false
+    verified: 2026-08-11
+    notes: >
+      NEWLY BLOCKED. Contributed 7 reviews to the 2026 board and then started
+      answering HTTP 401 with a "Security Verification" interstitial on every
+      path, robots.txt included — the same shape of block as Voice Magazine.
+      Nothing to work around: ask, or leave it.
+
+      Everything below was working until then. Word grades in the feed, UK-wide
+      so require_edinburgh applies, and award announcements are excluded because
+      "Hot Mess wins Best Musical Award" scored five stars against the real show.
+
+  - name: WhatsOnStage
+    slug: whatsonstage
+    homepage: https://www.whatsonstage.com/
+    feed: https://www.whatsonstage.com/rss.xml
+    rating:
+      type: auto            # star characters on the review page
+    fetch_page: true
+    require_edinburgh: true
+    pages: 1
+    verified: 2026-08-03
+    notes: >
+      A rolling 50-item feed with no date archive, mostly casting news and
+      listicles — only 1 of 6 sampled items was a rated review. Included because
+      it is a significant theatre publication and the cost of checking is one
+      request a day, not because the yield is high.
+
   - name: Voice Magazine
     slug: voicemag
     homepage: https://www.voicemag.uk/
