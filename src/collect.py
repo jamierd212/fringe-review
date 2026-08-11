@@ -858,6 +858,12 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None)
     """Collect and rate everything new. Returns the number of rated reviews added."""
     collector = Collector(load_config())
     added = 0
+    # Per-publication outcome, printed as a summary at the end. Four sources
+    # have now gone quiet mid-festival without anything in the run saying so:
+    # a format change, a new bot block, an unreachable host, and one that has
+    # never worked from this network at all. A publication going from fifty
+    # reviews to none is not an error anywhere, and it should be.
+    report: list[tuple[str, int, int, int]] = []
     # A backfill is explicitly asked for one festival; anything else collects
     # the current one. Nothing else may enter the database.
     target_year = backfill[0] if backfill else datetime.now().year
@@ -877,7 +883,10 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None)
                   f"a new one is needed each festival")
 
         new = [c for c in candidates if not db.already_seen(conn, c.url)]
-        print(f"    {len(new)} not seen before")
+        # Captured before the filters run: `new` is narrowed in place below, so
+        # by the end it no longer answers "how much was fresh today".
+        unseen = len(new)
+        print(f"    {unseen} not seen before")
 
         before = len(new)
         new = [c for c in new if collector.looks_like_review(c, pub)]
@@ -962,6 +971,22 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None)
         conn.commit()
         print(f"    {rated} with a star rating"
               + (f" ({split_out} round-ups split out)" if split_out else ""))
+        report.append((pub["name"], len(candidates), unseen, len(new), rated))
         added += rated
+
+    quiet = [r for r in report if r[4] == 0]
+    if quiet:
+        print("\n  SOURCES THAT ADDED NOTHING THIS RUN")
+        for name, found, unseen, kept, _ in quiet:
+            if found == 0:
+                why = "discovered nothing — check the feed, or we may be blocked"
+            elif unseen == 0:
+                why = f"{found} items, all seen before — normal on a quiet day"
+            elif kept == 0:
+                why = f"{found} items, {unseen} new, all dropped by the filters"
+            else:
+                why = f"{found} items, {kept} passed filters, none carried a rating"
+            print(f"    {name:24} {why}")
+        print("    (a source quiet for several days in festival season is worth a look)")
 
     return added
