@@ -421,12 +421,17 @@ class Collector:
         rather than here: by the title needing to say "review", by the festival
         date window, and finally by the admission gate, which asks whether the
         thing is a review of an Edinburgh festival show at all.
+
+        The public URL ends in the article id, and the id is the part that
+        resolves: /news/<slug>-<id> serves the article, while the same slug
+        without the id serves the empty Nuxt shell with a 200. That 200 is why
+        this went unnoticed - every link we published for The List was reachable,
+        and blank.
         """
         import json
 
         base = pub.get("api_base", "https://cms.list.co.uk/api/v2")
-        public = pub.get("public_base",
-                         "https://www.list.co.uk/edinburgh-festival/news")
+        public = pub.get("public_base", "https://list.co.uk/news")
         found: list[Candidate] = []
         for page in range(1, int(pub.get("pages", 3)) + 1):
             raw = self._get(f"{base}/news?page={page}")
@@ -439,11 +444,13 @@ class Collector:
             if not items:
                 break
             for item in items:
-                slug = item.get("slug")
-                if not slug:
+                slug, ident = item.get("slug"), item.get("id")
+                # Without the id the link is a blank page, so an article missing
+                # either half is skipped rather than published broken.
+                if not slug or not ident:
                     continue
                 found.append(Candidate(
-                    url=f"{public}/{slug}",
+                    url=f"{public}/{slug}-{ident}",
                     title=item.get("name") or "",
                     summary="",
                     published=item.get("display_created_date")

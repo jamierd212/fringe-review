@@ -326,7 +326,7 @@ publications:
     homepage: https://www.list.co.uk/
     api: list
     api_base: https://cms.list.co.uk/api/v2
-    public_base: https://www.list.co.uk/edinburgh-festival/news
+    public_base: https://list.co.uk/news   # article id is appended; without it the page is blank
     feed: https://cms.list.co.uk/api/v2/news   # documentation only; also marks the API host
     pages: 4                  # 20 items a page; four covers a busy festival day
     require_title_match: "\\breview\\b"
