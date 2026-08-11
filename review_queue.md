@@ -4,11 +4,7 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-| Publication | Headline | Matched to | Confidence |
-|---|---|---|---|
-| The List | [Antigone 1989: A Town Hall Musical](https://www.list.co.uk/edinburgh-festival/news/antigone-1989-a-town-hall-musical-music-review-a-cracking-set-of-songs) | A Town Hall Musical | 75% |
-| The Skinny | [Marty Gleeson @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/marty-gleeson-dog-ear-pleasance-courtyard) | Marty Gleeson | 76% |
-| The List | [Bryn Woz: Smut](https://www.list.co.uk/edinburgh-festival/news/bryn-woz-smut-comedy-review-seductive-unblushing-gags) | SMUT .5 | 92% |
+_Nothing to check. 🎉_
 
 ## Held — not on the leaderboard
 
@@ -18,6 +14,15 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Grapevine Magazine | [A Love Letter to You Sou](https://www.thegrapevinemag.com/theatre/tjfamez9kzlb1t2djj5htrlwza74fk) | Headline is too vague and incomplete to confirm it reviews a named show at an Edinburgh festival. |
+| Grapevine Magazine | [A Tirade against Minimalism: A Review of Broke and Fabulous in the 21st Century](https://www.thegrapevinemag.com/theatre/pyzx09vmrd50mqk39288tntsauksd0) | The headline lacks a clear named show title and location reference, appearing to be a thematic critique rather than a review of a specific Edinburgh festival performance. |
+| The Wee Review | [Signal One](https://theweereview.com/review/signal-one/) | This appears to be a title without context indicating it's a review of an Edinburgh festival show, rather than a complete headline establishing the show and festival connection. |
+| The Wee Review | [Blue Heron](https://theweereview.com/review/blue-heron/) | A single title with no context does not indicate this is a review of a show at an Edinburgh festival. |
+| The Wee Review | [Hold the Fort](https://theweereview.com/review/hold-the-fort/) | This headline lacks sufficient context to identify it as a review of a named Edinburgh festival show; it appears to be a generic title without clear indication of a specific performance or production. |
+| The Wee Review | [Garbage](https://theweereview.com/review/garbage/) | The headline 'Garbage' alone does not identify a specific named show or provide context indicating it reviews a single Edinburgh festival performance. |
+| The Wee Review | [Hot 8 Brass Band](https://theweereview.com/review/hot-8-brass-band/) | This is a band name with no indication that it's a review of a specific performance or appearance, lacking context about a festival show. |
+| The Wee Review | [Panda Bear & Sonic Boom – A ? of WHEN](https://theweereview.com/review/panda-bear-sonic-boom-a-of-when/) | This appears to be a music collaboration or album title rather than a review of a named show at an Edinburgh festival. |
+| The Wee Review | [Margaret Glaspy – I Am Both](https://theweereview.com/review/margaret-glaspy-i-am-both/) | This appears to be an album title rather than a review of a named Edinburgh festival show or performance. |
 | The List | [Mothman: A Romance](https://www.list.co.uk/edinburgh-festival/news/mothman-a-romance-musical-review-goofy-unpredictable-surrealism) | This appears to be a title or book reference rather than a review of a specific show at an Edinburgh festival, and no review context or festival attribution is provided in the headline alone. |
 | The List | [Sunny Dancer](https://www.list.co.uk/edinburgh-festival/news/sunny-dancer-film-review-confronting-coming-of-age-comedy) | This appears to be just a title or name without any context indicating it's a review of a specific Edinburgh festival show. |
 | The List | [Flesh physical](https://www.list.co.uk/edinburgh-festival/news/flesh-physical-theatre-review-uncomfortably-funny) | This appears to be a title or phrase rather than a review headline with critical content about a specific Edinburgh festival show. |
@@ -209,12 +214,3 @@ table and re-run `python run.py --match` to let it back in.
 | All Edinburgh Theatre | [Edinburgh Improv Tales](https://www.alledinburghtheatre.com/edinburgh-improv-tales-thespace-symposium-hall-edfringe-2025-review/) | This appears to be a generic title rather than a review of a specific named show with details about its content, performer, or venue. |
 | All Edinburgh Theatre | [The End of the Line](https://www.alledinburghtheatre.com/the-end-of-the-line-bedlam-eutc-edfringe-2025/) | This headline alone does not provide enough context to confirm it reviews a named show at an Edinburgh festival; it could be a round-up, news item, or review of a show elsewhere. |
 | All Edinburgh Theatre | [The Virtuous Burglar](https://www.alledinburghtheatre.com/the-virtuous-burglar-egtg-royal-scots-club-edfringe-2025-review/) | This appears to be a title without any context indicating it is a review of an Edinburgh festival show, lacking venue, date, or reviewer attribution typical of festival reviews. |
-| All Edinburgh Theatre | [School of Rock – The Musical](https://www.alledinburghtheatre.com/school-of-rock-forth-childrens-theatre-edfringe-2025-review/) | This is a famous touring musical production, not a show specifically at an Edinburgh festival. |
-| All Edinburgh Theatre | [What Ever Happened to Harmony Banks?](https://www.alledinburghtheatre.com/whatever-happened-to-harmony-banks-tess-letham-dance-base-edfringe-2025/) | This appears to be a profile or interview about a person rather than a review of a named show at an Edinburgh festival. |
-| All Edinburgh Theatre | [Hatches, Matches and Dispatches](https://www.alledinburghtheatre.com/hatches-matches-and-dispatches-ept-newington-trinity-church-edfringe-2025-review/) | This appears to be a generic section title or rubric for classified notices rather than a review of a named Edinburgh festival show. |
-| All Edinburgh Theatre | [Dan Bastianelli: Identity](https://www.alledinburghtheatre.com/dan-bastianelli-identity-thespace-surgeons-hall-edfringe-2025-review/) | This appears to be just a show title without context indicating it's a review of a specific Edinburgh festival performance. |
-| All Edinburgh Theatre | [Death on the Clyde](https://www.alledinburghtheatre.com/death-on-the-clyde-scotch-bonnet-productions-edfringe-2025-review/) | This headline lacks clear indicators that it reviews a specific Edinburgh festival show, appearing more like a generic title or news story about a location or incident rather than a review of a named performance. |
-| All Edinburgh Theatre | [Bugsy Malone](https://www.alledinburghtheatre.com/bugsy-malone-captivate-edfringe-2025-review/) | A show title alone without context suggesting it's a review of a specific Edinburgh festival production cannot be confirmed as a festival review. |
-| All Edinburgh Theatre | [Cornermen](https://www.alledinburghtheatre.com/cornermen-myspace-on-the-mile-edfringe-2025-review/) | This appears to be just a title with no context indicating it's a review of a specific Edinburgh festival show. |
-| All Edinburgh Theatre | [Legally Blonde](https://www.alledinburghtheatre.com/legally-blonde-captivate-edfringe-2025-review/) | This is just a title with no context indicating it's a review of a specific Edinburgh festival production rather than the show itself or a general reference. |
-| All Edinburgh Theatre | [The Children](https://www.alledinburghtheatre.com/the-children-egtg-royal-scots-club-edfringe-2025-review/) | This headline is too generic without context about it being a specific Edinburgh festival review - it lacks any indication of the show title, performer, venue, or festival location. |
