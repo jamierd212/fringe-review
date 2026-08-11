@@ -55,6 +55,15 @@ CREATE TABLE IF NOT EXISTS seen (
 -- Reviews refused admission to the leaderboard. Kept rather than deleted so a
 -- wrong rejection is visible and reversible, and so the same headline is not
 -- re-sent to the model on every run.
+-- Whether a published link still leads to the review it claims to. A link can
+-- return 200 and be empty (see The List), so status alone proves nothing.
+CREATE TABLE IF NOT EXISTS link_checks (
+    url        TEXT PRIMARY KEY,
+    checked_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    ok         INTEGER,
+    detail     TEXT
+);
+
 CREATE TABLE IF NOT EXISTS holds (
     url         TEXT PRIMARY KEY,
     headline    TEXT,

@@ -72,7 +72,9 @@ def main() -> int:
         conn.close()
         # Non-zero marks the workflow failed, which is what makes GitHub send an
         # email. The data is already committed by the time this step runs.
-        return 1 if health.report(db.connect(), cfg["publications"]) else 0
+        found = health.report(db.connect(), cfg["publications"],
+                              collector=collect.Collector(cfg))
+        return 1 if found else 0
 
     if not (args.render or args.match):
         if months:

@@ -87,6 +87,17 @@ jobs:
           echo "Running: python run.py ${args[*]+${args[*]}}"
           python run.py ${args[@]+"${args[@]}"}
 
+      # Runs before the commit so that what it records - which links have been
+      # checked, and when - is committed with the day's reviews. Otherwise the
+      # rotation resets every night and the same two links get checked forever.
+      # The exit code is carried past the commit rather than acted on here.
+      - name: Check sources and links
+        id: health
+        run: |
+          set +e
+          python run.py --health
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+
       - name: Commit the day's results
         env:
           BACKFILL: ${{ inputs.backfill }}
@@ -110,9 +121,11 @@ jobs:
             git push
           fi
 
-      # Deliberately the last step, and deliberately allowed to fail the run:
-      # the day's reviews are already committed and pushed above, so failing
-      # here costs nothing but sends GitHub's "workflow failed" email. A source
-      # that quietly stops collecting is otherwise invisible for weeks.
-      - name: Check no source has fallen silent
-        run: python run.py --health
+      # Deliberately last, and deliberately allowed to fail the run: the day's
+      # reviews are already committed and pushed above, so failing here costs
+      # nothing and is the only part that reaches a person. GitHub emails on a
+      # failed workflow; nobody reads a log line. A source that quietly stops
+      # collecting, or starts publishing links to nowhere, is otherwise
+      # invisible for weeks - which is exactly how it has gone so far.
+      - name: Fail the run if anything is wrong
+        run: exit ${{ steps.health.outputs.code }}

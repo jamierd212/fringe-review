@@ -14,6 +14,7 @@ be judged against its own history.
 
 from __future__ import annotations
 
+import re
 import sqlite3
 from datetime import date, datetime, timedelta
 
@@ -82,15 +83,116 @@ def silent_sources(conn: sqlite3.Connection, publications: list[dict],
     return out
 
 
-def report(conn: sqlite3.Connection, publications: list[dict]) -> int:
-    """Print any silent sources as GitHub annotations. Returns how many."""
+def report(conn: sqlite3.Connection, publications: list[dict],
+           collector=None) -> int:
+    """Print faults as GitHub annotations. Returns how many were found."""
     quiet = silent_sources(conn, publications)
-    if not quiet:
-        print("All enabled sources have collected a review recently.")
-        return 0
-    print(f"{len(quiet)} source(s) not collecting:")
+    broken = check_links(conn, collector) if collector is not None else []
+
     for name, why in quiet:
         # ::error:: surfaces in the Actions UI; the non-zero exit is what makes
         # GitHub send an email, which is the part that reaches a person.
         print(f"::error title=Source silent::{name} — {why}")
-    return len(quiet)
+    for name, why in broken:
+        print(f"::error title=Links broken::{name} — {why}")
+
+    if not quiet and not broken:
+        print("All enabled sources are collecting, and the links checked "
+              "today lead to the review.")
+    return len(quiet) + len(broken)
+
+
+# ---------------------------------------------------------------------------
+# Do our links still lead to the review?
+
+# Words this short carry no evidence, and words this common appear on every page
+# of a site's furniture, so neither can tell an article from an empty shell.
+_STOP = {"review", "edinburgh", "fringe", "festival", "stars", "with", "from",
+         "that", "this", "have", "about", "their", "there", "which", "show"}
+
+
+def _evidence(headline: str) -> list[str]:
+    """The words from a headline whose presence would prove the article loaded."""
+    words = re.findall(r"[a-z]{5,}", (headline or "").lower())
+    return [w for w in dict.fromkeys(words) if w not in _STOP][:4]
+
+
+def _page_text(html: str) -> str:
+    html = re.sub(r"<(script|style)\b.*?</\1>", " ", html, flags=re.S | re.I)
+    return re.sub(r"<[^>]+>", " ", html).lower()
+
+
+def check_links(conn: sqlite3.Connection, collector, per_publication: int = 2
+                ) -> list[tuple[str, str]]:
+    """
+    Fetch a few published links per publication and confirm the review is there.
+
+    Checked through the collector so this obeys the same robots rules and crawl
+    delays as everything else - a link checker is still a crawler.
+
+    Least-recently-checked first, so a couple of requests a day per publication
+    walks the whole site over time rather than hammering it at once.
+    """
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS link_checks (
+            url TEXT PRIMARY KEY, checked_at TEXT DEFAULT CURRENT_TIMESTAMP,
+            ok INTEGER, detail TEXT)""")
+
+    rows = conn.execute("""
+        SELECT r.url, r.publication, r.headline
+        FROM reviews r LEFT JOIN link_checks c ON c.url = r.url
+        WHERE r.stars IS NOT NULL
+        ORDER BY c.checked_at IS NOT NULL, c.checked_at, r.first_seen DESC""")
+
+    picked: dict[str, list] = {}
+    for url, pub, headline in rows:
+        got = picked.setdefault(pub, [])
+        if len(got) < per_publication:
+            got.append((url, headline))
+
+    failures: dict[str, list[str]] = {}
+    checked: dict[str, int] = {}
+    for pub, items in picked.items():
+        for url, headline in items:
+            # A page robots.txt puts out of bounds tells us nothing about whether
+            # the link works, so it is not recorded and does not use up the
+            # publication's sample - otherwise a source we are not allowed to
+            # check would look permanently healthy.
+            if not collector.allowed(url):
+                continue
+            html = collector._get(url)
+            checked[pub] = checked.get(pub, 0) + 1
+            status = getattr(collector, "last_status", None)
+            if html is None:
+                # A refusal is not a broken link: the page may be fine and simply
+                # not for us. Only a missing page counts against the link.
+                ok, detail = (status != 404), f"HTTP {status}"
+            else:
+                words = _evidence(headline)
+                text = _page_text(html)
+                hits = [w for w in words if w in text]
+                # Two words is the bar where a headline's own vocabulary stops
+                # being something a navigation menu could supply by accident.
+                ok = not words or len(hits) >= min(2, len(words))
+                detail = "ok" if ok else f"none of {words} on the page"
+            conn.execute("INSERT INTO link_checks (url, checked_at, ok, detail) "
+                         "VALUES (?, datetime('now'), ?, ?) ON CONFLICT(url) DO "
+                         "UPDATE SET checked_at=excluded.checked_at, "
+                         "ok=excluded.ok, detail=excluded.detail",
+                         (url, int(ok), detail))
+            if not ok:
+                failures.setdefault(pub, []).append(f"{url} — {detail}")
+    conn.commit()
+
+    # One dead link is an article the publication moved or pulled. Every sampled
+    # link failing is our URL pattern being wrong, which is the fault worth an
+    # email - it is silent, it affects every link from that source, and it is the
+    # one that put 70 blank pages on the leaderboard.
+    out = []
+    for pub, bad in failures.items():
+        if len(bad) >= checked.get(pub, 0):
+            out.append((pub, f"all {len(bad)} links sampled led nowhere: {bad[0]}"))
+        else:
+            out.append((pub, f"{len(bad)} of {checked[pub]} links sampled "
+                             f"led nowhere: {bad[0]}"))
+    return out
