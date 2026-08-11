@@ -4,9 +4,7 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-| Publication | Headline | Matched to | Confidence |
-|---|---|---|---|
-| The Guardian | [Frankie McNair: Huge Ass Mindset review – a stellar comic finds laughs in the darkest places](https://www.theguardian.com/stage/2026/aug/11/frankie-mcnair-review) | HugeAss Mindset | 95% |
+_Nothing to check. 🎉_
 
 ## Held — not on the leaderboard
 
