@@ -364,6 +364,17 @@ def from_css_rule(html: str, rule: dict) -> Rating | None:
         value = float(m.group(1))
         return _make(value, 100, f"{_tidy(value)}%", "css_width")
 
+    if selector := rule.get("count_selector"):
+        # Stars drawn as icon ELEMENTS rather than characters: The Wee Review
+        # uses Font Awesome, <i class="fa fa-star"> filled and "fa-star-o"
+        # empty. Counting them across the page would pick up the related-reviews
+        # sidebar too, so `selector` scopes to the article's own widget first
+        # and this counts the filled icons inside it.
+        filled = len(node.select(selector))
+        if not 1 <= filled <= 5:
+            return None
+        return _make(filled, 5, f"{filled}/5", "css_icons")
+
     if rule.get("count_stars"):
         # The element holds glyphs rather than a number:
         # <div class="star-rating"><span>&#x2605;</span> x4</div>
