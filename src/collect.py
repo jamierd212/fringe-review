@@ -105,25 +105,33 @@ class Collector:
         if host in self._robots:
             return self._robots[host]
 
+        # Retried rather than trusted first time. A challenge is probabilistic:
+        # one unlucky 403 on robots.txt used to disable an entire publication
+        # for the whole run, because the verdict is cached per host. Broadway
+        # Baby collected nothing for a week that way while serving us perfectly
+        # from another network. A site that genuinely refuses us will refuse
+        # three times half a second apart; a challenge often will not.
         parser = RobotFileParser()
-        try:
-            r = self.session.get(host + "/robots.txt", timeout=self.timeout)
-            if r.status_code == 200:
-                parser.parse(r.text.splitlines())
-            elif r.status_code in (401, 403):
-                parser.disallow_all = True
-                print(f"      ! robots.txt refused (HTTP {r.status_code}) — treating "
-                      f"{host} as off-limits")
-            elif 400 <= r.status_code < 500:
-                parser = None            # no robots.txt: nothing is forbidden
-            else:
-                parser.disallow_all = True
-                print(f"      ! robots.txt unavailable (HTTP {r.status_code}) — "
-                      f"skipping {host} this run")
-        except requests.RequestException as exc:
+        attempts = int(self.defaults.get("robots_attempts", 3))
+        last = None
+        for attempt in range(attempts):
+            try:
+                r = self.session.get(host + "/robots.txt", timeout=self.timeout)
+                last = r.status_code
+                if r.status_code == 200:
+                    parser.parse(r.text.splitlines())
+                    break
+                if 400 <= r.status_code < 500 and r.status_code not in (401, 403, 429):
+                    parser = None          # no robots.txt: nothing is forbidden
+                    break
+            except requests.RequestException as exc:
+                last = type(exc).__name__
+            if attempt < attempts - 1:
+                time.sleep(0.5 * (attempt + 1))
+        else:
             parser.disallow_all = True
-            print(f"      ! robots.txt unreachable ({type(exc).__name__}) — "
-                  f"skipping {host} this run")
+            print(f"      ! robots.txt refused {attempts} times ({last}) — treating "
+                  f"{host} as off-limits this run")
 
         self._robots[host] = parser
         return parser
@@ -174,17 +182,27 @@ class Collector:
         wait = self.crawl_delay(url, pub) - (time.monotonic() - self._last_request)
         if wait > 0:
             time.sleep(wait)
-        self._last_request = time.monotonic()
-        try:
-            r = self.session.get(url, timeout=self.timeout)
-            self.last_status = r.status_code
-            if r.status_code != 200:
-                print(f"      ! HTTP {r.status_code}  {url}")
-                return None
-            return r.text
-        except requests.RequestException as exc:
-            print(f"      ! {type(exc).__name__}  {url}")
-            return None
+        # One retry for the statuses that are usually a bot challenge or a blip
+        # rather than an answer. Without it a single 403 on an index page ends
+        # that publication's whole run, which is how a working source can go
+        # quiet for a week. A site that means it will say so twice.
+        for attempt in (1, 2):
+            self._last_request = time.monotonic()
+            try:
+                r = self.session.get(url, timeout=self.timeout)
+                self.last_status = r.status_code
+                if r.status_code == 200:
+                    return r.text
+                transient = r.status_code in (403, 408, 429, 500, 502, 503, 504)
+                if not transient or attempt == 2:
+                    print(f"      ! HTTP {r.status_code}  {url}")
+                    return None
+            except requests.RequestException as exc:
+                if attempt == 2:
+                    print(f"      ! {type(exc).__name__}  {url}")
+                    return None
+            time.sleep(2)
+        return None
 
     # -- Stage 1: discovery -------------------------------------------------
 
