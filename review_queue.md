@@ -4,7 +4,10 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-_Nothing to check. 🎉_
+| Publication | Headline | Matched to | Confidence |
+|---|---|---|---|
+| Chortle | [Bebe Cave: Swoon](https://www.chortle.co.uk/review/2026/08/10/61240/bebe_cave%3A_swoon) | Swoon 4. | 94% |
+| One4Review | [Dom McGovern : Prize Hog 4****](https://one4review.co.uk/2026/08/dom-mcgovern-prize-hog-4/) | Prize Hog (United Agents) | 95% |
 
 ## Held — not on the leaderboard
 
@@ -14,6 +17,7 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| FringeReview | [Woody Sez: The Life & Music Of Woody Guthrie](https://fringereview.co.uk/review/edinburgh-fringe/2026/woody-sez-the-life-music-of-woody-guthrie/) | The headline lacks any indication this is a review of a show at an Edinburgh festival - it reads as a generic title without location, venue, or festival context. |
 | One4Review | [Kool & The Gang 4 ⭐️⭐️⭐️⭐️](https://one4review.co.uk/2026/08/kool-the-gang-4-%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f/) | This is a rating without context, likely part of a round-up or list rather than a review of a single identified show at an Edinburgh festival. |
 | Chortle | [Portrait Of A Tom As A Young Neenan](https://www.chortle.co.uk/review/2026/08/09/61233/portrait_of_a_tom_as_a_young_neenan) | This appears to be a title or reference to a work, but without context indicating it's a review of a named show at an Edinburgh festival, it reads more like a headline fragment or artwork title rather than a review article. |
 | FringeReview | [Blizzard (WIP)](https://fringereview.co.uk/review/edinburgh-fringe/2026/blizzard-wip/) | This appears to be a show title only with no review content, publication context, or Edinburgh festival confirmation, making it impossible to verify as a festival review. |
@@ -213,4 +217,3 @@ table and re-run `python run.py --match` to let it back in.
 | All Edinburgh Theatre | [Good For You](https://www.alledinburghtheatre.com/good-for-you-somethings-afoot-theatre-collective-edfringe-2025-review/) | This headline is too generic and lacks context to identify it as a review of a named Edinburgh festival show. |
 | All Edinburgh Theatre | [Calendar Girls](https://www.alledinburghtheatre.com/calendar-girls-leitheatre-st-serfs-edfringe-2025-review/) | This is a generic title without context indicating it reviews a specific Edinburgh festival show rather than the well-known film or stage production. |
 | All Edinburgh Theatre | [The Kids Always Win](https://www.alledinburghtheatre.com/the-kids-always-win-hooray-productions-pleasance-courtyard-edfringe-2025-review/) | This headline alone lacks sufficient context to confirm it reviews a named show at an Edinburgh festival; it could be a general article, review of a show elsewhere, or commentary without location and show details specified. |
-| All Edinburgh Theatre | [Ringing out the Changes](https://www.alledinburghtheatre.com/ringing-out-the-changes-jo-clifford-st-marys-episcopal-cathedral-edfringe-2025-review/) | This headline does not clearly identify a specific named show at an Edinburgh festival or provide sufficient context to confirm it reviews a single performance. |
