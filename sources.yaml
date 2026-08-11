@@ -397,15 +397,29 @@ publications:
     feed: https://corrblimey.uk/feed/
     backfill: https://corrblimey.uk/{year}/{month:02d}/feed/
     rating:
-      type: auto            # stars in the feed title
-    fetch_page: false
-    require_title_prefix: "Review:"
+      type: auto              # star glyphs on the page (they left the headline in 2026)
+    fetch_page: true
+    # They moved the word in 2026: "Review:" used to start the headline and now
+    # sits mid-string, after the festival name. A prefix test silently dropped
+    # every one of their reviews, so this matches wherever it appears.
+    require_title_match: "\\bReview:"
+    title_strip_patterns:
+      # Headlines end "<show> - <venue>", and without removing the venue the
+      # dash split made the VENUE the show: "Next To Normal - Sanctuary,
+      # Paradise in Augustine's" was filed as a show called "Sanctuary".
+      - "\\s+[–—]\\s+[^–—]+$"
     pages: 6
-    verified: 2026-08-03
+    verified: 2026-08-11
     notes: >
-      6 of 6 sampled items rated, from the feed alone. Titles name the festival
-      outright ("Review: Edinburgh Festival Fringe 2025 - ..."), and it covers
-      the International Festival too.
+      Two things changed for 2026 and each broke collection silently.
+
+      The rating left the headline. In 2025 it was "Review: ... ★★★★" and could
+      be read from the feed alone; now the feed carries no stars at all and they
+      are on the page, so fetch_page is on.
+
+      And "Review:" moved from the start of the headline to the middle, after
+      the festival name, which a prefix test rejected outright — 59 of 60 items
+      dropped before anything looked at them.
 
   - name: North West End
     slug: northwestend
