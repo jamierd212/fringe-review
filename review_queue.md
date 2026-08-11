@@ -6,8 +6,7 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| Chortle | [Bebe Cave: Swoon](https://www.chortle.co.uk/review/2026/08/10/61240/bebe_cave%3A_swoon) | Swoon 4. | 94% |
-| One4Review | [Dom McGovern : Prize Hog 4****](https://one4review.co.uk/2026/08/dom-mcgovern-prize-hog-4/) | Prize Hog (United Agents) | 95% |
+| The Guardian | [Frankie McNair: Huge Ass Mindset review – a stellar comic finds laughs in the darkest places](https://www.theguardian.com/stage/2026/aug/11/frankie-mcnair-review) | HugeAss Mindset | 95% |
 
 ## Held — not on the leaderboard
 
