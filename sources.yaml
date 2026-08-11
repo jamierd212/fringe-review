@@ -83,6 +83,16 @@ publications:
       type: auto            # "4/5" in the page text
     fetch_page: true        # rating is on the page, not in the feed
     pages: 1
+    title_strip_patterns:
+      # Their house style is "<show> (<company>)": "Truthmachine (Counterpilot
+      # In Association With Cluster Arts)". Left on, the company is part of the
+      # show's name on the board and stops it matching the same show from any
+      # other publication.
+      #
+      # The risk is a show whose real title ends in brackets - "Macbeth (An
+      # Undoing)" - which this would shorten. Judged worth it: all 19 cases on
+      # the 2026 board were companies, and the alternative is 19 wrong titles.
+      - "\\s*\\([^)]*\\)\\s*$"
     verified: 2026-08-01
     notes: >
       Long-running Fringe publication. Ratings render as plain "4/5" text.
@@ -539,6 +549,30 @@ publications:
       EXCLUDED: the feed now carries SEO spam ("Costa Rica Crypto Business Setup
       Lawyers") alongside theatre content, which suggests the site is
       compromised or sold on. Not a source to rely on.
+
+  - name: Grapevine Magazine
+    slug: grapevine
+    homepage: https://www.thegrapevinemag.com/
+    # Squarespace: no /feed, but their section feeds work. Theatre is the only
+    # section carrying Fringe reviews.
+    feed: https://www.thegrapevinemag.com/theatre?format=rss
+    rating:
+      type: auto              # star characters in the feed body
+    fetch_page: false
+    pages: 1                  # the section feed is not paginated
+    require_edinburgh: false  # a Fringe-focused theatre section
+    verified: 2026-08-11
+    notes: >
+      Came to us from a reader pointing at a review we had missed, which is how
+      it was found rather than by probing.
+
+      robots.txt names 29 AI crawlers including ClaudeBot and anthropic-ai, but
+      User-agent: * disallows only /config, /search, /account, /api and /static.
+      Same position the owner took on the other sites doing this: those rules
+      target training crawlers, and we are a link aggregator.
+
+      6 of 8 sampled items rated, from the feed alone. The two misses were an
+      opinion piece and a round-up, both correctly unrated.
 
   - name: The Skinny
     slug: theskinny
