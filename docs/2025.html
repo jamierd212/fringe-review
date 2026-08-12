@@ -180,6 +180,10 @@
   .filters #f-clear {
     font: inherit; padding: .3rem .7rem; border: 1px solid var(--rule);
     border-radius: 999px; background: var(--card); color: var(--muted); cursor: pointer;
+    /* The row is aligned to the top so the genre chips can grow downwards, but
+       Clear has no label above it, so that left it floating above the time
+       boxes it sits beside. Pinned to the bottom, it lines up with them. */
+    align-self: end;
   }
   .filters #f-clear:hover { border-color: var(--ink); color: var(--ink); }
   /* Chosen genres, listed under the picker so several can be held at once.
@@ -195,12 +199,31 @@
     font: inherit; font-size: .8rem; line-height: 1.3;
     padding: .15rem .5rem; border: 1px solid var(--ink); border-radius: 999px;
     background: var(--ink); color: var(--card); cursor: pointer;
+    display: inline-flex; align-items: baseline; gap: .3rem; max-width: 100%;
   }
-  .filters .chosen button::after { content: " ×"; opacity: .7; }
+  .filters .chosen .chip-name {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+  }
+  .filters .chosen button::after { content: "×"; opacity: .7; flex: none; }
   .filters .chosen button:hover { opacity: .82; }
   @media (max-width: 560px) {
     nav.years .search { margin-left: 0; }
     nav.years input[type="search"] { width: 100%; }
+    /* Two to a row on a phone. The controls are a fixed 15rem so they line up
+       on a wide screen, but two of those are wider than the phone, so Location
+       and Genre each took a row of their own and the panel ran down the page.
+       Half the row each, and they sit side by side as they do on desktop. */
+    .filters label { flex: 1 1 calc(50% - .45rem); min-width: 0; }
+    /* The time pair takes exactly the width its two boxes need, rather than
+       half the row like Location and Genre or the whole of it, which left Clear
+       stranded on a line of its own. Sized to content, there is room for Clear
+       beside it. */
+    .filters label.span { flex: 0 0 auto; }
+    .picker { display: block; }
+    .picker > button.picker-open,
+    .filters select,
+    .filters .chosen { width: 100%; max-width: 100%; }
+    .picker-panel { width: 17rem; max-width: 92vw; }
   }
   nav.years input[type="search"] {
     padding: .3rem .85rem; border: 1px solid var(--rule); border-radius: 999px;
@@ -257,7 +280,7 @@
 </header>
 
 <p class="meta">
-  Updated 12 August 2026, 21:32 BST &middot;
+  Updated 12 August 2026, 21:39 BST &middot;
   2145 rated reviews across 1434 shows
 </p>
 
@@ -45599,6 +45622,18 @@
         search.addEventListener('input', function () { draw(search.value); });
       }
       wrap.appendChild(panel);
+      // A panel hanging off the right edge does not merely get clipped - it
+      // widens the page and lets the whole thing scroll sideways. Pulling it
+      // left fixes that, but only until the control is narrow and near the left
+      // edge, where pulling it left puts it off the other side. So it is pulled
+      // in from whichever edge it exceeds, and never past the opposite one.
+      var room = document.documentElement.clientWidth;
+      var here = wrap.getBoundingClientRect().left;
+      var wide = panel.offsetWidth;
+      var offset = 0;
+      if (here + wide > room - 4) offset = room - 4 - wide - here;
+      if (here + offset < 4) offset = 4 - here;
+      panel.style.left = offset + 'px';
       button.setAttribute('aria-expanded', 'true');
       var sel = list.querySelector('[aria-selected="true"]');
       if (sel) sel.scrollIntoView({block: 'nearest'});
@@ -45656,7 +45691,13 @@
     chosenGenres.forEach(function (value) {
       var chip = document.createElement('button');
       chip.type = 'button';
-      chip.textContent = labelFor(value);
+      // The name goes in its own element so it can be truncated on a narrow
+      // screen while the × stays put. Left as one run of text, "Theatre – New
+      // writing ×" wrapped in the middle and the × dropped onto a second line.
+      var name = document.createElement('span');
+      name.className = 'chip-name';
+      name.textContent = labelFor(value);
+      chip.appendChild(name);
       chip.setAttribute('aria-label', 'Remove ' + labelFor(value) + ' filter');
       chip.addEventListener('click', function () {
         chosenGenres = chosenGenres.filter(function (v) { return v !== value; });
