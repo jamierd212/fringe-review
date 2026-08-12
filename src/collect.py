@@ -895,10 +895,19 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None)
 
     for pub in collector.publications:
         print(f"  {pub['name']}")
+        collector.last_status = None
         candidates = collector.discover(pub, backfill)
         if limit:
             candidates = candidates[:limit]
         print(f"    {len(candidates)} items in feed")
+
+        # What the runner actually saw, written to the database so it is
+        # committed with the run. Broadway Baby works from a laptop and has never
+        # collected anything from the Action, and every explanation for that so
+        # far has been a guess made from the wrong machine - including one of mine
+        # that was wrong. The log says this too, but only someone watching the
+        # right run at the right moment ever reads a log.
+        db.record_probe(conn, pub["name"], collector.last_status, len(candidates))
 
         if not candidates and pub.get("discovery") == "index":
             # An index-based source finding nothing means the index URL is stale

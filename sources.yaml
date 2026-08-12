@@ -199,6 +199,12 @@ publications:
     discovery: index
     index_urls:
       - https://broadwaybaby.com/edfringe
+    # Their robots.txt asks Google, Bing and Apple for 10 seconds between
+    # requests. No rule names us, so nothing obliges us to it, which is exactly
+    # why we should: a source with no feed and no sitemap costs a page fetch per
+    # review, and asking for fifty of those faster than they let a search engine
+    # crawl is not a reasonable way to treat a small publication.
+    delay_seconds: 10
     link_pattern: 'href="(https://broadwaybaby\.com/shows/[^"]+/\d+)"[^>]*>(.*?)</a>'
     rating:
       type: css

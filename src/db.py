@@ -64,6 +64,17 @@ CREATE TABLE IF NOT EXISTS link_checks (
     detail     TEXT
 );
 
+-- What each source's discovery actually returned, and the last HTTP status the
+-- runner saw doing it. One row per source per run, so a source that behaves
+-- differently on the Action than on a laptop leaves evidence rather than
+-- requiring someone to be watching the log at the time.
+CREATE TABLE IF NOT EXISTS source_probes (
+    publication TEXT NOT NULL,
+    ran_at      TEXT DEFAULT CURRENT_TIMESTAMP,
+    status      INTEGER,
+    found       INTEGER
+);
+
 CREATE TABLE IF NOT EXISTS holds (
     url         TEXT PRIMARY KEY,
     headline    TEXT,
@@ -117,3 +128,18 @@ def stats(conn: sqlite3.Connection) -> dict[str, int]:
         "rated": count("SELECT COUNT(*) FROM reviews WHERE stars IS NOT NULL"),
         "seen": count("SELECT COUNT(*) FROM seen"),
     }
+
+
+def record_probe(conn: sqlite3.Connection, publication: str,
+                 status: int | None, found: int) -> None:
+    """Record what discovery saw for one source on one run."""
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS source_probes (publication TEXT NOT NULL, "
+        "ran_at TEXT DEFAULT CURRENT_TIMESTAMP, status INTEGER, found INTEGER)")
+    conn.execute("INSERT INTO source_probes (publication, status, found) "
+                 "VALUES (?, ?, ?)", (publication, status, found))
+    # Two weeks is enough to see a pattern and short enough that the table never
+    # becomes a second copy of the run history.
+    conn.execute("DELETE FROM source_probes "
+                 "WHERE ran_at < datetime('now', '-14 days')")
+    conn.commit()

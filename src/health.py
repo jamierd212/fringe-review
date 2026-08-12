@@ -85,21 +85,58 @@ def silent_sources(conn: sqlite3.Connection, publications: list[dict],
 
 def report(conn: sqlite3.Connection, publications: list[dict],
            collector=None) -> int:
-    """Print faults as GitHub annotations. Returns how many were found."""
+    """
+    Print faults as GitHub annotations. Returns how many are NEW since last run.
+
+    Only a new fault fails the run, because only a new fault is news. The first
+    version failed on the standing state instead, so Broadway Baby - which has
+    never collected anything and may never be allowed to - failed every sweep
+    from the moment it was added. An alert that fires every morning for a known
+    condition is one you learn to close without reading, which is the failure
+    this whole check exists to prevent.
+
+    A known fault is still printed, as a warning, so it stays visible in the run
+    without crying wolf. If it clears and comes back, it is news again.
+    """
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS health_state (
+            problem TEXT PRIMARY KEY, first_seen TEXT, last_seen TEXT)""")
+
     quiet = silent_sources(conn, publications)
     broken = check_links(conn, collector) if collector is not None else []
+    # Keyed on the kind of fault and the source, not the wording: "nothing for
+    # 4 days" becomes "nothing for 5 days" tomorrow, and that is the same fault.
+    current = {f"silent:{n}": ("Source silent", n, why) for n, why in quiet}
+    current.update({f"links:{n}": ("Links broken", n, why) for n, why in broken})
 
-    for name, why in quiet:
-        # ::error:: surfaces in the Actions UI; the non-zero exit is what makes
-        # GitHub send an email, which is the part that reaches a person.
-        print(f"::error title=Source silent::{name} — {why}")
-    for name, why in broken:
-        print(f"::error title=Links broken::{name} — {why}")
+    known = {row[0] for row in conn.execute("SELECT problem FROM health_state")}
+    fresh = [k for k in current if k not in known]
 
-    if not quiet and not broken:
+    for key, (title, name, why) in current.items():
+        # ::error:: with a non-zero exit is what makes GitHub send an email;
+        # ::warning:: shows in the run without marking it failed.
+        level = "error" if key in fresh else "warning"
+        print(f"::{level} title={title}::{name} — {why}")
+
+    for key in sorted(known - set(current)):
+        print(f"Resolved since the last run: {key.split(':', 1)[1]}")
+
+    now = datetime.now().isoformat(timespec="seconds")
+    for key in current:
+        conn.execute("INSERT INTO health_state (problem, first_seen, last_seen) "
+                     "VALUES (?, ?, ?) ON CONFLICT(problem) DO UPDATE SET "
+                     "last_seen=excluded.last_seen", (key, now, now))
+    # Forgotten once it clears, so the same fault returning counts as news.
+    conn.executemany("DELETE FROM health_state WHERE problem = ?",
+                     [(k,) for k in known - set(current)])
+    conn.commit()
+
+    if not current:
         print("All enabled sources are collecting, and the links checked "
               "today lead to the review.")
-    return len(quiet) + len(broken)
+    elif not fresh:
+        print(f"\n{len(current)} known problem(s), none new since the last run.")
+    return len(fresh)
 
 
 # ---------------------------------------------------------------------------
