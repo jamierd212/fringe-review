@@ -257,7 +257,7 @@
 </header>
 
 <p class="meta">
-  Updated 12 August 2026, 21:30 BST &middot;
+  Updated 12 August 2026, 21:32 BST &middot;
   2145 rated reviews across 1434 shows
 </p>
 
@@ -45631,21 +45631,11 @@
       panel.hidden = open;
     });
   }
-  // Default to a two-hour window starting now: "what can I get to shortly".
-  // Set here rather than at build time because the pages are generated once a
-  // day and cached, so a server-rendered "now" would be stale for almost
-  // everyone reading it.
-  function setHour(select, hour) {
-    if (!select) return;
-    var value = String(hour).padStart(2, '0') + ':00';
-    if ([].some.call(select.options, function (o) { return o.value === value; })) {
-      select.value = value;
-      select.dispatchEvent(new Event('change', {bubbles: true}));
-    }
-  }
-  var nowHour = new Date().getHours();
-  setHour(fFrom, nowHour);
-  setHour(fTo, (nowHour + 2) % 24);
+  // The time window starts empty. It used to open on the next two hours - "what
+  // can I get to shortly" - but the defaults were only ever displayed, never
+  // applied: the controls read 21:00 to 23:00 above a list showing every show at
+  // every hour. A filter that says it is on while doing nothing is worse than no
+  // default, so the honest reading of those boxes is now the true one.
 
   [fVenue, fFrom, fTo].forEach(function (el) {
     if (el) el.addEventListener('change', apply);
