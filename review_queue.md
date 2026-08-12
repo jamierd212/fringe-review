@@ -4,7 +4,14 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-_Nothing to check. 🎉_
+| Publication | Headline | Matched to | Confidence |
+|---|---|---|---|
+| Chortle | [Amanda Knox: Cartwheel](https://www.chortle.co.uk/review/2026/08/12/61275/amanda_knox%3A_cartwheel) | Amanda Knox in Cartwheel | 93% |
+| Fest Magazine | [Review: Tamsyn Kelly: Rat’s Ass](https://festmag.com/2026/08/12/review-tamsyn-kelly-rats-ass/) | Rat's Ass | 95% |
+| The List | [Sarah Hester Ross: Serving Cunt](https://list.co.uk/news/sarah-hester-ross-serving-cunt-cabaret-review-glistening-camp-confidence-48778) | Serving C*nt | 95% |
+| The Skinny | [Max Fulham: Monkey Business @ Gilded Balloon](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/max-fulham-monkey-business-gilded-balloon-teviot) | Max Fulham's Monkey Business | 96% |
+| One4Review | [Kate Hammer: Government Approved Comedian 3.5☆☆☆](https://one4review.co.uk/2026/08/kate-hammer-government-approved-comedian-3-5%e2%98%86%e2%98%86%e2%98%86/) | Government Approved Comedian | 98% |
+| Corr Blimey | [Edinburgh Festival Fringe 2026 Review: Bucksomly Betrothals](https://corrblimey.uk/2026/08/12/edinburgh-festival-fringe-2026-review-bucksomly-betrothals-studio-thespacetriplex/) | Bucksomely Betrothals | 98% |
 
 ## Held — not on the leaderboard
 
@@ -14,6 +21,10 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The Wee Review | [A&E](https://theweereview.com/review/ae-2/) | This headline is far too vague to identify a specific show or review at an Edinburgh festival. |
+| The Scotsman | [Fringe dance reviews: Superbowl Salsa | Taiwan Season: The Wall | Glob | Taiwan Season: Proximities | Forgive Me](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/fringe-dance-reviews-superbowl-salsa-taiwan-season-the-wall-glob-taiwan-season-proximities-forgive-me-8912704) | This is a round-up reviewing multiple shows rather than a single named show. |
+| The Scotsman | [Fringe theatre reviews: In the Black | We Had Fun | A Public Display of Affection | The Last Mad Man | NON HUMAN ANIMAL | CVNTCLAVE | Hamlet: Prince of Sweden](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-in-the-black-we-had-fun-a-public-display-of-affection-the-last-mad-man-non-human-animal-cvntclave-hamlet-prince-of-sweden-8914845) | This is a round-up reviewing multiple shows, not a single named show. |
+| The Scotsman | [Fringe comedy reviews: Jonathan Oldfield: Exquisite Corpse | Chris Cantrill: Rewilding | Harriet Dyer: Easily Distra… | Fiona Allen: White Lies | Hajar, Like Badger | The Buddha Wears Prada](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-jonathan-oldfield-exquisite-corpse-chris-cantrill-rewilding-harriet-dyer-easily-distra-fiona-allen-white-lies-hajar-like-badger-the-buddha-wears-prada-8915706) | This is a round-up of multiple shows with multiple reviews listed together, not a review of a single named show. |
 | The Scotsman | [Edinburgh Fringe dance reviews: Superbowl Salsa | Taiwan Season: The Wall | Glob | Taiwan Season: Proximities | Forgive Me](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/edinburgh-fringe-dance-reviews-superbowl-salsa-taiwan-season-the-wall-glob-taiwan-season-proximities-forgive-me-8912704) | This is a round-up of multiple shows with multiple reviews, not a review of a single named show. |
 | The List | [All Rise](https://list.co.uk/news/all-rise-music-review-poignant-and-buoyant-48768) | This headline alone does not provide enough context to identify it as a review of a specific named show at an Edinburgh festival; it could be a title, announcement, or generic phrase. |
 | The List | [Under Mask](https://list.co.uk/news/under-mask-dance-review-masks-movement-and-ritual-48766) | This appears to be just a title without context indicating it reviews a specific show at an Edinburgh festival. |
@@ -210,7 +221,3 @@ table and re-run `python run.py --match` to let it back in.
 | One4Review | [Mark Simmons – His Latest Jokes 4.5 ****](https://one4review.co.uk/2025/08/mark-simmons-his-latest-jokes-4-5/) | This appears to be a rating/review entry rather than a full article reviewing a named show at an Edinburgh festival, lacking context about venue, festival, or performance details. |
 | One4Review | [Are You There Margaret? It’s Me, Gahd 4****](https://one4review.co.uk/2025/08/are-you-there-margaret-its-me-gahd-4/) | This appears to be a rating or headline fragment rather than a clear review of a named show at an Edinburgh festival. |
 | One4Review | [The Blondie Story – 5*****](https://one4review.co.uk/2025/08/the-blondie-story-5/) | This appears to be a rating of a show but lacks a review article structure, venue, or Edinburgh festival context information needed to confirm it's reviewing a specific Edinburgh show. |
-| One4Review | [Karen Dunbar  4.5****](https://one4review.co.uk/2025/08/karen-dunbar-4-5/) | This appears to be a rating without a review headline or show title, likely a fragment from a list or round-up of ratings. |
-| All Edinburgh Theatre | [Rock of Ages](https://www.alledinburghtheatre.com/rock-of-ages-bare-productions-edfringe-2025-review/) | This headline alone does not indicate it is a review of a specific Edinburgh festival show; it appears to be just a title without context suggesting it reviews a particular performance at an Edinburgh festival. |
-| All Edinburgh Theatre | [EdFringe 2025: Youth and Student Theatre](https://www.alledinburghtheatre.com/edfringe-2025-youth-and-student-theatre-made-in-edinburgh-listings/) | This is a category or round-up of multiple youth and student theatre shows at the Fringe, not a review of one named show. |
-| All Edinburgh Theatre | [EdFringe 2025: Theatre for children and young people](https://www.alledinburghtheatre.com/edfringe-2025-theatre-for-children-and-young-people-made-in-edinburgh-listings/) | This is a round-up or list of multiple shows rather than a review of one named show. |
