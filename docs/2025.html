@@ -116,7 +116,7 @@
   }
   nav.years .search { margin-left: .4rem; }
   .filters {
-    display: flex; flex-wrap: wrap; gap: .45rem .8rem; align-items: end;
+    display: flex; flex-wrap: wrap; gap: .45rem .8rem; align-items: start;
     background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
     padding: .5rem .7rem; margin: .5rem 0 0; font-size: .85rem;
   }
@@ -136,7 +136,8 @@
      have, and a separate × is a small target on a phone. */
   .filters .chosen {
     display: flex; flex-wrap: wrap; gap: .3rem;
-    flex-basis: 100%; margin: .1rem 0 0;
+    max-width: 15rem;          /* matches the select, so chips wrap under it */
+    margin: .25rem 0 0;
   }
   .filters .chosen:empty { display: none; }
   .filters .chosen button {
@@ -205,7 +206,7 @@
 </header>
 
 <p class="meta">
-  Updated 12 August 2026, 11:44 BST &middot;
+  Updated 12 August 2026, 21:22 BST &middot;
   2145 rated reviews across 1434 shows
 </p>
 
