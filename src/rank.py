@@ -94,6 +94,7 @@ class Show:
     # The programme's own values behind that badge. Kept separately because the
     # badge is one readable string while filtering needs the parts: a section to
     # group by and tags to scope to it.
+    festival: str = ""          # "fringe", "eif", "freefringe"
     section: str = ""           # e.g. "COMEDY"
     subgenre: str = ""          # e.g. "Stand-up,Solo show"
     venue: str = ""
@@ -238,6 +239,7 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
             # Only a show linked to its programme entry gets a badge, and the
             # same applies to the filter: an unlinked show has no classification
             # we can stand behind, so it answers to no genre rather than a guess.
+            festival=(row["festival"] or "") if row["edfringe_url"] else "",
             section=(row["genre"] or "") if row["edfringe_url"] else "",
             subgenre=(row["subgenre"] or "") if row["edfringe_url"] else "",
             venue=row["venue"] or "",

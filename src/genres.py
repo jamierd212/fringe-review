@@ -11,6 +11,12 @@ Only the Fringe classifies its shows. EIF publishes no genre anywhere in its
 programme: the event pages carry no category field and their own what's-on
 filters are built client-side, so an EIF show can be found by name or venue but
 not by genre. The free fringe publishes none either.
+
+Those two festivals stand at the top of the list as choices in their own right.
+It is the one honest thing to offer for a show whose programme classifies
+nothing - "which festival is this" is a question we can answer, where "what kind
+of show is this" is not - and it is what a reader looking for the International
+Festival would reach for anyway.
 """
 
 from __future__ import annotations
@@ -33,6 +39,14 @@ SECTIONS = {
     "SPOKEN_WORD": "Spoken Word",
     "EXHIBITIONS": "Exhibitions",
     "EVENTS": "Events",
+}
+
+# Festivals that publish no classification at all, offered as choices in their
+# own right. The Fringe is absent deliberately: its shows already have sections,
+# so a "Fringe" entry would select nearly everything and say nothing.
+FESTIVALS = {
+    "eif": "EIF",
+    "freefringe": "Free Fringe",
 }
 
 # Tags describing who made a show or who it is for, rather than what kind of
@@ -101,14 +115,20 @@ def tags_of(subgenre: str) -> list[str]:
     return out
 
 
-def keys_for(genre: str, subgenre: str) -> list[str]:
+def keys_for(festival: str, genre: str, subgenre: str) -> list[str]:
     """
     Every filter value this show should answer to.
 
     A show tagged Stand-up under Comedy answers to both "COMEDY" and
     "COMEDY|stand-up", so choosing the section keeps it and so does choosing
-    the sub-genre.
+    the sub-genre. A show from a festival that publishes no classification
+    answers to its festival instead.
     """
+    fest = (festival or "").strip().lower()
+    if fest in FESTIVALS:
+        # "@" cannot appear in a section or a tag, so a festival key can never
+        # collide with one.
+        return [f"@{fest}"]
     raw = (genre or "").strip().upper()
     if not raw:
         return []
@@ -126,7 +146,12 @@ def options(shows) -> tuple[list, list]:
     """
     sections: Counter[str] = Counter()
     subs: Counter[tuple[str, str]] = Counter()
+    fests: Counter[str] = Counter()
     for show in shows:
+        fest = (getattr(show, "festival", "") or "").strip().lower()
+        if fest in FESTIVALS:
+            fests[fest] += 1
+            continue
         raw = (getattr(show, "section", "") or "").strip().upper()
         if not raw:
             continue
@@ -134,7 +159,11 @@ def options(shows) -> tuple[list, list]:
         for t in tags_of(getattr(show, "subgenre", "") or ""):
             subs[(raw, t)] += 1
 
-    ordered = [(raw, section(raw), n) for raw, n in sections.most_common()]
+    # Festivals first, in the order they are written above rather than by size:
+    # there are only two, and EIF above Free Fringe reads better than a ranking
+    # that would flip whenever one of them was reviewed more.
+    ordered = [(f"@{k}", FESTIVALS[k], fests[k]) for k in FESTIVALS if fests[k]]
+    ordered += [(raw, section(raw), n) for raw, n in sections.most_common()]
     sub_options = []
     for raw, label, _ in ordered:
         for (sec, t), n in sorted(subs.items(), key=lambda kv: (-kv[1], kv[0][1])):

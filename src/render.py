@@ -151,7 +151,8 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
     env.filters["stars"] = stars_html
     env.globals["venue_group"] = lambda v: VENUE_GROUPS.get(v or "", "")
     env.globals["genre_keys"] = lambda s: genres.keys_for(
-        getattr(s, "section", ""), getattr(s, "subgenre", ""))
+        getattr(s, "festival", ""), getattr(s, "section", ""),
+        getattr(s, "subgenre", ""))
     template = env.get_template("index.html.j2")
 
     now = datetime.now(timezone.utc).astimezone(ZoneInfo("Europe/London"))
