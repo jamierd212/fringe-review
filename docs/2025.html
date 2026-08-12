@@ -125,6 +125,13 @@
     font: inherit; padding: .15rem .35rem; border: 1px solid var(--rule);
     border-radius: 4px; background: #fff; color: var(--ink); max-width: 15rem;
   }
+  /* The open list, not the closed box — the box was tightened earlier and the
+     rows inside it were not. How far this gets is up to the browser: a desktop
+     browser draws the list itself and honours all of it, Android honours some,
+     and iOS opens a native picker that ignores CSS entirely. */
+  .filters option, .filters optgroup {
+    font-size: .85rem; line-height: 1.15; padding: .08rem .4rem; min-height: 0;
+  }
   .filters .times { display: flex; align-items: center; gap: .35rem; }
   .filters #f-clear {
     font: inherit; padding: .3rem .7rem; border: 1px solid var(--rule);
@@ -206,7 +213,7 @@
 </header>
 
 <p class="meta">
-  Updated 12 August 2026, 21:24 BST &middot;
+  Updated 12 August 2026, 21:27 BST &middot;
   2145 rated reviews across 1434 shows
 </p>
 
