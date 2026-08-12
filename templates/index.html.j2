@@ -131,6 +131,21 @@
     border-radius: 999px; background: var(--card); color: var(--muted); cursor: pointer;
   }
   .filters #f-clear:hover { border-color: var(--ink); color: var(--ink); }
+  /* Chosen genres, listed under the picker so several can be held at once.
+     The whole chip is the remove button: there is no other action it could
+     have, and a separate × is a small target on a phone. */
+  .filters .chosen {
+    display: flex; flex-wrap: wrap; gap: .3rem;
+    flex-basis: 100%; margin: .1rem 0 0;
+  }
+  .filters .chosen:empty { display: none; }
+  .filters .chosen button {
+    font: inherit; font-size: .8rem; line-height: 1.3;
+    padding: .15rem .5rem; border: 1px solid var(--ink); border-radius: 999px;
+    background: var(--ink); color: var(--card); cursor: pointer;
+  }
+  .filters .chosen button::after { content: " ×"; opacity: .7; }
+  .filters .chosen button:hover { opacity: .82; }
   @media (max-width: 560px) {
     nav.years .search { margin-left: 0; }
     nav.years input[type="search"] { width: 100%; }
@@ -215,6 +230,10 @@
         everywhere, so "Storytelling" alone would mean both a comedian and a
         play, whereas "Comedy – Storytelling" means one of them. #}
     {% if genre_sections %}
+    {#- A picker that adds to a list, rather than a multiple-select: a native
+        multi-select needs ctrl-click, which does not exist on a phone, and
+        shows its choices in a scrolling box. Here what you have chosen stays
+        visible underneath, and tapping one removes it. #}
     <label>Genre
       <select id="f-genre">
         <option value="">Any genre</option>
@@ -247,6 +266,7 @@
       </span>
     </label>
     <button type="button" id="f-clear">Clear</button>
+    <span class="chosen" id="f-genre-chosen"></span>
   </div>
   {% endif %}
   {% endif %}
@@ -353,6 +373,8 @@
   var panel = document.getElementById('filters');
   var fVenue = document.getElementById('f-venue');
   var fGenre = document.getElementById('f-genre');
+  var fGenreChosen = document.getElementById('f-genre-chosen');
+  var chosenGenres = [];
   var fFrom = document.getElementById('f-from');
   var fTo = document.getElementById('f-to');
   var fClear = document.getElementById('f-clear');
@@ -376,7 +398,7 @@
   function apply() {
     var q = input.value.trim().toLowerCase();
     var venue = fVenue ? fVenue.value : '';
-    var genre = fGenre ? fGenre.value : '';
+
     var from = fFrom ? minutes(fFrom.value) : null;
     var to = fTo ? minutes(fTo.value) : null;
     var hits = 0;
@@ -390,10 +412,17 @@
              ? r.vgroup === venue.slice(2)
              : r.venue === venue.slice(2);
       }
-      // A show with no genre - every EIF and free fringe show, since neither
-      // publishes one - cannot satisfy a genre filter, so it drops out rather
-      // than being claimed as something we do not know it to be.
-      if (show && genre) show = r.genres.indexOf(genre) !== -1;
+      // Several genres widen the search rather than narrowing it: choosing
+      // Comedy and Theatre means either, which is the only reading that can
+      // return anything, since a show belongs to one section. A show with no
+      // genre at all matches none of them, so it drops out rather than being
+      // claimed as something we do not know it to be.
+      if (show && chosenGenres.length) {
+        show = false;
+        for (var g = 0; g < chosenGenres.length; g++) {
+          if (r.genres.indexOf(chosenGenres[g]) !== -1) { show = true; break; }
+        }
+      }
       // A show with no known time cannot satisfy a time window. Hiding it is
       // the honest answer: we do not know when it is on, so we cannot claim
       // it starts in the hour someone asked for.
@@ -423,7 +452,7 @@
       rest.hidden = !anyRest;
       if (section) section.hidden = !anyRest;
     }
-    var filtering = q || venue || genre || from !== null || to !== null;
+    var filtering = q || venue || chosenGenres.length || from !== null || to !== null;
     none.hidden = !(filtering && hits === 0);
     if (!none.hidden) none.textContent = 'No shows match those filters.';
   }
@@ -454,13 +483,65 @@
   setHour(fFrom, nowHour);
   setHour(fTo, (nowHour + 2) % 24);
 
-  [fVenue, fGenre, fFrom, fTo].forEach(function (el) {
+  [fVenue, fFrom, fTo].forEach(function (el) {
     if (el) el.addEventListener('change', apply);
   });
+
+  // The genre picker adds to a list rather than replacing a value. Choosing an
+  // option turns it into a chip and returns the picker to "Any genre", so the
+  // next choice adds rather than overwrites.
+  function labelFor(value) {
+    for (var i = 0; i < fGenre.options.length; i++) {
+      if (fGenre.options[i].value === value) return fGenre.options[i].text;
+    }
+    return value;
+  }
+
+  function drawGenres() {
+    fGenreChosen.textContent = '';
+    chosenGenres.forEach(function (value) {
+      var chip = document.createElement('button');
+      chip.type = 'button';
+      chip.textContent = labelFor(value);
+      chip.setAttribute('aria-label', 'Remove ' + labelFor(value) + ' filter');
+      chip.addEventListener('click', function () {
+        chosenGenres = chosenGenres.filter(function (v) { return v !== value; });
+        setDisabled(value, false);
+        drawGenres();
+        apply();
+      });
+      fGenreChosen.appendChild(chip);
+    });
+  }
+
+  // An option already chosen is greyed out rather than removed, so the list
+  // does not reshuffle under the finger of someone picking a second genre.
+  function setDisabled(value, state) {
+    for (var i = 0; i < fGenre.options.length; i++) {
+      if (fGenre.options[i].value === value) fGenre.options[i].disabled = state;
+    }
+  }
+
+  if (fGenre) {
+    fGenre.addEventListener('change', function () {
+      var value = fGenre.value;
+      fGenre.value = '';
+      if (!value || chosenGenres.indexOf(value) !== -1) return;
+      chosenGenres.push(value);
+      setDisabled(value, true);
+      drawGenres();
+      apply();
+    });
+  }
   if (fClear) {
     fClear.addEventListener('click', function () {
       if (fVenue) fVenue.value = '';
-      if (fGenre) fGenre.value = '';
+      if (fGenre) {
+        chosenGenres.forEach(function (v) { setDisabled(v, false); });
+        chosenGenres = [];
+        fGenre.value = '';
+        drawGenres();
+      }
       if (fFrom) fFrom.value = '';
       if (fTo) fTo.value = '';
       apply();          // Clear means clear: back to every show, not back to "from now"
