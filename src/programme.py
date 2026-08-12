@@ -300,8 +300,12 @@ def label(festival: str, genre: str, subgenre: str) -> str:
     reader something useful — that this is the International Festival rather
     than the Fringe.
     """
-    # The Fringe's own values are machine-shaped: "Childrens_Shows", "Theatre".
-    genre = (genre or "").replace("_", " ").title().replace("And", "&")
+    # One spelling for the badge and the genre filter, or a reader who picks
+    # "Children's Shows" from the filter is shown rows badged "CHILDRENS SHOWS"
+    # and cannot tell whether they are the same thing. Title-casing the machine
+    # value gave that, and "Opera" for a section that is mostly musicals.
+    from .genres import section as _section
+    genre = _section(genre)
     # The Fringe comma-joins every subgenre it holds, so a badge could read
     # "Childrens Shows · Musical comedy, Family-friendly" — 48 characters, wider
     # than a phone, and the page scrolled sideways because of it. The first is

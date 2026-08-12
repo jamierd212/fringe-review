@@ -90,7 +90,12 @@ class Show:
     title: str
     performer: str | None
     url: str | None = None       # official programme entry
-    genre: str = ""             # e.g. "Comedy · Sketch"
+    genre: str = ""             # the badge text, e.g. "Comedy · Sketch"
+    # The programme's own values behind that badge. Kept separately because the
+    # badge is one readable string while filtering needs the parts: a section to
+    # group by and tags to scope to it.
+    section: str = ""           # e.g. "COMEDY"
+    subgenre: str = ""          # e.g. "Stand-up,Solo show"
     venue: str = ""
     start_time: str = ""        # "HH:MM" from the festival's own programme
 
@@ -230,6 +235,11 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
             url=row["edfringe_url"] or None,
             genre=label(row["festival"] or "", row["genre"] or "", row["subgenre"] or "")
             if row["edfringe_url"] else "",
+            # Only a show linked to its programme entry gets a badge, and the
+            # same applies to the filter: an unlinked show has no classification
+            # we can stand behind, so it answers to no genre rather than a guess.
+            section=(row["genre"] or "") if row["edfringe_url"] else "",
+            subgenre=(row["subgenre"] or "") if row["edfringe_url"] else "",
             venue=row["venue"] or "",
             start_time=row["start_time"] or "",
         )

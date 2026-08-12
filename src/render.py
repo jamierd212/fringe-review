@@ -11,7 +11,7 @@ from zoneinfo import ZoneInfo
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from . import rank
+from . import genres, rank
 from .collect import load_config
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -150,6 +150,8 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
     )
     env.filters["stars"] = stars_html
     env.globals["venue_group"] = lambda v: VENUE_GROUPS.get(v or "", "")
+    env.globals["genre_keys"] = lambda s: genres.keys_for(
+        getattr(s, "section", ""), getattr(s, "subgenre", ""))
     template = env.get_template("index.html.j2")
 
     now = datetime.now(timezone.utc).astimezone(ZoneInfo("Europe/London"))
@@ -203,6 +205,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
         # 09:00 through to 08:00 the next morning: a festival day, in the order
         # someone lives it, rather than a clock starting at midnight.
         hours = [f"{(9 + i) % 24:02d}:00" for i in range(24)]
+        genre_sections, genre_subs = genres.options(ranked + rest)
 
         def build(canonical: str) -> str:
             return template.render(
@@ -223,6 +226,8 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 analytics_token=defaults.get("analytics_token", ""),
                 venues=venues,
                 venue_groups=groups,
+                genre_sections=genre_sections,
+                genre_subs=genre_subs,
                 hours=hours,
             )
 

@@ -209,6 +209,25 @@
         </optgroup>
       </select>
     </label>
+    {#- Only the Fringe classifies its shows, so this appears only when there is
+        something to choose from. Sections first, then their tags scoped to the
+        section they belong to: the Fringe's tags are a flat vocabulary reused
+        everywhere, so "Storytelling" alone would mean both a comedian and a
+        play, whereas "Comedy – Storytelling" means one of them. #}
+    {% if genre_sections %}
+    <label>Genre
+      <select id="f-genre">
+        <option value="">Any genre</option>
+        <optgroup label="Genres">
+          {% for value, name, n in genre_sections %}<option value="{{ value }}">{{ name }}</option>{% endfor %}
+        </optgroup>
+        <option value="" disabled>──────────</option>
+        <optgroup label="Sub-genres">
+          {% for value, name, n in genre_subs %}<option value="{{ value }}">{{ name }}</option>{% endfor %}
+        </optgroup>
+      </select>
+    </label>
+    {% endif %}
     <label>Starts between
       <span class="times">
         {#- Whole hours rather than a time picker: show times are only useful
@@ -242,6 +261,7 @@
 <article class="show{% if position <= 3 %} top{% endif %}"
          data-find="{{ (show.title ~ ' ' ~ (show.performer or '') ~ ' ' ~ show.genre)|lower }}"
          data-venue="{{ show.venue }}" data-vgroup="{{ venue_group(show.venue) }}"
+         data-genres="{{ genre_keys(show)|join(';') }}"
          data-start="{{ show.start_minutes }}">
   <div class="pos">{{ position }}</div>
   <div class="body">
@@ -276,6 +296,7 @@
   {% for show in rest %}
   <div data-find="{{ show.title|lower }}"
        data-venue="{{ show.venue }}" data-vgroup="{{ venue_group(show.venue) }}"
+       data-genres="{{ genre_keys(show)|join(';') }}"
        data-start="{{ show.start_minutes }}">
     {{ show.title }}
     {% for review in show.reviews %}
@@ -331,6 +352,7 @@
   var toggle = document.getElementById('filter-toggle');
   var panel = document.getElementById('filters');
   var fVenue = document.getElementById('f-venue');
+  var fGenre = document.getElementById('f-genre');
   var fFrom = document.getElementById('f-from');
   var fTo = document.getElementById('f-to');
   var fClear = document.getElementById('f-clear');
@@ -338,6 +360,10 @@
   rows.forEach(function (r) {
     r.venue = r.el.getAttribute('data-venue') || '';
     r.vgroup = r.el.getAttribute('data-vgroup') || '';
+    // A show carries its section and every tag scoped to it, so "COMEDY" and
+    // "COMEDY|stand-up" both match in one lookup. Semicolons separate them
+    // because the tags themselves contain spaces.
+    r.genres = (r.el.getAttribute('data-genres') || '').split(';');
     r.start = parseInt(r.el.getAttribute('data-start'), 10);
   });
 
@@ -350,6 +376,7 @@
   function apply() {
     var q = input.value.trim().toLowerCase();
     var venue = fVenue ? fVenue.value : '';
+    var genre = fGenre ? fGenre.value : '';
     var from = fFrom ? minutes(fFrom.value) : null;
     var to = fTo ? minutes(fTo.value) : null;
     var hits = 0;
@@ -363,6 +390,10 @@
              ? r.vgroup === venue.slice(2)
              : r.venue === venue.slice(2);
       }
+      // A show with no genre - every EIF and free fringe show, since neither
+      // publishes one - cannot satisfy a genre filter, so it drops out rather
+      // than being claimed as something we do not know it to be.
+      if (show && genre) show = r.genres.indexOf(genre) !== -1;
       // A show with no known time cannot satisfy a time window. Hiding it is
       // the honest answer: we do not know when it is on, so we cannot claim
       // it starts in the hour someone asked for.
@@ -392,7 +423,7 @@
       rest.hidden = !anyRest;
       if (section) section.hidden = !anyRest;
     }
-    var filtering = q || venue || from !== null || to !== null;
+    var filtering = q || venue || genre || from !== null || to !== null;
     none.hidden = !(filtering && hits === 0);
     if (!none.hidden) none.textContent = 'No shows match those filters.';
   }
@@ -423,12 +454,13 @@
   setHour(fFrom, nowHour);
   setHour(fTo, (nowHour + 2) % 24);
 
-  [fVenue, fFrom, fTo].forEach(function (el) {
+  [fVenue, fGenre, fFrom, fTo].forEach(function (el) {
     if (el) el.addEventListener('change', apply);
   });
   if (fClear) {
     fClear.addEventListener('click', function () {
       if (fVenue) fVenue.value = '';
+      if (fGenre) fGenre.value = '';
       if (fFrom) fFrom.value = '';
       if (fTo) fTo.value = '';
       apply();          // Clear means clear: back to every show, not back to "from now"
