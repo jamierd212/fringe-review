@@ -132,6 +132,50 @@
   .filters option, .filters optgroup {
     font-size: .85rem; line-height: 1.15; padding: .08rem .4rem; min-height: 0;
   }
+  /* iOS opens a native picker for a <select> and ignores author CSS entirely,
+     so the only way to control the row spacing on a phone is to stop using it.
+     The <select> stays in the DOM and stays authoritative — everything else
+     still reads .value and listens for change — and this draws a list on top of
+     it. Rows are 34px rather than the picker's 44: tight enough to see roughly
+     twice as many venues at once, still big enough to hit with a thumb. */
+  .picker { position: relative; }
+  .picker > button.picker-open {
+    font: inherit; font-size: .85rem; text-align: left;
+    padding: .15rem 1.4rem .15rem .35rem; border: 1px solid var(--rule);
+    border-radius: 4px; background: #fff; color: var(--ink);
+    width: 15rem; max-width: 100%; cursor: pointer;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .picker > button.picker-open::after {
+    content: ""; position: absolute; right: .5rem; top: 50%;
+    width: .4rem; height: .4rem; margin-top: -.32rem; pointer-events: none;
+    border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted);
+    transform: rotate(45deg);
+  }
+  .picker-panel {
+    position: absolute; z-index: 40; top: calc(100% + 2px); left: 0;
+    width: 17rem; max-width: 84vw; background: #fff;
+    border: 1px solid var(--rule); border-radius: 6px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.13); overflow: hidden;
+  }
+  .picker-search {
+    font: inherit; font-size: .85rem; width: 100%; border: 0;
+    border-bottom: 1px solid var(--rule); padding: .4rem .55rem; color: var(--ink);
+  }
+  .picker-list { max-height: 15rem; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .picker-list [role="option"] {
+    padding: .42rem .55rem; font-size: .85rem; line-height: 1.15;
+    cursor: pointer; border-top: 1px solid var(--rule);
+  }
+  .picker-list [role="option"]:first-child { border-top: 0; }
+  .picker-list [role="option"][aria-selected="true"] { background: var(--ink); color: #fff; }
+  .picker-list [role="option"][aria-disabled="true"] { color: var(--muted); cursor: default; }
+  .picker-list .picker-group {
+    padding: .3rem .55rem .18rem; font-size: .7rem; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--muted); background: var(--bg);
+  }
+  .picker-list .picker-rule { height: 1px; background: var(--rule); margin: .15rem 0; }
+  .picker-empty { padding: .5rem .55rem; font-size: .85rem; color: var(--muted); }
   .filters .times { display: flex; align-items: center; gap: .35rem; }
   .filters #f-clear {
     font: inherit; padding: .3rem .7rem; border: 1px solid var(--rule);
@@ -213,7 +257,7 @@
 </header>
 
 <p class="meta">
-  Updated 12 August 2026, 21:27 BST &middot;
+  Updated 12 August 2026, 21:30 BST &middot;
   2145 rated reviews across 1434 shows
 </p>
 
@@ -45448,6 +45492,134 @@
     if (!none.hidden) none.textContent = 'No shows match those filters.';
   }
 
+
+  // Draw the dropdowns ourselves, because iOS will not let us style its own.
+  // The <select> stays in the DOM and stays the source of truth: this sets its
+  // value and fires change, so the filtering, the chips and Clear are untouched
+  // and all of it still works if this script never runs.
+  function makePicker(select) {
+    if (!select) return;
+    var wrap = document.createElement('span');
+    wrap.className = 'picker';
+    select.parentNode.insertBefore(wrap, select);
+    wrap.appendChild(select);
+    select.style.display = 'none';
+
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'picker-open';
+    button.setAttribute('aria-haspopup', 'listbox');
+    button.setAttribute('aria-expanded', 'false');
+    wrap.appendChild(button);
+
+    var panel = null;
+
+    function label() {
+      var o = select.options[select.selectedIndex];
+      button.textContent = o ? o.text : '';
+    }
+
+    function close() {
+      if (panel) { panel.remove(); panel = null; }
+      button.setAttribute('aria-expanded', 'false');
+    }
+
+    function choose(value) {
+      select.value = value;
+      select.dispatchEvent(new Event('change', {bubbles: true}));
+      label();
+      close();
+      button.focus();
+    }
+
+    function open() {
+      if (panel) { close(); return; }
+      panel = document.createElement('div');
+      panel.className = 'picker-panel';
+      var list = document.createElement('div');
+      list.className = 'picker-list';
+      list.setAttribute('role', 'listbox');
+
+      // Long lists get a filter box. The native picker has no way to search
+      // three hundred venues, so this is the one place the custom list is
+      // plainly better rather than merely tidier.
+      var search = null;
+      if (select.options.length > 40) {
+        search = document.createElement('input');
+        search.type = 'search';
+        search.className = 'picker-search';
+        search.placeholder = 'Type to narrow';
+        panel.appendChild(search);
+      }
+      panel.appendChild(list);
+
+      function draw(query) {
+        list.textContent = '';
+        var q = (query || '').trim().toLowerCase();
+        var shown = 0;
+        var lastGroup = null;
+        [].forEach.call(select.options, function (o) {
+          var group = o.parentNode.tagName === 'OPTGROUP' ? o.parentNode.label : null;
+          // The separator is a disabled blank option; it is furniture, and it
+          // makes no sense in a list someone is filtering.
+          if (o.disabled && !o.value) {
+            if (!q) { var r = document.createElement('div'); r.className = 'picker-rule'; list.appendChild(r); }
+            return;
+          }
+          if (q && o.text.toLowerCase().indexOf(q) === -1) return;
+          if (group && group !== lastGroup) {
+            var g = document.createElement('div');
+            g.className = 'picker-group';
+            g.textContent = group;
+            list.appendChild(g);
+            lastGroup = group;
+          }
+          var row = document.createElement('div');
+          row.setAttribute('role', 'option');
+          row.textContent = o.text;
+          if (o.value === select.value) row.setAttribute('aria-selected', 'true');
+          if (o.disabled) {
+            row.setAttribute('aria-disabled', 'true');
+          } else {
+            row.addEventListener('click', function () { choose(o.value); });
+          }
+          list.appendChild(row);
+          shown++;
+        });
+        if (!shown) {
+          var none = document.createElement('div');
+          none.className = 'picker-empty';
+          none.textContent = 'Nothing matches';
+          list.appendChild(none);
+        }
+      }
+
+      draw('');
+      if (search) {
+        search.addEventListener('input', function () { draw(search.value); });
+      }
+      wrap.appendChild(panel);
+      button.setAttribute('aria-expanded', 'true');
+      var sel = list.querySelector('[aria-selected="true"]');
+      if (sel) sel.scrollIntoView({block: 'nearest'});
+      if (search) search.focus();
+    }
+
+    button.addEventListener('click', function (e) { e.stopPropagation(); open(); });
+    document.addEventListener('click', function (e) {
+      if (panel && !wrap.contains(e.target)) close();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && panel) { close(); button.focus(); }
+    });
+    // Anything that changes the value elsewhere - Clear, the default time
+    // window, a chip being removed - has to be reflected on the button.
+    select.addEventListener('change', label);
+    label();
+  }
+
+  [fVenue, fGenre, fFrom, fTo].forEach(makePicker);
+
   input.addEventListener('input', apply);
   input.addEventListener('search', apply);   // the clear (x) button
 
@@ -45468,6 +45640,7 @@
     var value = String(hour).padStart(2, '0') + ':00';
     if ([].some.call(select.options, function (o) { return o.value === value; })) {
       select.value = value;
+      select.dispatchEvent(new Event('change', {bubbles: true}));
     }
   }
   var nowHour = new Date().getHours();
@@ -45526,15 +45699,23 @@
   }
   if (fClear) {
     fClear.addEventListener('click', function () {
-      if (fVenue) fVenue.value = '';
+      // Dispatched, not just assigned: the drawn buttons follow the select's
+      // change event, and without it Clear emptied the filter while every
+      // button still showed the choice it had just thrown away.
+      function reset(el) {
+        if (!el) return;
+        el.value = '';
+        el.dispatchEvent(new Event('change', {bubbles: true}));
+      }
       if (fGenre) {
         chosenGenres.forEach(function (v) { setDisabled(v, false); });
         chosenGenres = [];
-        fGenre.value = '';
         drawGenres();
       }
-      if (fFrom) fFrom.value = '';
-      if (fTo) fTo.value = '';
+      reset(fVenue);
+      reset(fGenre);
+      reset(fFrom);
+      reset(fTo);
       apply();          // Clear means clear: back to every show, not back to "from now"
 
     });
