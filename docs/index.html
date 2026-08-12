@@ -290,6 +290,7 @@
           <option value="v:Alchemist Cocktail Bar and Restaurant">Alchemist Cocktail Bar and Restaurant</option><option value="v:Assembly @ Dance Base">Assembly @ Dance Base</option><option value="v:Assembly @ St Andrew Square">Assembly @ St Andrew Square</option><option value="v:Assembly George Square">Assembly George Square</option><option value="v:Assembly George Square Gardens">Assembly George Square Gardens</option><option value="v:Assembly George Square Studios">Assembly George Square Studios</option><option value="v:Assembly Hall">Assembly Hall</option><option value="v:Assembly Rooms">Assembly Rooms</option><option value="v:Assembly Roxy">Assembly Roxy</option><option value="v:Bedlam Theatre">Bedlam Theatre</option><option value="v:Braw Venues @ Hill Street">Braw Venues @ Hill Street</option><option value="v:Brown's of Leith">Brown's of Leith</option><option value="v:C ARTS | C venues | C alto">C ARTS | C venues | C alto</option><option value="v:C ARTS | C venues | C aquila">C ARTS | C venues | C aquila</option><option value="v:C ARTS | C venues | C aurora">C ARTS | C venues | C aurora</option><option value="v:EIFF @ Cineworld">EIFF @ Cineworld</option><option value="v:Gilded Balloon Patter House">Gilded Balloon Patter House</option><option value="v:Gilded Balloon Teviot">Gilded Balloon Teviot</option><option value="v:Greenside @ George Street">Greenside @ George Street</option><option value="v:Greenside @ Riddles Court">Greenside @ Riddles Court</option><option value="v:Hoots @ Nicolson Square">Hoots @ Nicolson Square</option><option value="v:Hoots @ The Apex">Hoots @ The Apex</option><option value="v:Inverleith St Serf's Church Centre">Inverleith St Serf's Church Centre</option><option value="v:Just The Tonic at The Caves">Just The Tonic at The Caves</option><option value="v:Just The Tonic at The Hive">Just The Tonic at The Hive</option><option value="v:Just The Tonic at The Mash House">Just The Tonic at The Mash House</option><option value="v:Laughing Horse @ Bar 50">Laughing Horse @ Bar 50</option><option value="v:Laughing Horse @ Dragonfly">Laughing Horse @ Dragonfly</option><option value="v:Laughing Horse @ The Counting House">Laughing Horse @ The Counting House</option><option value="v:Laughing Horse @ West Nic Records">Laughing Horse @ West Nic Records</option><option value="v:Monkey Barrel Comedy">Monkey Barrel Comedy</option><option value="v:Monkey Barrel Comedy (Cabaret Voltaire)">Monkey Barrel Comedy (Cabaret Voltaire)</option><option value="v:Monkey Barrel Comedy (Niddry Street)">Monkey Barrel Comedy (Niddry Street)</option><option value="v:Monkey Barrel Comedy at O'Neill's (The Tron)">Monkey Barrel Comedy at O'Neill's (The Tron)</option><option value="v:Nicolson Square Venues">Nicolson Square Venues</option><option value="v:Paradise in Augustines">Paradise in Augustines</option><option value="v:Paradise in The Vault">Paradise in The Vault</option><option value="v:PBH's Free Fringe @ Liquid Room">PBH's Free Fringe @ Liquid Room</option><option value="v:PBH's Free Fringe @ Slow Progress Cafe and Records">PBH's Free Fringe @ Slow Progress Cafe and Records</option><option value="v:Pleasance at EICC">Pleasance at EICC</option><option value="v:Pleasance Courtyard">Pleasance Courtyard</option><option value="v:Pleasance Dome">Pleasance Dome</option><option value="v:Pleasance Grassmarket">Pleasance Grassmarket</option><option value="v:Scottish Poetry Library">Scottish Poetry Library</option><option value="v:Scottish Storytelling Centre">Scottish Storytelling Centre</option><option value="v:St Bride's Community Centre">St Bride's Community Centre</option><option value="v:St Columba's by the Castle Scottish Episcopal Church">St Columba's by the Castle Scottish Episcopal Church</option><option value="v:Summerhall">Summerhall</option><option value="v:Teatro Fisico">Teatro Fisico</option><option value="v:The Edinburgh Academy">The Edinburgh Academy</option><option value="v:The Gilded Saloon">The Gilded Saloon</option><option value="v:The Jazz Bar">The Jazz Bar</option><option value="v:The Stand Comedy Club">The Stand Comedy Club</option><option value="v:The Stand Comedy Club 2">The Stand Comedy Club 2</option><option value="v:The Stand Comedy Club 3 \u0026 4">The Stand Comedy Club 3 \u0026 4</option><option value="v:The Voodoo Rooms">The Voodoo Rooms</option><option value="v:theSpace @ Niddry St">theSpace @ Niddry St</option><option value="v:theSpace @ Surgeons' Hall">theSpace @ Surgeons' Hall</option><option value="v:theSpace @ Symposium Hall">theSpace @ Symposium Hall</option><option value="v:theSpace on the Mile">theSpace on the Mile</option><option value="v:theSpaceTriplex">theSpaceTriplex</option><option value="v:Traverse Theatre">Traverse Theatre</option><option value="v:Underbelly, Bristo Square">Underbelly, Bristo Square</option><option value="v:Underbelly, Cowgate">Underbelly, Cowgate</option><option value="v:Underbelly, George Square">Underbelly, George Square</option><option value="v:Underbelly’s Circus Hub on the Meadows">Underbelly’s Circus Hub on the Meadows</option><option value="v:ZOO Playground">ZOO Playground</option><option value="v:ZOO Southside">ZOO Southside</option>
         </optgroup>
       </select>
+      <span class="chosen" id="f-venue-chosen"></span>
     </label>
     
     <label>Genre
@@ -325,7 +326,7 @@
 </header>
 
 <p class="meta">
-  Updated 12 August 2026, 21:39 BST &middot;
+  Updated 12 August 2026, 21:43 BST &middot;
   536 rated reviews across 409 shows
 </p>
 
@@ -12690,7 +12691,10 @@
   var fVenue = document.getElementById('f-venue');
   var fGenre = document.getElementById('f-genre');
   var fGenreChosen = document.getElementById('f-genre-chosen');
-  var chosenGenres = [];
+  var fVenueChosen = document.getElementById('f-venue-chosen');
+  // Assigned further down, once multiPick exists; apply() only ever runs from
+  // an event, by which time both are built.
+  var genrePick = null, venuePick = null;
   var fFrom = document.getElementById('f-from');
   var fTo = document.getElementById('f-to');
   var fClear = document.getElementById('f-clear');
@@ -12713,7 +12717,8 @@
 
   function apply() {
     var q = input.value.trim().toLowerCase();
-    var venue = fVenue ? fVenue.value : '';
+    var venues = venuePick ? venuePick.values() : [];
+    var genres = genrePick ? genrePick.values() : [];
 
     var from = fFrom ? minutes(fFrom.value) : null;
     var to = fTo ? minutes(fTo.value) : null;
@@ -12722,21 +12727,26 @@
       var r = rows[i];
       var show = !q || r.text.indexOf(q) !== -1;
       // "g:" is an area, "v:" a single venue. Each show carries its own area,
-      // so an area match is one comparison rather than a lookup table.
-      if (show && venue) {
-        show = venue.charAt(0) === 'g'
-             ? r.vgroup === venue.slice(2)
-             : r.venue === venue.slice(2);
+      // so an area match is one comparison rather than a lookup table. Several
+      // choices widen the search, as with genre: an area and a venue inside it
+      // both match the same show, and it is shown once either way.
+      if (show && venues.length) {
+        show = false;
+        for (var v = 0; v < venues.length; v++) {
+          var pick = venues[v];
+          if (pick.charAt(0) === 'g' ? r.vgroup === pick.slice(2)
+                                     : r.venue === pick.slice(2)) { show = true; break; }
+        }
       }
       // Several genres widen the search rather than narrowing it: choosing
       // Comedy and Theatre means either, which is the only reading that can
       // return anything, since a show belongs to one section. A show with no
       // genre at all matches none of them, so it drops out rather than being
       // claimed as something we do not know it to be.
-      if (show && chosenGenres.length) {
+      if (show && genres.length) {
         show = false;
-        for (var g = 0; g < chosenGenres.length; g++) {
-          if (r.genres.indexOf(chosenGenres[g]) !== -1) { show = true; break; }
+        for (var g = 0; g < genres.length; g++) {
+          if (r.genres.indexOf(genres[g]) !== -1) { show = true; break; }
         }
       }
       // A show with no known time cannot satisfy a time window. Hiding it is
@@ -12768,7 +12778,8 @@
       rest.hidden = !anyRest;
       if (section) section.hidden = !anyRest;
     }
-    var filtering = q || venue || chosenGenres.length || from !== null || to !== null;
+    var filtering = q || venues.length || genres.length
+                 || from !== null || to !== null;
     none.hidden = !(filtering && hits === 0);
     if (!none.hidden) none.textContent = 'No shows match those filters.';
   }
@@ -12930,62 +12941,79 @@
   // every hour. A filter that says it is on while doing nothing is worse than no
   // default, so the honest reading of those boxes is now the true one.
 
-  [fVenue, fFrom, fTo].forEach(function (el) {
+  [fFrom, fTo].forEach(function (el) {
     if (el) el.addEventListener('change', apply);
   });
 
-  // The genre picker adds to a list rather than replacing a value. Choosing an
-  // option turns it into a chip and returns the picker to "Any genre", so the
-  // next choice adds rather than overwrites.
-  function labelFor(value) {
-    for (var i = 0; i < fGenre.options.length; i++) {
-      if (fGenre.options[i].value === value) return fGenre.options[i].text;
-    }
-    return value;
-  }
+  // Genre and Location both hold several choices at once, so the chip list is
+  // built once and used twice rather than written out again per control.
+  // Choosing an option turns it into a chip and returns the picker to "Any
+  // venue" / "Any genre", so the next choice adds rather than overwrites.
+  function multiPick(select, box) {
+    if (!select || !box) return {values: function () { return []; }, clear: function () {}};
+    var chosen = [];
 
-  function drawGenres() {
-    fGenreChosen.textContent = '';
-    chosenGenres.forEach(function (value) {
-      var chip = document.createElement('button');
-      chip.type = 'button';
-      // The name goes in its own element so it can be truncated on a narrow
-      // screen while the × stays put. Left as one run of text, "Theatre – New
-      // writing ×" wrapped in the middle and the × dropped onto a second line.
-      var name = document.createElement('span');
-      name.className = 'chip-name';
-      name.textContent = labelFor(value);
-      chip.appendChild(name);
-      chip.setAttribute('aria-label', 'Remove ' + labelFor(value) + ' filter');
-      chip.addEventListener('click', function () {
-        chosenGenres = chosenGenres.filter(function (v) { return v !== value; });
-        setDisabled(value, false);
-        drawGenres();
-        apply();
+    function labelFor(value) {
+      for (var i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === value) return select.options[i].text;
+      }
+      return value;
+    }
+
+    // An option already chosen is greyed out rather than removed, so the list
+    // does not reshuffle under the finger of someone picking a second one.
+    function setDisabled(value, state) {
+      for (var i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === value) select.options[i].disabled = state;
+      }
+    }
+
+    function draw() {
+      box.textContent = '';
+      chosen.forEach(function (value) {
+        var chip = document.createElement('button');
+        chip.type = 'button';
+        // The name goes in its own element so it can be truncated on a narrow
+        // screen while the × stays put. Left as one run of text, "Theatre – New
+        // writing ×" wrapped in the middle and dropped the × onto a second line.
+        var name = document.createElement('span');
+        name.className = 'chip-name';
+        name.textContent = labelFor(value);
+        chip.appendChild(name);
+        chip.setAttribute('aria-label', 'Remove ' + labelFor(value) + ' filter');
+        chip.addEventListener('click', function () {
+          chosen = chosen.filter(function (v) { return v !== value; });
+          setDisabled(value, false);
+          draw();
+          apply();
+        });
+        box.appendChild(chip);
       });
-      fGenreChosen.appendChild(chip);
-    });
-  }
-
-  // An option already chosen is greyed out rather than removed, so the list
-  // does not reshuffle under the finger of someone picking a second genre.
-  function setDisabled(value, state) {
-    for (var i = 0; i < fGenre.options.length; i++) {
-      if (fGenre.options[i].value === value) fGenre.options[i].disabled = state;
     }
-  }
 
-  if (fGenre) {
-    fGenre.addEventListener('change', function () {
-      var value = fGenre.value;
-      fGenre.value = '';
-      if (!value || chosenGenres.indexOf(value) !== -1) return;
-      chosenGenres.push(value);
+    select.addEventListener('change', function () {
+      var value = select.value;
+      select.value = '';
+      if (!value || chosen.indexOf(value) !== -1) return;
+      chosen.push(value);
       setDisabled(value, true);
-      drawGenres();
+      draw();
       apply();
     });
+
+    return {
+      values: function () { return chosen; },
+      clear: function () {
+        chosen.forEach(function (v) { setDisabled(v, false); });
+        chosen = [];
+        draw();
+      }
+    };
   }
+
+  venuePick = multiPick(fVenue, fVenueChosen);
+  genrePick = multiPick(fGenre, fGenreChosen);
+
   if (fClear) {
     fClear.addEventListener('click', function () {
       // Dispatched, not just assigned: the drawn buttons follow the select's
@@ -12996,11 +13024,8 @@
         el.value = '';
         el.dispatchEvent(new Event('change', {bubbles: true}));
       }
-      if (fGenre) {
-        chosenGenres.forEach(function (v) { setDisabled(v, false); });
-        chosenGenres = [];
-        drawGenres();
-      }
+      venuePick.clear();
+      genrePick.clear();
       reset(fVenue);
       reset(fGenre);
       reset(fFrom);
