@@ -12,8 +12,8 @@ programme: the event pages carry no category field and their own what's-on
 filters are built client-side, so an EIF show can be found by name or venue but
 not by genre. The free fringe publishes none either.
 
-Those two festivals stand at the top of the list as choices in their own right.
-It is the one honest thing to offer for a show whose programme classifies
+Those two festivals stand at the end of the section list as choices in their own
+right. It is the one honest thing to offer for a show whose programme classifies
 nothing - "which festival is this" is a question we can answer, where "what kind
 of show is this" is not - and it is what a reader looking for the International
 Festival would reach for anyway.
@@ -45,8 +45,8 @@ SECTIONS = {
 # own right. The Fringe is absent deliberately: its shows already have sections,
 # so a "Fringe" entry would select nearly everything and say nothing.
 FESTIVALS = {
-    "eif": "EIF",
     "freefringe": "Free Fringe",
+    "eif": "EIF",
 }
 
 # Tags describing who made a show or who it is for, rather than what kind of
@@ -159,11 +159,13 @@ def options(shows) -> tuple[list, list]:
         for t in tags_of(getattr(show, "subgenre", "") or ""):
             subs[(raw, t)] += 1
 
-    # Festivals first, in the order they are written above rather than by size:
-    # there are only two, and EIF above Free Fringe reads better than a ranking
-    # that would flip whenever one of them was reviewed more.
-    ordered = [(f"@{k}", FESTIVALS[k], fests[k]) for k in FESTIVALS if fests[k]]
-    ordered += [(raw, section(raw), n) for raw, n in sections.most_common()]
+    # Sections by size, then the two festivals at the end. They are top-level
+    # choices like the sections, but they answer a different question - which
+    # festival, not what kind of show - so they read better after the genres
+    # than interrupting them. Written order, not by size: with two entries a
+    # ranking would flip about whenever one was reviewed more than the other.
+    ordered = [(raw, section(raw), n) for raw, n in sections.most_common()]
+    ordered += [(f"@{k}", FESTIVALS[k], fests[k]) for k in FESTIVALS if fests[k]]
     sub_options = []
     for raw, label, _ in ordered:
         for (sec, t), n in sorted(subs.items(), key=lambda kv: (-kv[1], kv[0][1])):
