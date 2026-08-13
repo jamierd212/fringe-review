@@ -280,7 +280,7 @@
 </header>
 
 <p class="meta">
-  Updated 13 August 2026, 21:28 BST &middot;
+  Updated 13 August 2026, 21:41 BST &middot;
   2145 rated reviews across 1434 shows
 </p>
 
@@ -45793,12 +45793,23 @@
     if (genrePick) genrePick.values().forEach(function (v) { add('genre', v); });
     if (fFrom && fFrom.value) add('from', fFrom.value);
     if (fTo && fTo.value) add('to', fTo.value);
-    var url = location.pathname + (params.length ? '?' + params.join('&') : '');
-    history.replaceState(null, '', url);
+    var query = params.join('&');
+    history.replaceState(null, '', location.pathname + (query ? '?' + query : ''));
+    // Also kept for the session, because the browser's back button is not the
+    // only way back: every show page carries its own "← Top-Rated Shows" link,
+    // which is an ordinary link to a bare URL and throws the filter away.
+    try { sessionStorage.setItem('fringestars-filter', query); } catch (e) {}
   }
 
   function readState() {
-    if (!location.search) return false;
+    // The address bar wins, so a link someone was sent shows what it says.
+    // Otherwise fall back to what this tab was last looking at.
+    var search = location.search.slice(1);
+    if (!search) {
+      try { search = sessionStorage.getItem('fringestars-filter') || ''; }
+      catch (e) { search = ''; }
+    }
+    if (!search) return false;
     // A hand-edited or truncated URL must not be able to throw here: anything
     // that escapes this function stops the rest of the script attaching its
     // handlers, and "?q=%%%" alone was enough to leave Clear doing nothing.
@@ -45807,7 +45818,7 @@
       catch (e) { return ''; }
     }
     var venues = [], genres = [], q = '', from = '', to = '';
-    location.search.slice(1).split('&').forEach(function (pair) {
+    search.split('&').forEach(function (pair) {
       var bits = pair.split('=');
       var key = decode(bits[0]);
       var value = decode(bits[1] || '');
