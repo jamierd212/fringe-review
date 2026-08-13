@@ -199,12 +199,22 @@ def split_performer(raw: str) -> tuple[str | None, str]:
     return (left, right) if looks_like_name else (None, title)
 
 
-def alias_forms(raw: str) -> list[str]:
+def alias_forms(raw: str, include_performer: bool = False) -> list[str]:
     """
     Every normalised string that should point at this show.
 
     Generating a few aliases per review is what lets "Companion Piece" from one
     publication find "Sam Campbell: Companion Piece" from another.
+
+    `include_performer` adds the name before the colon on its own. "X: Y" is
+    read as performer and show, which is right for "Amanda Dwyer: Better Than
+    Revenge" and wrong for "Truthmachine: How Truthful Would You Be In A Room
+    Full Of Strangers?", where X is the show and Y a subtitle. Offering X as
+    well lets the second kind find a show the programme lists as "Truthmachine".
+
+    It is for LOOKING UP only, never for storing. Stored, "amanda dwyer" would
+    point at whichever of her shows was seen first, and her next one would be
+    filed under it.
     """
     title = clean_title(raw)
     performer, show = split_performer(raw)
@@ -212,6 +222,8 @@ def alias_forms(raw: str) -> list[str]:
     candidates = [title, show]
     if performer:
         candidates.append(f"{performer} {show}")
+        if include_performer:
+            candidates.append(performer)
 
     seen, out = set(), []
     for c in candidates:

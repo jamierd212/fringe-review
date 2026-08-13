@@ -94,13 +94,19 @@ def run(conn: sqlite3.Connection, year: int, gate: bool = True) -> dict[str, int
     for row in unmatched:
         headline = row["headline"] or ""
         aliases = alias_forms(headline)
+        # Looked up with one more spelling than gets stored: the name before the
+        # colon, which is the show itself when the colon introduces a subtitle
+        # rather than naming a performer. Storing that would file a comedian's
+        # next show under their last one.
+        fallbacks = [a for a in alias_forms(headline, include_performer=True)
+                     if a not in aliases]
         if not aliases:
             continue
 
         # `year` is only a fallback for reviews whose feed gave no usable date.
         review_year = festival_year(row["published"], year)
         show_id, confidence, how = _resolve(
-            conn, aliases, headline, review_year, matcher, keeper
+            conn, aliases, fallbacks, headline, review_year, matcher, keeper
         )
         if show_id is None:
             # Refused admission. The review row stays, with no show attached, so
@@ -145,8 +151,9 @@ def run(conn: sqlite3.Connection, year: int, gate: bool = True) -> dict[str, int
     return counts
 
 
-def _resolve(conn, aliases: list[str], headline: str, year: int,
-             matcher: Matcher, keeper=None) -> tuple[str | None, float, str]:
+def _resolve(conn, aliases: list[str], fallbacks: list[str], headline: str,
+             year: int, matcher: Matcher,
+             keeper=None) -> tuple[str | None, float, str]:
     """
     Return (show_id, confidence, method), or (None, ...) if refused admission.
 
@@ -159,16 +166,40 @@ def _resolve(conn, aliases: list[str], headline: str, year: int,
     # later year is a different run with different reviews, and merging the two
     # would silently pool this year's ratings with last year's.
 
+    def exact(names: list[str], listed_only: bool = False) -> str | None:
+        if not names:
+            return None
+        placeholders = ",".join("?" * len(names))
+        # `listed_only` restricts the match to shows the festival programme
+        # actually lists, which is what makes the loose lookup below safe.
+        clause = " AND s.edfringe_url IS NOT NULL" if listed_only else ""
+        found = conn.execute(
+            f"""SELECT a.show_id FROM aliases a
+                  JOIN shows s ON s.id = a.show_id
+                 WHERE a.alias IN ({placeholders}) AND s.year = ?{clause} LIMIT 1""",
+            (*names, year),
+        ).fetchone()
+        return found["show_id"] if found else None
+
     # 1. Exact hit on a spelling we already know.
-    placeholders = ",".join("?" * len(aliases))
-    hit = conn.execute(
-        f"""SELECT a.show_id FROM aliases a
-              JOIN shows s ON s.id = a.show_id
-             WHERE a.alias IN ({placeholders}) AND s.year = ? LIMIT 1""",
-        (*aliases, year),
-    ).fetchone()
+    hit = exact(aliases)
     if hit:
-        return hit["show_id"], 1.0, "exact"
+        return hit, 1.0, "exact"
+
+    # 2. Only then the looser spelling - the name before the colon on its own,
+    #    which is the show itself when the colon introduces a subtitle rather
+    #    than naming a performer.
+    #
+    #    Tried strictly after the precise ones, because `alias IN (...)` returns
+    #    whichever row the database reaches first and would otherwise let "Lara
+    #    Ricote" beat "Inkling" and pull a review off the show the programme
+    #    lists. And accepted only where the programme lists that name as a show,
+    #    which is the evidence that the colon was a subtitle: without it,
+    #    "Darkfield Radio: Visitors" and "Darkfield Radio: Eternal" both collapse
+    #    into one show, merging two different productions by one company.
+    hit = exact(fallbacks, listed_only=True)
+    if hit:
+        return hit, 1.0, "exact"
 
     # 2. Fuzzy against every alias from the same year.
     known = conn.execute(
