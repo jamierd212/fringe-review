@@ -6,8 +6,10 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| The Wee Review | [Dane Buckley: Darling](https://theweereview.com/review/dane-buckley-darling/) | Dane Buckley | 88% |
-| One4Review | [Man Sings the Same Song Over and Over Again for an Hour ★★★★½](https://one4review.co.uk/2026/08/man-sings-the-same-song-over-and-over-again-for-an-hour-%e2%98%85%e2%98%85%e2%98%85%e2%98%85%c2%bd/) | Man Sings The Same Song Over And Over Again For An Hour | 96% |
+| The Skinny | [Freddie Meredith @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/freddie-meredith-pleasance-courtyard) | Freddie Meredith | 74% |
+| The Skinny | [Jess Fuchs @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/jess-fuchs-feral-pleasance-courtyard) | Jess Fuchs | 77% |
+| The Skinny | [Eleanor Morton @ Monkey Barrel](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/eleanor-morton-the-mermaid-monkey-barrel) | Eleanor Morton | 78% |
+| The Skinny | [Mike Wozniak @ Assembly Hall](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/mike-wozniak-assembly-hall) | Mike Wozniak | 80% |
 
 ## Held — not on the leaderboard
 
@@ -17,6 +19,10 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The Skinny | [Zoe Wohlfeld @ Underbelly Cowgate](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/zoe-wohlfeld-underbelly-cowgate) | This appears to be a venue listing or schedule entry rather than a review headline, lacking evaluative language or critical content. |
+| The List | [Maribou State](https://list.co.uk/news/maribou-state-music-review-woozy-and-elastic-48793) | The headline is only a name with no review text, context, or indication it reviews a specific Edinburgh festival show. |
+| The Scotsman | [Fringe comedy reviews: Madeleine Brettingham | Pierre Novellie | Those People | Paddy Young | Tom Ballard](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/edinburgh-fringe-comedy-reviews-madeleine-brettingham-pierre-novellie-those-people-paddy-young-tom-ballard-8918204) | This is a round-up of multiple shows in a single review, not a review of one named show. |
+| The Scotsman | [Fringe theatre reviews: Big Stuff | Gameplay | Long Way Home | Saving Britney + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-big-stuff-gameplay-long-way-home-saving-britney-in-the-cold-light-operation-blank-8919289) | This is a round-up review of multiple shows, not a review of a single named show. |
 | The List | [SpinQueen™](https://list.co.uk/news/spinqueen-theatre-review-raw-unfiltered-rage-48787) | This appears to be a trademarked product name rather than a review headline of an Edinburgh festival show. |
 | The Scotsman | [Fringe dance reviews: not for glory | Collaborator | Snow | CODE | Common Ground](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/fringe-dance-reviews-not-for-glory-collaborator-snow-code-common-ground-8917734) | This is a round-up of multiple shows, not a review of a single named show. |
 | The Scotsman | [A&E](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-the-king-of-all-birds-baby-everything-puttana-the-second-best-school-shooting-ae-the-painted-revolutionary-8917948#and-e) | This headline is far too vague to identify a specific show or review at an Edinburgh festival. |
@@ -213,7 +219,3 @@ table and re-run `python run.py --match` to let it back in.
 | One4Review | [Elements – 4.5****](https://one4review.co.uk/2025/08/elements-4-5/) | This appears to be a rating snippet rather than a full review headline of a named show at Edinburgh festival. |
 | One4Review | [All Made Up Podcast 4****](https://one4review.co.uk/2025/08/19452/) | This appears to be a rating or listing entry rather than a full review article of a single named show. |
 | One4Review | [Terry Pratchett’s Monstrous Regiment 4****](https://one4review.co.uk/2025/08/terry-pratchetts-monstrous-regiment-4/) | This appears to be a rating or review snippet rather than a full review article of a named show at an Edinburgh festival. |
-| One4Review | [Koalas and Kebabs 4.5****](https://one4review.co.uk/2025/08/koalas-and-kebabs-4-5/) | This appears to be a rating or score without enough context to identify it as a review of a single named Edinburgh festival show. |
-| One4Review | [The Best of Scottish Comedy – The Stand – 4****](https://one4review.co.uk/2025/08/the-best-of-scottish-comedy-the-stand-4/) | This is a round-up review of multiple comedy acts at a venue, not a review of one named show. |
-| One4Review | [Chortle Student Comedy Awards final 2025  4.5****](https://one4review.co.uk/2025/08/chortle-student-comedy-awards-final-2025-4-5/) | This is an awards announcement or news item about a competition, not a review of a single named show at an Edinburgh festival. |
-| One4Review | [Amy Annette 4.5****](https://one4review.co.uk/2025/08/amy-annette-4-5/) | This appears to be a rating or star rating without context rather than a full review headline of a named show. |
