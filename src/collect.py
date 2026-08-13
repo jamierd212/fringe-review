@@ -879,9 +879,28 @@ def load_config(path: Path = CONFIG_PATH) -> dict:
         return yaml.safe_load(fh)
 
 
-def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None) -> int:
-    """Collect and rate everything new. Returns the number of rated reviews added."""
+def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None,
+        only: list[str] | None = None) -> int:
+    """
+    Collect and rate everything new. Returns the number of rated reviews added.
+
+    `only` restricts the sweep to named publications. Two sources are refused
+    from the scheduled runner but served normally from a home connection -
+    Broadway Baby answers it with a 403 from a data centre address - so they are
+    collected occasionally by hand from a machine they will talk to. Nothing
+    about the crawler changes when it runs there: same User-Agent, same crawl
+    delay, same robots.txt check, which for Broadway Baby explicitly permits us.
+    """
     collector = Collector(load_config())
+    if only:
+        wanted = {n.casefold() for n in only}
+        collector.publications = [p for p in collector.publications
+                                  if p["name"].casefold() in wanted]
+        missing = wanted - {p["name"].casefold() for p in collector.publications}
+        for name in sorted(missing):
+            print(f"  !! no enabled publication called {name!r}")
+        if not collector.publications:
+            return 0
     added = 0
     # Per-publication outcome, printed as a summary at the end. Four sources
     # have now gone quiet mid-festival without anything in the run saying so:

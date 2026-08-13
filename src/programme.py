@@ -28,6 +28,12 @@ import sqlite3
 import ssl
 import time
 import urllib.request
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
+
+# The Fringe publishes performance times in UTC; its own pages, and every
+# poster and ticket in the city, show them on an Edinburgh clock.
+EDINBURGH = ZoneInfo("Europe/London")
 from urllib.error import HTTPError, URLError
 
 import certifi
@@ -129,9 +135,27 @@ def _json_array(html: str, key: str):
         return None
 
 
+def _local_clock(stamp: str) -> str:
+    """
+    "2026-08-05T20:30:00.000Z" -> "21:30", the time on an Edinburgh clock.
+
+    The Fringe states performance times in UTC, with the Z to say so, while its
+    own pages show them in local time. Reading the characters straight out of
+    the string gave 20:30 for a show that starts at 21:30, and did it to every
+    show on the board, because the festival runs in August and August is BST.
+    """
+    try:
+        when = datetime.strptime(stamp[:19], "%Y-%m-%dT%H:%M:%S")
+    except ValueError:
+        return ""
+    if stamp.endswith("Z") or stamp[19:].startswith("+00"):
+        when = when.replace(tzinfo=timezone.utc).astimezone(EDINBURGH)
+    return when.strftime("%H:%M")
+
+
 def _start_time(html: str) -> str:
     """
-    The show's usual start time as HH:MM.
+    The show's usual start time as HH:MM, on an Edinburgh clock.
 
     A run lists every performance separately, but they share one time — 25
     performances of Simon Munnery, all at 11:50. The most common wins, so an
@@ -141,10 +165,11 @@ def _start_time(html: str) -> str:
 
     performances = _json_array(html, "performances") or []
     times = Counter(
-        p["dateTime"][11:16]
+        local
         for p in performances
         if isinstance(p, dict) and not p.get("cancelled")
         and isinstance(p.get("dateTime"), str) and len(p["dateTime"]) >= 16
+        and (local := _local_clock(p["dateTime"]))
     )
     return times.most_common(1)[0][0] if times else ""
 

@@ -24,6 +24,10 @@ def main() -> int:
                         help="read a month's archive instead of the live feed")
     parser.add_argument("--limit", type=int,
                         help="only process N items per publication (quick tests)")
+    parser.add_argument("--only", nargs="+", metavar="PUBLICATION",
+                        help="collect just these publications, named as in "
+                             "sources.yaml; for the sources the scheduled runner "
+                             "cannot reach")
     parser.add_argument("--health", action="store_true",
                         help="report sources that have stopped collecting, and "
                              "exit non-zero if any (so the run is marked failed "
@@ -80,10 +84,11 @@ def main() -> int:
         if months:
             for y, m in months:
                 print(f"\nCollecting reviews from {y}-{m:02d}\n")
-                collect.run(conn, backfill=(y, m), limit=args.limit)
+                collect.run(conn, backfill=(y, m), limit=args.limit,
+                            only=args.only)
         else:
             print("\nCollecting reviews\n")
-            collect.run(conn, backfill=None, limit=args.limit)
+            collect.run(conn, backfill=None, limit=args.limit, only=args.only)
 
     if not args.render:
         print("\nMatching reviews to shows")

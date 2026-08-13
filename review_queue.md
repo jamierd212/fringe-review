@@ -6,10 +6,8 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| The Skinny | [Freddie Meredith @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/freddie-meredith-pleasance-courtyard) | Freddie Meredith | 74% |
-| The Skinny | [Jess Fuchs @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/jess-fuchs-feral-pleasance-courtyard) | Jess Fuchs | 77% |
-| The Skinny | [Eleanor Morton @ Monkey Barrel](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/eleanor-morton-the-mermaid-monkey-barrel) | Eleanor Morton | 78% |
-| The Skinny | [Mike Wozniak @ Assembly Hall](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/mike-wozniak-assembly-hall) | Mike Wozniak | 80% |
+| ThreeWeeks Edinburgh | [Mothman: A Romance Musical](https://threeweeksedinburgh.com/article/mothman-a-romance-musical-finger-guns-and-liebenspiel-present/) | A Romance Musical | 79% |
+| ThreeWeeks Edinburgh | [The Trials Of Magnus Coffinkey](https://threeweeksedinburgh.com/article/the-trials-of-magnus-coffinkey-give-or-take-productions/) | The Trial of Magnus Coffinkey | 98% |
 
 ## Held — not on the leaderboard
 
