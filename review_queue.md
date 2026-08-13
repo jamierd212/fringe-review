@@ -6,12 +6,8 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| Chortle | [Amanda Knox: Cartwheel](https://www.chortle.co.uk/review/2026/08/12/61275/amanda_knox%3A_cartwheel) | Amanda Knox in Cartwheel | 93% |
-| Fest Magazine | [Review: Tamsyn Kelly: Rat’s Ass](https://festmag.com/2026/08/12/review-tamsyn-kelly-rats-ass/) | Rat's Ass | 95% |
-| The List | [Sarah Hester Ross: Serving Cunt](https://list.co.uk/news/sarah-hester-ross-serving-cunt-cabaret-review-glistening-camp-confidence-48778) | Serving C*nt | 95% |
-| The Skinny | [Max Fulham: Monkey Business @ Gilded Balloon](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/max-fulham-monkey-business-gilded-balloon-teviot) | Max Fulham's Monkey Business | 96% |
-| One4Review | [Kate Hammer: Government Approved Comedian 3.5☆☆☆](https://one4review.co.uk/2026/08/kate-hammer-government-approved-comedian-3-5%e2%98%86%e2%98%86%e2%98%86/) | Government Approved Comedian | 98% |
-| Corr Blimey | [Edinburgh Festival Fringe 2026 Review: Bucksomly Betrothals](https://corrblimey.uk/2026/08/12/edinburgh-festival-fringe-2026-review-bucksomly-betrothals-studio-thespacetriplex/) | Bucksomely Betrothals | 98% |
+| The Wee Review | [Dane Buckley: Darling](https://theweereview.com/review/dane-buckley-darling/) | Dane Buckley | 88% |
+| One4Review | [Man Sings the Same Song Over and Over Again for an Hour ★★★★½](https://one4review.co.uk/2026/08/man-sings-the-same-song-over-and-over-again-for-an-hour-%e2%98%85%e2%98%85%e2%98%85%e2%98%85%c2%bd/) | Man Sings The Same Song Over And Over Again For An Hour | 96% |
 
 ## Held — not on the leaderboard
 
@@ -21,6 +17,9 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The List | [SpinQueen™](https://list.co.uk/news/spinqueen-theatre-review-raw-unfiltered-rage-48787) | This appears to be a trademarked product name rather than a review headline of an Edinburgh festival show. |
+| The Scotsman | [Fringe dance reviews: not for glory | Collaborator | Snow | CODE | Common Ground](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/fringe-dance-reviews-not-for-glory-collaborator-snow-code-common-ground-8917734) | This is a round-up of multiple shows, not a review of a single named show. |
+| The Scotsman | [A&E](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-the-king-of-all-birds-baby-everything-puttana-the-second-best-school-shooting-ae-the-painted-revolutionary-8917948#and-e) | This headline is far too vague to identify a specific show or review at an Edinburgh festival. |
 | The Wee Review | [A&E](https://theweereview.com/review/ae-2/) | This headline is far too vague to identify a specific show or review at an Edinburgh festival. |
 | The Scotsman | [Fringe dance reviews: Superbowl Salsa | Taiwan Season: The Wall | Glob | Taiwan Season: Proximities | Forgive Me](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/fringe-dance-reviews-superbowl-salsa-taiwan-season-the-wall-glob-taiwan-season-proximities-forgive-me-8912704) | This is a round-up reviewing multiple shows rather than a single named show. |
 | The Scotsman | [Fringe theatre reviews: In the Black | We Had Fun | A Public Display of Affection | The Last Mad Man | NON HUMAN ANIMAL | CVNTCLAVE | Hamlet: Prince of Sweden](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-in-the-black-we-had-fun-a-public-display-of-affection-the-last-mad-man-non-human-animal-cvntclave-hamlet-prince-of-sweden-8914845) | This is a round-up reviewing multiple shows, not a single named show. |
@@ -218,6 +217,3 @@ table and re-run `python run.py --match` to let it back in.
 | One4Review | [The Best of Scottish Comedy – The Stand – 4****](https://one4review.co.uk/2025/08/the-best-of-scottish-comedy-the-stand-4/) | This is a round-up review of multiple comedy acts at a venue, not a review of one named show. |
 | One4Review | [Chortle Student Comedy Awards final 2025  4.5****](https://one4review.co.uk/2025/08/chortle-student-comedy-awards-final-2025-4-5/) | This is an awards announcement or news item about a competition, not a review of a single named show at an Edinburgh festival. |
 | One4Review | [Amy Annette 4.5****](https://one4review.co.uk/2025/08/amy-annette-4-5/) | This appears to be a rating or star rating without context rather than a full review headline of a named show. |
-| One4Review | [Mark Simmons – His Latest Jokes 4.5 ****](https://one4review.co.uk/2025/08/mark-simmons-his-latest-jokes-4-5/) | This appears to be a rating/review entry rather than a full article reviewing a named show at an Edinburgh festival, lacking context about venue, festival, or performance details. |
-| One4Review | [Are You There Margaret? It’s Me, Gahd 4****](https://one4review.co.uk/2025/08/are-you-there-margaret-its-me-gahd-4/) | This appears to be a rating or headline fragment rather than a clear review of a named show at an Edinburgh festival. |
-| One4Review | [The Blondie Story – 5*****](https://one4review.co.uk/2025/08/the-blondie-story-5/) | This appears to be a rating of a show but lacks a review article structure, venue, or Edinburgh festival context information needed to confirm it's reviewing a specific Edinburgh show. |
