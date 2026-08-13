@@ -326,7 +326,7 @@
 </header>
 
 <p class="meta">
-  Updated 13 August 2026, 16:50 BST &middot;
+  Updated 13 August 2026, 20:22 BST &middot;
   755 rated reviews across 554 shows
 </p>
 
@@ -17330,6 +17330,7 @@
                  || from !== null || to !== null;
     none.hidden = !(filtering && hits === 0);
     if (!none.hidden) none.textContent = 'No shows match those filters.';
+    writeState();
   }
 
 
@@ -17551,6 +17552,21 @@
 
     return {
       values: function () { return chosen; },
+      // Used when restoring from the URL. Silent: it does not call apply(),
+      // because the restore sets every control first and applies once at the end.
+      restore: function (list) {
+        list.forEach(function (v) {
+          if (chosen.indexOf(v) !== -1) return;
+          for (var i = 0; i < select.options.length; i++) {
+            if (select.options[i].value === v) {
+              chosen.push(v);
+              setDisabled(v, true);
+              return;
+            }
+          }
+        });
+        draw();
+      },
       clear: function () {
         chosen.forEach(function (v) { setDisabled(v, false); });
         chosen = [];
@@ -17561,6 +17577,66 @@
 
   venuePick = multiPick(fVenue, fVenueChosen);
   genrePick = multiPick(fGenre, fGenreChosen);
+
+
+  // Keep the filter in the address bar. Going to a show and pressing back used
+  // to land on a bare leaderboard with every choice thrown away; with the state
+  // in the URL the browser restores it for free, and a filtered view becomes
+  // something you can send to someone.
+  //
+  // replaceState, not pushState: typing in the search box would otherwise add a
+  // history entry per keystroke and back would walk through them one at a time.
+  function writeState() {
+    if (!window.history || !history.replaceState) return;
+    var params = [];
+    function add(key, value) {
+      params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+    }
+    var q = input.value.trim();
+    if (q) add('q', q);
+    // Repeated keys rather than one comma-joined value, because venue names
+    // contain commas - "Underbelly, Cowgate" would split into two.
+    if (venuePick) venuePick.values().forEach(function (v) { add('venue', v); });
+    if (genrePick) genrePick.values().forEach(function (v) { add('genre', v); });
+    if (fFrom && fFrom.value) add('from', fFrom.value);
+    if (fTo && fTo.value) add('to', fTo.value);
+    var url = location.pathname + (params.length ? '?' + params.join('&') : '');
+    history.replaceState(null, '', url);
+  }
+
+  function readState() {
+    if (!location.search) return false;
+    // A hand-edited or truncated URL must not be able to throw here: anything
+    // that escapes this function stops the rest of the script attaching its
+    // handlers, and "?q=%%%" alone was enough to leave Clear doing nothing.
+    function decode(text) {
+      try { return decodeURIComponent(text.replace(/\+/g, ' ')); }
+      catch (e) { return ''; }
+    }
+    var venues = [], genres = [], q = '', from = '', to = '';
+    location.search.slice(1).split('&').forEach(function (pair) {
+      var bits = pair.split('=');
+      var key = decode(bits[0]);
+      var value = decode(bits[1] || '');
+      if (key === 'venue') venues.push(value);
+      else if (key === 'genre') genres.push(value);
+      else if (key === 'q') q = value;
+      else if (key === 'from') from = value;
+      else if (key === 'to') to = value;
+    });
+    if (q) input.value = q;
+    if (venuePick) venuePick.restore(venues);
+    if (genrePick) genrePick.restore(genres);
+    function setIf(select, value) {
+      if (!select || !value) return;
+      for (var i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === value) { select.value = value; return; }
+      }
+    }
+    setIf(fFrom, from);
+    setIf(fTo, to);
+    return !!(q || venues.length || genres.length || from || to);
+  }
 
   if (fClear) {
     fClear.addEventListener('click', function () {
@@ -17582,6 +17658,20 @@
 
     });
   }
+  if (readState()) {
+    // The panel opens itself, so a restored filter is visible rather than
+    // quietly cutting the list down for reasons the reader cannot see.
+    if (toggle && panel) {
+      panel.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+    }
+    [fFrom, fTo].forEach(function (el) {
+      if (el) el.dispatchEvent(new Event('change', {bubbles: true}));
+    });
+    apply();
+  }
+
+
 })();
 </script>
 
