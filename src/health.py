@@ -103,14 +103,25 @@ def report(conn: sqlite3.Connection, publications: list[dict],
             problem TEXT PRIMARY KEY, first_seen TEXT, last_seen TEXT)""")
 
     quiet = silent_sources(conn, publications)
+    dead = unreachable_sources(conn, publications)
+    # A source already reported as unreachable does not also need reporting as
+    # silent: the silence is the symptom and the failed fetch is the cause.
+    named = {n for n, _ in dead}
+    quiet = [(n, w) for n, w in quiet if n not in named]
     broken = check_links(conn, collector) if collector is not None else []
     # Keyed on the kind of fault and the source, not the wording: "nothing for
     # 4 days" becomes "nothing for 5 days" tomorrow, and that is the same fault.
     current = {f"silent:{n}": ("Source silent", n, why) for n, why in quiet}
+    current.update({f"dead:{n}": ("Source unreachable", n, why) for n, why in dead})
     current.update({f"links:{n}": ("Links broken", n, why) for n, why in broken})
 
     known = {row[0] for row in conn.execute("SELECT problem FROM health_state")}
-    fresh = [k for k in current if k not in known]
+    # Judged per publication, not per problem. Broadway Baby moving from
+    # "silent" to "unreachable" is the same fault described better, and keying
+    # on the description alone announced it as newly broken and simultaneously
+    # as resolved.
+    known_pubs = {k.split(":", 1)[1] for k in known}
+    fresh = [k for k in current if k.split(":", 1)[1] not in known_pubs]
 
     for key, (title, name, why) in current.items():
         # ::error:: with a non-zero exit is what makes GitHub send an email;
@@ -118,8 +129,9 @@ def report(conn: sqlite3.Connection, publications: list[dict],
         level = "error" if key in fresh else "warning"
         print(f"::{level} title={title}::{name} — {why}")
 
-    for key in sorted(known - set(current)):
-        print(f"Resolved since the last run: {key.split(':', 1)[1]}")
+    current_pubs = {k.split(":", 1)[1] for k in current}
+    for name in sorted(known_pubs - current_pubs):
+        print(f"Resolved since the last run: {name}")
 
     now = datetime.now().isoformat(timespec="seconds")
     for key in current:
@@ -232,4 +244,40 @@ def check_links(conn: sqlite3.Connection, collector, per_publication: int = 2
         else:
             out.append((pub, f"{len(bad)} of {checked[pub]} links sampled "
                              f"led nowhere: {bad[0]}"))
+    return out
+
+
+def unreachable_sources(conn: sqlite3.Connection, publications: list[dict],
+                        runs: int = 3) -> list[tuple[str, str]]:
+    """
+    Sources whose discovery has come back empty on every recent run.
+
+    This is a stronger signal than silence, and an earlier one. "No reviews for
+    four days" is inference - a publication may simply not have posted. "The
+    last three runs fetched the index and got nothing" is a fact about our own
+    requests, and it separates a quiet week from a site that is refusing us or
+    has fallen over.
+
+    ThreeWeeks went down mid-festival and would have waited a day for the silence
+    rule to notice, having already failed three runs in a row by then.
+    """
+    enabled = {p["name"] for p in publications if p.get("enabled", True)}
+    out = []
+    for name in sorted(enabled):
+        probes = conn.execute(
+            """SELECT status, found FROM source_probes WHERE publication = ?
+               ORDER BY ran_at DESC LIMIT ?""", (name, runs)).fetchall()
+        if len(probes) < runs or any(p[1] for p in probes):
+            continue
+        statuses = {p[0] for p in probes}
+        # One status repeated is the useful case: 403 every time is a block,
+        # nothing every time is a connection that never completed.
+        if statuses == {None}:
+            why = f"{runs} runs, no connection at all — the site may be down"
+        elif len(statuses) == 1:
+            code = statuses.pop()
+            why = f"{runs} runs, HTTP {code} every time"
+        else:
+            why = f"{runs} runs, nothing found ({sorted(str(s) for s in statuses)})"
+        out.append((name, why))
     return out
