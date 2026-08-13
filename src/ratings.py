@@ -243,10 +243,16 @@ def from_numeric(text: str) -> Rating | None:
     # publication's CSS rule in sources.yaml points at the element holding it,
     # which from_css_rule handles with an explicit `scale: 100`.
 
-    # "four stars", "4 stars"
-    m = re.search(r"\b(one|two|three|four|five|[1-5])[\s-]+stars?\b", text, re.I)
+    # "four stars", "4 stars" — but not "two star performers", where the number
+    # counts the performers and "star" describes them. Requiring the plural, or
+    # a boundary that is not another word, is what separates a rating from a
+    # sentence: "These two star performers" was read as two stars and published
+    # as the rating for a show the same publication had given three.
+    m = re.search(r"\b(one|two|three|four|five|[1-5])[\s-]+stars\b"
+                  r"|\b(one|two|three|four|five|[1-5])[\s-]+star\b(?!\s+\w)",
+                  text, re.I)
     if m:
-        value = WORD_NUMBERS[m.group(1).lower()]
+        value = WORD_NUMBERS[(m.group(1) or m.group(2)).lower()]
         return _make(value, 5, f"{value} stars", "words")
 
     return None

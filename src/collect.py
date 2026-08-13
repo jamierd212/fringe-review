@@ -976,13 +976,17 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None,
                 ),
             )
 
-        # Per-publication title cleanups, applied before rating as well as
-        # after. A source whose rating sits in the feed never reaches the
-        # post-fetch cleanup inside rate(), because rate() returns as soon as
-        # the feed yields a rating.
-        for cand in new:
+        # Per-publication title cleanups. Deliberately NOT applied before the
+        # rating is read: Binge Fringe writes "<show>, <company>, EdFringe 2026
+        # ★★★", and the pattern that removes the company took the stars with it.
+        # Stripped first, the rating fell through to the words rule, which found
+        # "These two star performers" in the blurb and published that show at two
+        # stars when its own headline said three.
+        def tidy(cand):
             for pattern in pub.get("title_strip_patterns", []) or []:
-                cand.title = re.sub(pattern, "", cand.title, flags=re.I).strip(" -–—:|,")
+                cand.title = re.sub(pattern, "", cand.title,
+                                    flags=re.I).strip(" -–—:|,")
+            return cand
 
         rated = split_out = 0
         roundup_pattern = pub.get("roundup_pattern", r"\breviews\b")
@@ -994,7 +998,7 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None,
                 pieces = collector.expand_roundup(pub, cand)
                 if pieces:
                     for piece, rating in pieces:
-                        store(piece, rating)
+                        store(tidy(piece), rating)
                     db.mark_seen(conn, cand.url, "roundup")
                     rated += len(pieces)
                     split_out += 1
@@ -1004,6 +1008,8 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None,
 
             had_date = cand.published is not None
             rating = collector.rate(pub, cand)
+            # Cleaned only once the rating has been read out of it.
+            tidy(cand)
             if rating is None:
                 db.mark_seen(conn, cand.url, "no_rating")
                 continue

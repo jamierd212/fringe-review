@@ -15,7 +15,7 @@ import argparse
 import sys
 from datetime import date
 
-from src import collect, db, health, match, programme, render
+from src import collect, db, health, match, programme, recheck, render
 
 
 def main() -> int:
@@ -24,6 +24,9 @@ def main() -> int:
                         help="read a month's archive instead of the live feed")
     parser.add_argument("--limit", type=int,
                         help="only process N items per publication (quick tests)")
+    parser.add_argument("--recheck", action="store_true",
+                        help="re-read recently collected reviews and correct any "
+                             "rating the publication has since changed")
     parser.add_argument("--only", nargs="+", metavar="PUBLICATION",
                         help="collect just these publications, named as in "
                              "sources.yaml; for the sources the scheduled runner "
@@ -70,6 +73,16 @@ def main() -> int:
         conn.commit()
         print("Cleared all show assignments; re-matching from scratch.")
         args.match = True
+
+    if args.recheck:
+        print("\nRe-reading recent reviews\n")
+        n = recheck.run(conn, only=args.only)
+        print(f"\n  {n} rating(s) changed")
+        if n:
+            render.run(conn, year)
+            print("  pages rebuilt")
+        conn.close()
+        return 0
 
     if args.health:
         cfg = collect.load_config()
