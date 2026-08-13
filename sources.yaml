@@ -94,6 +94,14 @@ publications:
       # the 2026 board were companies, and the alternative is 19 wrong titles.
       - "\\s*\\([^)]*\\)\\s*$"
     verified: 2026-08-01
+    # STOPPED WORKING 11 August 2026. Their server accepts the TCP connection
+    # and then closes it the moment it has read our TLS ClientHello - every
+    # version, every cipher set, with and without ALPN, from three different
+    # networks. A browser on the same machine and the same network loads the
+    # site normally, so it is neither an outage nor an IP block: something is
+    # filtering on the shape of the handshake itself, which is decided before
+    # any User-Agent is sent. Left enabled: it costs one failed connection a run
+    # and will start working again by itself if they change it back.
     notes: >
       Long-running Fringe publication. Ratings render as plain "4/5" text.
 

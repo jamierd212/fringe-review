@@ -258,8 +258,14 @@ def unreachable_sources(conn: sqlite3.Connection, publications: list[dict],
     requests, and it separates a quiet week from a site that is refusing us or
     has fallen over.
 
-    ThreeWeeks went down mid-festival and would have waited a day for the silence
-    rule to notice, having already failed three runs in a row by then.
+    ThreeWeeks stopped answering mid-festival and would have waited a day for the
+    silence rule to notice, having already failed three runs in a row by then.
+
+    A status of None means the connection never completed, which reads like an
+    outage and is not necessarily one: ThreeWeeks drops the TLS handshake from
+    every command-line client while serving browsers normally from the same
+    machine and the same network. The wording says both, because from here the
+    two are indistinguishable.
     """
     enabled = {p["name"] for p in publications if p.get("enabled", True)}
     out = []
@@ -273,7 +279,8 @@ def unreachable_sources(conn: sqlite3.Connection, publications: list[dict],
         # One status repeated is the useful case: 403 every time is a block,
         # nothing every time is a connection that never completed.
         if statuses == {None}:
-            why = f"{runs} runs, no connection at all — the site may be down"
+            why = (f"{runs} runs, the connection never completed — either the "
+                   f"site is down or it is refusing this client")
         elif len(statuses) == 1:
             code = statuses.pop()
             why = f"{runs} runs, HTTP {code} every time"
