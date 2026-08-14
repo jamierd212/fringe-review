@@ -326,9 +326,23 @@ def from_badge(html: str, rule: dict) -> Rating | None:
 # --------------------------------------------------------------------------
 
 def from_marker_count(html: str, rule: dict) -> Rating | None:
+    """
+    Count a repeated marker — one per filled star.
+
+    `scope` narrows the page first, and is needed wherever a rating appears more
+    than once. The Stage puts its own rating under the headline and another
+    beside every related review in the sidebar, so counting across the whole page
+    gives whatever the last block happened to hold.
+    """
     marker = rule.get("marker")
     if not marker:
         return None
+    scope = rule.get("scope")
+    if scope:
+        found = re.search(scope, html, re.S | re.I)
+        if not found:
+            return None
+        html = found.group(1) if found.groups() else found.group(0)
     count = len(re.findall(marker, html))
     if not 1 <= count <= 5:
         # Zero means no rating on this page; more than five means the marker is

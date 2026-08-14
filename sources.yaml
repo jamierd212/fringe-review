@@ -198,6 +198,58 @@ publications:
 
   # ------------------------------------------------------ deliberately excluded
 
+  - name: The Stage
+    slug: thestage
+    homepage: https://www.thestage.co.uk/
+    # No feed of any kind; their reviews index is the way in and is updated as
+    # reviews are published.
+    discovery: index
+    index_urls:
+      - https://www.thestage.co.uk/reviews/
+    # Their hrefs are HTML-encoded (&#x2f; for /), so the pattern matches the
+    # slug rather than a path, and discovery makes it absolute.
+    link_pattern: 'reviews&#x2f;([a-z0-9-]{12,})"[^>]*>(.*?)</a>'
+    rating:
+      # Five images, one per star, the empty ones served as stageNoStar.svg.
+      # Scoped to the block under the headline: the same markup appears beside
+      # every related review in the sidebar, and counting the whole page picks up
+      # whichever came last.
+      type: marker_count
+      scope: '<h1[^>]*>.*?</h1>\s*<div class="aos-StarRating[^"]*">(.*?)</div>'
+      marker: 'stageStar\.svg'
+    fetch_page: true
+    date_from_page: 'class="[^"]*ArticleDate[^"]*"[^>]*>([^<]+)<'
+    date_format: '%b %d, %Y'
+    delay_seconds: 10          # what their robots.txt asks of search engines
+    # The index links each review twice, once by headline and once by a pull
+    # quote, so the link text is as likely to be "Fantastically physical
+    # performances" as the show's name. The page states it properly.
+    title_from_page: true
+    # Their page title is "<show> review at <venue>, Edinburgh: <verdict>".
+    # The central REVIEW_TAIL rule removes everything from " review" onwards.
+    verified: 2026-08-14
+    notes: >
+      robots.txt allows us and asks 10 seconds between requests, which we honour.
+      The rating is readable without a subscription even where the article body
+      is not.
+
+  - name: Everything Theatre
+    slug: everythingtheatre
+    homepage: https://everything-theatre.co.uk/
+    feed: https://everything-theatre.co.uk/feed/
+    pages: 4
+    rating:
+      type: auto              # schema.org Review with a ratingValue on the page
+    fetch_page: true
+    require_title_match: "\\bReview\\b"
+    title_strip_patterns:
+      - '^\s*Review:\s*'
+      - ',\s*[^,]+$'          # trailing venue, as in "Show, The Courtyard Theatre"
+    verified: 2026-08-14
+    notes: >
+      A London-focused site that covers Edinburgh through August, so most of the
+      feed is out of scope and the festival window does the filtering.
+
   - name: EdFringeReview
     slug: edfringereview
     homepage: https://www.edfringereview.com/
