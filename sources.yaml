@@ -198,6 +198,30 @@ publications:
 
   # ------------------------------------------------------ deliberately excluded
 
+  - name: EdFringeReview
+    slug: edfringereview
+    homepage: https://www.edfringereview.com/
+    api: firestore
+    api_base: https://firestore.googleapis.com/v1/projects/efr-app-ajk/databases/(default)/documents
+    public_base: https://www.edfringereview.com/review/r
+    feed: https://firestore.googleapis.com/v1/projects/efr-app-ajk/databases/(default)/documents/reviews
+    pages: 3                  # 300 a page, ordered newest first
+    rating:
+      type: none              # stated in the document; never inferred from a page
+    verified: 2026-08-14
+    notes: >
+      Their site renders nothing server-side — every review page is the same
+      3.8KB shell — so there is nothing to scrape. The reviews are in a public
+      Firestore database that answers unauthenticated reads: no key and no
+      credentials, exactly the request a reader's browser makes.
+
+      edfringereview.com/robots.txt is "Disallow:" with nothing after it.
+
+      ONLY APPROVED REVIEWS ARE TAKEN. Their app queries
+      where("status","==","APPROVED"); a separate getUnapprovedReviews is the
+      editors' moderation queue. Collecting those would put ratings on the board
+      that the publication has not published.
+
   - name: BroadwayWorld
     slug: broadwayworld
     homepage: https://www.broadwayworld.com/

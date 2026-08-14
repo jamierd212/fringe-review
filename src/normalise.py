@@ -81,7 +81,15 @@ FESTIVAL_TAIL = re.compile(
 RATING_FRAGMENT = re.compile(
     # (?<!\d) so the digit swallowed before a star run cannot be the last digit
     # of a year: "EdFringe 2025 ★★★★" was being reduced to "EdFringe 202".
-    rf"[\(\[]?\s*(?:(?<!\d)\d\s*)?[{FILLED_STARS}{EMPTY_STARS}]+\s*[\)\]]?"
+    # "4.⭐⭐⭐⭐.5" — a half star written with the digits either side of the run,
+    # which has to be matched whole or it leaves "4. .5" behind.
+    rf"[\(\[]?\s*\d\s*[.,]\s*(?:[{FILLED_STARS}{EMPTY_STARS}]\uFE0F?\s*)+[.,]\s*5\s*[\)\]]?"
+    rf"|"
+    # \uFE0F after each star: ⭐ is usually written ⭐️, with an invisible
+    # variation selector telling the font to draw it in colour. Matching only the
+    # star left a trail of those behind — "First Class Panic ️ ️ ️ ️ ️" was on the
+    # board, looking like stray spaces because that is all they render as.
+    rf"[\(\[]?\s*(?:(?<!\d)\d\s*)?(?:[{FILLED_STARS}{EMPTY_STARS}]\uFE0F?\s*)+[\)\]]?"
     rf"|[\(\[]?\s*\d\s*(?:[.,]\s*5|1\s*[/⁄]\s*2|½)?\s*\*{{1,5}}\s*[\)\]]?"
     rf"|\s\d\s*(?:[.,]5|1\s*[/⁄]\s*2|½)\s*$"
     rf"|\*{{2,5}}\s*$"
@@ -140,6 +148,10 @@ def clean_title(raw: str) -> str:
     text = unicodedata.normalize("NFKC", text)
     text = _unify_punctuation(text)
     text = RATING_FRAGMENT.sub(" ", text)
+    # Any variation selector left over. Titles stored before the pattern above
+    # understood them kept a trail of these, and they render as nothing at all,
+    # so "First Class Panic ️ ️ ️ ️ ️" looked like a title with a stutter.
+    text = text.replace("\uFE0F", "")
     # Headlines can stack prefixes ("Review: Edinburgh Fringe 2025: Diva"), so
     # strip repeatedly until nothing more comes off.
     for _ in range(3):

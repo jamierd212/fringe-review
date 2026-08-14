@@ -465,6 +465,71 @@ class Collector:
                 ))
         return found
 
+    def discover_firestore(self, pub: dict,
+                           backfill: tuple[int, int] | None) -> list[Candidate]:
+        """
+        EdFringeReview, whose pages are empty and whose reviews are in Firestore.
+
+        Their site renders nothing server-side - every review page is the same
+        3.8KB shell - so there is no page to read. The reviews sit in a Firestore
+        database that answers unauthenticated reads: no key, no credentials, the
+        same request the site itself makes from a reader's browser.
+
+        Only APPROVED reviews are taken. Their own app queries
+        where("status","==","APPROVED"), and a separate getUnapprovedReviews is
+        the editors' moderation queue - twenty of the last few hundred. Those are
+        not published, and publishing them here would put a rating on the board
+        that its own publication has not stood behind.
+
+        The rating is stated outright in the document, so no page is fetched and
+        nothing is inferred.
+        """
+        import json
+
+        base = pub.get("api_base", "")
+        public = pub.get("public_base", "")
+        found: list[Candidate] = []
+        token = None
+        for _ in range(int(pub.get("pages", 3))):
+            url = f"{base}/reviews?pageSize=300&orderBy=createdAt%20desc"
+            if token:
+                url += f"&pageToken={token}"
+            raw = self._get(url)
+            if raw is None:
+                break
+            try:
+                payload = json.loads(raw)
+            except ValueError:
+                break
+            docs = payload.get("documents", [])
+            if not docs:
+                break
+            for doc in docs:
+                fields = doc.get("fields", {})
+
+                def value(key):
+                    holder = fields.get(key)
+                    return next(iter(holder.values())) if holder else None
+
+                if value("status") != "APPROVED":
+                    continue
+                name, stars = value("name"), value("stars")
+                if not name or stars in (None, ""):
+                    continue
+                ident = doc["name"].rsplit("/", 1)[-1]
+                found.append(Candidate(
+                    url=f"{public}/{ident}",
+                    title=str(name),
+                    summary="",
+                    published=value("createdAt"),
+                    publication=pub["name"],
+                    known_stars=int(float(stars)),
+                ))
+            token = payload.get("nextPageToken")
+            if not token:
+                break
+        return found
+
     def discover_listing(self, pub: dict,
                          backfill: tuple[int, int] | None) -> list[Candidate]:
         """
@@ -601,6 +666,8 @@ class Collector:
             return self.discover_listing(pub, backfill)
         if pub.get("api") == "list":
             return self.discover_list(pub, backfill)
+        if pub.get("api") == "firestore":
+            return self.discover_firestore(pub, backfill)
 
         found: list[Candidate] = []
         for feed_url in self.feed_urls(pub, backfill):
