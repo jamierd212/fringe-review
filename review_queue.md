@@ -6,8 +6,9 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| ThreeWeeks Edinburgh | [Mothman: A Romance Musical](https://threeweeksedinburgh.com/article/mothman-a-romance-musical-finger-guns-and-liebenspiel-present/) | A Romance Musical | 79% |
-| ThreeWeeks Edinburgh | [The Trials Of Magnus Coffinkey](https://threeweeksedinburgh.com/article/the-trials-of-magnus-coffinkey-give-or-take-productions/) | The Trial of Magnus Coffinkey | 98% |
+| All Edinburgh Theatre | [The Bear](https://www.alledinburghtheatre.com/the-bear-egtg-royal-scots-club-edfringe-2026-review/) | The Bear | 75% |
+| The Skinny | [Sam Eley is Basil Crumbwick @ Monkey Barrel](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/sam-eley-is-basil-crumbwick-monkey-barrel) | Sam Eley is Basil Crumbwick: Soul Sewage | 85% |
+| The List | [JLCO With Yuja Wang](https://list.co.uk/news/jlco-with-yuja-wang-music-review-confident-commanding-compositions-48805) | JLCO with Yuja Wang, Usher Hall | 95% |
 
 ## Held — not on the leaderboard
 
@@ -17,6 +18,12 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The Skinny | [Doomsday Jockeys @ Pizza Geeks](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/doomsday-jockeys-pizza-geeks) | This appears to be a venue listing or announcement rather than a review of a named show at an Edinburgh festival. |
+| The Scotsman | [Sean Shibe, Queen’s Hall](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/eif-music-reviews-sean-shibe-jlco-with-yuja-wang-8920073#sean-shibe-queen-s-hall) | This appears to be a concert review or announcement rather than a review of a named Edinburgh festival show, as it lacks clear indication of festival context. |
+| The Scotsman | [Fringe comedy reviews: Bebe Cave | Eleanor Morton | Sophie Duker | Olga Koch](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-bebe-cave-eleanor-morton-sophie-duker-olga-koch-8920590) | This is a round-up reviewing multiple named shows rather than a single show. |
+| The Scotsman | [Fringe theatre reviews: ALONE | Blackbox | Hadid | BASIC BALD B*TCH | Live From The Afterlife + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-alone-blackbox-hadid-basic-bald-btch-live-from-the-afterlife-8920885) | This is a round-up of multiple shows with multiple reviews, not a review of a single named show. |
+| The Scotsman | [Fringe theatre reviews: The Distance | Motorway | SLAY | Bi-Curious George: Snail Trail + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-the-distance-motorway-slay-bi-curious-george-snail-trail-dinosaurs-8920993) | This is a round-up of multiple shows, not a review of a single named show. |
+| The Scotsman | [Fringe theatre reviews: As Far As We Know | Nesting | Surreally Good | Playback + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-as-far-as-we-know-nesting-surreally-good-playback-you-come-from-a-long-line-of-shallow-people-thermodrama-8921021) | This is a round-up of multiple shows, not a review of a single named show. |
 | The Skinny | [Zoe Wohlfeld @ Underbelly Cowgate](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/zoe-wohlfeld-underbelly-cowgate) | This appears to be a venue listing or schedule entry rather than a review headline, lacking evaluative language or critical content. |
 | The List | [Maribou State](https://list.co.uk/news/maribou-state-music-review-woozy-and-elastic-48793) | The headline is only a name with no review text, context, or indication it reviews a specific Edinburgh festival show. |
 | The Scotsman | [Fringe comedy reviews: Madeleine Brettingham | Pierre Novellie | Those People | Paddy Young | Tom Ballard](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/edinburgh-fringe-comedy-reviews-madeleine-brettingham-pierre-novellie-those-people-paddy-young-tom-ballard-8918204) | This is a round-up of multiple shows in a single review, not a review of one named show. |
@@ -211,9 +218,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Scotsman | [Melbourne Symphony Orchestra](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/edinburgh-international-festival-music-reviews-melbourne-symphony-orchestra-master-musicians-with-peirani-and-segal-william-barton-up-late-with-joep-beving-maarten-vos-leonidas-kavakos-the-apollon-5286417#melbourne-symphony-orchestra) | This appears to be a venue or organization name rather than a review headline, and lacks the structure of a festival review. |
 | The Scotsman | [Artist Rooms: Bourgeois, Chadwick, Mapplethorpe, Edinburgh review: 'confusing'](https://www.scotsman.com/arts-and-culture/art/artist-rooms-bourgeois-chadwick-mapplethorpe-edinburgh-review-confusing-5287441) | This is a review of an art exhibition featuring multiple artists, not a single named show or performance at an Edinburgh festival. |
 | One4Review | [Tall Tails – 5*****](https://one4review.co.uk/2025/08/tall-tails-5/) | This appears to be a rating entry rather than a review article, likely part of a round-up or list of shows. |
-| One4Review | [Comedy Sheep: Best of Wales Stand-Up – 4****](https://one4review.co.uk/2025/08/comedy-sheep-best-of-wales-stand-up-4/) | This appears to be a round-up or collection of multiple Welsh stand-up acts rather than a review of one named show at an Edinburgh festival. |
-| One4Review | [Ella 5*****](https://one4review.co.uk/2025/08/ella-5/) | This appears to be a rating or score rather than a review headline for a named show at an Edinburgh festival. |
-| One4Review | [40 Years of Fringe : Jenny Eclair 5*****](https://one4review.co.uk/2025/08/40-years-of-fringe-jenny-eclair-5/) | This is a round-up or special feature covering 40 years of the Fringe rather than a review of one named show. |
-| One4Review | [Elements – 4.5****](https://one4review.co.uk/2025/08/elements-4-5/) | This appears to be a rating snippet rather than a full review headline of a named show at Edinburgh festival. |
-| One4Review | [All Made Up Podcast 4****](https://one4review.co.uk/2025/08/19452/) | This appears to be a rating or listing entry rather than a full review article of a single named show. |
-| One4Review | [Terry Pratchett’s Monstrous Regiment 4****](https://one4review.co.uk/2025/08/terry-pratchetts-monstrous-regiment-4/) | This appears to be a rating or review snippet rather than a full review article of a named show at an Edinburgh festival. |
