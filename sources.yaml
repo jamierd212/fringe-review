@@ -198,6 +198,37 @@ publications:
 
   # ------------------------------------------------------ deliberately excluded
 
+  - name: BroadwayWorld
+    slug: broadwayworld
+    homepage: https://www.broadwayworld.com/
+    # No feed covers their Edinburgh coverage — the UK regional RSS carries two
+    # items — but the Scotland section lists every festival review as it lands.
+    discovery: index
+    index_urls:
+      - https://www.broadwayworld.com/scotland/
+    # Year-agnostic on purpose: the date filter decides which festival a review
+    # belongs to, so nothing here needs editing each August.
+    link_pattern: 'href="(/[^"]*article/EDINBURGH-\d{4}-Review-[^"]*)"[^>]*>(.*?)</a>'
+    rating:
+      # The rating is stated nowhere in their text and their structured data
+      # marks each piece a CriticReview with no rating in it. It is in the
+      # filename of an image: cloudimages.broadwayworld.com/4stars.png.
+      type: pattern
+      pattern: 'cloudimages\.broadwayworld\.com/(\d)(andahalf)?stars?\.png'
+      scale: 5
+    fetch_page: true
+    # Link text is often empty (the thumbnail anchor), and the headline on the
+    # page is the fuller "EDINBURGH 2026: Review: SHOW, Venue".
+    title_from_page: true
+    title_strip_patterns:
+      - '^\s*EDINBURGH\s+\d{4}\s*:?\s*Review\s*:?\s*'
+      - ',\s*[^,]+$'          # trailing venue, as with their house style
+    verified: 2026-08-14
+    notes: >
+      robots.txt allows everything except admin paths. Reviews appear under
+      /scotland/, /westend/ and /uk-regional/ but all are listed on the Scotland
+      section page, which is the single cheapest entry point.
+
   - name: Broadway Baby
     slug: broadwaybaby
     homepage: https://broadwaybaby.com/

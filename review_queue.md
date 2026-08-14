@@ -4,10 +4,7 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-| Publication | Headline | Matched to | Confidence |
-|---|---|---|---|
-| ThreeWeeks Edinburgh | [Mothman: A Romance Musical](https://threeweeksedinburgh.com/article/mothman-a-romance-musical-finger-guns-and-liebenspiel-present/) | A Romance Musical | 79% |
-| ThreeWeeks Edinburgh | [The Trials Of Magnus Coffinkey](https://threeweeksedinburgh.com/article/the-trials-of-magnus-coffinkey-give-or-take-productions/) | The Trial of Magnus Coffinkey | 98% |
+_Nothing to check. 🎉_
 
 ## Held — not on the leaderboard
 
@@ -17,6 +14,7 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| BroadwayWorld | [COLIN CLOUD: HOAX at Pleasance Courtyard](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-COLIN-CLOUD-HOAX-at-Pleasance-Courtyard-The-Grand-20260813) | not in any programme; no AI check available |
 | The Skinny | [Zoe Wohlfeld @ Underbelly Cowgate](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/zoe-wohlfeld-underbelly-cowgate) | This appears to be a venue listing or schedule entry rather than a review headline, lacking evaluative language or critical content. |
 | The List | [Maribou State](https://list.co.uk/news/maribou-state-music-review-woozy-and-elastic-48793) | The headline is only a name with no review text, context, or indication it reviews a specific Edinburgh festival show. |
 | The Scotsman | [Fringe comedy reviews: Madeleine Brettingham | Pierre Novellie | Those People | Paddy Young | Tom Ballard](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/edinburgh-fringe-comedy-reviews-madeleine-brettingham-pierre-novellie-those-people-paddy-young-tom-ballard-8918204) | This is a round-up of multiple shows in a single review, not a review of one named show. |
@@ -216,4 +214,3 @@ table and re-run `python run.py --match` to let it back in.
 | One4Review | [40 Years of Fringe : Jenny Eclair 5*****](https://one4review.co.uk/2025/08/40-years-of-fringe-jenny-eclair-5/) | This is a round-up or special feature covering 40 years of the Fringe rather than a review of one named show. |
 | One4Review | [Elements – 4.5****](https://one4review.co.uk/2025/08/elements-4-5/) | This appears to be a rating snippet rather than a full review headline of a named show at Edinburgh festival. |
 | One4Review | [All Made Up Podcast 4****](https://one4review.co.uk/2025/08/19452/) | This appears to be a rating or listing entry rather than a full review article of a single named show. |
-| One4Review | [Terry Pratchett’s Monstrous Regiment 4****](https://one4review.co.uk/2025/08/terry-pratchetts-monstrous-regiment-4/) | This appears to be a rating or review snippet rather than a full review article of a named show at an Edinburgh festival. |

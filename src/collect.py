@@ -18,7 +18,7 @@ import feedparser
 import requests
 import yaml
 
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 from urllib.robotparser import RobotFileParser
 
 from . import db
@@ -388,10 +388,15 @@ class Collector:
                     best[url] = text
 
             for url, label in best.items():
+                # Listings often link relatively; the stored URL must be one a
+                # reader can follow from anywhere.
+                url = urljoin(index_url, url)
                 # The date sits in the URL, which is the only date this source
                 # gives us — without it every review would fall back to the
-                # current year and land on the wrong leaderboard.
-                m = _re.search(r"/(\d{4})/(\d{2})/(\d{2})/", url)
+                # current year and land on the wrong leaderboard. Two shapes:
+                # a path of /YYYY/MM/DD/, and a -YYYYMMDD suffix on the slug.
+                m = _re.search(r"/(\d{4})/(\d{2})/(\d{2})/", url) \
+                    or _re.search(r"-(\d{4})(\d{2})(\d{2})(?:$|[^\d])", url)
                 published = f"{m.group(1)}-{m.group(2)}-{m.group(3)}T12:00:00Z" if m else None
                 if backfill and m:
                     if (int(m.group(1)), int(m.group(2))) != backfill:

@@ -408,6 +408,33 @@ def from_css_rule(html: str, rule: dict) -> Rating | None:
 # The cascade
 # --------------------------------------------------------------------------
 
+def from_pattern(html: str, rule: dict) -> Rating | None:
+    """
+    A rating written into the markup rather than the text.
+
+    BroadwayWorld states it in an image filename - 4stars.png - which no amount
+    of reading the page as prose will find: there is no rating in their text, and
+    their structured data marks the piece a CriticReview with no rating in it.
+
+    The pattern must capture the number in group 1, and may capture a half in
+    group 2. First match wins, so it should be anchored on something specific to
+    the review itself; a page of recommendations carries other shows' ratings.
+    """
+    if not html:
+        return None
+    m = re.search(rule["pattern"], html, re.I)
+    if not m:
+        return None
+    try:
+        value = float(m.group(1))
+    except (TypeError, ValueError):
+        return None
+    if len(m.groups()) > 1 and m.group(2):
+        value += 0.5
+    return _make(value, float(rule.get("scale", 5)),
+                 m.group(0)[-28:], "pattern")
+
+
 def find_rating(*, title: str = "", summary: str = "", html: str = "",
                 rule: dict | None = None) -> Rating | None:
     """
@@ -431,6 +458,9 @@ def find_rating(*, title: str = "", summary: str = "", html: str = "",
 
     if kind == "marker_count":
         return from_marker_count(html, rule)
+
+    if kind == "pattern":
+        return from_pattern(html, rule)
 
     if html:
         found = from_jsonld(html)
