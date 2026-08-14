@@ -91,8 +91,14 @@ def rating_style(html: str) -> list[str]:
     found = []
     if any(c in html for c in STAR_CHARS):
         found.append("star characters")
-    if re.search(r'src="[^"]*?(\d)(?:andahalf)?stars?\.(?:png|gif|svg|jpg)', html, re.I):
+    # Loose on purpose. BroadwayWorld writes 4stars.png and Theatre Weekly
+    # New-4Star-350x71.png; an exact shape catches one and misses the other, and
+    # a missed rating reads as "this publication doesn't rate", which is the
+    # wrong answer to give about a publication that plainly does.
+    if re.search(r'src="[^"]*?(\d)\s*(?:andahalf)?[-_ ]?stars?\b[^"]*"', html, re.I):
         found.append("rating in an image filename")
+    if re.search(r'alt="[^"]*\b(?:one|two|three|four|five|\d)[-\s]?stars?\b[^"]*"', html, re.I):
+        found.append("rating in an image's alt text")
     if re.search(r'"(?:ratingValue|reviewRating)"', html):
         found.append("structured data")
     if re.search(r"\b(?:one|two|three|four|five|[1-5])\s+stars\b", html, re.I):

@@ -198,6 +198,76 @@ publications:
 
   # ------------------------------------------------------ deliberately excluded
 
+  - name: Time Out
+    slug: timeout
+    homepage: https://www.timeout.com/
+    discovery: index
+    index_urls:
+      - https://www.timeout.com/edinburgh/theatre/edinburgh-fringe-international-festival-reviews
+    link_pattern: 'href="(/edinburgh/(?:theatre|comedy)/[a-z0-9-]{12,})"[^>]*>(.*?)</a>'
+    rating:
+      # Their stars are five identical inline SVGs, filled by CSS, so counting
+      # them gives five every time. The rating is in the label beside them, put
+      # there for screen readers, which is the only place on the page it is
+      # written down.
+      type: pattern
+      pattern: 'class="sr-only">(\d)(?:\.\d)? out of 5 stars'
+      scale: 5
+    fetch_page: true
+    title_from_page: true
+    delay_seconds: 10
+    verified: 2026-08-14
+    notes: >
+      Not every Time Out review carries a rating; the ones that do not are
+      skipped, as anywhere else.
+
+      THEY 404 UNDER LOAD. Requesting several pages back to back had them
+      answering 404 to URLs that had worked moments before, and the error page
+      carries star markup of its own — 5 and 4 — which would be collected as a
+      rating if it were ever mistaken for an article. Ten seconds between
+      requests keeps them answering normally.
+
+  - name: British Theatre Guide
+    slug: britishtheatreguide
+    homepage: https://britishtheatreguide.info/
+    feed: https://britishtheatreguide.info/reviews.atom
+    pages: 3
+    rating:
+      # Font Awesome icons, one per star, with no empty or half variants drawn —
+      # a four-star review renders four and stops. Scoped to the rating span,
+      # though nothing else on the page uses the icon today.
+      type: marker_count
+      scope: '<span class="rating">(.*?)</span>'
+      marker: 'fa-solid fa-star'
+    fetch_page: true
+    verified: 2026-08-14
+    notes: >
+      Feed titles are the show name alone, which is unusually clean. The feed
+      covers all their reviews, so the festival window does the filtering.
+
+  - name: Theatre Weekly
+    slug: theatreweekly
+    homepage: https://theatreweekly.com/
+    feed: https://theatreweekly.com/feed/
+    pages: 4
+    rating:
+      # The rating is the filename of a star graphic: New-4Star-350x71.png. The
+      # alt text says "Four Star Review" but only on some of them, so the
+      # filename is the reliable half.
+      type: pattern
+      pattern: '/wp-content/uploads/[^"?]*?(\d)Star[^"?]*\.png'
+      scale: 5
+    fetch_page: true
+    require_title_prefix: "Edinburgh Fringe Review:"
+    title_strip_patterns:
+      - '^\s*Edinburgh Fringe Review:\s*'
+      - '\s+at\s+[^,]+$'      # " at theSpace (Triplex BIG)"
+    verified: 2026-08-14
+    notes: >
+      They cover UK theatre year-round and title their festival pieces
+      "Edinburgh Fringe Review: <show> at <venue>", so the prefix filter keeps
+      the rest of their output out.
+
   - name: The Stage
     slug: thestage
     homepage: https://www.thestage.co.uk/

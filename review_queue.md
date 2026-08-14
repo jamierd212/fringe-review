@@ -4,9 +4,7 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-| Publication | Headline | Matched to | Confidence |
-|---|---|---|---|
-| Everything Theatre | [Black Box](https://everything-theatre.co.uk/2026/08/review-black-box-belly-button-at-underbelly/) | Blackbox | 94% |
+_Nothing to check. 🎉_
 
 ## Held — not on the leaderboard
 
@@ -16,6 +14,8 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Theatre Weekly | [SpinQueen™](https://theatreweekly.com/edinburgh-fringe-review-spinqueen-at-greenside-george-street-jade-studio/) | This appears to be a trademarked product name rather than a review headline of an Edinburgh festival show. |
+| British Theatre Guide | [What Ever Happened To That Guy?](https://www.britishtheatreguide.info/reviews/what-ever-happe-pleasance-dome-25846) | not in any programme; no AI check available |
 | The Stage | [Game of Thrones: The Mad King review at the RSC: Tremendous stagecraft](https://www.thestage.co.uk/reviews/game-of-thrones-the-mad-king-review-royal-shakespeare-theatre-stratford-upon-avon-george-rr-martin) | not in any programme; no AI check available |
 | The Stage | [How the Other Half Loves at the Old Vic, London: complex dance](https://www.thestage.co.uk/reviews/how-the-other-half-loves-review-old-vic-theatre-london-alan-ayckbourn) | not in any programme; no AI check available |
 | The Stage | [Cats at Regent’s Park Open Air Theatre, London: musical tapestry](https://www.thestage.co.uk/reviews/cats-review-regents-park-open-air-theatre-london) | not in any programme; no AI check available |
@@ -214,5 +214,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Scotsman | [Buttalk](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-go-the-alchemy-of-sadness-buttalk-going-soft-5275782#buttalk) | This appears to be just a title with no context indicating it reviews a specific named show at an Edinburgh festival. |
 | The Scotsman | [The Alchemy of Sadness](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-go-the-alchemy-of-sadness-buttalk-going-soft-5275782#alchemy-of-sadness) | This appears to be a title or concept rather than a review headline, with no indication it reviews a named show at an Edinburgh festival. |
 | The Scotsman | [Edinburgh International Film Festival reviews: Hysteria | Concessions | On the Sea | In Transit](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/film-and-tv/edinburgh-international-film-festival-reviews-hysteria-concessions-on-the-sea-in-transit-5275880) | This is a round-up of multiple films rather than a review of a single named show. |
-| The Scotsman | [The Players of Diadon](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-refuse-tilly-no-body-the-players-of-diadon-5276236#players-of-diadon) | This appears to be a show title rather than a review headline, lacking the structure and language typical of a festival review. |
-| The Scotsman | [Tilly No-Body](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-refuse-tilly-no-body-the-players-of-diadon-5276236#tilly-no-body) | This appears to be a title or name rather than a review headline, as it lacks review language, critical descriptors, or clear indication of being a review of a show. |
