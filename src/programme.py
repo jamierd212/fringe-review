@@ -392,8 +392,40 @@ def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dic
         candidates = [normalise(row["title"])]
         if row["performer"]:
             candidates.append(normalise(f"{row['performer']} {row['title']}"))
+
+        # And every fuller spelling any publication has used for this show. The
+        # Skinny headlined "Dane Buckley @ Pleasance Courtyard", so the show was
+        # stored as "Dane Buckley" and matched nothing; The Wee Review had called
+        # it "Dane Buckley: Darling", which is what the programme lists.
+        #
+        # Only aliases that CONTAIN the title are tried. A shorter one is the
+        # dangerous direction - this show also answers to "darling", and some
+        # other act's Darling would be a confident, wrong match.
+        title_words = set(candidates[0].split())
+        for (alias,) in conn.execute(
+                "SELECT alias FROM aliases WHERE show_id = ?", (row["id"],)):
+            if alias not in candidates and title_words <= set(alias.split()):
+                candidates.append(alias)
+        # Longest first, so the most specific spelling wins where several match.
+        candidates.sort(key=len, reverse=True)
         hit = next(((f, i[k]) for k in candidates for f, i in indexes if k in i), None)
-        key = candidates[0]
+        key = normalise(row["title"])
+
+        # Still nothing: the programme may list the show under a longer name
+        # beginning with what we have. A publication that headlines "Dan Tiernan
+        # @ Monkey Barrel" leaves us the performer and no show, while the
+        # programme has "Dan Tiernan: Quartz And All".
+        #
+        # Accepted only when exactly one programme entry begins with it, so
+        # Spencer Jones - who has two this year - is left alone rather than
+        # guessed at, and only for names of two words or more, because a
+        # one-word title like "Muse" prefixes half the programme.
+        if hit is None and len(key.split()) >= 2:
+            for fest, index in indexes:
+                starts = [k for k in index if k.startswith(key + " ")]
+                if len(starts) == 1:
+                    hit = (fest, index[starts[0]])
+                    break
         if hit is None and row["edfringe_url"]:
             # Linked by the gate under a spelling the title alone does not
             # reproduce; the URL it found is still the right page to read.
@@ -427,3 +459,57 @@ def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dic
     if per_festival:
         print("    linked: " + ", ".join(f"{v} {k}" for k, v in per_festival.items()))
     return {"matched": matched, "missed": missed}
+
+
+def merge_by_programme(conn: sqlite3.Connection, year: int) -> int:
+    """
+    Fold together shows that turn out to be the same programme entry.
+
+    Two shows in one year pointing at the same page in the festival programme
+    are one show. It happens when publications name a run differently and
+    neither spelling reaches the other: "Dan Tiernan" from a review headlined
+    with the venue, "Quartz And All" from one headlined with the title. Both sat
+    on the leaderboard, each with a fraction of the reviews.
+
+    The title kept is decided by the programme, not by us. Its entry reads
+    "marty gleeson dog ear", so the show we hold as "Marty Gleeson" is a prefix
+    of it and the one we hold as "Dog Ear" is not: the prefix is the performer,
+    the remainder is the show, and the show is what a reader is looking for.
+    Counting reviews instead kept "Mike Wozniak" over "The Bench".
+    """
+    keys = {}
+    for fest in FESTIVALS:
+        for key, url in programme_index(fest).items():
+            keys.setdefault(url, key)
+
+    groups: dict[str, list] = {}
+    for row in conn.execute(
+            """SELECT id, title, edfringe_url,
+                      (SELECT COUNT(*) FROM reviews WHERE show_id = shows.id) AS n
+                 FROM shows
+                WHERE year = ? AND edfringe_url IS NOT NULL AND edfringe_url <> ''""",
+            (year,)):
+        groups.setdefault(row["edfringe_url"], []).append(row)
+
+    merged = 0
+    for url, shows in groups.items():
+        if len(shows) < 2:
+            continue
+        key = keys.get(url, "")
+        def rank(r):
+            mine = normalise(r["title"])
+            # Not a prefix of the programme's own name -> the show's own title.
+            return (bool(key) and not key.startswith(mine + " "), r["n"], len(r["title"]))
+        shows.sort(key=rank, reverse=True)
+        keeper, rest = shows[0], shows[1:]
+        for other in rest:
+            conn.execute("UPDATE reviews SET show_id = ? WHERE show_id = ?",
+                         (keeper["id"], other["id"]))
+            conn.execute("UPDATE OR IGNORE aliases SET show_id = ? WHERE show_id = ?",
+                         (keeper["id"], other["id"]))
+            conn.execute("DELETE FROM aliases WHERE show_id = ?", (other["id"],))
+            conn.execute("DELETE FROM shows WHERE id = ?", (other["id"],))
+            print(f"    merged {other['title'][:34]!r} into {keeper['title'][:34]!r}")
+            merged += 1
+    conn.commit()
+    return merged

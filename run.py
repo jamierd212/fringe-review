@@ -120,6 +120,11 @@ def main() -> int:
         counts = programme.enrich(conn, current)
         if counts["matched"] or counts["missed"]:
             print(f"  programme: {counts['matched']} linked, {counts['missed']} not found")
+        # Two shows on the same programme entry are one show, however
+        # differently the publications named them.
+        merged = programme.merge_by_programme(conn, current)
+        if merged:
+            print(f"  merged {merged} duplicate show(s)")
 
     paths = render.run(conn, year)
     stats = db.stats(conn)
