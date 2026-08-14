@@ -198,6 +198,42 @@ publications:
 
   # ------------------------------------------------------ deliberately excluded
 
+  - name: The Arts Desk
+    slug: theartsdesk
+    homepage: https://theartsdesk.com/
+    # Their RSS is abandoned — nothing in it is newer than December 2025, and the
+    # Edinburgh entries in it are navigation links dated last September. The
+    # site itself is current; /reviews lists everything as it is published.
+    discovery: index
+    index_urls:
+      - https://theartsdesk.com/topics/edinburgh-festival
+      - https://theartsdesk.com/reviews
+    link_pattern: 'href="(/(?:theatre|comedy|dance|opera|classical-music|new-music)/[a-z0-9-]{12,})"[^>]*>(.*?)</a>'
+    rating:
+      # Drupal's fivestar widget: five divs whatever the rating, each holding a
+      # span that is "on" or "off". Their festival round-ups leave the widget
+      # unset, so every span reads "off", the count comes to zero and the article
+      # is skipped — which is right, because a round-up's ratings belong to the
+      # shows inside it and are not stated here.
+      type: marker_count
+      scope: '<div class="fivestar-widget-static[^"]*">(.*?)</div>\s*</div>'
+      marker: '<span class="on">'
+    fetch_page: true
+    title_from_page: true
+    date_from_page: '(\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4})'
+    date_format: '%d %B %Y'
+    # They review the whole of the arts, all year: an unrestricted run collected
+    # 29 reviews of which 26 were the Barbican, Dublin and Kilkenny. None could
+    # match a Fringe show, so none did any harm, but none should have been asked
+    # for either.
+    require_title_match: "edinburgh|fringe"
+    verified: 2026-08-14
+    notes: >
+      Their festival ROUND-UPS carry no rating — the widget is left unset, every
+      star reads "off", and they are skipped. That is most of their Fringe
+      coverage, so expect a handful of reviews rather than a stream: the ones
+      that count are the single-show reviews and the EIF concerts.
+
   - name: Time Out
     slug: timeout
     homepage: https://www.timeout.com/
