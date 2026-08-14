@@ -27,11 +27,14 @@ from pathlib import Path
 from urllib.parse import urljoin, urlsplit
 from urllib.robotparser import RobotFileParser
 
+import time
+
 import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.collect import load_config                    # noqa: E402
+from src.ratings import find_rating                   # noqa: E402
 
 UA = load_config()["defaults"].get(
     "user_agent", "FringeLeaderboardBot/0.1 (+https://fringestars.com/bot.html)")
@@ -110,23 +113,35 @@ def rating_style(html: str) -> list[str]:
     return found
 
 
-def sample_review(session, base, feed_url):
-    """A likely review URL, from the feed if there is one, else the home page."""
+def sample_reviews(session, base, feed_url, want=2):
+    """
+    Real article URLs, never the feed itself.
+
+    British Theatre Guide was written off because their atom feed lives at
+    /reviews.atom, so "the first link containing 'review'" was the feed, and
+    reading a feed as though it were an article finds no rating in it.
+    """
+    out = []
     if feed_url:
-        text = get(session, feed_url).text or ""
-        links = re.findall(r"<link[^>]*>([^<]+)</link>|<link[^>]*href=\"([^\"]+)\"", text)
-        flat = [a or b for a, b in links]
-        for u in flat:
-            if "review" in u.lower():
-                return u
-        if len(flat) > 1:
-            return flat[1]
+        import feedparser
+        parsed = feedparser.parse(get(session, feed_url).text or "")
+        for entry in parsed.entries:
+            link = entry.get("link")
+            if link and link.rstrip("/") != feed_url.rstrip("/"):
+                out.append(link)
+            if len(out) >= want:
+                return out
     html = get(session, base + "/").text or ""
-    hrefs = re.findall(r'href="([^"]+)"', html)
-    for h in hrefs:
-        if "review" in h.lower() and "#" not in h:
-            return urljoin(base, h)
-    return None
+    for href in re.findall(r'href="([^"]+)"', html):
+        url = urljoin(base, href)
+        if url.rstrip("/") in (base, feed_url or ""):
+            continue
+        if re.search(r"/(?:reviews?|edinburgh)/", url) and "#" not in url:
+            if url not in out:
+                out.append(url)
+        if len(out) >= want:
+            break
+    return out
 
 
 def probe(session, host: str) -> str:
@@ -136,17 +151,22 @@ def probe(session, host: str) -> str:
     if not allowed:
         return f"{verdict}"
     feed = find_feed(session, base)
-    url = sample_review(session, base, feed)
-    if not url:
-        return f"{verdict}; no feed, and no review link found to sample"
-    page = get(session, url)
-    if page.status_code != 200:
-        return f"{verdict}; feed={'yes' if feed else 'no'}; sample page HTTP {page.status_code}"
-    styles = rating_style(page.text)
-    where = "feed" if feed else "no feed (index or sitemap needed)"
-    if not styles:
-        return f"{verdict}; {where}; NO RATING FOUND on {url[-40:]}"
-    return f"{verdict}; {where}; rating via {', '.join(styles)}"
+    urls = sample_reviews(session, base, feed)
+    if not urls:
+        return f"{verdict}; no feed, and no article found to sample"
+    where = "feed" if feed else "no feed (index needed)"
+    lines = []
+    for url in urls:
+        time.sleep(2)                      # two pages per site, unhurried
+        page = get(session, url)
+        if page.status_code != 200:
+            lines.append(f"HTTP {page.status_code}")
+            continue
+        found = find_rating(html=page.text, rule={"type": "auto"})
+        styles = rating_style(page.text)
+        got = f"{found.stars}* via {found.method}" if found else "extractor found nothing"
+        lines.append(f"{got}" + (f" [{'; '.join(styles)}]" if styles else " [no signal]"))
+    return f"{verdict}; {where}; " + " | ".join(lines)
 
 
 CANDIDATES = [

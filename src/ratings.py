@@ -97,6 +97,29 @@ def _make(value: float, maximum: float, original: str, method: str) -> Rating | 
 # Strategy 1: schema.org structured data. Unambiguous when present.
 # --------------------------------------------------------------------------
 
+def from_microdata(html: str) -> Rating | None:
+    """
+    schema.org stated as attributes rather than as a JSON block.
+
+    The same vocabulary, written the older way: <span itemprop="ratingValue">4.0
+    </span>, or a <meta> carrying it. A Younger Theatre marks up its reviews
+    exactly as thoroughly as anyone using JSON-LD, and read as nothing at all
+    because we only looked for the script tag.
+    """
+    value = re.search(r'itemprop="ratingValue"[^>]*>\s*([\d.]+)', html, re.I) \
+        or re.search(r'<meta[^>]+itemprop="ratingValue"[^>]+content="([\d.]+)"', html, re.I)
+    if not value:
+        return None
+    best = re.search(r'itemprop="bestRating"[^>]+content="([\d.]+)"', html, re.I) \
+        or re.search(r'itemprop="bestRating"[^>]*>\s*([\d.]+)', html, re.I)
+    try:
+        rating = float(value.group(1))
+        maximum = float(best.group(1)) if best else 5.0
+    except (TypeError, ValueError):
+        return None
+    return _make(rating, maximum, f"{_tidy(rating)}/{_tidy(maximum)}", "microdata")
+
+
 def from_jsonld(html: str) -> Rating | None:
     for block in re.findall(
         r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
@@ -477,7 +500,7 @@ def find_rating(*, title: str = "", summary: str = "", html: str = "",
         return from_pattern(html, rule)
 
     if html:
-        found = from_jsonld(html)
+        found = from_jsonld(html) or from_microdata(html)
         if found:
             return found
 
