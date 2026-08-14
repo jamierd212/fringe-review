@@ -198,6 +198,30 @@ publications:
 
   # ------------------------------------------------------ deliberately excluded
 
+  - name: RGM
+    slug: rgm
+    homepage: https://rgm.press/
+    # Their feed is music-led and carries none of this; the Edinburgh tag page
+    # lists every festival round-up they publish.
+    discovery: index
+    index_urls:
+      - https://rgm.press/tag/edinburgh-fringe/
+    link_pattern: 'href="(https://rgm\.press/edinburgh-fringe[^"]*)"[^>]*>(.*?)</a>'
+    rating:
+      type: auto
+    fetch_page: true
+    # Everything they publish about the Fringe is a round-up of several shows,
+    # titled "top picks" rather than "reviews", so the default pattern misses
+    # them and each article would be filed as a single review of five shows.
+    roundups: true
+    roundup_pattern: 'top picks|picks of the day|reviews'
+    verified: 2026-08-14
+    notes: >
+      Each show in a round-up is named in a bold line, reviewed in prose, and
+      then rated in a paragraph of its own further down — a different shape from
+      the round-ups where the rating sits beside the name, and one split_roundup
+      now handles.
+
   - name: The Arts Desk
     slug: theartsdesk
     homepage: https://theartsdesk.com/

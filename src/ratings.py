@@ -162,11 +162,24 @@ def _walk(node):
 # Strategy 2: literal star characters, e.g. "★★★★☆" or "4⭐⭐⭐⭐"
 # --------------------------------------------------------------------------
 
+def _drop_variation_selectors(text: str) -> str:
+    """
+    Remove U+FE0F, which sits invisibly after most emoji stars.
+
+    "⭐️⭐️⭐️⭐️" is four stars with a selector after each, telling the font to draw
+    them in colour. To a pattern matching consecutive star characters it is four
+    stars with something between them, so it matched nothing at all — and that
+    is how the character is usually written.
+    """
+    return text.replace("\uFE0F", "")
+
+
 def from_star_chars(text: str) -> Rating | None:
     """
     Count runs of star characters. We take the LONGEST run in the text, because
     pages often contain a stray star in a sidebar or a "related reviews" list.
     """
+    text = _drop_variation_selectors(text)
     pattern = f"[{FILLED_STARS}{EMPTY_STARS}]{{3,5}}"
     best = None
     for run in re.findall(pattern, text):
@@ -235,6 +248,7 @@ def from_asterisks(text: str) -> Rating | None:
     too easily emphasis markup or a footnote marker, and a missed rating is a far
     cheaper mistake than a wrong one.
     """
+    text = _drop_variation_selectors(text)
     m = re.search(r"(?<![\w*])([1-5])\s*(\*{1,5})(?![\w*])", text)
     if m:
         value = int(m.group(1))
@@ -579,6 +593,30 @@ def split_roundup(html: str) -> list[tuple[str, Rating]]:
             continue
         seen.add(key)
         out.append((title, rating))
+
+    if out:
+        return out
+
+    # A second shape, where the rating is not beside the name but below the
+    # review: a bold line naming the show, some paragraphs of prose, then a
+    # paragraph holding nothing but stars. rgm.press writes their daily Fringe
+    # round-ups that way, and read the first way they yield nothing at all.
+    heading = ""
+    for tag in soup.find_all(["strong", "b", "h2", "h3", "h4", "p"]):
+        text = " ".join(tag.get_text().split())
+        if not text:
+            continue
+        stripped = text.strip(FILLED_STARS + EMPTY_STARS + "\uFE0F .5")
+        if not stripped and any(ch in text for ch in FILLED_STARS):
+            # An element that is only stars: the rating for whatever was last
+            # named above it.
+            rating = from_star_chars(text) or from_half_stars(text)
+            if rating and heading and heading.casefold() not in seen:
+                seen.add(heading.casefold())
+                out.append((heading, rating))
+            heading = ""
+        elif tag.name in ("strong", "b", "h2", "h3", "h4") and 3 < len(text) < 90:
+            heading = text
     return out
 
 
