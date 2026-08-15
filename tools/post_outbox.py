@@ -53,27 +53,36 @@ def session(handle: str, password: str) -> dict:
     return r.json()
 
 
-def post(auth: dict, text: str) -> str:
-    """Post one message. Returns its URI."""
-    # The link is included as a facet so it is clickable rather than bare text.
-    facets = []
-    start = text.find("https://")
-    if start >= 0:
-        end = len(text.encode()) if text.endswith("/") else len(text)
-        facets = [{
-            "index": {"byteStart": len(text[:start].encode()),
-                      "byteEnd": len(text[:end].encode())},
-            "features": [{"$type": "app.bsky.richtext.facet#link",
-                          "uri": text[start:end].strip()}],
-        }]
+def post(auth: dict, text: str, url: str) -> str:
+    """
+    Post one message. Returns its URI.
+
+    The link is attached as a facet, which is how Bluesky makes a span of text
+    clickable. That lets the text read "fringestars.com/show/..." while the link
+    goes to the real address, scheme and all — the facet carries the URL, the
+    text only has to be legible.
+
+    Facet offsets are counted in BYTES, not characters. Show titles carry em
+    dashes, curly quotes and the odd accent, so measuring in characters puts the
+    link in the wrong place the moment a title is not plain ASCII.
+    """
     from datetime import datetime, timezone
+
     record = {
         "$type": "app.bsky.feed.post",
         "text": text,
         "createdAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     }
-    if facets:
-        record["facets"] = facets
+    shown = url.replace("https://www.", "").replace("https://", "")
+    start = text.find(shown)
+    if start >= 0:
+        record["facets"] = [{
+            "index": {
+                "byteStart": len(text[:start].encode("utf-8")),
+                "byteEnd": len(text[:start + len(shown)].encode("utf-8")),
+            },
+            "features": [{"$type": "app.bsky.richtext.facet#link", "uri": url}],
+        }]
     r = requests.post(
         f"{API}/com.atproto.repo.createRecord",
         headers={"Authorization": f"Bearer {auth['accessJwt']}"},
@@ -121,7 +130,7 @@ def main() -> int:
             print(f"  skipped (too long): {n['title'][:40]}")
             continue
         try:
-            uri = post(auth, n["text"])
+            uri = post(auth, n["text"], n["url"])
             print(f"  posted: {n['title'][:40]}  {uri[-20:]}")
             sent.append(n["show_id"])
         except requests.RequestException as exc:

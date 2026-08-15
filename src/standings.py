@@ -27,6 +27,9 @@ from pathlib import Path
 TOP = 20
 OUTBOX = Path(__file__).resolve().parent.parent / "data" / "outbox.json"
 SITE = "https://www.fringestars.com"
+# What the link reads as. The scheme and the www are noise in a congratulation,
+# and the facet carries the real address, so the text can be the readable form.
+SITE_SHOWN = "fringestars.com"
 # Bluesky's limit. Kept here because the message is composed to fit it.
 LIMIT = 300
 
@@ -61,7 +64,7 @@ def compose(show, position: int, previous: int) -> str:
             f"Congratulations! {title} is up to #{position} on fringestars.com "
             f"- the definitive Edinburgh festival reviews aggregator.\n"
             f"{average} Star Rating from {_plural(len(show.reviews), 'review')}.\n"
-            f"{SITE}/show/{show.id}/"
+            f"{SITE_SHOWN}/show/{show.id}/"
         )
 
     text = build(show.title)
@@ -102,6 +105,9 @@ def update(conn: sqlite3.Connection, year: int, placed, notify: bool = True) -> 
                     "position": position,
                     "previous": previous,
                     "text": compose(show, position, previous),
+                    # The address the link goes to, kept beside the text it is
+                    # shown as, so the sender does not have to reconstruct it.
+                    "url": f"{SITE}/show/{show.id}/",
                     "written_at": datetime.now().isoformat(timespec="seconds"),
                 })
         conn.execute(
