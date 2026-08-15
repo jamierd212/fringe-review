@@ -71,10 +71,11 @@ def draw_card(placed, when: date | None = None) -> Path:
     d.text((60, 54), "EDINBURGH FESTIVALS", font=_font("bold", 34), fill=MUTED)
     d.text((60, 96), "Top 20", font=_font("bold", 76), fill=INK)
     d.text((60, 186), when.strftime("%-d %B %Y"), font=_font("regular", 30), fill=MUTED)
-    # The ordering is by five- and four-star reviews, not by average, so the
-    # average alone makes the card look mis-sorted: 5.0 sits below 4.9 and 3.8
-    # above 4.4. Saying what ranks them, and showing how many reviews each
-    # average rests on, is what makes the order legible.
+    # No scores. The board is ranked by five- and four-star reviews rather than
+    # by average, so printing the average beside the position made the card look
+    # mis-sorted — 5.0 below 4.9, 3.8 above 4.4 — and needed a legend to explain
+    # a number nobody had asked for. Leaving it out says the same thing and
+    # leaves the titles room to be read.
     d.text((60, 226), "ranked by 5 and 4 star reviews",
            font=_font("regular", 26), fill=MUTED)
 
@@ -86,17 +87,10 @@ def draw_card(placed, when: date | None = None) -> Path:
         y = top + index * row_h
         d.rounded_rectangle([48, y, WIDTH - 48, y + row_h - 8], radius=10, fill=CARD)
         d.text((72, y + 11), str(position), font=pos_font, fill=MUTED)
-        rating = f"{show.mean:.1f} · {len(show.reviews)}"
-        rating_w = d.textlength(rating, font=rate_font)
-        # The title takes whatever the position and rating leave, and no more.
-        title = _fit(d, show.title, title_font, WIDTH - 200 - rating_w - 96)
+        title = _fit(d, show.title, title_font, WIDTH - 146 - 96)
         d.text((146, y + 11), title, font=title_font, fill=INK)
-        d.text((WIDTH - 72 - rating_w, y + 13), rating, font=rate_font, fill=STAR)
 
     d.text((60, HEIGHT - 74), "fringestars.com", font=_font("bold", 30), fill=INK)
-    legend = "average · reviews"
-    d.text((WIDTH - 60 - d.textlength(legend, font=_font("regular", 24)), HEIGHT - 70),
-           legend, font=_font("regular", 24), fill=MUTED)
 
     OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / f"top20-{when.isoformat()}.png"
@@ -119,7 +113,7 @@ def caption(conn: sqlite3.Connection, placed, when: date | None = None) -> str:
     lines = [f"Edinburgh Festivals Top 20 — {when.strftime('%-d %B')}", ""]
     for position, show in placed[:TOP]:
         handle = handles.get(show.id)
-        lines.append(f"{position}. {show.title} — {show.mean:.1f}"
+        lines.append(f"{position}. {show.title}"
                      + (f" @{handle}" if handle else ""))
     named = sum(1 for _, s in placed[:TOP] if s.id in handles)
     # Counted, not written down: the number of publications changes most weeks,
