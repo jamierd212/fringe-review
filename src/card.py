@@ -27,6 +27,7 @@ LOGO = Path(__file__).resolve().parent.parent / "assets" / "logo.png"
 WIDTH, HEIGHT = 1080, 1350
 TOP = 20
 LOGO_H = 224           # the height of the header block it sits beside
+ROWS_TOP = 286         # where the first white box starts
 # How wide a show's name may run before it is cut. Set by eye, at the length of
 # "Man Sings The Same Song Over And Over" — the longest title on the board and
 # the one that decides where this needs to sit.
@@ -111,7 +112,11 @@ def _logo(img: Image.Image) -> int:
     logo = logo.crop(box)
     scale = LOGO_H / logo.height
     logo = logo.resize((max(1, round(logo.width * scale)), LOGO_H), Image.LANCZOS)
-    img.paste(logo, (WIDTH - 60 - logo.width, 54), logo)
+    # Centred in the band above the first row, rather than hung from the top
+    # margin. The header text is left-aligned and ragged; the badge is the only
+    # thing on the right, so it has nothing to line up with and reads best
+    # sitting in the middle of the space it has.
+    img.paste(logo, (WIDTH - 60 - logo.width, (ROWS_TOP - LOGO_H) // 2), logo)
     return logo.width
 
 
@@ -127,11 +132,19 @@ def draw_card(placed, when: date | None = None) -> Path:
     # to shrink to clear the badge; stacked, only the qualifier is narrow enough
     # to need the room, and "Top 20" stays as large as the card allows.
     d.text((60, 54), "EDINBURGH FESTIVALS", font=_font("bold", 34), fill=MUTED)
-    d.text((60, 96), "Top 20", font=_font("bold", 76), fill=INK)
-    d.text((60, 184), "Critically Reviewed Shows", font=_font("bold", 38), fill=INK)
-    d.text((60, 234), when.strftime("%-d %B %Y"), font=_font("regular", 26), fill=MUTED)
 
-    top = 286
+    # The date sits beside the number, on its baseline rather than its box, so
+    # the two sit on one line however their sizes differ. Anchored, not nudged:
+    # the previous arrangement stacked them and a fourth line of header was more
+    # than the space could carry once the badge grew.
+    number = _font("bold", 76)
+    d.text((60, 165), "Top 20", font=number, fill=INK, anchor="ls")
+    d.text((60 + d.textlength("Top 20", font=number) + 26, 165),
+           when.strftime("%-d %B %Y"), font=_font("regular", 32),
+           fill=MUTED, anchor="ls")
+    d.text((60, 184), "Critically Reviewed Shows", font=_font("bold", 38), fill=INK)
+
+    top = ROWS_TOP
     row_h = (HEIGHT - top - 96) // TOP
     pos_font = _font("bold", 30)
     title_font = _font("bold", 30)
