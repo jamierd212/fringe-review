@@ -46,7 +46,13 @@ CREATE TABLE IF NOT EXISTS standings (
 
 
 def _migrate(conn: sqlite3.Connection) -> None:
-    """Add `best` to a standings table written before it existed."""
+    """
+    Add `best` to a standings table written before it existed.
+
+    Kept although nothing reads it yet: it was added to decide who to tag, and
+    tagging is gone, but a show's high-water mark is a real fact that costs one
+    column to keep and cannot be reconstructed later if it is not recorded now.
+    """
     conn.executescript(SCHEMA)
     columns = {row[1] for row in conn.execute("PRAGMA table_info(standings)")}
     if "best" not in columns:
@@ -99,25 +105,6 @@ def positions(conn: sqlite3.Connection, year: int) -> dict[str, int]:
     _migrate(conn)
     return {row[0]: row[1] for row in conn.execute(
         "SELECT show_id, position FROM standings WHERE year = ?", (year,))}
-
-
-def peaks(conn: sqlite3.Connection, year: int, placed) -> set[str]:
-    """
-    Shows that have just gone higher than they have ever been.
-
-    Read before update() records today, and the reason tagging is worth doing at
-    all. A show that sat at 5, slipped to 10 and climbed back to 6 has no news:
-    it has been higher, and being told about it is a notification for nothing.
-    Reaching 4 is news, and only that is worth putting in somebody's inbox.
-
-    A show never seen before counts, since it has never been higher than this.
-    """
-    _migrate(conn)
-    best = {row[0]: row[1] for row in conn.execute(
-        "SELECT show_id, best FROM standings WHERE year = ? AND best IS NOT NULL",
-        (year,))}
-    return {show.id for position, show in placed
-            if best.get(show.id) is None or position < best[show.id]}
 
 
 def update(conn: sqlite3.Connection, year: int, placed, notify: bool = True) -> list[dict]:
