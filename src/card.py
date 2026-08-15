@@ -20,11 +20,13 @@ import sqlite3
 from datetime import date
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 OUT = Path(__file__).resolve().parent.parent / "data" / "instagram"
+LOGO = Path(__file__).resolve().parent.parent / "assets" / "logo.png"
 WIDTH, HEIGHT = 1080, 1350
 TOP = 20
+LOGO_H = 190           # the height of the header block it sits beside
 
 # The site's own palette, so the card is recognisably the same thing.
 BG = (249, 228, 224)
@@ -62,17 +64,52 @@ def _fit(draw, text: str, font, room: int) -> str:
     return text.rstrip() + "…"
 
 
+def _logo(img: Image.Image) -> bool:
+    """
+    Place the logo in the top right corner. Returns whether one was found.
+
+    A missing logo is not an error. The card is drawn every morning by a machine
+    nobody is watching, and a leaderboard without its badge is worth more than no
+    leaderboard at all.
+
+    Transparency matters here: the card's background is the site's pink, so a
+    logo saved on its own cream square lands as a visible tile rather than a
+    mark. Where the file has an alpha channel it is honoured; where it has none
+    the near-white corner pixels are made transparent, which rescues a flat
+    export without touching a logo that was drawn properly.
+    """
+    if not LOGO.exists():
+        return False
+    logo = Image.open(LOGO).convert("RGBA")
+    if not any(px < 250 for px in logo.getchannel("A").getdata()):
+        corner = logo.getpixel((0, 0))[:3]
+        if min(corner) > 225:
+            logo.putalpha(Image.eval(
+                logo.convert("L"), lambda v: 0 if v > 225 else 255).filter(
+                    ImageFilter.GaussianBlur(0.6)))
+
+    box = logo.getbbox() or (0, 0, *logo.size)     # drop the empty margin
+    logo = logo.crop(box)
+    scale = LOGO_H / logo.height
+    logo = logo.resize((max(1, round(logo.width * scale)), LOGO_H), Image.LANCZOS)
+    img.paste(logo, (WIDTH - 60 - logo.width, 54), logo)
+    return True
+
+
 def draw_card(placed, when: date | None = None) -> Path:
     """Render the top twenty. Returns the path written."""
     when = when or date.today()
     img = Image.new("RGB", (WIDTH, HEIGHT), BG)
     d = ImageDraw.Draw(img)
 
+    # "Top 20 - Critically Reviewed Shows" set on one line has to drop to 54px to
+    # fit the width, and at that size it stops carrying in a feed thumbnail. So
+    # the number keeps its 76px and the qualifier sits beneath it.
     d.text((60, 54), "EDINBURGH FESTIVALS", font=_font("bold", 34), fill=MUTED)
     d.text((60, 96), "Top 20", font=_font("bold", 76), fill=INK)
-    d.text((60, 186), when.strftime("%-d %B %Y"), font=_font("regular", 30), fill=MUTED)
-    d.text((60, 226), "ranked by 5 and 4 star reviews",
-           font=_font("regular", 26), fill=MUTED)
+    d.text((60, 184), "Critically Reviewed Shows", font=_font("bold", 38), fill=INK)
+    d.text((60, 234), when.strftime("%-d %B %Y"), font=_font("regular", 26), fill=MUTED)
+    _logo(img)
 
     top = 286
     row_h = (HEIGHT - top - 96) // TOP
