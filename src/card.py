@@ -26,8 +26,12 @@ OUT = Path(__file__).resolve().parent.parent / "data" / "instagram"
 LOGO = Path(__file__).resolve().parent.parent / "assets" / "logo.png"
 WIDTH, HEIGHT = 1080, 1350
 TOP = 20
-LOGO_H = 224           # the height of the header block it sits beside
-ROWS_TOP = 286         # where the first white box starts
+LOGO_H = 190           # the height of the header block it sits beside
+ROWS_TOP = 266         # where the first white box starts
+# Fixed rather than derived from the space left over. Deriving it meant every
+# trim to the header silently made the rows TALLER, spreading the white space
+# rather than reducing it — the opposite of what shrinking the header is for.
+ROW_H = 48
 # How wide a show's name may run before it is cut. Set by eye, at the length of
 # "Man Sings The Same Song Over And Over" — the longest title on the board and
 # the one that decides where this needs to sit.
@@ -138,19 +142,18 @@ def draw_card(placed, when: date | None = None) -> Path:
     # the only way to place lines of 34, 76 and 38 evenly, because each box
     # carries a different amount of air above and below its letters.
     number = _font("bold", 76)
-    d.text((60, 77), "Edinburgh Festivals", font=_font("bold", 34), fill=MUTED,
+    d.text((60, 73), "Edinburgh Festivals", font=_font("bold", 34), fill=MUTED,
            anchor="ls")
-    d.text((60, 177), "Top 20", font=number, fill=INK, anchor="ls")
+    d.text((60, 166), "Top 20", font=number, fill=INK, anchor="ls")
     # The date sits beside the number, on the same baseline, so two very
     # different sizes still read as one line.
-    d.text((60 + d.textlength("Top 20", font=number) + 26, 177),
+    d.text((60 + d.textlength("Top 20", font=number) + 26, 166),
            when.strftime("%-d %B %Y"), font=_font("regular", 32),
            fill=MUTED, anchor="ls")
-    d.text((60, 250), "Critically Reviewed Shows", font=_font("bold", 38),
+    d.text((60, 234), "Critically Reviewed Shows", font=_font("bold", 38),
            fill=INK, anchor="ls")
 
-    top = ROWS_TOP
-    row_h = (HEIGHT - top - 96) // TOP
+    top, row_h = ROWS_TOP, ROW_H
     pos_font = _font("bold", 30)
     title_font = _font("bold", 30)
     meta_font = _font("regular", 23)
