@@ -26,7 +26,7 @@ OUT = Path(__file__).resolve().parent.parent / "data" / "instagram"
 LOGO = Path(__file__).resolve().parent.parent / "assets" / "logo.png"
 WIDTH, HEIGHT = 1080, 1350
 TOP = 20
-LOGO_H = 190           # the height of the header block it sits beside
+LOGO_H = 224           # the height of the header block it sits beside
 # How wide a show's name may run before it is cut. Set by eye, at the length of
 # "Man Sings The Same Song Over And Over" — the longest title on the board and
 # the one that decides where this needs to sit.
