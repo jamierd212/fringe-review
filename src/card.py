@@ -128,7 +128,23 @@ def caption(conn: sqlite3.Connection, placed, when: date | None = None) -> str:
               "",
               "#edfringe #edinburghfringe #edfringe2026 #fringe #theatre #comedy"]
     text = "\n".join(lines)
-    path = OUT / f"caption-{when.isoformat()}.txt"
     OUT.mkdir(parents=True, exist_ok=True)
-    path.write_text(text)
+    (OUT / f"caption-{when.isoformat()}.txt").write_text(text)
+
+    # The handles on their own, in order, for tagging the photo in the app.
+    # A caption mention notifies; a photo tag notifies AND puts the post in that
+    # account's tagged feed, which is the more visible of the two and cannot be
+    # automated without the Graph API. Having them as a list makes typing them
+    # into "Tag people" a matter of copying twenty short strings rather than
+    # picking them out of a paragraph.
+    tags, missing = [], []
+    for position, show in placed[:TOP]:
+        handle = handles.get(show.id)
+        (tags if handle else missing).append(
+            f"@{handle}" if handle else f"{position}. {show.title}")
+    lines = ["Tag these in the photo (Instagram allows 20):", ""] + tags
+    if missing:
+        lines += ["", "No handle on their programme entry — worth a look if you "
+                      "want them tagged:", ""] + missing
+    (OUT / f"tags-{when.isoformat()}.txt").write_text("\n".join(lines))
     return text, named
