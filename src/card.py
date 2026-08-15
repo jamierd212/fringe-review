@@ -45,6 +45,9 @@ TITLE_MAX = 630
 # so these leave 24px of padding at each end. They were 146 and 92, which was
 # generous padding bought at the cost of the venue on the longest rows.
 TEXT_L, TEXT_R = 134, 72
+# The least a shortened venue may be and still name somewhere. Below this it
+# is dropped in favour of the time alone.
+VENUE_MIN = 110
 
 # The site's own palette, so the card is recognisably the same thing.
 BG = (249, 228, 224)
@@ -187,18 +190,27 @@ def draw_card(placed, when: date | None = None) -> Path:
         title = _fit(d, show.title, title_font, TITLE_MAX)
         d.text((TEXT_L, mid), title, font=title_font, fill=INK, anchor="lm")
 
-        # Where the two would meet, the venue goes before the time does: the
-        # time is the shorter of the pair and the more use to somebody deciding
-        # what to see tonight.
+        # Where the two would meet, the venue gives way — but by being shortened
+        # rather than dropped. "Assembly George Sq…" still tells a reader which
+        # side of town to walk to; nothing at all tells them less than the row
+        # above with a venue on it, and reads like a mistake beside it.
+        #
+        # Below a working minimum it is dropped after all: three letters and an
+        # ellipsis name no venue in Edinburgh, and the time is worth more than a
+        # stub.
         limit = WIDTH - TEXT_R
         after_title = TEXT_L + d.textlength(title, font=title_font) + 28
-        for detail in ("  ·  ".join(t for t in (show.venue, show.start_time) if t),
-                       show.start_time or ""):
-            width = d.textlength(detail, font=meta_font)
-            if detail and limit - width >= after_title:
-                d.text((limit, mid), detail, font=meta_font,
-                       fill=(140, 140, 140), anchor="rm")
-                break
+        room = limit - after_title
+        venue, clock = show.venue or "", show.start_time or ""
+        detail = "  ·  ".join(t for t in (venue, clock) if t)
+        if venue and d.textlength(detail, font=meta_font) > room:
+            tail = f"  ·  {clock}" if clock else ""
+            spare = room - d.textlength(tail, font=meta_font)
+            detail = (_fit(d, venue, meta_font, spare) + tail
+                      if spare >= VENUE_MIN else clock)
+        if detail and d.textlength(detail, font=meta_font) <= room:
+            d.text((limit, mid), detail, font=meta_font,
+                   fill=(140, 140, 140), anchor="rm")
 
     d.text((60, HEIGHT - 82), "fringestars.com", font=_font("bold", 42), fill=INK)
 
