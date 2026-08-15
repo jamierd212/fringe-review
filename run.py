@@ -144,11 +144,15 @@ def main() -> int:
         from src import rank
         ranked, _rest = rank.leaderboard(conn, date.today().year)
         placed = rank.placement(conn, ranked, date.today().year)
+        # Read BEFORE update overwrites it: the card marks shows that have
+        # climbed, and it is drawn after the standings are recorded, so by then
+        # yesterday's positions are already today's.
+        yesterday = standings.positions(conn, date.today().year)
         notes = standings.update(conn, date.today().year, placed)
         queued = standings.queue(notes)
         # The day's card and caption, for posting by hand. Drawn every run
         # because the board moves every run; nothing is sent anywhere.
-        image = card.draw_card(placed)
+        image = card.draw_card(placed, previous=yesterday)
         _text, named = card.caption(conn, placed)
         print(f"  card: {image.name} ({named} of 20 with an Instagram handle)")
         if queued:

@@ -50,6 +50,13 @@ TEXT_L, TEXT_R = 134, 72
 # The least a shortened venue may be and still name somewhere. Below this it
 # is dropped in favour of the time alone.
 VENUE_MIN = 110
+# The position number's right edge, and where a climber's arrow sits beside it.
+# Set against "20", the widest number on the card at 39px: at POS_R 116 it starts
+# at 77, so an arrow ending at 73 all but touched it. These leave 12px on the
+# worst row and more on every other.
+POS_R, ARROW_X = 120, 52
+# Green, for the one thing on the card that is good news.
+RISE = (34, 139, 87)
 
 # The site's own palette, so the card is recognisably the same thing.
 BG = (249, 228, 224)
@@ -151,8 +158,26 @@ def _logo(img: Image.Image) -> int:
     return logo.width
 
 
-def draw_card(placed, when: date | None = None) -> Path:
-    """Render the top twenty. Returns the path written."""
+def _rise(d: ImageDraw.ImageDraw, mid: float) -> None:
+    """A small triangle beside the number, for a show that has climbed."""
+    w, h = 15, 13
+    d.polygon([(ARROW_X + w / 2, mid - h / 2), (ARROW_X, mid + h / 2),
+               (ARROW_X + w, mid + h / 2)], fill=RISE)
+
+
+def draw_card(placed, when: date | None = None,
+              previous: dict[str, int] | None = None) -> Path:
+    """
+    Render the top twenty. Returns the path written.
+
+    `previous` is where each show stood at the end of the last run, used to
+    mark the ones that have climbed. Posting the same twenty names every
+    morning gives a reader nothing to look for; an arrow gives them the
+    day's news at a glance.
+
+    Absent, nothing is marked. That is the honest state on the first run of a
+    year, when every show is new and none of them has moved.
+    """
     when = when or date.today()
     img = Image.new("RGB", (WIDTH, HEIGHT), BG)
     d = ImageDraw.Draw(img)
@@ -202,7 +227,11 @@ def draw_card(placed, when: date | None = None) -> Path:
         # other two sitting low, which is what put the whole row against the
         # bottom edge before.
         mid = y + (row_h - 8) / 2
-        d.text((72, mid), str(position), font=pos_font, fill=MUTED, anchor="lm")
+        # Ranged right, so 1 and 20 share an edge instead of both starting at
+        # the same place and looking staggered.
+        d.text((POS_R, mid), str(position), font=pos_font, fill=MUTED, anchor="rm")
+        if previous and previous.get(show.id, position) > position:
+            _rise(d, mid)
 
         # The name on the left, venue and time in grey on the right, both
         # against their own margin. Ranged right, the detail forms its own

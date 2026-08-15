@@ -78,6 +78,19 @@ def compose(show, position: int, previous: int) -> str:
     return text
 
 
+def positions(conn: sqlite3.Connection, year: int) -> dict[str, int]:
+    """
+    Where every show stood at the end of the last run.
+
+    Read before update() overwrites it. The card marks the shows that have
+    climbed, and it is drawn after the standings are recorded, so by then
+    "yesterday" has already become "today" unless somebody kept a copy.
+    """
+    conn.executescript(SCHEMA)
+    return {row[0]: row[1] for row in conn.execute(
+        "SELECT show_id, position FROM standings WHERE year = ?", (year,))}
+
+
 def update(conn: sqlite3.Connection, year: int, placed, notify: bool = True) -> list[dict]:
     """
     Record today's positions and return the notes for shows that rose.
