@@ -4,11 +4,7 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-| Publication | Headline | Matched to | Confidence |
-|---|---|---|---|
-| FringeReview | [Man Sings The Same Song Again and Again Over An Hour](https://fringereview.co.uk/review/edinburgh-fringe/2026/man-sings-the-same-song-again-and-again-over-an-hour/) | Man Sings The Same Song Over And Over Again For An Hour | 95% |
-| BroadwayWorld | [JESS ROBINSON: ELTON REIMAGINED: Piccolo Tent](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-JESS-ROBINSON-ELTON-REIMAGINED-Piccolo-Tent-Assembly-George-Square-Gardens-20260815) | Elton Reimagined | 95% |
-| The Scotsman | [JLCO with Yuja Wang, Usher Hall](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/eif-music-reviews-sean-shibe-jlco-with-yuja-wang-8920073#jlco-with-yuja-wang-usher-hall) | JLCO With Yuja Wang | 95% |
+_Nothing to check. 🎉_
 
 ## Held — not on the leaderboard
 
@@ -18,6 +14,7 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Edinburgh Festivals Magazine | [Your Inner Diva is showing](https://edfestmag.com/your-inner-diva-is-showing/) | not in any programme; no AI check available |
 | The Scotsman | [Sean Shibe, Queen’s Hall](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/eif-music-reviews-sean-shibe-jlco-with-yuja-wang-8920073#sean-shibe-queen-s-hall) | This appears to be a profile or announcement of a performer at a venue rather than a review of a named show at an Edinburgh festival. |
 | Everything Theatre | [The Doctor Will See You Now](https://everything-theatre.co.uk/2026/08/review-the-doctor-will-see-you-now-lion-unicorn-theatre/) | This headline lacks any indication of a named show, performer, or venue associated with an Edinburgh festival. |
 | Everything Theatre | [MAJENIN – A Palestinian Love Story (مجانين)](https://everything-theatre.co.uk/2026/08/review-majenin-a-palestinian-love-story-%d9%85%d8%ac%d8%a7%d9%86%d9%8a%d9%86-pleasance-dome/) | The headline appears to be a show title but lacks any context indicating this is a review of a performance at an Edinburgh festival. |
@@ -217,4 +214,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Scotsman | [A Poem and a Mistake](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-del-valle-a-true-tale-of-sex-drugs-rock-and-roll-and-redemption-24-weeks-joan-collins-blocked-me-on-twitter-a-poem-and-a-mistake-blaze-fm-bed-a-one-man-5271160#poem-and-mistake) | This headline lacks the specificity needed to identify it as a review of a named Edinburgh festival show - it reads more like a generic title or conceptual piece rather than a review with the show's actual name. |
 | The Scotsman | [Joan Collins Blocked Me on Twitter](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-del-valle-a-true-tale-of-sex-drugs-rock-and-roll-and-redemption-24-weeks-joan-collins-blocked-me-on-twitter-a-poem-and-a-mistake-blaze-fm-bed-a-one-man-5271160#joan-collins-blocked-me-on-twitter) | This is a profile or interview piece about a performer, not a review of a named show at an Edinburgh festival. |
 | The Scotsman | [through warm temperatures](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/edinburgh-fringe-dance-physical-theatre-reviews-through-warm-temperatures-5271940#through-warm-temperatures) | The headline is a fragment that does not indicate a review of any named show at an Edinburgh festival. |
-| The Scotsman | [Bonsori Kim & Thomas Hoppe](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/edinburgh-international-festival-reviews-orpheus-and-eurydice-bonsori-kim-thomas-hoppe-5272456#bonsori-kim-and-thomas-hoppe) | This appears to be just a list of names with no indication of a review, show title, or festival context. |

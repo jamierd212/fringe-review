@@ -198,6 +198,28 @@ publications:
 
   # ------------------------------------------------------ deliberately excluded
 
+  - name: Edinburgh Festivals Magazine
+    slug: edfestmag
+    homepage: https://edfestmag.com/
+    feed: https://edfestmag.com/feed/
+    pages: 4
+    rating:
+      # Their rating is a line of prose after the credits: "Words: Trudy Lynn
+      # Image: Aloft Circus Arts 4 stars". Anchored to "Words:" because every
+      # page also carries a testimonial reading "Rated 4 out of 5" — identical on
+      # all of them — which the ordinary cascade picks up first and which would
+      # have published every review as four stars, including the threes and
+      # fives.
+      type: pattern
+      pattern: 'Words:[^<]{0,140}?\b([1-5])\s*stars?\b'
+      scale: 5
+    fetch_page: true
+    verified: 2026-08-15
+    notes: >
+      robots.txt is "Disallow:" with nothing after it. Feed titles are the show
+      name as the Fringe writes it, which is unusually clean. Not every article
+      is a rated review; the ones without a rating are skipped.
+
   - name: RGM
     slug: rgm
     homepage: https://rgm.press/

@@ -225,8 +225,18 @@
     .filters .chosen { width: 100%; max-width: 100%; }
     .picker-panel { width: 17rem; max-width: 92vw; }
   }
+  nav.years .search { position: relative; }
+  /* The browser's own clear control is suppressed so there is never a pair of
+     them, and so this one can be the same size everywhere. */
+  nav.years input[type="search"]::-webkit-search-cancel-button { display: none; }
+  nav.years #q-clear {
+    position: absolute; right: .5rem; top: 50%; transform: translateY(-50%);
+    border: 0; background: none; cursor: pointer; padding: 0 .3rem;
+    font-size: 1.15rem; line-height: 1; color: var(--muted);
+  }
+  nav.years #q-clear:hover { color: var(--ink); }
   nav.years input[type="search"] {
-    padding: .3rem .85rem; border: 1px solid var(--rule); border-radius: 999px;
+    padding: .3rem 1.8rem .3rem .85rem; border: 1px solid var(--rule); border-radius: 999px;
     font-size: .9rem; font-family: inherit; color: var(--ink);
     /* Inputs default to line-height: normal while the pills inherit the body's
        1.55, which left the search box 5px shorter than everything beside it. */
@@ -277,6 +287,10 @@
       <span class="visually-hidden">Search shows</span>
       <input type="search" id="q" placeholder="Search shows&hellip;"
              autocomplete="off" spellcheck="false">
+      {#- Our own clear button rather than the one the browser draws: WebKit
+          hides its ✕ on a touch device, which is where clearing a search by
+          hand is most tedious. Hidden until there is something to clear. -#}
+      <button type="button" id="q-clear" aria-label="Clear search" hidden>&times;</button>
     </label>
   </nav>
   {# Populated from the festival's own programme; absent for past years, whose
@@ -707,6 +721,18 @@
     row.scrollIntoView({block: 'center'});
   }
 
+  var qClear = document.getElementById('q-clear');
+  function showClear() {
+    if (qClear) qClear.hidden = !input.value;
+  }
+  if (qClear) {
+    qClear.addEventListener('click', function () {
+      input.value = '';
+      input.dispatchEvent(new Event('input', {bubbles: true}));
+      input.focus();
+    });
+  }
+  input.addEventListener('input', showClear);
   input.addEventListener('input', apply);
   input.addEventListener('search', apply);   // the clear (x) button
 
@@ -922,6 +948,9 @@
     });
     apply();
   }
+
+  // A search restored from the URL or the session needs its clear button too.
+  showClear();
 
   // Last, and after any filter has been applied: scrolling to a row that is
   // about to be hidden would leave the page somewhere arbitrary.

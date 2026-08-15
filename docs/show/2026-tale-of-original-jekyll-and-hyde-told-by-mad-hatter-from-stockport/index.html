@@ -72,7 +72,10 @@
     padding: .8rem 0; margin: .9rem 0 1rem;
   }
   .avg { font-size: 1.6rem; font-weight: 700; color: var(--star); }
-  .avg small { font-size: .95rem; font-weight: 400; color: var(--muted); }
+  /* "/ 5" and "average across N reviews" read as body text beside the score,
+     rather than as a footnote to it. */
+  .avg small,
+  .summary small { font-size: 1rem; font-weight: 400; color: var(--muted); }
   ul.reviews { list-style: none; margin: 0; padding: 0; }
   ul.reviews li {
     display: flex; gap: .7rem; align-items: baseline; flex-wrap: wrap;
