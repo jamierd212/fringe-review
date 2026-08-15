@@ -68,9 +68,12 @@ def _fit(draw, text: str, font, room: int) -> str:
     return text.rstrip() + "…"
 
 
-def _logo(img: Image.Image) -> bool:
+def _logo(img: Image.Image) -> int:
     """
-    Place the logo in the top right corner. Returns whether one was found.
+    Place the logo in the top right corner. Returns the width it took, or 0.
+
+    The width matters to the caller: the title is set on one line beside it, and
+    has to know how much of the line the badge has already claimed.
 
     A missing logo is not an error. The card is drawn every morning by a machine
     nobody is watching, and a leaderboard without its badge is worth more than no
@@ -83,7 +86,7 @@ def _logo(img: Image.Image) -> bool:
     export without touching a logo that was drawn properly.
     """
     if not LOGO.exists():
-        return False
+        return 0
     logo = Image.open(LOGO).convert("RGBA")
     if not any(px < 250 for px in logo.getchannel("A").getdata()):
         corner = logo.getpixel((0, 0))[:3]
@@ -97,7 +100,7 @@ def _logo(img: Image.Image) -> bool:
     scale = LOGO_H / logo.height
     logo = logo.resize((max(1, round(logo.width * scale)), LOGO_H), Image.LANCZOS)
     img.paste(logo, (WIDTH - 60 - logo.width, 54), logo)
-    return True
+    return logo.width
 
 
 def draw_card(placed, when: date | None = None) -> Path:
@@ -109,11 +112,21 @@ def draw_card(placed, when: date | None = None) -> Path:
     # "Top 20 - Critically Reviewed Shows" set on one line has to drop to 54px to
     # fit the width, and at that size it stops carrying in a feed thumbnail. So
     # the number keeps its 76px and the qualifier sits beneath it.
+    badge = _logo(img)
+
+    # The title is one line at one size, so the size is whatever that line can
+    # be and still clear the logo. Chosen at draw time rather than fixed,
+    # because the badge's width depends on the file supplied and a number typed
+    # in here would be a guess about someone else's artwork.
+    room = WIDTH - 120 - (badge + 36 if badge else 0)
+    title = "Top 20 - Critically Reviewed Shows"
+    size = next((s for s in (76, 68, 62, 56, 50, 46, 42)
+                 if d.textlength(title, font=_font("bold", s)) <= room), 38)
+
     d.text((60, 54), "EDINBURGH FESTIVALS", font=_font("bold", 34), fill=MUTED)
-    d.text((60, 96), "Top 20", font=_font("bold", 76), fill=INK)
-    d.text((60, 184), "Critically Reviewed Shows", font=_font("bold", 38), fill=INK)
-    d.text((60, 234), when.strftime("%-d %B %Y"), font=_font("regular", 26), fill=MUTED)
-    _logo(img)
+    d.text((60, 108), title, font=_font("bold", size), fill=INK)
+    d.text((60, 108 + size + 26), when.strftime("%-d %B %Y"),
+           font=_font("regular", 26), fill=MUTED)
 
     top = 286
     row_h = (HEIGHT - top - 96) // TOP
