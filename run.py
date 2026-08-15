@@ -15,7 +15,7 @@ import argparse
 import sys
 from datetime import date
 
-from src import collect, db, health, match, programme, recheck, render, standings
+from src import card, collect, db, health, match, programme, recheck, render, standings
 
 
 def main() -> int:
@@ -133,6 +133,12 @@ def main() -> int:
         ranked, _rest = rank.leaderboard(conn, date.today().year)
         notes = standings.update(conn, date.today().year, rank.positions(ranked))
         queued = standings.queue(notes)
+        # The day's card and caption, for posting by hand. Drawn every run
+        # because the board moves every run; nothing is sent anywhere.
+        placed = rank.positions(ranked)
+        image = card.draw_card(placed)
+        _text, named = card.caption(conn, placed)
+        print(f"  card: {image.name} ({named} of 20 with an Instagram handle)")
         if queued:
             print(f"\n  {queued} show(s) climbed — messages waiting in data/outbox.json")
             print("  Review and send with:  python tools/post_outbox.py")
