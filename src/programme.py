@@ -195,6 +195,29 @@ CREATE TABLE IF NOT EXISTS performance_checks (
 # can be bought.
 CANCELLED = "CANCELLED"
 VIA_VENUE = "NO_ALLOCATION_CONTACT_VENUE"
+# How full a performance is — the thing a reader most wants and the one thing
+# this module cannot get. It is not in the page: the pre-rendered payload carries
+# soldOut: false on everything because it is built once and never revisited. The
+# live figure comes from the festival's ticketing API,
+#
+#     https://edfringe-tikketr-web-api.equhost.com/graphql
+#     query PerformancePrices($performanceId: String!)
+#       -> performanceAvailabilityLevel, performancePercentageRemaining
+#
+# whose robots.txt allows us (use=reference) and which needs no token: the site
+# only sends Authorization when a visitor happens to be logged in. What stops us
+# is Cloudflare, which answers our requests with a "Just a moment..." challenge
+# page. Solving that is not something this crawler will do, so availability is
+# out of reach unless the festival opens the door.
+#
+# If it ever is opened, the shape of the job is small, because both end states
+# are permanent: a date that has sold out stays sold out, and a date that has
+# passed stays passed. So a performance is checked until one of those happens
+# and then never again. Only the dates being displayed need it at all — today's
+# is ~800 queries, against 10,000 for the whole remaining calendar. Returns and
+# late allocations do happen, so sold-out dates would want a weekly second look
+# rather than never; that is a small addition to a small job.
+
 # Dates a reader can act on: everything the festival has not called off.
 BOOKABLE = ("TICKETS_AVAILABLE", "TWO_FOR_ONE", "PREVIEW_SHOW", "EVENT_SPECIFIC",
             "FREE_TICKETED", "FREE_NON_TICKETED", VIA_VENUE)
