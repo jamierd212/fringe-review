@@ -333,7 +333,7 @@
 
 
 <p class="meta">
-  Updated 15 August 2026, 17:18 BST &middot;
+  Updated 15 August 2026, 18:11 BST &middot;
   2145 rated reviews across 1434 shows
 </p>
 
@@ -47018,22 +47018,18 @@
           if (r.genres.indexOf(genres[g]) !== -1) { show = true; break; }
         }
       }
-      // "Any date" is not a no-op: it drops shows whose run is over, which is
-      // what a filter headed "tickets available" has to mean. It is the
-      // default, so the board shows what can still be booked unless someone
-      // asks otherwise.
+      // "Any date" filters nothing. The board is a record of what was
+      // acclaimed, not a list of what is on sale, and a show that has finished
+      // its run or sold out was no less good for it — dropping the number one
+      // show because the festival is not the one selling it would fail at the
+      // only job this page has.
       //
-      // A show we hold no calendar for is treated differently by each. Under
-      // "any date" it stays, because we cannot show its run has ended and
-      // hiding it would silently drop all five EIF shows and 54 Fringe shows we
-      // never matched to a programme entry. Under a named date it goes, because
-      // claiming it plays that night is a claim we cannot make. Not knowing is
-      // a reason to keep quiet, not a reason to assert either way.
-      if (show) {
+      // Choosing a date is a different question, and there it does filter. A
+      // show we hold no calendar for goes then, because claiming it plays that
+      // night is a claim we cannot make.
+      if (show && when) {
         if (!r.days.length) {
-          show = !when;
-        } else if (!when) {
-          show = r.days[r.days.length - 1] >= today;
+          show = false;
         } else if (when === 'today') {
           show = r.days.indexOf(today) !== -1;
         } else {
@@ -47517,12 +47513,6 @@
     [fFrom, fTo].forEach(function (el) {
       if (el) el.dispatchEvent(new Event('change', {bubbles: true}));
     });
-    apply();
-  } else if (fPlaying) {
-    // Nothing restored, but the board still has a default to honour: "Any
-    // date" hides runs that have ended, and it has to do that on arrival
-    // rather than waiting for the reader to touch a control they have no
-    // reason to touch.
     apply();
   }
 

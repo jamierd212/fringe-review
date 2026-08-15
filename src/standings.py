@@ -38,10 +38,20 @@ CREATE TABLE IF NOT EXISTS standings (
     year     INTEGER NOT NULL,
     show_id  TEXT NOT NULL,
     position INTEGER NOT NULL,
+    best     INTEGER,
     seen_at  TEXT DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (year, show_id)
 );
 """
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    """Add `best` to a standings table written before it existed."""
+    conn.executescript(SCHEMA)
+    columns = {row[1] for row in conn.execute("PRAGMA table_info(standings)")}
+    if "best" not in columns:
+        conn.execute("ALTER TABLE standings ADD COLUMN best INTEGER")
+        conn.execute("UPDATE standings SET best = position WHERE best IS NULL")
 
 
 def _plural(n: int, word: str) -> str:
@@ -86,9 +96,28 @@ def positions(conn: sqlite3.Connection, year: int) -> dict[str, int]:
     climbed, and it is drawn after the standings are recorded, so by then
     "yesterday" has already become "today" unless somebody kept a copy.
     """
-    conn.executescript(SCHEMA)
+    _migrate(conn)
     return {row[0]: row[1] for row in conn.execute(
         "SELECT show_id, position FROM standings WHERE year = ?", (year,))}
+
+
+def peaks(conn: sqlite3.Connection, year: int, placed) -> set[str]:
+    """
+    Shows that have just gone higher than they have ever been.
+
+    Read before update() records today, and the reason tagging is worth doing at
+    all. A show that sat at 5, slipped to 10 and climbed back to 6 has no news:
+    it has been higher, and being told about it is a notification for nothing.
+    Reaching 4 is news, and only that is worth putting in somebody's inbox.
+
+    A show never seen before counts, since it has never been higher than this.
+    """
+    _migrate(conn)
+    best = {row[0]: row[1] for row in conn.execute(
+        "SELECT show_id, best FROM standings WHERE year = ? AND best IS NOT NULL",
+        (year,))}
+    return {show.id for position, show in placed
+            if best.get(show.id) is None or position < best[show.id]}
 
 
 def update(conn: sqlite3.Connection, year: int, placed, notify: bool = True) -> list[dict]:
@@ -100,7 +129,7 @@ def update(conn: sqlite3.Connection, year: int, placed, notify: bool = True) -> 
     position there is no move to describe, and congratulating the whole top
     twenty for standing still is not what was asked for.
     """
-    conn.executescript(SCHEMA)
+    _migrate(conn)
     before = {
         row[0]: row[1]
         for row in conn.execute(
@@ -124,11 +153,14 @@ def update(conn: sqlite3.Connection, year: int, placed, notify: bool = True) -> 
                     "written_at": datetime.now().isoformat(timespec="seconds"),
                 })
         conn.execute(
-            """INSERT INTO standings (year, show_id, position, seen_at)
-               VALUES (?, ?, ?, datetime('now'))
+            """INSERT INTO standings (year, show_id, position, best, seen_at)
+               VALUES (?, ?, ?, ?, datetime('now'))
                ON CONFLICT(year, show_id) DO UPDATE SET
-                   position = excluded.position, seen_at = excluded.seen_at""",
-            (year, show.id, position),
+                   position = excluded.position,
+                   best = MIN(COALESCE(standings.best, excluded.position),
+                              excluded.position),
+                   seen_at = excluded.seen_at""",
+            (year, show.id, position, position),
         )
     conn.commit()
     return notes

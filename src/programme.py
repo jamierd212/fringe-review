@@ -203,10 +203,27 @@ CREATE TABLE IF NOT EXISTS performance_checks (
 # way the reader cannot buy that date here, which is the question being asked.
 CANCELLED = "CANCELLED"
 VIA_VENUE = "NO_ALLOCATION_CONTACT_VENUE"
-# Dates the festival will actually sell. VIA_VENUE is NOT among them: that is
-# the red one.
+# Dates a reader may still get into. VIA_VENUE is among them, and this was
+# argued both ways before the festival's own words settled it. Its message on a
+# red date reads:
+#
+#   "The performance has no ticket allocation remaining. Please check with the
+#    venue box office for further ticket allocation."
+#
+# That is not sold out. It is the box office saying it has none and pointing the
+# reader at somebody who might — and it is a per-venue template, identical for
+# Summerhall and Pleasance, so it carries no per-performance meaning either.
+#
+# Excluding these hid the number one show on the board. Bigfoot is at
+# Summerhall, red on all but two dates, and perfectly bookable; four of the top
+# five were in the same position. A leaderboard of acclaim that drops its best
+# reviewed show because the festival is not the one selling it has failed at the
+# only job it has.
+#
+# The cost is that sold-out cannot be shown at all. Nothing here can express it:
+# the one field that could is behind a bot challenge we will not solve.
 BOOKABLE = ("TICKETS_AVAILABLE", "TWO_FOR_ONE", "PREVIEW_SHOW", "EVENT_SPECIFIC",
-            "FREE_TICKETED", "FREE_NON_TICKETED")
+            "FREE_TICKETED", "FREE_NON_TICKETED", VIA_VENUE)
 
 
 def _performances(html: str) -> list[tuple[str, str, str]]:

@@ -148,12 +148,15 @@ def main() -> int:
         # climbed, and it is drawn after the standings are recorded, so by then
         # yesterday's positions are already today's.
         yesterday = standings.positions(conn, date.today().year)
+        # Who has just gone higher than ever — also read before update records
+        # today, and the only shows worth putting in somebody's notifications.
+        highs = standings.peaks(conn, date.today().year, placed)
         notes = standings.update(conn, date.today().year, placed)
         queued = standings.queue(notes)
         # The day's card and caption, for posting by hand. Drawn every run
         # because the board moves every run; nothing is sent anywhere.
         image = card.draw_card(placed, previous=yesterday)
-        _text, named = card.caption(conn, placed)
+        _text, named = card.caption(conn, placed, peaks=highs)
         print(f"  card: {image.name} ({named} of 20 with an Instagram handle)")
         if queued:
             print(f"\n  {queued} show(s) climbed — messages waiting in data/outbox.json")

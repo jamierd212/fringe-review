@@ -380,7 +380,8 @@ def _venue_tags(placed, taken: set[str], slots: int) -> list[tuple[str, str]]:
     return [(venue, known[venue]) for venue, _n in counts.most_common(slots)]
 
 
-def caption(conn: sqlite3.Connection, placed, when: date | None = None) -> str:
+def caption(conn: sqlite3.Connection, placed, when: date | None = None,
+            peaks: set[str] | None = None) -> str:
     """
     The caption: the twenty in order, with a mention where we have one.
 
@@ -419,8 +420,15 @@ def caption(conn: sqlite3.Connection, placed, when: date | None = None) -> str:
     # automated without the Graph API. Having them as a list makes typing them
     # into "Tag people" a matter of copying twenty short strings rather than
     # picking them out of a paragraph.
+    # Only shows that have just gone higher than they have ever been. The board
+    # barely moves from one morning to the next, so tagging all twenty daily
+    # says "you are still there" — not news, and the surest way to be muted by
+    # the accounts most worth reaching. `peaks` is None only when nothing has
+    # been recorded yet, in which case everyone is at their best by definition.
+    worth_telling = [(position, show) for position, show in placed[:TOP]
+                     if peaks is None or show.id in peaks]
     tags, missing = [], []
-    for position, show in placed[:TOP]:
+    for position, show in worth_telling:
         handle = handles.get(show.id)
         (tags if handle else missing).append(
             f"@{handle}" if handle else f"{position}. {show.title}")
@@ -431,12 +439,13 @@ def caption(conn: sqlite3.Connection, placed, when: date | None = None) -> str:
     venues = _venue_tags(placed, {t.lstrip("@").lower() for t in tags},
                          TAG_LIMIT - len(tags))
     lines = [f"Tag these in the photo ({len(tags) + len(venues)} of "
-             f"{TAG_LIMIT} Instagram allows):", ""] + tags
+             f"{TAG_LIMIT} Instagram allows):", "",
+             "Shows at their highest position yet:", ""] + (tags or ["(none today)"])
     if venues:
         lines += ["", "Venues, filling the spare slots:", ""] + [
             f"@{handle}   ({venue})" for venue, handle in venues]
     if missing:
-        lines += ["", "No handle on their programme entry — worth a look if you "
-                      "want them tagged:", ""] + missing
+        lines += ["", "At a new high but no handle on their programme entry:",
+                  ""] + missing
     (OUT / f"tags-{when.isoformat()}.txt").write_text("\n".join(lines))
     return text, named
