@@ -2,10 +2,13 @@
 Draw the day's top twenty as an image, and write the caption to go with it.
 
 Instagram has no text-only post, so a leaderboard has to become a picture. The
-card is 1080x1280. Instagram's feed will not show anything taller than 4:5, and
-1080x1350 is exactly 4:5 — sitting on the line, where any rounding in their
-pipeline takes a slice off it. A little inside the limit is never cropped, and
-twenty rows still fit at a size that can be read on a phone.
+card is 1080x1350, which is EXACTLY 4:5.
+
+That is not "within" the limit, it is the limit, and the distinction matters.
+Instagram's feed frame is 4:5 and fills it: an image squarer than that has its
+SIDES cropped to reach the shape. Moving to 1080x1280 to be safely inside the
+limit therefore made the cropping worse, not better, and 1080x1080 worse again.
+Exactly 4:5 is the only shape that arrives whole.
 
 Nothing is posted. The card and its caption are written to a folder for a person
 to upload, which is also why the caption is a separate file: it is meant to be
@@ -26,14 +29,14 @@ from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 OUT = Path(__file__).resolve().parent.parent / "data" / "instagram"
 LOGO = Path(__file__).resolve().parent.parent / "assets" / "logo.png"
-WIDTH, HEIGHT = 1080, 1280
+WIDTH, HEIGHT = 1080, 1350
 TOP = 20
 LOGO_H = 190           # the height of the header block it sits beside
 ROWS_TOP = 266         # where the first white box starts
 # Fixed rather than derived from the space left over. Deriving it meant every
 # trim to the header silently made the rows TALLER, spreading the white space
 # rather than reducing it — the opposite of what shrinking the header is for.
-ROW_H = 46
+ROW_H = 48
 # The band above the first row, and what it keeps clear at each end.
 HEADER_TOP, HEADER_BOTTOM = 42, 23
 # How wide a show's name may run before it is cut, at the length of "Man Sings
