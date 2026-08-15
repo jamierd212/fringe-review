@@ -27,6 +27,8 @@ from pathlib import Path
 TOP = 20
 OUTBOX = Path(__file__).resolve().parent.parent / "data" / "outbox.json"
 SITE = "https://www.fringestars.com"
+# Bluesky's limit. Kept here because the message is composed to fit it.
+LIMIT = 300
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS standings (
@@ -45,16 +47,30 @@ def _plural(n: int, word: str) -> str:
 
 def compose(show, position: int, previous: int) -> str:
     """
-    The message. Kept short enough for any platform, and factual: the numbers are
-    the publications' own and the claim is only that they add up to this place.
+    The message, as it will appear.
+
+    `previous` is not named in it. The interesting fact is where the show is now,
+    and "up from #12" invites the reader to notice the days it was lower.
     """
     average = f"{show.mean:.1f}".rstrip("0").rstrip(".")
-    return (
-        f"{show.title} is up to #{position} on the Edinburgh festivals "
-        f"leaderboard, from #{previous} — averaging {average} across "
-        f"{_plural(len(show.reviews), 'review')}. "
-        f"{SITE}/show/{show.id}/"
-    )
+
+    def build(title: str) -> str:
+        return (
+            f"Congratulations! {title} is up to #{position} on Fringestars.com "
+            f"- the definitive Edinburgh festival reviews aggregator.\n"
+            f"{average} Star Rating from {_plural(len(show.reviews), 'review')}.\n"
+            f"{SITE}/show/{show.id}/"
+        )
+
+    text = build(show.title)
+    if len(text) > LIMIT:
+        # Shorten the title rather than drop the message. Fringe titles run long
+        # — "Man Sings The Same Song Over And Over Again For An Hour" — and the
+        # longest already in the top twenty lands at 279 of the 300 allowed, so
+        # this is a matter of when rather than whether.
+        room = len(show.title) - (len(text) - LIMIT) - 1
+        text = build(show.title[:max(room, 12)].rstrip() + "\u2026")
+    return text
 
 
 def update(conn: sqlite3.Connection, year: int, placed, notify: bool = True) -> list[dict]:

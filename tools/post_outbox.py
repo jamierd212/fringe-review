@@ -94,8 +94,10 @@ def main() -> int:
     for n in notes:
         over = len(n["text"]) - LIMIT
         flag = f"   !! {over} characters too long" if over > 0 else ""
-        print(f"  #{n['previous']} -> #{n['position']}{flag}")
-        print(f"    {n['text']}\n")
+        if flag:
+            print(f"  {flag.strip()}")
+        print("  " + n["text"].replace("\n", "\n  "))
+        print()
 
     if "--send" not in sys.argv:
         print("Nothing sent. Re-run with --send to post these.")
