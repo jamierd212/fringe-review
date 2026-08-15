@@ -31,6 +31,10 @@ LOGO_H = 190           # the height of the header block it sits beside
 # "Man Sings The Same Song Over And Over" — the longest title on the board and
 # the one that decides where this needs to sit.
 TITLE_MAX = 640
+# Where a row's text starts and stops. The white card behind it runs 48 to 1032,
+# so these leave 24px of padding at each end. They were 146 and 92, which was
+# generous padding bought at the cost of the venue on the longest rows.
+TEXT_L, TEXT_R = 134, 72
 
 # The site's own palette, so the card is recognisably the same thing.
 BG = (249, 228, 224)
@@ -117,21 +121,15 @@ def draw_card(placed, when: date | None = None) -> Path:
     img = Image.new("RGB", (WIDTH, HEIGHT), BG)
     d = ImageDraw.Draw(img)
 
-    badge = _logo(img)
+    _logo(img)
 
-    # The title is one line at one size, so the size is whatever that line can
-    # be and still clear the logo. Chosen at draw time rather than fixed,
-    # because the badge's width depends on the file supplied and a number typed
-    # in here would be a guess about someone else's artwork.
-    room = WIDTH - 120 - (badge + 36 if badge else 0)
-    title = "Top 20 - Critically Reviewed Shows"
-    size = next((s for s in (76, 68, 62, 56, 50, 46, 42)
-                 if d.textlength(title, font=_font("bold", s)) <= room), 38)
-
+    # Two lines, so the number keeps its size. On one line the whole title has
+    # to shrink to clear the badge; stacked, only the qualifier is narrow enough
+    # to need the room, and "Top 20" stays as large as the card allows.
     d.text((60, 54), "EDINBURGH FESTIVALS", font=_font("bold", 34), fill=MUTED)
-    d.text((60, 108), title, font=_font("bold", size), fill=INK)
-    d.text((60, 108 + size + 26), when.strftime("%-d %B %Y"),
-           font=_font("regular", 26), fill=MUTED)
+    d.text((60, 96), "Top 20", font=_font("bold", 76), fill=INK)
+    d.text((60, 184), "Critically Reviewed Shows", font=_font("bold", 38), fill=INK)
+    d.text((60, 234), when.strftime("%-d %B %Y"), font=_font("regular", 26), fill=MUTED)
 
     top = 286
     row_h = (HEIGHT - top - 96) // TOP
@@ -151,13 +149,13 @@ def draw_card(placed, when: date | None = None) -> Path:
         # with that column, and a name cut at a readable length costs less than
         # a row with nowhere to put its venue.
         title = _fit(d, show.title, title_font, TITLE_MAX)
-        d.text((146, y + 11), title, font=title_font, fill=INK)
+        d.text((TEXT_L, y + 11), title, font=title_font, fill=INK)
 
         # Where the two would meet, the venue goes before the time does: the
         # time is the shorter of the pair and the more use to somebody deciding
         # what to see tonight.
-        limit = WIDTH - 92
-        after_title = 146 + d.textlength(title, font=title_font) + 28
+        limit = WIDTH - TEXT_R
+        after_title = TEXT_L + d.textlength(title, font=title_font) + 28
         for detail in ("  ·  ".join(t for t in (show.venue, show.start_time) if t),
                        show.start_time or ""):
             width = d.textlength(detail, font=meta_font)
@@ -166,7 +164,7 @@ def draw_card(placed, when: date | None = None) -> Path:
                        fill=(140, 140, 140))
                 break
 
-    d.text((60, HEIGHT - 74), "fringestars.com", font=_font("bold", 30), fill=INK)
+    d.text((60, HEIGHT - 82), "fringestars.com", font=_font("bold", 42), fill=INK)
 
     OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / f"top20-{when.isoformat()}.png"
