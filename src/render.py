@@ -211,7 +211,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
         def build(canonical: str) -> str:
             return template.render(
                 canonical=canonical,
-                placed=rank.positions(ranked),
+                placed=rank.placement(conn, ranked, this_year),
                 rest=rest,
                 year=this_year,
                 nav=[dict(n, current=(n["year"] == this_year)) for n in nav],

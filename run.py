@@ -131,11 +131,11 @@ def main() -> int:
     if not args.render:
         from src import rank
         ranked, _rest = rank.leaderboard(conn, date.today().year)
-        notes = standings.update(conn, date.today().year, rank.positions(ranked))
+        placed = rank.placement(conn, ranked, date.today().year)
+        notes = standings.update(conn, date.today().year, placed)
         queued = standings.queue(notes)
         # The day's card and caption, for posting by hand. Drawn every run
         # because the board moves every run; nothing is sent anywhere.
-        placed = rank.positions(ranked)
         image = card.draw_card(placed)
         _text, named = card.caption(conn, placed)
         print(f"  card: {image.name} ({named} of 20 with an Instagram handle)")

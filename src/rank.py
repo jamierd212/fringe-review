@@ -288,6 +288,10 @@ def leaderboard(conn: sqlite3.Connection,
 
 def positions(ranked: list[Show]) -> list[tuple[int, Show]]:
     """
+    NO LONGER USED for display — see placement(), which resolves ties by
+    scarcity instead of sharing a number. Kept because it is the honest answer
+    to "who is level with whom", which is what the tie test still needs.
+
     Attach positions, sharing a number between genuinely tied shows
     (two shows on 3x5 and 1x4 are both 2nd, and the next show is 4th).
 
@@ -308,3 +312,60 @@ def positions(ranked: list[Show]) -> list[tuple[int, Show]]:
             last_pos, last_key = index, key
         out.append((last_pos, show))
     return out
+
+
+def scarcity(conn: sqlite3.Connection, year: int | None = None) -> dict[str, float]:
+    """
+    {show_id: how hard-won its top reviews were}.
+
+    A five from Chortle, who give one to 8% of what they review, is a rarer thing
+    than a five from a publication that gives them to a third of the bill. This
+    adds up 1/rate for each four- and five-star review a show holds, using the
+    publication's rate of going AT LEAST that high — which also means a five
+    counts for more than a four without having to say so, since the rate of
+    giving five is always the lower of the two.
+
+    Used only to separate shows the main ranking has tied. It is not a second
+    opinion about which show is better; it is a way of ordering equals that is
+    about the reviews rather than the alphabet.
+    """
+    rates = selectivity(conn, year)
+    scores: dict[str, float] = {}
+    rows = conn.execute(
+        """SELECT r.show_id, r.publication, r.stars FROM reviews r
+             JOIN shows s ON s.id = r.show_id
+            WHERE r.stars >= 4 AND (? IS NULL OR s.year = ?)""",
+        (year, year),
+    )
+    for show_id, publication, stars in rows:
+        rate = rates.get((publication, stars))
+        if not rate:
+            continue
+        scores[show_id] = scores.get(show_id, 0.0) + 1.0 / rate
+    return scores
+
+
+def placement(conn: sqlite3.Connection, ranked: list[Show],
+              year: int | None = None) -> list[tuple[int, Show]]:
+    """The order everything uses: the page, the card, and the climb detection."""
+    return strict_positions(ranked, scarcity(conn, year))
+
+
+def strict_positions(ranked: list[Show], scores: dict[str, float]) -> list[tuple[int, Show]]:
+    """
+    Positions 1..N with nothing shared, ties broken by scarcity.
+
+    The site shows tied shows sharing a number, which is honest: they are level.
+    A published list of twenty cannot do that — it would run 1, 2, 8, 8, 10 and
+    read as a mistake — so the ties are resolved rather than displayed, by which
+    show's top reviews were the harder to come by.
+    """
+    # rank_key ends with the title, to keep the sort stable. Sorting on the whole
+    # key makes every key unique, so the scarcity term is never reached and the
+    # order comes out alphabetical — which is exactly what this is meant to
+    # replace. Compare everything except that last element, as positions() does
+    # when deciding what counts as tied.
+    order = sorted(ranked, key=lambda s: (rank_key(s)[:-1],
+                                          -scores.get(s.id, 0.0),
+                                          rank_key(s)[-1]))
+    return list(enumerate(order, start=1))
