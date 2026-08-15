@@ -71,24 +71,30 @@ def draw_card(placed, when: date | None = None) -> Path:
     d.text((60, 54), "EDINBURGH FESTIVALS", font=_font("bold", 34), fill=MUTED)
     d.text((60, 96), "Top 20", font=_font("bold", 76), fill=INK)
     d.text((60, 186), when.strftime("%-d %B %Y"), font=_font("regular", 30), fill=MUTED)
-    # No scores. The board is ranked by five- and four-star reviews rather than
-    # by average, so printing the average beside the position made the card look
-    # mis-sorted — 5.0 below 4.9, 3.8 above 4.4 — and needed a legend to explain
-    # a number nobody had asked for. Leaving it out says the same thing and
-    # leaves the titles room to be read.
     d.text((60, 226), "ranked by 5 and 4 star reviews",
            font=_font("regular", 26), fill=MUTED)
 
     top = 286
     row_h = (HEIGHT - top - 96) // TOP
-    pos_font, title_font, rate_font = (_font("bold", 30), _font("bold", 30),
-                                       _font("regular", 27))
+    pos_font = _font("bold", 30)
+    title_font = _font("bold", 30)
+    meta_font = _font("regular", 23)
     for index, (position, show) in enumerate(placed[:TOP]):
         y = top + index * row_h
         d.rounded_rectangle([48, y, WIDTH - 48, y + row_h - 8], radius=10, fill=CARD)
         d.text((72, y + 11), str(position), font=pos_font, fill=MUTED)
-        title = _fit(d, show.title, title_font, WIDTH - 146 - 96)
+
+        # Time and venue follow the name on the same line, in grey. The detail is
+        # measured first and the title given what is left: the venue is the part
+        # a reader acts on, so it keeps its room and the title gives way.
+        detail = "  ·  ".join(x for x in (show.start_time, show.venue) if x)
+        room = WIDTH - 146 - 92
+        detail_w = d.textlength(detail, font=meta_font) if detail else 0
+        title = _fit(d, show.title, title_font, room - detail_w - 28)
         d.text((146, y + 11), title, font=title_font, fill=INK)
+        if detail:
+            x = 146 + d.textlength(title, font=title_font) + 28
+            d.text((x, y + 15), detail, font=meta_font, fill=(140, 140, 140))
 
     d.text((60, HEIGHT - 74), "fringestars.com", font=_font("bold", 30), fill=INK)
 
