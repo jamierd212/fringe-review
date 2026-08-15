@@ -477,6 +477,24 @@
   if (!box || !input) return;
   box.hidden = false;
 
+  // The filter button is revealed here too, rather than several hundred lines
+  // below with the rest of the filter code. It is hidden in the markup so it
+  // never shows as a dead control without JavaScript, which means anything
+  // throwing before the reveal takes the button with it — and the reveal was
+  // last in the file, behind the pickers, the chips, the URL state and the
+  // sticky bar. Mobile Chrome showed the search box and no Filter button, which
+  // is exactly that shape of failure.
+  var filterToggle = document.getElementById('filter-toggle');
+  var filterPanel = document.getElementById('filters');
+  if (filterToggle && filterPanel) {
+    filterToggle.hidden = false;
+    filterToggle.addEventListener('click', function () {
+      var open = filterToggle.getAttribute('aria-expanded') === 'true';
+      filterToggle.setAttribute('aria-expanded', String(!open));
+      filterPanel.hidden = open;
+    });
+  }
+
   // Read the text once. Doing it per keystroke means touching a thousand
   // elements' DOM text on every character typed.
   var rows = [].map.call(document.querySelectorAll('[data-find]'), function (el) {
@@ -801,14 +819,6 @@
   input.addEventListener('input', apply);
   input.addEventListener('search', apply);   // the clear (x) button
 
-  if (toggle && panel) {
-    toggle.hidden = false;
-    toggle.addEventListener('click', function () {
-      var open = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!open));
-      panel.hidden = open;
-    });
-  }
   // The time window starts empty. It used to open on the next two hours - "what
   // can I get to shortly" - but the defaults were only ever displayed, never
   // applied: the controls read 21:00 to 23:00 above a list showing every show at
