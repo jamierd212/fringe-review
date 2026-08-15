@@ -236,6 +236,11 @@
        and Genre each took a row of their own and the panel ran down the page.
        Half the row each, and they sit side by side as they do on desktop. */
     .filters label { flex: 1 1 calc(50% - .45rem); min-width: 0; }
+    /* Playing is third of three half-width controls, so it starts a row of its
+       own. Allowed to grow it fills that row, which reads as a wider, more
+       important control rather than as the odd one out. Held to half, it sits
+       under Location in the same column. */
+    .filters label.half { flex: 0 1 calc(50% - .45rem); }
     /* The time pair takes exactly the width its two boxes need, rather than
        half the row like Location and Genre or the whole of it, which left Clear
        stranded on a line of its own. Sized to content, there is room for Clear
@@ -369,6 +374,25 @@
       <span class="chosen" id="f-genre-chosen"></span>
     </label>
     {% endif %}
+    {#- Only offered where we hold the festival's calendar. The dates come from
+        the programme's own per-performance status — the field behind the
+        calendar on a show's page — so this says what that calendar says.
+
+        It deliberately does not claim a seat is free. The festival publishes no
+        sold-out state at all, and a third of performances read "no allocation,
+        contact venue", which means the venue sells its own tickets rather than
+        that there are none. Calling this "tickets available" would have hidden
+        four of the current top twelve, every one of them bookable. "Playing" is
+        what the data supports. -#}
+    {% if playing %}
+    <label class="half">Playing
+      <select id="f-playing">
+        <option value="">Any date</option>
+        <option value="today">Today</option>
+        <option value="any">Any day from today</option>
+      </select>
+    </label>
+    {% endif %}
     <label class="span">Starts between
       <span class="times">
         {#- Whole hours rather than a time picker: show times are only useful
@@ -403,6 +427,7 @@
          data-find="{{ (show.title ~ ' ' ~ (show.performer or '') ~ ' ' ~ show.genre)|lower }}"
          data-venue="{{ show.venue }}" data-vgroup="{{ venue_group(show.venue) }}"
          data-genres="{{ genre_keys(show)|join(';') }}"
+         data-days="{{ playing.get(show.id, '') }}"
          data-start="{{ show.start_minutes }}">
   <div class="pos">{{ position }}</div>
   <div class="body">
@@ -438,6 +463,7 @@
   <div data-find="{{ show.title|lower }}"
        data-venue="{{ show.venue }}" data-vgroup="{{ venue_group(show.venue) }}"
        data-genres="{{ genre_keys(show)|join(';') }}"
+       data-days="{{ playing.get(show.id, '') }}"
        data-start="{{ show.start_minutes }}">
     {{ show.title }}
     {% for review in show.reviews %}
@@ -520,6 +546,7 @@
   var fFrom = document.getElementById('f-from');
   var fTo = document.getElementById('f-to');
   var fClear = document.getElementById('f-clear');
+  var fPlaying = document.getElementById('f-playing');
 
   rows.forEach(function (r) {
     r.venue = r.el.getAttribute('data-venue') || '';
@@ -529,7 +556,27 @@
     // because the tags themselves contain spaces.
     r.genres = (r.el.getAttribute('data-genres') || '').split(';');
     r.start = parseInt(r.el.getAttribute('data-start'), 10);
+    // Days the show can still be booked, as offsets from 1 August. Parsed once
+    // here rather than per keystroke: this is the only filter whose data is a
+    // list per row, and re-splitting eight hundred of them on every character
+    // typed into the search box was the one thing that could make it stutter.
+    var days = r.el.getAttribute('data-days') || '';
+    r.days = days ? days.split(' ').map(Number) : [];
   });
+
+  // Today, as the same offset. Computed in the browser rather than baked in at
+  // build time: the page is rebuilt each morning, but it is also read at
+  // midnight, from a cache, and by people whose browser has been open since
+  // yesterday. A "Today" that means the day the file was written would be
+  // quietly wrong for all of them.
+  var epoch = Date.UTC.apply(null, '{{ playing_epoch }}'.split('-').map(function (n, i) {
+    return i === 1 ? Number(n) - 1 : Number(n);
+  }));
+  function todayOffset() {
+    var now = new Date();
+    return Math.round((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())
+                       - epoch) / 86400000);
+  }
 
   function minutes(value) {
     if (!value) return null;
@@ -544,6 +591,8 @@
 
     var from = fFrom ? minutes(fFrom.value) : null;
     var to = fTo ? minutes(fTo.value) : null;
+    var when = fPlaying ? fPlaying.value : '';
+    var today = when ? todayOffset() : 0;
     var hits = 0;
     for (var i = 0; i < rows.length; i++) {
       var r = rows[i];
@@ -569,6 +618,19 @@
         show = false;
         for (var g = 0; g < genres.length; g++) {
           if (r.genres.indexOf(genres[g]) !== -1) { show = true; break; }
+        }
+      }
+      // A show we hold no calendar for cannot answer this, so it drops out
+      // rather than being offered as something that might be on. That is the
+      // same rule the time filter follows, and for the same reason: silence is
+      // not a yes.
+      if (show && when) {
+        if (!r.days.length) {
+          show = false;
+        } else if (when === 'today') {
+          show = r.days.indexOf(today) !== -1;
+        } else {
+          show = r.days[r.days.length - 1] >= today;
         }
       }
       // A show with no known time cannot satisfy a time window. Hiding it is
@@ -828,7 +890,7 @@
   // every hour. A filter that says it is on while doing nothing is worse than no
   // default, so the honest reading of those boxes is now the true one.
 
-  [fFrom, fTo].forEach(function (el) {
+  [fFrom, fTo, fPlaying].forEach(function (el) {
     if (el) el.addEventListener('change', apply);
   });
 
@@ -938,6 +1000,7 @@
     if (genrePick) genrePick.values().forEach(function (v) { add('genre', v); });
     if (fFrom && fFrom.value) add('from', fFrom.value);
     if (fTo && fTo.value) add('to', fTo.value);
+    if (fPlaying && fPlaying.value) add('playing', fPlaying.value);
     var query = params.join('&');
     history.replaceState(null, '', location.pathname + (query ? '?' + query : ''));
     // Also kept for the session, because the browser's back button is not the
@@ -962,7 +1025,7 @@
       try { return decodeURIComponent(text.replace(/\+/g, ' ')); }
       catch (e) { return ''; }
     }
-    var venues = [], genres = [], q = '', from = '', to = '';
+    var venues = [], genres = [], q = '', from = '', to = '', when = '';
     search.split('&').forEach(function (pair) {
       var bits = pair.split('=');
       var key = decode(bits[0]);
@@ -972,6 +1035,7 @@
       else if (key === 'q') q = value;
       else if (key === 'from') from = value;
       else if (key === 'to') to = value;
+      else if (key === 'playing') when = value;
     });
     if (q) input.value = q;
     if (venuePick) venuePick.restore(venues);
@@ -984,7 +1048,8 @@
     }
     setIf(fFrom, from);
     setIf(fTo, to);
-    return !!(q || venues.length || genres.length || from || to);
+    setIf(fPlaying, when);
+    return !!(q || venues.length || genres.length || from || to || when);
   }
 
   if (fClear) {
@@ -1010,6 +1075,7 @@
       reset(fGenre);
       reset(fFrom);
       reset(fTo);
+      reset(fPlaying);
       apply();          // Clear means clear: back to every show, not back to "from now"
       // And put the panel away. Clear is the last thing anyone does in it, and
       // leaving it open hides the list they have just asked to see all of.

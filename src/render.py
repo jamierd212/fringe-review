@@ -11,7 +11,7 @@ from zoneinfo import ZoneInfo
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from . import genres, rank
+from . import genres, programme, rank
 from .collect import load_config
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -40,6 +40,45 @@ AREA_SHOWS = json.loads((ROOT / "data" / "area-shows.json").read_text()) \
 # reads wrong. An editorial override, kept here where it is visible rather than
 # hidden in the sort.
 PINNED_AFTER = {"Summerhall & The Meadows": "George Square"}
+
+
+def playing_days(conn: sqlite3.Connection, year: int) -> dict[str, str]:
+    """
+    For each show, the days it can still be booked, as offsets from 1 August.
+
+    Offsets rather than dates because this ends up in an attribute on every row
+    on the page: "7 8 9" instead of "2026-08-07,2026-08-08,2026-08-09" is a
+    third of the bytes across eight hundred shows, and the browser has to do
+    arithmetic on them either way.
+
+    Only performances the festival has not called off. Cancelled and sold-out
+    dates are left out entirely rather than marked, because a filter's job here
+    is to answer "can I go", and a date that cannot be attended is not an
+    answer to it.
+    """
+    from datetime import date as _date
+
+    base = _date(year, 8, 1).toordinal()
+    days: dict[str, set[int]] = {}
+    try:
+        rows = conn.execute(
+            """SELECT p.show_id, p.date FROM performances p
+                 JOIN shows s ON s.id = p.show_id
+                WHERE s.year = ? AND p.status IN (%s)"""
+            % ",".join("?" * len(programme.BOOKABLE)),
+            (year, *programme.BOOKABLE),
+        )
+    except sqlite3.OperationalError:
+        # No calendars collected yet. The filter hides itself rather than
+        # offering a choice that would empty the page.
+        return {}
+    for show_id, when in rows:
+        try:
+            offset = _date(*map(int, when.split("-"))).toordinal() - base
+        except (TypeError, ValueError):
+            continue
+        days.setdefault(show_id, set()).add(offset)
+    return {k: " ".join(str(n) for n in sorted(v)) for k, v in days.items()}
 
 
 def order_areas(areas: set[str]) -> list[str]:
@@ -207,6 +246,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
         # someone lives it, rather than a clock starting at midnight.
         hours = [f"{(9 + i) % 24:02d}:00" for i in range(24)]
         genre_sections, genre_subs = genres.options(ranked + rest)
+        playing = playing_days(conn, this_year)
 
         def build(canonical: str) -> str:
             return template.render(
@@ -230,6 +270,8 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 genre_sections=genre_sections,
                 genre_subs=genre_subs,
                 hours=hours,
+                playing=playing,
+                playing_epoch=f"{this_year}-08-01",
             )
 
         # The landing year is served at two URLs — its own page and the bare

@@ -153,6 +153,95 @@ def _local_clock(stamp: str) -> str:
     return when.strftime("%H:%M")
 
 
+PERFORMANCES_SCHEMA = """
+CREATE TABLE IF NOT EXISTS performances (
+    show_id TEXT NOT NULL,
+    date    TEXT NOT NULL,          -- YYYY-MM-DD on an Edinburgh clock
+    time    TEXT NOT NULL,          -- HH:MM likewise
+    status  TEXT NOT NULL,          -- the festival's own ticketStatus
+    PRIMARY KEY (show_id, date, time)
+);
+CREATE INDEX IF NOT EXISTS performances_date ON performances (date);
+CREATE TABLE IF NOT EXISTS performance_checks (
+    show_id    TEXT PRIMARY KEY,
+    checked_at TEXT NOT NULL
+);
+"""
+
+# What the festival says about a performance. This is the field behind the
+# calendar on a show's own page — the one that tells a reader which dates they
+# can book — so storing it is storing that calendar.
+#
+# The complete set, read out of the site's own bundle rather than guessed at
+# from a sample:
+#
+#   CANCELLED  EVENT_SPECIFIC  FREE_NON_TICKETED  FREE_TICKETED
+#   NO_ALLOCATION_CONTACT_VENUE  PREVIEW_SHOW  TICKETS_AVAILABLE  TWO_FOR_ONE
+#
+# There is no sold-out value in it. A date is bookable, bookable through the
+# venue, free, or cancelled; "the last seat has gone" is not a state this
+# programme can express. The separate soldOut boolean was false on all 1,400
+# performances sampled, as was ticketsAvailable — including on performances the
+# same record marked TICKETS_AVAILABLE — so neither is read. soldOut is still
+# honoured if it ever turns true, which costs nothing and covers the case where
+# it means something we have not seen.
+#
+# NO_ALLOCATION_CONTACT_VENUE is the one that misleads. It does not mean sold
+# out; it means the Fringe box office holds no allocation because the venue
+# sells its own. It is a third of all performances and the ONLY status on some
+# of the best-reviewed shows on the board — Next to Normal, For Dolores,
+# Mayflies and Cathy are entirely this. Reading it as unavailable would hide
+# four of the top twelve from a reader looking for a ticket, every one of which
+# can be bought.
+CANCELLED = "CANCELLED"
+VIA_VENUE = "NO_ALLOCATION_CONTACT_VENUE"
+# Dates a reader can act on: everything the festival has not called off.
+BOOKABLE = ("TICKETS_AVAILABLE", "TWO_FOR_ONE", "PREVIEW_SHOW", "EVENT_SPECIFIC",
+            "FREE_TICKETED", "FREE_NON_TICKETED", VIA_VENUE)
+
+
+def _performances(html: str) -> list[tuple[str, str, str]]:
+    """Every performance as (date, time, status), on an Edinburgh clock."""
+    out = []
+    for p in _json_array(html, "performances") or []:
+        stamp = p.get("dateTime") if isinstance(p, dict) else None
+        if not isinstance(stamp, str) or len(stamp) < 16:
+            continue
+        try:
+            when = datetime.strptime(stamp[:19], "%Y-%m-%dT%H:%M:%S")
+        except ValueError:
+            continue
+        if stamp.endswith("Z") or stamp[19:].startswith("+00"):
+            when = when.replace(tzinfo=timezone.utc).astimezone(EDINBURGH)
+        if p.get("cancelled") or p.get("soldOut"):
+            status = CANCELLED if p.get("cancelled") else "SOLD_OUT"
+        else:
+            status = p.get("ticketStatus") or ""
+        out.append((when.strftime("%Y-%m-%d"), when.strftime("%H:%M"), status))
+    return out
+
+
+def store_performances(conn: sqlite3.Connection, show_id: str,
+                       performances: list[tuple[str, str, str]]) -> None:
+    """
+    Replace what we hold for one show.
+
+    Replaced rather than merged: a performance that disappears from the
+    programme has been withdrawn, and leaving it behind would keep offering a
+    date that no longer exists.
+    """
+    conn.executescript(PERFORMANCES_SCHEMA)
+    conn.execute("DELETE FROM performances WHERE show_id = ?", (show_id,))
+    conn.executemany(
+        "INSERT OR REPLACE INTO performances (show_id, date, time, status) "
+        "VALUES (?, ?, ?, ?)",
+        [(show_id, *p) for p in performances])
+    conn.execute(
+        "INSERT INTO performance_checks (show_id, checked_at) VALUES (?, datetime('now')) "
+        "ON CONFLICT(show_id) DO UPDATE SET checked_at = excluded.checked_at",
+        (show_id,))
+
+
 def _start_time(html: str) -> str:
     """
     The show's usual start time as HH:MM, on an Edinburgh clock.
@@ -472,6 +561,7 @@ def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dic
             continue
 
         details = fest["details"](html)
+        store_performances(conn, row["id"], _performances(html))
         for network, handle in (details.get("socials") or {}).items():
             conn.execute(
                 """INSERT INTO socials (show_id, network, handle) VALUES (?, ?, ?)
@@ -494,6 +584,56 @@ def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dic
     if per_festival:
         print("    linked: " + ", ".join(f"{v} {k}" for k, v in per_festival.items()))
     return {"matched": matched, "missed": missed}
+
+
+def refresh_performances(conn: sqlite3.Connection, year: int,
+                         stale_days: int = 4, limit: int = 200) -> dict[str, int]:
+    """
+    Re-read the calendar for shows whose dates we have not checked lately.
+
+    enrich() only fetches a show's page while something is missing from it, so
+    once a show is fully described it is never read again. That is right for a
+    genre, which does not change, and wrong for a schedule, which does: runs get
+    extended, performances get cancelled, and a date we offer that no longer
+    exists is worse than no date at all.
+
+    Bounded on purpose. The whole board is ~780 pages and the festival asks for
+    a second between requests, so refreshing everything nightly would add
+    thirteen minutes to a run that has better things to do. A slice each night
+    brings the board round in under a week, and shows never checked go first.
+    """
+    conn.executescript(PERFORMANCES_SCHEMA)
+    due = conn.execute(
+        """SELECT s.id, s.title, s.edfringe_url, c.checked_at
+             FROM shows s LEFT JOIN performance_checks c ON c.show_id = s.id
+            WHERE s.year = ? AND s.edfringe_url LIKE '%edfringe%'
+              AND (c.checked_at IS NULL
+                   OR c.checked_at < datetime('now', ?))
+            ORDER BY c.checked_at IS NOT NULL, c.checked_at
+            LIMIT ?""",
+        (year, f"-{stale_days} days", limit),
+    ).fetchall()
+    if not due:
+        return {"checked": 0, "dates": 0}
+
+    checked = dates = 0
+    for row in due:
+        time.sleep(DELAY)
+        html = _get(row["edfringe_url"])
+        if html is None:
+            continue
+        found = _performances(html)
+        # A page that parses to nothing is a page we failed to read, not a show
+        # with no performances left. Storing the empty result would wipe a real
+        # calendar and mark it freshly checked, so the mistake would stick.
+        if not found:
+            continue
+        store_performances(conn, row["id"], found)
+        checked += 1
+        dates += len(found)
+    conn.commit()
+    print(f"    calendars: {checked} show(s) refreshed, {dates} performances")
+    return {"checked": checked, "dates": dates}
 
 
 def merge_by_programme(conn: sqlite3.Connection, year: int) -> int:
