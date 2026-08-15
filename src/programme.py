@@ -230,6 +230,53 @@ def _performances(html: str) -> list[tuple[str, str, str]]:
     return out
 
 
+def _official_title(html: str) -> str:
+    """
+    What the festival itself calls the show.
+
+    Publications name a run however suits their headline — The Skinny wrote
+    "Dane Buckley @ Pleasance Courtyard", so that is the name we took and kept.
+    The programme calls it "Dane Buckley: Darling", and the programme is the
+    show's own name rather than one paper's shorthand for it.
+
+    Mostly this restores a performer ("Sarah Hester Ross: Serving C*nt") or fixes
+    capitals that a headline shouted ("44 MINUTES" -> "44 Minutes").
+    """
+    import json
+
+    m = re.search(r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>',
+                  html, re.S)
+    if not m:
+        return ""
+    try:
+        event = json.loads(m.group(1))["props"]["pageProps"]["data"]["event"]
+    except (KeyError, TypeError, ValueError):
+        return ""
+    title = (event.get("title") or "").strip() if isinstance(event, dict) else ""
+    # A title that is only a venue or a date is not a title. Nothing seen so far
+    # trips this, but adopting the programme's word for it means adopting
+    # whatever it says, and a blank board is a bad way to find that out.
+    return title if 2 < len(title) <= 160 else ""
+
+
+def adopt_title(conn: sqlite3.Connection, show_id: str, current: str,
+                official: str) -> bool:
+    """
+    Take the festival's name for a show, keeping ours as an alias.
+
+    The old spelling has to stay searchable: it is what publications use, so
+    dropping it would stop tomorrow's review from matching the show it belongs
+    to. Page URLs are built from the show id, not the title, so nothing anyone
+    has linked to moves.
+    """
+    if not official or official == current:
+        return False
+    conn.execute("UPDATE shows SET title = ? WHERE id = ?", (official, show_id))
+    conn.execute("INSERT OR IGNORE INTO aliases (alias, show_id) VALUES (?, ?)",
+                 (normalise(current), show_id))
+    return True
+
+
 def store_performances(conn: sqlite3.Connection, show_id: str,
                        performances: list[tuple[str, str, str]]) -> None:
     """
@@ -634,7 +681,7 @@ def refresh_performances(conn: sqlite3.Connection, year: int,
     if not due:
         return {"checked": 0, "dates": 0}
 
-    checked = dates = failed = 0
+    checked = dates = failed = renamed = 0
     for row in due:
         time.sleep(DELAY)
         html = _get(row["edfringe_url"])
@@ -653,12 +700,15 @@ def refresh_performances(conn: sqlite3.Connection, year: int,
             failed += 1
             continue
         store_performances(conn, row["id"], found)
+        if adopt_title(conn, row["id"], row["title"], _official_title(html)):
+            renamed += 1
         checked += 1
         dates += len(found)
     conn.commit()
     print(f"    calendars: {checked} show(s) refreshed, {dates} performances"
+          + (f", {renamed} renamed" if renamed else "")
           + (f", {failed} unreadable" if failed else ""))
-    return {"checked": checked, "dates": dates, "failed": failed}
+    return {"checked": checked, "dates": dates, "failed": failed, "renamed": renamed}
 
 
 def merge_by_programme(conn: sqlite3.Connection, year: int) -> int:
