@@ -20,7 +20,7 @@ import sqlite3
 from datetime import date
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 OUT = Path(__file__).resolve().parent.parent / "data" / "instagram"
 LOGO = Path(__file__).resolve().parent.parent / "assets" / "logo.png"
@@ -79,21 +79,29 @@ def _logo(img: Image.Image) -> int:
     nobody is watching, and a leaderboard without its badge is worth more than no
     leaderboard at all.
 
-    Transparency matters here: the card's background is the site's pink, so a
-    logo saved on its own cream square lands as a visible tile rather than a
-    mark. Where the file has an alpha channel it is honoured; where it has none
-    the near-white corner pixels are made transparent, which rescues a flat
-    export without touching a logo that was drawn properly.
+    Transparency matters here. A logo saved on its own flat square lands as a
+    visible tile rather than a mark — and it does so even when that square is
+    meant to match, because "the site pink" exported from a drawing tool is
+    rarely the exact pink drawn here. The file supplied is (250, 224, 219)
+    against a card of (249, 228, 224): invisible on screen, a clear rectangle
+    once posted.
+
+    So where the file has no alpha of its own, the background is knocked out by
+    colour rather than by brightness — whatever the corner pixel is, near
+    matches of it become transparent. Brightness alone would keep a pale pink
+    and lose a pale yellow, and there is a pale yellow star in this one.
+
+    The knockout ramps rather than switching, so anti-aliased edges keep their
+    softness instead of gaining a hard fringe.
     """
     if not LOGO.exists():
         return 0
     logo = Image.open(LOGO).convert("RGBA")
-    if not any(px < 250 for px in logo.getchannel("A").getdata()):
+    if min(logo.getchannel("A").get_flattened_data()) == 255:
         corner = logo.getpixel((0, 0))[:3]
-        if min(corner) > 225:
-            logo.putalpha(Image.eval(
-                logo.convert("L"), lambda v: 0 if v > 225 else 255).filter(
-                    ImageFilter.GaussianBlur(0.6)))
+        flat = Image.new("RGB", logo.size, corner)
+        difference = ImageChops.difference(logo.convert("RGB"), flat).convert("L")
+        logo.putalpha(Image.eval(difference, lambda v: min(255, max(0, (v - 6) * 10))))
 
     box = logo.getbbox() or (0, 0, *logo.size)     # drop the empty margin
     logo = logo.crop(box)
@@ -109,9 +117,6 @@ def draw_card(placed, when: date | None = None) -> Path:
     img = Image.new("RGB", (WIDTH, HEIGHT), BG)
     d = ImageDraw.Draw(img)
 
-    # "Top 20 - Critically Reviewed Shows" set on one line has to drop to 54px to
-    # fit the width, and at that size it stops carrying in a feed thumbnail. So
-    # the number keeps its 76px and the qualifier sits beneath it.
     badge = _logo(img)
 
     # The title is one line at one size, so the size is whatever that line can
