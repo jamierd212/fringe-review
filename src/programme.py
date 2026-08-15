@@ -174,6 +174,34 @@ def _start_time(html: str) -> str:
     return times.most_common(1)[0][0] if times else ""
 
 
+SOCIALS = (
+    ("bluesky",   r'https?://(?:www\.)?bsky\.app/profile/([^"\s\\/?]+)'),
+    ("x",         r'https?://(?:www\.)?(?:twitter\.com|x\.com)/([A-Za-z0-9_]{2,20})'),
+    ("instagram", r'https?://(?:www\.)?instagram\.com/([A-Za-z0-9_.]{2,30})'),
+    ("facebook",  r'https?://(?:www\.)?facebook\.com/([A-Za-z0-9_.-]{2,40})'),
+)
+
+
+def _socials(html: str) -> dict:
+    """
+    The accounts a company has listed on its own programme entry.
+
+    Their own statement of where to find them, which is the only trustworthy
+    source for this: a handle guessed from a name reaches whoever happens to
+    hold it, and being congratulated for someone else's show in public is not a
+    mistake that can be taken back.
+    """
+    out = {}
+    for name, pattern in SOCIALS:
+        found = re.findall(pattern, html, re.I)
+        # Ignore Facebook's own furniture — sharer links and the like.
+        found = [f for f in found if f.lower() not in
+                 ("sharer", "sharer.php", "share.php", "profile.php", "pages", "home")]
+        if found:
+            out[name] = found[0]
+    return out
+
+
 def _fringe_details(html: str) -> dict:
     """The Fringe states genre and subGenre outright in the page JSON."""
     genre = re.search(r'"genre"\s*:\s*"([^"]*)"', html)
@@ -187,7 +215,8 @@ def _fringe_details(html: str) -> dict:
             "subgenre": (sub.group(1).strip() if sub else ""),
             "venue": (venue.group(1).strip() if venue else ""),
             "start_time": _start_time(html),
-            "duration": (duration.group(1) if duration else "")}
+            "duration": (duration.group(1) if duration else ""),
+            "socials": _socials(html)}
 
 
 def _eif_details(html: str) -> dict:
@@ -443,6 +472,12 @@ def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dic
             continue
 
         details = fest["details"](html)
+        for network, handle in (details.get("socials") or {}).items():
+            conn.execute(
+                """INSERT INTO socials (show_id, network, handle) VALUES (?, ?, ?)
+                   ON CONFLICT(show_id, network) DO UPDATE SET handle = excluded.handle""",
+                (row["id"], network, handle),
+            )
         conn.execute(
             """UPDATE shows SET edfringe_url = ?, festival = ?, genre = ?,
                                  subgenre = ?, venue = ?, start_time = ?,

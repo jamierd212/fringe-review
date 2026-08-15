@@ -75,6 +75,15 @@ CREATE TABLE IF NOT EXISTS source_probes (
     found       INTEGER
 );
 
+-- Where a company says it can be found, taken from its own programme entry.
+-- Not guessed: a handle inferred from a show's name reaches whoever holds it.
+CREATE TABLE IF NOT EXISTS socials (
+    show_id  TEXT NOT NULL,
+    network  TEXT NOT NULL,
+    handle   TEXT NOT NULL,
+    PRIMARY KEY (show_id, network)
+);
+
 CREATE TABLE IF NOT EXISTS holds (
     url         TEXT PRIMARY KEY,
     headline    TEXT,
