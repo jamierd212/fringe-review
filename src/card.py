@@ -56,13 +56,30 @@ MUTED = (107, 107, 107)
 STAR = (198, 40, 40)
 CARD = (255, 255, 255)
 
-# Fonts are looked up by file because Pillow needs a path. Several candidates,
-# because the machine that draws this is not necessarily a Mac.
+# Inter, carried in the repository rather than taken from the machine.
+#
+# The card is drawn by the nightly run on Ubuntu, not on the Mac it is designed
+# on, so anything chosen from the system fonts here would silently fall back to
+# DejaVu there and the posted card would not be the card anyone approved. A file
+# in the repo renders the same in both places, which is the whole point.
+#
+# Inter is drawn for screens and holds its shape at the 23px the venue column
+# runs at, where Arial starts to look like a spreadsheet. SIL Open Font Licence,
+# so redistributing it here is permitted; the licence travels with it.
+#
+# InterDisplay is the same face cut for large sizes — tighter spacing, finer
+# detail — and is used for the header alone, which is what it is for.
+_FONTS_DIR = Path(__file__).resolve().parent.parent / "assets" / "fonts"
 FONTS = {
-    "bold": ["/System/Library/Fonts/Supplemental/Arial Bold.ttf",
-             "/System/Library/Fonts/Supplemental/Arial Black.ttf",
+    "bold": [_FONTS_DIR / "Inter-Bold.ttf",
+             "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
              "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"],
-    "regular": ["/System/Library/Fonts/Supplemental/Arial.ttf",
+    "display": [_FONTS_DIR / "InterDisplay-Bold.ttf",
+                _FONTS_DIR / "Inter-Bold.ttf",
+                "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"],
+    "regular": [_FONTS_DIR / "Inter-Regular.ttf",
+                "/System/Library/Fonts/Supplemental/Arial.ttf",
                 "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"],
 }
 
@@ -149,8 +166,8 @@ def draw_card(placed, when: date | None = None) -> Path:
     # itself at one end of the space and nowhere near the other. Baselines are
     # the only way to place lines of 34, 76 and 38 evenly, because each box
     # carries a different amount of air above and below its letters.
-    number = _font("bold", 76)
-    d.text((60, 73), "Edinburgh Festivals", font=_font("bold", 34), fill=MUTED,
+    number = _font("display", 76)
+    d.text((60, 73), "Edinburgh Festivals", font=_font("display", 34), fill=MUTED,
            anchor="ls")
     d.text((60, 166), "Top 20", font=number, fill=INK, anchor="ls")
     # The date sits beside the number, on the same baseline, so two very
@@ -158,7 +175,7 @@ def draw_card(placed, when: date | None = None) -> Path:
     d.text((60 + d.textlength("Top 20", font=number) + 26, 166),
            when.strftime("%-d %B %Y"), font=_font("regular", 32),
            fill=MUTED, anchor="ls")
-    d.text((60, 234), "Critically Reviewed Shows", font=_font("bold", 38),
+    d.text((60, 234), "Critically Reviewed Shows", font=_font("display", 38),
            fill=INK, anchor="ls")
 
     top, row_h = ROWS_TOP, ROW_H
@@ -212,7 +229,7 @@ def draw_card(placed, when: date | None = None) -> Path:
             d.text((limit, mid), detail, font=meta_font,
                    fill=(140, 140, 140), anchor="rm")
 
-    d.text((60, HEIGHT - 82), "fringestars.com", font=_font("bold", 42), fill=INK)
+    d.text((60, HEIGHT - 82), "fringestars.com", font=_font("display", 42), fill=INK)
 
     OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / f"top20-{when.isoformat()}.png"
