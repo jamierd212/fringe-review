@@ -52,7 +52,9 @@ def compose(show, position: int, previous: int) -> str:
     `previous` is not named in it. The interesting fact is where the show is now,
     and "up from #12" invites the reader to notice the days it was lower.
     """
-    average = f"{show.mean:.1f}".rstrip("0").rstrip(".")
+    # One decimal always: "5 Star Rating" beside "4.9 Star Rating" reads as a
+    # different kind of measurement rather than the top of the same one.
+    average = f"{show.mean:.1f}"
 
     def build(title: str) -> str:
         return (
