@@ -4,9 +4,7 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-| Publication | Headline | Matched to | Confidence |
-|---|---|---|---|
-| Theatre & Tonic | [Don’t You Forget About Me](https://www.theatreandtonic.co.uk/edinburgh-fringe/dont-you-forget-about-me-at-assembly-roxy-downstairs-review) | Don't You Forget About Me | 75% |
+_Nothing to check. 🎉_
 
 ## Held — not on the leaderboard
 
@@ -16,6 +14,7 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The Herald | [HK Soul Showcase](https://www.heraldscotland.com/life_style/26462940.fringe-review-hk-soul-showcase-assembly-dance-base-three-stars/) | not in any programme; no AI check available |
 | Theatre & Tonic | [Come To Where I Am](https://www.theatreandtonic.co.uk/edinburgh-fringe/come-to-where-i-am-at-shedinburgh-review) | not in any programme; no AI check available |
 | Theatre & Tonic | [Parentified](https://www.theatreandtonic.co.uk/edinburgh-fringe/parentified-ed-fringe-review) | not in any programme; no AI check available |
 | Theatre & Tonic | [Don’t know? Have a go!, theSpace](https://www.theatreandtonic.co.uk/edinburgh-fringe/dont-know-have-a-go-ed-fringe-review) | not in any programme; no AI check available |
@@ -215,4 +214,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Scotsman | [Troubled](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-niusia-in-the-land-of-eagles-troubled-amazons-lei-ldn-mind-how-you-go-5268286#troubled) | The headline 'Troubled' alone provides no context indicating this reviews a named show at an Edinburgh festival. |
 | The Scotsman | [Edinburgh Fringe theatre reviews: DYKE Systems Ltd | Homo(sapien) | Beth wants The D](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-dyke-systems-homosapien-5268364) | This is a round-up listing multiple shows ('DYKE Systems Ltd', 'Homo(sapien)', 'Beth wants The D'), not a review of a single named show. |
 | The Scotsman | [Benedetti & Sitkovetsky’s Tribute to Menuhin](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/edinburgh-international-festival-music-reviews-sitkovetsky-trio-benedetti-5268385#benedetti-and-sitkovetsky-s-tribute-to-menuhin) | This appears to be a concert or classical music performance that lacks any indication it is part of an Edinburgh festival or reviewing a named show at such a festival. |
-| The Scotsman | [Go West!](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-philosophy-of-the-world-father-away-she-goes-eelmageddon-go-west-thirsty-the-poetess-virtyouoso-an-immersive-reflection-5269531#go-west) | This appears to be a generic title or command rather than a review of a specific named show at an Edinburgh festival. |

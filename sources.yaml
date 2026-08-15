@@ -198,6 +198,41 @@ publications:
 
   # ------------------------------------------------------ deliberately excluded
 
+  - name: The Herald
+    slug: heraldscotland
+    homepage: https://www.heraldscotland.com/
+    # No feed reaches their festival coverage, and their sitemap is sections
+    # only. The festivals topic page lists the reviews as they are published.
+    discovery: index
+    index_urls:
+      - https://www.heraldscotland.com/topics/edinburgh-festivals-2026/
+    link_pattern: 'href="(/[^"]*fringe-review[^"]*)"[^>]*>(.*?)</a>'
+    rating:
+      # Stated in the page title: "Fringe review: 44 Minutes, Assembly Rooms,
+      # four stars". Anchored to the title because the phrase appears about
+      # thirty times elsewhere on the page, in the headlines of every other
+      # review they link to.
+      type: pattern
+      pattern: '<title>[^<]*?\b(one|two|three|four|five|[1-5])\s+stars?\b'
+      scale: 5
+    fetch_page: true
+    title_from_page: true
+    # og:title holds a promotional standfirst, not the show; <title> has the
+    # show, the venue and the rating in their house format.
+    title_pattern: '<title>([^<]*)</title>'
+    title_strip_patterns:
+      - '\s*\|\s*The Herald\s*$'
+      - '^\s*Fringe review:\s*'
+      - ',\s*[^,]*\bstars?\b.*$'     # the rating, which ends their headline
+      - ',\s*[^,]+$'                  # then the venue
+    verified: 2026-08-15
+    notes: >
+      THE TOPIC URL CARRIES THE YEAR and will need a new entry each August,
+      like Chortle's index. Without it this source silently collects nothing.
+    #
+    # The rating is also in the URL slug (…-four-stars/), which is a useful
+    # cross-check if the title format ever changes.
+
   - name: Theatre & Tonic
     slug: theatreandtonic
     homepage: https://www.theatreandtonic.co.uk/

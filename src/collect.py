@@ -909,8 +909,14 @@ class Collector:
         # joyous"). The page is already in hand, so take the real headline from
         # it rather than fetching twice or matching on punctuation-stripped mush.
         if pub.get("title_from_page"):
-            for pattern in (r'<meta[^>]+property="og:title"[^>]+content="([^"]+)"',
-                            r"<title>(.*?)</title>"):
+            # og:title first, because it is usually the cleanest statement of the
+            # headline — but not always. The Herald puts a promotional standfirst
+            # there ("44 minutes until somebody dies: brace yourself...") and the
+            # show's name only in <title>, so a publication can say which to use.
+            preferred = pub.get("title_pattern")
+            for pattern in ([preferred] if preferred else []) + [
+                            r'<meta[^>]+property="og:title"[^>]+content="([^"]+)"',
+                            r"<title>(.*?)</title>"]:
                 m = re.search(pattern, html, re.S | re.I)
                 if m:
                     import html as _html

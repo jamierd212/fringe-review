@@ -476,10 +476,16 @@ def from_pattern(html: str, rule: dict) -> Rating | None:
     m = re.search(rule["pattern"], html, re.I)
     if not m:
         return None
-    try:
-        value = float(m.group(1))
-    except (TypeError, ValueError):
-        return None
+    captured = (m.group(1) or "").strip().lower()
+    # Publications write the number either way. The Herald puts it in the page
+    # title as a word - "Fringe review: 44 Minutes, Assembly Rooms, four stars".
+    if captured in WORD_NUMBERS:
+        value = float(WORD_NUMBERS[captured])
+    else:
+        try:
+            value = float(captured)
+        except (TypeError, ValueError):
+            return None
     if len(m.groups()) > 1 and m.group(2):
         value += 0.5
     return _make(value, float(rule.get("scale", 5)),
