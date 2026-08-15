@@ -198,6 +198,83 @@ publications:
 
   # ------------------------------------------------------ deliberately excluded
 
+  - name: The Student
+    slug: thestudent
+    homepage: https://www.thestudentnews.co.uk/
+    feed: https://www.thestudentnews.co.uk/feed/
+    pages: 5
+    rating:
+      type: auto
+    fetch_page: true
+    require_title_prefix: "Fringe 2026:"
+    title_strip_patterns:
+      - '^\s*Fringe \d{4}:\s*'
+    verified: 2026-08-15
+    notes: >
+      Edinburgh University's student paper, and prolific during the festival —
+      every one of the ten most recent feed items was a Fringe review. Their
+      house prefix is "Fringe <year>:", so THE PREFIX NEEDS UPDATING each August.
+
+  - name: A Young(ish) Perspective
+    slug: ayoungishperspective
+    homepage: https://ayoungishperspective.co.uk/
+    feed: https://ayoungishperspective.co.uk/feed/
+    pages: 5
+    rating:
+      type: auto              # star characters in the page
+    fetch_page: true
+    require_title_prefix: "REVIEW:"
+    title_strip_patterns:
+      - '^\s*REVIEW:\s*'
+      - '\s+@\s+.*$'          # "@ Cabaret Voltaire", their venue notation
+    verified: 2026-08-15
+    notes: >
+      They review year-round and turn to Edinburgh in August, so most of the feed
+      is out of scope and the festival window does the filtering.
+
+  - name: Bouquets & Brickbats
+    slug: bouquetsbrickbats
+    homepage: https://bouquetsbrickbatsreviews.com/
+    feed: https://bouquetsbrickbatsreviews.com/feed/
+    pages: 5
+    rating:
+      type: auto              # written as "N stars" in the copy
+    fetch_page: true
+    verified: 2026-08-15
+    notes: >
+      Feed titles are the show name alone, with no prefix or venue to strip.
+
+  - name: The QR
+    slug: theqr
+    homepage: https://theqr.co.uk/
+    feed: https://theqr.co.uk/feed/
+    pages: 5
+    rating:
+      type: auto
+    fetch_page: true
+    require_title_prefix: "EdFringe Review:"
+    title_strip_patterns:
+      - '^\s*EdFringe Review:\s*'
+      - '\s+[–—-]\s+.*$'      # trailing subtitle after a dash
+    verified: 2026-08-15
+    notes: >
+      Sampled eight reviews: six fours, a three and one unrated, so the rating
+      moves rather than being a constant read off the page furniture.
+
+  - name: Edinburgh Reviews
+    slug: edinburghreviews
+    homepage: https://edinburgh-reviews.co.uk/
+    feed: https://edinburgh-reviews.co.uk/feed/
+    pages: 5
+    rating:
+      type: auto              # schema.org rating on the page
+    fetch_page: true
+    require_title_match: "\\breview\\b"
+    verified: 2026-08-15
+    notes: >
+      Despite the name they cover restaurants, exhibitions and anime alongside
+      the festival, so the admission gate does the real filtering here.
+
   - name: The Herald
     slug: heraldscotland
     homepage: https://www.heraldscotland.com/

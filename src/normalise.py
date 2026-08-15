@@ -152,6 +152,10 @@ def clean_title(raw: str) -> str:
     # understood them kept a trail of these, and they render as nothing at all,
     # so "First Class Panic ️ ️ ️ ️ ️" looked like a title with a stutter.
     text = text.replace("\uFE0F", "")
+    # RGM writes "Bilal Zafar::Rubicon"; splitting on the colon leaves the show
+    # as ":Rubicon", which is then how it appears on the board. A title has no
+    # business beginning with punctuation.
+    text = text.lstrip(" :–—-,|.")
     # Headlines can stack prefixes ("Review: Edinburgh Fringe 2025: Diva"), so
     # strip repeatedly until nothing more comes off.
     for _ in range(3):
