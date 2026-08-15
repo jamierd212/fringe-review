@@ -42,22 +42,18 @@ HEADER_TOP, HEADER_BOTTOM = 42, 23
 # bold that title stopped after "Over"; in regular, more characters fit the same
 # 640, so it ran on to "Over A…" and shouldered Summerhall off the row. 630
 # gives the same words back and the venue with them.
-TITLE_MAX = 600
+TITLE_MAX = 630
 # Where a row's text starts and stops. The white card behind it runs 48 to 1032,
 # so these leave 24px of padding at each end. They were 146 and 92, which was
 # generous padding bought at the cost of the venue on the longest rows.
-TEXT_L, TEXT_R = 166, 72
+TEXT_L, TEXT_R = 134, 72
 # The least a shortened venue may be and still name somewhere. Below this it
 # is dropped in favour of the time alone.
 VENUE_MIN = 110
-# The left gutter, in order: the climb marker, then the position number.
-#
-# Sized against the worst case rather than the common one — a three-figure jump
-# ("132") beside "20", the widest position. That is 46px of marker and 39px of
-# number, so the number's right edge sits at 148 and the title starts at 166.
-# Twenty-two pixels of title width, spent so that a show arriving from nowhere
-# can say how far it came.
-POS_R, ARROW_X, DELTA_X = 148, 52, 67
+# The position number's right edge. The climb marker used to sit to its left,
+# which put the one coloured thing on the card in the reader's path before they
+# had read a single name. It now sits at the far right, after the venue.
+POS_R = 120
 # Green, for the one thing on the card that is good news.
 RISE = (34, 139, 87)
 
@@ -161,24 +157,34 @@ def _logo(img: Image.Image) -> int:
     return logo.width
 
 
-def _rise(d: ImageDraw.ImageDraw, mid: float, places: int | None) -> None:
+def _climb(previous: dict[str, int] | None, show, position: int) -> str | None:
     """
-    The climb marker: an arrow, and how far the show came.
+    How far this show has come, as it will be written, or None if it has not.
 
-    The number is the point. A show that has moved from 20th to 19th and one
-    that has arrived from 45th both get an arrow, and only the figure beside it
-    says which is the day's news.
-
-    `places` is None when we have never seen the show before — its first
-    appearance anywhere, not a climb from a known position. It gets the arrow
-    without a figure, because any number there would be invented.
+    Measured against every show's last position rather than only the twenty
+    shown, so a show arriving from 45th can say so. A show with no previous
+    position at all is new to the board entirely: it gets the arrow without a
+    figure, because any number there would be invented.
     """
-    w, h = 12, 12
-    d.polygon([(ARROW_X + w / 2, mid - h / 2), (ARROW_X, mid + h / 2),
-               (ARROW_X + w, mid + h / 2)], fill=RISE)
-    if places is not None:
-        d.text((DELTA_X, mid), str(places), font=_font("bold", 18),
-               fill=RISE, anchor="lm")
+    if not previous:
+        return None
+    was = previous.get(show.id)
+    if was is None:
+        return ""
+    return str(was - position) if was > position else None
+
+
+def _rise(d: ImageDraw.ImageDraw, right: float, mid: float, places: str,
+          font) -> float:
+    """Draw the marker with its right edge at `right`. Returns its width."""
+    w, h, gap = 12, 12, 3
+    width = w + (gap + d.textlength(places, font=font) if places else 0)
+    x = right - width
+    d.polygon([(x + w / 2, mid - h / 2), (x, mid + h / 2), (x + w, mid + h / 2)],
+              fill=RISE)
+    if places:
+        d.text((x + w + gap, mid), places, font=font, fill=RISE, anchor="lm")
+    return width
 
 
 def draw_card(placed, when: date | None = None,
@@ -208,7 +214,7 @@ def draw_card(placed, when: date | None = None,
     # so numbers that look evenly spaced are not.
     lines = [("Edinburgh Festivals", "display", 38, MUTED),
              ("Top 20", "display", 76, INK),
-             ("Critically Reviewed Shows", "display", 38, INK)]
+             ("Critically Acclaimed Shows", "display", 38, INK)]
     fonts = [_font(kind, size) for _, kind, size, _ in lines]
     metrics = [f.getmetrics() for f in fonts]
     ink = sum(a + desc for a, desc in metrics)
@@ -228,6 +234,18 @@ def draw_card(placed, when: date | None = None,
 
     top, row_h = ROWS_TOP, ROW_H
     pos_font = _font("bold", 30)
+    climb_font = _font("bold", 18)
+
+    # How much of the right edge the markers need TODAY, rather than the most
+    # they could ever need. A day with no climbers reserves nothing and the
+    # venues get the full width back; a day whose biggest jump is "3" reserves
+    # room for "3". Computed across the whole card, not per row, so the detail
+    # column still lines up down the page.
+    climbs = {show.id: _climb(previous, show, position)
+              for position, show in placed[:TOP]}
+    marker_w = max((12 + (3 + d.textlength(c, font=climb_font) if c else 0)
+                    for c in climbs.values() if c is not None), default=0)
+    detail_r = WIDTH - TEXT_R - (marker_w + 16 if marker_w else 0)
     # Regular, not bold. Twenty bold names down the card left nothing for the
     # header to be louder than; the position numbers hold the weight now and the
     # titles read as a list rather than twenty separate headlines.
@@ -246,15 +264,6 @@ def draw_card(placed, when: date | None = None,
         # Ranged right, so 1 and 20 share an edge instead of both starting at
         # the same place and looking staggered.
         d.text((POS_R, mid), str(position), font=pos_font, fill=MUTED, anchor="rm")
-        # Movement is measured against every show's last position, not just
-        # the twenty shown, so a show arriving from 45th can say so. A show with
-        # no previous position at all is new to the board entirely.
-        if previous:
-            was = previous.get(show.id)
-            if was is None:
-                _rise(d, mid, None)
-            elif was > position:
-                _rise(d, mid, was - position)
 
         # The name on the left, venue and time in grey on the right, both
         # against their own margin. Ranged right, the detail forms its own
@@ -274,7 +283,7 @@ def draw_card(placed, when: date | None = None,
         # Below a working minimum it is dropped after all: three letters and an
         # ellipsis name no venue in Edinburgh, and the time is worth more than a
         # stub.
-        limit = WIDTH - TEXT_R
+        limit = detail_r
         after_title = TEXT_L + d.textlength(title, font=title_font) + 28
         room = limit - after_title
         venue, clock = show.venue or "", show.start_time or ""
@@ -287,6 +296,12 @@ def draw_card(placed, when: date | None = None,
         if detail and d.textlength(detail, font=meta_font) <= room:
             d.text((limit, mid), detail, font=meta_font,
                    fill=(140, 140, 140), anchor="rm")
+
+        # The climb marker last, hard against the right margin, so the arrows
+        # form their own column clear of everything else.
+        climbed = climbs.get(show.id)
+        if climbed is not None:
+            _rise(d, WIDTH - TEXT_R, mid, climbed, climb_font)
 
     d.text((60, HEIGHT - 82), "fringestars.com", font=_font("display", 42), fill=INK)
 
