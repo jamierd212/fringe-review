@@ -778,6 +778,22 @@
       window.scrollTo({top: 0, behavior: 'smooth'});
     });
     window.addEventListener('scroll', onScroll, {passive: true});
+
+    // Let go of the search box once you start scrolling the results. On iOS the
+    // keyboard shrinks the visual viewport while the bar stays pinned to the
+    // layout one, so it sits above the visible area and reads as having
+    // scrolled away. Dismissing the keyboard puts it back, and by the time
+    // someone is scrolling results they have finished typing anyway.
+    //
+    // Bound to touchmove and wheel rather than scroll: those only happen when a
+    // person moves the page, where scroll also fires when the keyboard opens and
+    // would blur the field the instant it was tapped.
+    ['touchmove', 'wheel'].forEach(function (event) {
+      window.addEventListener(event, function () {
+        if (document.activeElement === input) input.blur();
+      }, {passive: true});
+    });
+
     onScroll();
   }
 
@@ -982,6 +998,12 @@
       reset(fFrom);
       reset(fTo);
       apply();          // Clear means clear: back to every show, not back to "from now"
+      // And put the panel away. Clear is the last thing anyone does in it, and
+      // leaving it open hides the list they have just asked to see all of.
+      if (toggle && panel) {
+        panel.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+      }
 
     });
   }
