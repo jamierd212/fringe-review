@@ -58,7 +58,7 @@ def compose(show, position: int, previous: int) -> str:
 
     def build(title: str) -> str:
         return (
-            f"Congratulations! {title} is up to #{position} on Fringestars.com "
+            f"Congratulations! {title} is up to #{position} on fringestars.com "
             f"- the definitive Edinburgh festival reviews aggregator.\n"
             f"{average} Star Rating from {_plural(len(show.reviews), 'review')}.\n"
             f"{SITE}/show/{show.id}/"
