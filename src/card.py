@@ -32,10 +32,15 @@ ROWS_TOP = 266         # where the first white box starts
 # trim to the header silently made the rows TALLER, spreading the white space
 # rather than reducing it — the opposite of what shrinking the header is for.
 ROW_H = 48
-# How wide a show's name may run before it is cut. Set by eye, at the length of
-# "Man Sings The Same Song Over And Over" — the longest title on the board and
-# the one that decides where this needs to sit.
-TITLE_MAX = 640
+# How wide a show's name may run before it is cut, at the length of "Man Sings
+# The Same Song Over And Over" — the longest title on the board and the one that
+# decides where this sits.
+#
+# It is measured against the weight the titles are actually set in. At 640 in
+# bold that title stopped after "Over"; in regular, more characters fit the same
+# 640, so it ran on to "Over A…" and shouldered Summerhall off the row. 630
+# gives the same words back and the venue with them.
+TITLE_MAX = 630
 # Where a row's text starts and stops. The white card behind it runs 48 to 1032,
 # so these leave 24px of padding at each end. They were 146 and 92, which was
 # generous padding bought at the cost of the venue on the longest rows.
