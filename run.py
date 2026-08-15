@@ -126,6 +126,18 @@ def main() -> int:
         if merged:
             print(f"  merged {merged} duplicate show(s)")
 
+        # Re-read every show's calendar, every run. This is the availability
+        # pass, and it is deliberately not a slice of the board: what it
+        # collects is which dates the box office has sold out, and that changes
+        # daily. A show that went red yesterday must not still be offered as
+        # bookable today, so a rota that came round once a week would be wrong
+        # about the shows people most want six days in seven.
+        #
+        # It costs about thirteen minutes at the festival's requested one
+        # second between requests. That is most of this run, and it buys the
+        # only part of the page that goes stale overnight.
+        programme.refresh_performances(conn, current, stale_days=0, limit=1000)
+
     # Record where everything stands, and note any show that has climbed inside
     # the top twenty. Writes to an outbox; sends nothing.
     if not args.render:
