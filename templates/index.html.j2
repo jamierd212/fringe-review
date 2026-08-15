@@ -99,13 +99,16 @@
   .topbar { position: sticky; top: 0; z-index: 50; background: var(--bg); }
   .topbar.compact {
     box-shadow: 0 1px 0 var(--rule), 0 6px 12px -10px rgba(0,0,0,.35);
-    padding-bottom: .45rem;
+    /* Padding rather than a margin on the nav inside: a child's top margin
+       collapses through the container, so the buttons sat flush against the top
+       of the screen with the gap applied but not visible. */
+    padding: .4rem 0 .45rem;
   }
   /* Once scrolled, the year tabs give up their space: the bar is there to keep
      filtering and searching within reach, and you can still reach the years by
      going back to the top. */
   .topbar.compact nav.years a { display: none; }
-  .topbar.compact nav.years { margin-top: .45rem; }
+  .topbar.compact nav.years { margin-top: 0; }
   .to-top {
     padding: .3rem .85rem; border: 1px solid var(--rule); border-radius: 999px;
     font: inherit; font-size: .9rem; font-weight: 700; color: var(--muted);
