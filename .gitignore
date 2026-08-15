@@ -9,3 +9,4 @@ fringe-review/
 
 # Kept locally as a working reference, deliberately not published.
 README.md
+data/outbox.json

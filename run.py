@@ -15,7 +15,7 @@ import argparse
 import sys
 from datetime import date
 
-from src import collect, db, health, match, programme, recheck, render
+from src import collect, db, health, match, programme, recheck, render, standings
 
 
 def main() -> int:
@@ -125,6 +125,17 @@ def main() -> int:
         merged = programme.merge_by_programme(conn, current)
         if merged:
             print(f"  merged {merged} duplicate show(s)")
+
+    # Record where everything stands, and note any show that has climbed inside
+    # the top twenty. Writes to an outbox; sends nothing.
+    if not args.render:
+        from src import rank
+        ranked, _rest = rank.leaderboard(conn, date.today().year)
+        notes = standings.update(conn, date.today().year, rank.positions(ranked))
+        queued = standings.queue(notes)
+        if queued:
+            print(f"\n  {queued} show(s) climbed — messages waiting in data/outbox.json")
+            print("  Review and send with:  python tools/post_outbox.py")
 
     paths = render.run(conn, year)
     stats = db.stats(conn)
