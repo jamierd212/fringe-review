@@ -139,7 +139,14 @@ def draw_card(placed, when: date | None = None) -> Path:
     for index, (position, show) in enumerate(placed[:TOP]):
         y = top + index * row_h
         d.rounded_rectangle([48, y, WIDTH - 48, y + row_h - 8], radius=10, fill=CARD)
-        d.text((72, y + 11), str(position), font=pos_font, fill=MUTED)
+
+        # Everything on the row hangs off the box's own centre line, set with
+        # Pillow's middle anchor rather than by nudging each baseline. Three
+        # sizes of type share this row; offsets tuned for one of them leave the
+        # other two sitting low, which is what put the whole row against the
+        # bottom edge before.
+        mid = y + (row_h - 8) / 2
+        d.text((72, mid), str(position), font=pos_font, fill=MUTED, anchor="lm")
 
         # The name on the left, venue and time in grey on the right, both
         # against their own margin. Ranged right, the detail forms its own
@@ -149,7 +156,7 @@ def draw_card(placed, when: date | None = None) -> Path:
         # with that column, and a name cut at a readable length costs less than
         # a row with nowhere to put its venue.
         title = _fit(d, show.title, title_font, TITLE_MAX)
-        d.text((TEXT_L, y + 11), title, font=title_font, fill=INK)
+        d.text((TEXT_L, mid), title, font=title_font, fill=INK, anchor="lm")
 
         # Where the two would meet, the venue goes before the time does: the
         # time is the shorter of the pair and the more use to somebody deciding
@@ -160,8 +167,8 @@ def draw_card(placed, when: date | None = None) -> Path:
                        show.start_time or ""):
             width = d.textlength(detail, font=meta_font)
             if detail and limit - width >= after_title:
-                d.text((limit - width, y + 15), detail, font=meta_font,
-                       fill=(140, 140, 140))
+                d.text((limit, mid), detail, font=meta_font,
+                       fill=(140, 140, 140), anchor="rm")
                 break
 
     d.text((60, HEIGHT - 82), "fringestars.com", font=_font("bold", 42), fill=INK)
