@@ -42,19 +42,22 @@ HEADER_TOP, HEADER_BOTTOM = 42, 23
 # bold that title stopped after "Over"; in regular, more characters fit the same
 # 640, so it ran on to "Over A…" and shouldered Summerhall off the row. 630
 # gives the same words back and the venue with them.
-TITLE_MAX = 630
+TITLE_MAX = 600
 # Where a row's text starts and stops. The white card behind it runs 48 to 1032,
 # so these leave 24px of padding at each end. They were 146 and 92, which was
 # generous padding bought at the cost of the venue on the longest rows.
-TEXT_L, TEXT_R = 134, 72
+TEXT_L, TEXT_R = 166, 72
 # The least a shortened venue may be and still name somewhere. Below this it
 # is dropped in favour of the time alone.
 VENUE_MIN = 110
-# The position number's right edge, and where a climber's arrow sits beside it.
-# Set against "20", the widest number on the card at 39px: at POS_R 116 it starts
-# at 77, so an arrow ending at 73 all but touched it. These leave 12px on the
-# worst row and more on every other.
-POS_R, ARROW_X = 120, 52
+# The left gutter, in order: the climb marker, then the position number.
+#
+# Sized against the worst case rather than the common one — a three-figure jump
+# ("132") beside "20", the widest position. That is 46px of marker and 39px of
+# number, so the number's right edge sits at 148 and the title starts at 166.
+# Twenty-two pixels of title width, spent so that a show arriving from nowhere
+# can say how far it came.
+POS_R, ARROW_X, DELTA_X = 148, 52, 67
 # Green, for the one thing on the card that is good news.
 RISE = (34, 139, 87)
 
@@ -158,11 +161,24 @@ def _logo(img: Image.Image) -> int:
     return logo.width
 
 
-def _rise(d: ImageDraw.ImageDraw, mid: float) -> None:
-    """A small triangle beside the number, for a show that has climbed."""
-    w, h = 15, 13
+def _rise(d: ImageDraw.ImageDraw, mid: float, places: int | None) -> None:
+    """
+    The climb marker: an arrow, and how far the show came.
+
+    The number is the point. A show that has moved from 20th to 19th and one
+    that has arrived from 45th both get an arrow, and only the figure beside it
+    says which is the day's news.
+
+    `places` is None when we have never seen the show before — its first
+    appearance anywhere, not a climb from a known position. It gets the arrow
+    without a figure, because any number there would be invented.
+    """
+    w, h = 12, 12
     d.polygon([(ARROW_X + w / 2, mid - h / 2), (ARROW_X, mid + h / 2),
                (ARROW_X + w, mid + h / 2)], fill=RISE)
+    if places is not None:
+        d.text((DELTA_X, mid), str(places), font=_font("bold", 18),
+               fill=RISE, anchor="lm")
 
 
 def draw_card(placed, when: date | None = None,
@@ -230,8 +246,15 @@ def draw_card(placed, when: date | None = None,
         # Ranged right, so 1 and 20 share an edge instead of both starting at
         # the same place and looking staggered.
         d.text((POS_R, mid), str(position), font=pos_font, fill=MUTED, anchor="rm")
-        if previous and previous.get(show.id, position) > position:
-            _rise(d, mid)
+        # Movement is measured against every show's last position, not just
+        # the twenty shown, so a show arriving from 45th can say so. A show with
+        # no previous position at all is new to the board entirely.
+        if previous:
+            was = previous.get(show.id)
+            if was is None:
+                _rise(d, mid, None)
+            elif was > position:
+                _rise(d, mid, was - position)
 
         # The name on the left, venue and time in grey on the right, both
         # against their own margin. Ranged right, the detail forms its own
