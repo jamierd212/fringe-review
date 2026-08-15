@@ -155,7 +155,10 @@ def draw_card(placed, when: date | None = None) -> Path:
 
     top, row_h = ROWS_TOP, ROW_H
     pos_font = _font("bold", 30)
-    title_font = _font("bold", 30)
+    # Regular, not bold. Twenty bold names down the card left nothing for the
+    # header to be louder than; the position numbers hold the weight now and the
+    # titles read as a list rather than twenty separate headlines.
+    title_font = _font("regular", 30)
     meta_font = _font("regular", 23)
     for index, (position, show) in enumerate(placed[:TOP]):
         y = top + index * row_h
