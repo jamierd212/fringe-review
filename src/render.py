@@ -81,6 +81,23 @@ def playing_days(conn: sqlite3.Connection, year: int) -> dict[str, str]:
     return {k: " ".join(str(n) for n in sorted(v)) for k, v in days.items()}
 
 
+def playing_dates(year: int, days: dict[str, str]) -> list[tuple[int, str]]:
+    """
+    Every date the board has a show on, as (offset, "Sat 16 Aug").
+
+    All of them, not just the ones still to come. Which dates are past depends
+    on when the page is READ, and it is read from caches and from tabs left open
+    overnight; the browser drops the ones that have gone, using the same clock
+    it uses for "today".
+    """
+    from datetime import date as _date, timedelta
+
+    base = _date(year, 8, 1)
+    seen = {int(n) for value in days.values() for n in value.split() if value}
+    return [(n, (base + timedelta(days=n)).strftime("%a %-d %b"))
+            for n in sorted(seen)]
+
+
 def order_areas(areas: set[str]) -> list[str]:
     """Areas by programme size, then the pinned exceptions moved into place."""
     ordered = sorted(areas, key=lambda a: (-AREA_SHOWS.get(a, 0), a.casefold()))
@@ -247,6 +264,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
         hours = [f"{(9 + i) % 24:02d}:00" for i in range(24)]
         genre_sections, genre_subs = genres.options(ranked + rest)
         playing = playing_days(conn, this_year)
+        dates = playing_dates(this_year, playing)
 
         def build(canonical: str) -> str:
             return template.render(
@@ -271,6 +289,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 genre_subs=genre_subs,
                 hours=hours,
                 playing=playing,
+                playing_dates=dates,
                 playing_epoch=f"{this_year}-08-01",
             )
 

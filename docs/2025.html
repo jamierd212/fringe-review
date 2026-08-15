@@ -199,6 +199,13 @@
   .picker-list .picker-rule { height: 1px; background: var(--rule); margin: .15rem 0; }
   .picker-empty { padding: .5rem .55rem; font-size: .85rem; color: var(--muted); }
   .filters .times { display: flex; align-items: center; gap: .35rem; }
+  /* Label beside the box rather than above it. "Tickets available" is the
+     longest label of the four, and stacked it pushed the panel a row taller
+     while leaving most of that row empty. Sized to content so it does not
+     claim half a row it does not need. */
+  .filters label.inline {
+    flex: 0 1 auto; flex-direction: row; align-items: center; gap: .4rem;
+  }
   .filters #f-clear {
     font: inherit; padding: .3rem .7rem; border: 1px solid var(--rule);
     border-radius: 999px; background: var(--card); color: var(--muted); cursor: pointer;
@@ -236,11 +243,7 @@
        and Genre each took a row of their own and the panel ran down the page.
        Half the row each, and they sit side by side as they do on desktop. */
     .filters label { flex: 1 1 calc(50% - .45rem); min-width: 0; }
-    /* Playing is third of three half-width controls, so it starts a row of its
-       own. Allowed to grow it fills that row, which reads as a wider, more
-       important control rather than as the odd one out. Held to half, it sits
-       under Location in the same column. */
-    .filters label.half { flex: 0 1 calc(50% - .45rem); }
+
     /* The time pair takes exactly the width its two boxes need, rather than
        half the row like Location and Genre or the whole of it, which left Clear
        stranded on a line of its own. Sized to content, there is room for Clear
@@ -251,6 +254,16 @@
     .filters select,
     .filters .chosen { width: 100%; max-width: 100%; }
     .picker-panel { width: 17rem; max-width: 92vw; }
+    /* An inline label keeps its box beside it rather than under it, so the box
+       cannot take the whole row — that pushed "Tickets available" onto two
+       lines and made the row it was meant to save taller than before.
+
+       The box is held narrow so that Clear fits on the row beside it. At 9.5rem
+       the pair needed 332.3px of a 331.6px row and Clear dropped to a line of
+       its own over three quarters of a pixel; 9rem leaves 8px of slack, which
+       survives a font that measures slightly differently. */
+    .filters label.inline { white-space: nowrap; }
+    .filters label.inline select { width: auto; min-width: 0; max-width: 9rem; }
   }
   nav.years .search { position: relative; }
   /* The browser's own clear control is suppressed so there is never a pair of
@@ -320,7 +333,7 @@
 
 
 <p class="meta">
-  Updated 15 August 2026, 15:23 BST &middot;
+  Updated 15 August 2026, 15:30 BST &middot;
   2145 rated reviews across 1434 shows
 </p>
 
@@ -47015,7 +47028,7 @@
         } else if (when === 'today') {
           show = r.days.indexOf(today) !== -1;
         } else {
-          show = r.days[r.days.length - 1] >= today;
+          show = r.days.indexOf(parseInt(when.slice(1), 10)) !== -1;
         }
       }
       // A show with no known time cannot satisfy a time window. Hiding it is
@@ -47274,6 +47287,20 @@
   // applied: the controls read 21:00 to 23:00 above a list showing every show at
   // every hour. A filter that says it is on while doing nothing is worse than no
   // default, so the honest reading of those boxes is now the true one.
+
+  // Dates that have already gone. Removed here rather than left out at build
+  // time, because a page written this morning is still being read tonight, and
+  // from caches for longer than that — the reader's clock is the one that knows
+  // which dates are still worth offering.
+  if (fPlaying) {
+    var gone = todayOffset();
+    [].slice.call(fPlaying.options).forEach(function (option) {
+      if (option.value.charAt(0) === 'd'
+          && parseInt(option.value.slice(1), 10) < gone) {
+        option.parentNode.removeChild(option);
+      }
+    });
+  }
 
   [fFrom, fTo, fPlaying].forEach(function (el) {
     if (el) el.addEventListener('change', apply);

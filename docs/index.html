@@ -199,6 +199,13 @@
   .picker-list .picker-rule { height: 1px; background: var(--rule); margin: .15rem 0; }
   .picker-empty { padding: .5rem .55rem; font-size: .85rem; color: var(--muted); }
   .filters .times { display: flex; align-items: center; gap: .35rem; }
+  /* Label beside the box rather than above it. "Tickets available" is the
+     longest label of the four, and stacked it pushed the panel a row taller
+     while leaving most of that row empty. Sized to content so it does not
+     claim half a row it does not need. */
+  .filters label.inline {
+    flex: 0 1 auto; flex-direction: row; align-items: center; gap: .4rem;
+  }
   .filters #f-clear {
     font: inherit; padding: .3rem .7rem; border: 1px solid var(--rule);
     border-radius: 999px; background: var(--card); color: var(--muted); cursor: pointer;
@@ -236,11 +243,7 @@
        and Genre each took a row of their own and the panel ran down the page.
        Half the row each, and they sit side by side as they do on desktop. */
     .filters label { flex: 1 1 calc(50% - .45rem); min-width: 0; }
-    /* Playing is third of three half-width controls, so it starts a row of its
-       own. Allowed to grow it fills that row, which reads as a wider, more
-       important control rather than as the odd one out. Held to half, it sits
-       under Location in the same column. */
-    .filters label.half { flex: 0 1 calc(50% - .45rem); }
+
     /* The time pair takes exactly the width its two boxes need, rather than
        half the row like Location and Genre or the whole of it, which left Clear
        stranded on a line of its own. Sized to content, there is room for Clear
@@ -251,6 +254,16 @@
     .filters select,
     .filters .chosen { width: 100%; max-width: 100%; }
     .picker-panel { width: 17rem; max-width: 92vw; }
+    /* An inline label keeps its box beside it rather than under it, so the box
+       cannot take the whole row — that pushed "Tickets available" onto two
+       lines and made the row it was meant to save taller than before.
+
+       The box is held narrow so that Clear fits on the row beside it. At 9.5rem
+       the pair needed 332.3px of a 331.6px row and Clear dropped to a line of
+       its own over three quarters of a pixel; 9rem leaves 8px of slack, which
+       survives a font that measures slightly differently. */
+    .filters label.inline { white-space: nowrap; }
+    .filters label.inline select { width: auto; min-width: 0; max-width: 9rem; }
   }
   nav.years .search { position: relative; }
   /* The browser's own clear control is suppressed so there is never a pair of
@@ -347,14 +360,6 @@
       <span class="chosen" id="f-genre-chosen"></span>
     </label>
     
-    <label class="half">Tickets
-      <select id="f-playing">
-        <option value="">Any date</option>
-        <option value="today">Available today</option>
-        <option value="any">Available from today</option>
-      </select>
-    </label>
-    
     <label class="span">Starts between
       <span class="times"><select id="f-from">
           <option value="">Any time</option>
@@ -367,14 +372,80 @@
         </select>
       </span>
     </label>
+    <label class="inline">Tickets available
+      <select id="f-playing"><option value="">Any date</option>
+        <option value="today">Today</option><option value="" disabled>──────────</option>
+        
+        <option value="d2">Mon 3 Aug</option>
+        
+        <option value="d3">Tue 4 Aug</option>
+        
+        <option value="d4">Wed 5 Aug</option>
+        
+        <option value="d5">Thu 6 Aug</option>
+        
+        <option value="d6">Fri 7 Aug</option>
+        
+        <option value="d7">Sat 8 Aug</option>
+        
+        <option value="d8">Sun 9 Aug</option>
+        
+        <option value="d9">Mon 10 Aug</option>
+        
+        <option value="d10">Tue 11 Aug</option>
+        
+        <option value="d11">Wed 12 Aug</option>
+        
+        <option value="d12">Thu 13 Aug</option>
+        
+        <option value="d13">Fri 14 Aug</option>
+        
+        <option value="d14">Sat 15 Aug</option>
+        
+        <option value="d15">Sun 16 Aug</option>
+        
+        <option value="d16">Mon 17 Aug</option>
+        
+        <option value="d17">Tue 18 Aug</option>
+        
+        <option value="d18">Wed 19 Aug</option>
+        
+        <option value="d19">Thu 20 Aug</option>
+        
+        <option value="d20">Fri 21 Aug</option>
+        
+        <option value="d21">Sat 22 Aug</option>
+        
+        <option value="d22">Sun 23 Aug</option>
+        
+        <option value="d23">Mon 24 Aug</option>
+        
+        <option value="d24">Tue 25 Aug</option>
+        
+        <option value="d25">Wed 26 Aug</option>
+        
+        <option value="d26">Thu 27 Aug</option>
+        
+        <option value="d27">Fri 28 Aug</option>
+        
+        <option value="d28">Sat 29 Aug</option>
+        
+        <option value="d29">Sun 30 Aug</option>
+        
+        <option value="d30">Mon 31 Aug</option>
+        
+      </select>
+    </label>
+    
     <button type="button" id="f-clear">Clear</button>
+
   </div>
   
 </div>
 
 
 <p class="meta">
-  Updated 15 August 2026, 15:23 BST &middot;
+  Updated 15 August 2026, 15:30 BST &middot;
   1497 rated reviews across 842 shows
 </p>
 
@@ -771,7 +842,7 @@
          data-find="the real kyle mccarren  musicals & opera · musical theatre"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="OPERA;OPERA|musical theatre;OPERA|live music"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="830">
   <div class="pos">7</div>
   <div class="body">
@@ -1313,7 +1384,7 @@
          data-find="man or bear  theatre · horror"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|horror;THEATRE|new writing"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="825">
   <div class="pos">16</div>
   <div class="body">
@@ -1366,7 +1437,7 @@
          data-find="44 minutes  theatre · new writing"
          data-venue="Assembly @ St Andrew Square" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|thriller"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1265">
   <div class="pos">17</div>
   <div class="body">
@@ -1631,7 +1702,7 @@
          data-find="john robertson's the dark room  comedy · game show"
          data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|game show;COMEDY|improv"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1320">
   <div class="pos">22</div>
   <div class="body">
@@ -1727,7 +1798,7 @@
          data-find="the distance  theatre · new writing"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|physical theatre"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29 30"
          data-start="1080">
   <div class="pos">24</div>
   <div class="body">
@@ -1775,7 +1846,7 @@
          data-find="catamaran milo edwards comedy · stand-up"
          data-venue="Monkey Barrel Comedy at O'Neill's (The Tron)" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 23 24 25 26 27 28 29"
          data-start="1035">
   <div class="pos">25</div>
   <div class="body">
@@ -2050,7 +2121,7 @@
          data-find="sam eley is basil crumbwick: soul sewage  comedy · character comedy"
          data-venue="Monkey Barrel Comedy" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|character comedy;COMEDY|stand-up"
-         data-days=""
+         data-days="2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1405">
   <div class="pos">30</div>
   <div class="body">
@@ -2222,7 +2293,7 @@
          data-find="a romance musical mothman comedy · musical theatre"
          data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
          data-genres="COMEDY;COMEDY|musical theatre;COMEDY|sketch show"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1130">
   <div class="pos">34</div>
   <div class="body">
@@ -2308,7 +2379,7 @@
          data-find="chill towards enlightenment chad goes deep comedy"
          data-venue="Assembly George Square" data-vgroup="George Square"
          data-genres="COMEDY"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18"
          data-start="1305">
   <div class="pos">36</div>
   <div class="body">
@@ -2480,7 +2551,7 @@
          data-find="parasocial activity  theatre · new writing"
          data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|dark comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="1060">
   <div class="pos">40</div>
   <div class="body">
@@ -2523,7 +2594,7 @@
          data-find="nun slut  comedy · clown"
          data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|clown;COMEDY|character comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 24 26 27 28 29 30"
          data-start="1100">
   <div class="pos">41</div>
   <div class="body">
@@ -2609,7 +2680,7 @@
          data-find="i used to work in a helium balloon factor until they let me go olaf falafel presents comedy · absurdist"
          data-venue="Laughing Horse @ The Pear Tree" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|absurdist"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="870">
   <div class="pos">43</div>
   <div class="body">
@@ -2768,7 +2839,7 @@
          data-find="highlander 70 joseph morpurgo comedy"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1140">
   <div class="pos">46</div>
   <div class="body">
@@ -2947,7 +3018,7 @@
          data-find="jupiter rob auton comedy · theatre"
          data-venue="Assembly Roxy" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|theatre;COMEDY|storytelling"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="780">
   <div class="pos">49</div>
   <div class="body">
@@ -3202,7 +3273,7 @@
          data-find="bliss  musicals & opera · musical comedy"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="OPERA;OPERA|musical comedy;OPERA|pop"
-         data-days=""
+         data-days="5 6 7 8 9 10 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29 30"
          data-start="780">
   <div class="pos">54</div>
   <div class="body">
@@ -3394,7 +3465,7 @@
          data-find="succubus  theatre · dark comedy"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|dark comedy;THEATRE|solo show"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15"
          data-start="975">
   <div class="pos">58</div>
   <div class="body">
@@ -3442,7 +3513,7 @@
          data-find="the pieces by aloft  circus · acrobatics"
          data-venue="Underbelly’s Circus Hub on the Meadows" data-vgroup="Summerhall & The Meadows"
          data-genres="CIRCUS;CIRCUS|acrobatics;CIRCUS|circus"
-         data-days=""
+         data-days="7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28"
          data-start="785">
   <div class="pos">59</div>
   <div class="body">
@@ -3682,7 +3753,7 @@
          data-find="step and a half the palestinian circus circus · circus"
          data-venue="Underbelly’s Circus Hub on the Meadows" data-vgroup="Summerhall & The Meadows"
          data-genres="CIRCUS;CIRCUS|circus;CIRCUS|dance"
-         data-days=""
+         data-days="7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28"
          data-start="845">
   <div class="pos">64</div>
   <div class="body">
@@ -3788,7 +3859,7 @@
          data-find="we had fun  theatre · new writing"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|new writing"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29 30"
          data-start="1080">
   <div class="pos">66</div>
   <div class="body">
@@ -3846,7 +3917,7 @@
          data-find="buggers  theatre · new writing"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|new writing"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="800">
   <div class="pos">67</div>
   <div class="body">
@@ -3889,7 +3960,7 @@
          data-find="evita too  theatre · musical theatre"
          data-venue="ZOO Southside" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|musical theatre;THEATRE|comedy"
-         data-days=""
+         data-days="6 7 8 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1105">
   <div class="pos">68</div>
   <div class="body">
@@ -3932,7 +4003,7 @@
          data-find="giraffe  theatre · comedy"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|solo show"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 15 16 17 18 19 20 21 22 23 25 26 27 28 29 30"
          data-start="825">
   <div class="pos">69</div>
   <div class="body">
@@ -3975,7 +4046,7 @@
          data-find="hater  theatre · dark comedy"
          data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|dark comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 11 12 13 14 15 16 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="660">
   <div class="pos">70</div>
   <div class="body">
@@ -4104,7 +4175,7 @@
          data-find="frankie thompson  comedy · clown"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|clown;COMEDY|performance art"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1245">
   <div class="pos">73</div>
   <div class="body">
@@ -4147,7 +4218,7 @@
          data-find="sofie hagen  comedy · stand-up"
          data-venue="Monkey Barrel Comedy" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="3 4 5 6 7 8 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="920">
   <div class="pos">74</div>
   <div class="body">
@@ -4233,7 +4304,7 @@
          data-find="ham  theatre · devised"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|devised;THEATRE|adaptation"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29"
          data-start="1170">
   <div class="pos">76</div>
   <div class="body">
@@ -4319,7 +4390,7 @@
          data-find="a razor-edge new play to start your day! this is not america theatre · new writing"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|contemporary"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="665">
   <div class="pos">78</div>
   <div class="body">
@@ -4405,7 +4476,7 @@
          data-find="stand up if you're here tonight  theatre · comedy"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|immersive"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="1000">
   <div class="pos">80</div>
   <div class="body">
@@ -4448,7 +4519,7 @@
          data-find="jerk off!  theatre · dark comedy"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|dark comedy;THEATRE|solo show"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29"
          data-start="695">
   <div class="pos">81</div>
   <div class="body">
@@ -4577,7 +4648,7 @@
          data-find="see you tomorrow  theatre · comedy"
          data-venue="Greenside @ George Street" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|dark comedy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28"
          data-start="685">
   <div class="pos">84</div>
   <div class="body">
@@ -4620,7 +4691,7 @@
          data-find="my life is a sonnet  theatre · storytelling"
          data-venue="theSpace on the Mile" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|storytelling;THEATRE|comedy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 22 23 24 25 26 27 28"
          data-start="1220">
   <div class="pos">85</div>
   <div class="body">
@@ -4792,7 +4863,7 @@
          data-find="rockbeth  theatre · drama"
          data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|drama;THEATRE|live music"
-         data-days=""
+         data-days="9 10 11 12 13 14"
          data-start="720">
   <div class="pos">89</div>
   <div class="body">
@@ -4835,7 +4906,7 @@
          data-find="why english?  circus · physical theatre"
          data-venue="Assembly George Square Studios" data-vgroup="George Square"
          data-genres="CIRCUS;CIRCUS|physical theatre;CIRCUS|contemporary"
-         data-days=""
+         data-days="9 10 11 12 13 14 15"
          data-start="735">
   <div class="pos">90</div>
   <div class="body">
@@ -4878,7 +4949,7 @@
          data-find="around the world in 80 toys  theatre · physical theatre"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|physical theatre;THEATRE|puppetry"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="615">
   <div class="pos">91</div>
   <div class="body">
@@ -4921,7 +4992,7 @@
          data-find="bubble schmeisis (remixed)  theatre · storytelling"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|storytelling;THEATRE|immersive"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29 30"
          data-start="990">
   <div class="pos">92</div>
   <div class="body">
@@ -5237,7 +5308,7 @@
          data-find="kiss me x alex franklin comedy · lgbtq+"
          data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="865">
   <div class="pos">99</div>
   <div class="body">
@@ -5333,7 +5404,7 @@
          data-find="clementine 2 rosalie minnitt comedy · character comedy"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|character comedy;COMEDY|solo show"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="935">
   <div class="pos">101</div>
   <div class="body">
@@ -5593,7 +5664,7 @@
          data-find="come back home  theatre · absurdist"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|absurdist"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="795">
   <div class="pos">106</div>
   <div class="body">
@@ -5704,7 +5775,7 @@
          data-find="overtone  theatre · new writing"
          data-venue="Pleasance Dome" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|new writing"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 24 26 27 28 29"
          data-start="880">
   <div class="pos">108</div>
   <div class="body">
@@ -5800,7 +5871,7 @@
          data-find="making love with david magidoff  comedy · improv"
          data-venue="Assembly George Square Studios" data-vgroup="George Square"
          data-genres="COMEDY;COMEDY|improv;COMEDY|musical comedy"
-         data-days=""
+         data-days="6 7 8 10 11 12 13 14 15 17 18 19 20 21 22"
          data-start="1205">
   <div class="pos">110</div>
   <div class="body">
@@ -5838,7 +5909,7 @@
          data-find="everybody's got a bomb  circus · dance"
          data-venue="ZOO Southside" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="CIRCUS;CIRCUS|dance;CIRCUS|contemporary"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15"
          data-start="750">
   <div class="pos">111</div>
   <div class="body">
@@ -5876,7 +5947,7 @@
          data-find="you're not even safe up the back! craig hill comedy · stand-up"
          data-venue="Just The Tonic Nucleus" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 18 19 20 21 22 25 26 27 28 29"
          data-start="1165">
   <div class="pos">112</div>
   <div class="body">
@@ -5914,7 +5985,7 @@
          data-find="good grief aoife dunne comedy · storytelling"
          data-venue="Gilded Balloon Teviot" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|storytelling;COMEDY|solo show"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15"
          data-start="860">
   <div class="pos">113</div>
   <div class="body">
@@ -6142,7 +6213,7 @@
          data-find="ndlovu youth choir  music · family-friendly"
          data-venue="Assembly Hall" data-vgroup="Royal Mile / Old Town"
          data-genres="MUSIC;MUSIC|family-friendly;MUSIC|vocal"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="730">
   <div class="pos">119</div>
   <div class="body">
@@ -6256,7 +6327,7 @@
          data-find="plano  theatre · horror"
          data-venue="The Royal Scots Club" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|horror;THEATRE|contemporary"
-         data-days=""
+         data-days="9 10 11 12 13 14"
          data-start="1295">
   <div class="pos">122</div>
   <div class="body">
@@ -6370,7 +6441,7 @@
          data-find="judas exclusive  theatre · comedy"
          data-venue="ZOO Southside" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|new writing"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27"
          data-start="1150">
   <div class="pos">125</div>
   <div class="body">
@@ -6446,7 +6517,7 @@
          data-find="jess fuchs  comedy · stand-up"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|storytelling"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1135">
   <div class="pos">127</div>
   <div class="body">
@@ -6598,7 +6669,7 @@
          data-find="phuckets and rainbows  theatre · solo show"
          data-venue="Greenside @ George Street" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|solo show;THEATRE|comedy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14"
          data-start="1050">
   <div class="pos">131</div>
   <div class="body">
@@ -6674,7 +6745,7 @@
          data-find="the misfortunes of a spy and her mystic  theatre · lgbtq+"
          data-venue="Greenside @ George Street" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|fantasy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28"
          data-start="1100">
   <div class="pos">133</div>
   <div class="body">
@@ -6712,7 +6783,7 @@
          data-find="the scaring crybabies comedy · horror"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|horror;COMEDY|sketch show"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1200">
   <div class="pos">134</div>
   <div class="body">
@@ -6750,7 +6821,7 @@
          data-find="where are all the tall grandmas? lou wall comedy · musical comedy"
          data-venue="Monkey Barrel Comedy" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|musical comedy;COMEDY|multimedia"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1275">
   <div class="pos">135</div>
   <div class="body">
@@ -6826,7 +6897,7 @@
          data-find="mind er3ction  comedy · character comedy"
          data-venue="Just The Tonic at The Caves" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|character comedy;COMEDY|dance"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1425">
   <div class="pos">137</div>
   <div class="body">
@@ -6940,7 +7011,7 @@
          data-find="30 years byrning jason byrne comedy · stand-up"
          data-venue="Assembly Hall" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1150">
   <div class="pos">140</div>
   <div class="body">
@@ -6978,7 +7049,7 @@
          data-find="comedy zachary ruane comedy · solo show"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|solo show;COMEDY|international"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 25 26 27 28 29"
          data-start="1115">
   <div class="pos">141</div>
   <div class="body">
@@ -7130,7 +7201,7 @@
          data-find="mysteries of the picts  theatre · event"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|event;THEATRE|immersive"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29 30"
          data-start="720">
   <div class="pos">145</div>
   <div class="body">
@@ -7168,7 +7239,7 @@
          data-find="paul mcdaniel harder, faster, better, paul-er comedy · stand-up"
          data-venue="The Stand Comedy Club 3 \u0026 4" data-vgroup=""
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19"
          data-start="895">
   <div class="pos">146</div>
   <div class="body">
@@ -7206,7 +7277,7 @@
          data-find="police cops in space  comedy · theatre"
          data-venue="Assembly Roxy" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|theatre"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1190">
   <div class="pos">147</div>
   <div class="body">
@@ -7244,7 +7315,7 @@
          data-find="solo show stuart mitchell comedy · stand-up"
          data-venue="Hoots @ The Apex" data-vgroup="Grassmarket"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|solo show"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="720">
   <div class="pos">148</div>
   <div class="body">
@@ -7320,7 +7391,7 @@
          data-find="what a character casey filips comedy · clown"
          data-venue="Assembly George Square" data-vgroup="George Square"
          data-genres="COMEDY;COMEDY|clown;COMEDY|character comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1310">
   <div class="pos">150</div>
   <div class="body">
@@ -7548,7 +7619,7 @@
          data-find="sitting (in silence)  theatre · drama"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|drama;THEATRE|new writing"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="885">
   <div class="pos">156</div>
   <div class="body">
@@ -7586,7 +7657,7 @@
          data-find="sublimation  theatre · solo show"
          data-venue="Braw Venues @ Grand Lodge" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|solo show"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1020">
   <div class="pos">157</div>
   <div class="body">
@@ -7624,7 +7695,7 @@
          data-find="woodhill  theatre · verbatim"
          data-venue="ZOO Southside" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|verbatim;THEATRE|dance"
-         data-days=""
+         data-days="6 7 8 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="865">
   <div class="pos">158</div>
   <div class="body">
@@ -7662,7 +7733,7 @@
          data-find="don't be ridiculous, everybody wants this candace bryan comedy · stand-up"
          data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="960">
   <div class="pos">159</div>
   <div class="body">
@@ -7700,7 +7771,7 @@
          data-find="burger and a pint: treats for the soul  comedy · sketch show"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|sketch show"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="975">
   <div class="pos">160</div>
   <div class="body">
@@ -7814,7 +7885,7 @@
          data-find="flight  theatre · immersive"
          data-venue="Assembly George Square" data-vgroup="George Square"
          data-genres="THEATRE;THEATRE|immersive;THEATRE|experimental"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="720">
   <div class="pos">163</div>
   <div class="body">
@@ -7852,7 +7923,7 @@
          data-find="memory foam max fulham comedy · ventriloquism"
          data-venue="Pleasance Dome" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|ventriloquism;COMEDY|sketch show"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="1140">
   <div class="pos">164</div>
   <div class="body">
@@ -8042,7 +8113,7 @@
          data-find="most of my moms are gay  theatre · musical theatre"
          data-venue="Greenside @ George Street" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|musical theatre;THEATRE|musical comedy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28"
          data-start="1105">
   <div class="pos">169</div>
   <div class="body">
@@ -8118,7 +8189,7 @@
          data-find="arcade  theatre · immersive"
          data-venue="Pleasance Dome" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|immersive;THEATRE|interactive"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="720">
   <div class="pos">171</div>
   <div class="body">
@@ -8156,7 +8227,7 @@
          data-find="burning down the horse  theatre · immersive"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|immersive;THEATRE|comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="755">
   <div class="pos">172</div>
   <div class="body">
@@ -8194,7 +8265,7 @@
          data-find="mortal sin  theatre · new writing"
          data-venue="Gilded Balloon Teviot" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|comedy"
-         data-days=""
+         data-days="4 5 6 7 8 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="740">
   <div class="pos">173</div>
   <div class="body">
@@ -8308,7 +8379,7 @@
          data-find="box [m]  circus · artist(s) of colour"
          data-venue="theSpaceTriplex" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="CIRCUS"
-         data-days=""
+         data-days="6 7 8 9 10 11"
          data-start="1225">
   <div class="pos">176</div>
   <div class="body">
@@ -8384,7 +8455,7 @@
          data-find="burn  theatre · drama"
          data-venue="Paradise in The Vault" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|drama;THEATRE|new writing"
-         data-days=""
+         data-days="7 8 9 10 11 12 13 14"
          data-start="955">
   <div class="pos">178</div>
   <div class="body">
@@ -8460,7 +8531,7 @@
          data-find="lifelong  theatre · new writing"
          data-venue="Assembly George Square Studios" data-vgroup="George Square"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|drama"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16"
          data-start="720">
   <div class="pos">180</div>
   <div class="body">
@@ -8498,7 +8569,7 @@
          data-find="love hunt charlie mulliner comedy · interactive"
          data-venue="Pleasance Dome" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|interactive"
-         data-days=""
+         data-days="5 6 7 8 9 10"
          data-start="1380">
   <div class="pos">181</div>
   <div class="body">
@@ -8650,7 +8721,7 @@
          data-find="the flying bubble show  children's shows · circus"
          data-venue="Underbelly’s Circus Hub on the Meadows" data-vgroup="Summerhall & The Meadows"
          data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|circus;CHILDRENS_SHOWS|magic"
-         data-days=""
+         data-days="7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28"
          data-start="910">
   <div class="pos">185</div>
   <div class="body">
@@ -8764,7 +8835,7 @@
          data-find="under mask taiwan season circus · dance"
          data-venue="Assembly @ Dance Base" data-vgroup="Grassmarket"
          data-genres="CIRCUS;CIRCUS|dance;CIRCUS|contemporary"
-         data-days=""
+         data-days="5 6 7 8 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1120">
   <div class="pos">188</div>
   <div class="body">
@@ -8802,7 +8873,7 @@
          data-find="a titanic story boiler room six theatre · historical"
          data-venue="Pleasance Dome" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|historical;THEATRE|drama"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="660">
   <div class="pos">189</div>
   <div class="body">
@@ -8916,7 +8987,7 @@
          data-find="define queerness  theatre · lgbtq+"
          data-venue="Venue 13" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|verbatim"
-         data-days=""
+         data-days="7 10 12 14 17 19 21 24 26 28"
          data-start="1185">
   <div class="pos">192</div>
   <div class="body">
@@ -8954,7 +9025,7 @@
          data-find="playback  theatre · new writing"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|new writing"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="800">
   <div class="pos">193</div>
   <div class="body">
@@ -8992,7 +9063,7 @@
          data-find="lucy's dream dracula theatre · puppetry"
          data-venue="Pleasance at EICC" data-vgroup="West End"
          data-genres="THEATRE;THEATRE|puppetry;THEATRE|physical theatre"
-         data-days=""
+         data-days="5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 24 26 27 28"
          data-start="1050">
   <div class="pos">194</div>
   <div class="body">
@@ -9035,7 +9106,7 @@
          data-find="imogen andrews  comedy · sketch show"
          data-venue="Pleasance Dome" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|sketch show;COMEDY|multimedia"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="1290">
   <div class="pos">195</div>
   <div class="body">
@@ -9121,7 +9192,7 @@
          data-find="how strange it is (the neutral milk hotel show) salty brine theatre · cabaret"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|cabaret;THEATRE|live music"
-         data-days=""
+         data-days="5 6 7 8 9 10 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1290">
   <div class="pos">197</div>
   <div class="body">
@@ -9164,7 +9235,7 @@
          data-find="the part of you that's always screaming jordan brookes comedy · stand-up"
          data-venue="Pleasance Dome" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1305">
   <div class="pos">198</div>
   <div class="body">
@@ -9207,7 +9278,7 @@
          data-find="snail trail bi-curious george theatre · comedy"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 15 16 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="900">
   <div class="pos">199</div>
   <div class="body">
@@ -9293,7 +9364,7 @@
          data-find="becoming dr ruth  theatre · new writing"
          data-venue="Assembly @ St Andrew Square" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|true-life"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1015">
   <div class="pos">201</div>
   <div class="body">
@@ -9379,7 +9450,7 @@
          data-find="primal scream  theatre · music"
          data-venue="Assembly Rooms" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|music"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="925">
   <div class="pos">203</div>
   <div class="body">
@@ -9465,7 +9536,7 @@
          data-find="baby lame  comedy · drag"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|drag"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1370">
   <div class="pos">205</div>
   <div class="body">
@@ -10548,7 +10619,7 @@
          data-find="the bob ross effect  theatre · cabaret"
          data-venue="Assembly George Square Gardens" data-vgroup="George Square"
          data-genres="THEATRE;THEATRE|cabaret;THEATRE|comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="965">
   <div class="pos">226</div>
   <div class="body">
@@ -10788,7 +10859,7 @@
          data-find="is in full control the entire time chelsea birkby comedy · stand-up"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1305">
   <div class="pos">231</div>
   <div class="body">
@@ -11250,7 +11321,7 @@
          data-find="lions  theatre · comedy"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|true-life"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29"
          data-start="1170">
   <div class="pos">240</div>
   <div class="body">
@@ -11414,7 +11485,7 @@
          data-find="on the record alastair clark comedy · stand-up"
          data-venue="PBH's Free Fringe @ Slow Progress Cafe and Records" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|solo show"
-         data-days=""
+         data-days="7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="810">
   <div class="pos">243</div>
   <div class="body">
@@ -11457,7 +11528,7 @@
          data-find="come from away  musicals & opera · musical theatre"
          data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="OPERA;OPERA|musical theatre"
-         data-days=""
+         data-days="9 10 11 12 13 14"
          data-start="660">
   <div class="pos">244</div>
   <div class="body">
@@ -11543,7 +11614,7 @@
          data-find="110% ready the listies children's shows · family-friendly"
          data-venue="Assembly George Square Studios" data-vgroup="George Square"
          data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|family-friendly;CHILDRENS_SHOWS|comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 13 14 15"
          data-start="780">
   <div class="pos">246</div>
   <div class="body">
@@ -11586,7 +11657,7 @@
          data-find="tell me  circus · circus"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="CIRCUS;CIRCUS|circus;CIRCUS|dance"
-         data-days=""
+         data-days="5 6 7 8 11 12 13 14 15 18 19 20 21 22 25 26 27 28 29 30"
          data-start="1140">
   <div class="pos">247</div>
   <div class="body">
@@ -11715,7 +11786,7 @@
          data-find="werewolf  theatre · horror"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|horror;THEATRE|comedy"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29 30"
          data-start="1260">
   <div class="pos">250</div>
   <div class="body">
@@ -12145,7 +12216,7 @@
          data-find="apples in winter  theatre · drama"
          data-venue="Paradise in The Vault" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|drama;THEATRE|solo show"
-         data-days=""
+         data-days="7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28 29"
          data-start="630">
   <div class="pos">260</div>
   <div class="body">
@@ -12274,7 +12345,7 @@
          data-find="remember, remember!  theatre · musical comedy"
          data-venue="Pleasance Dome" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|musical comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1035">
   <div class="pos">263</div>
   <div class="body">
@@ -12317,7 +12388,7 @@
          data-find="toast  theatre · new writing"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|absurdist"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15"
          data-start="730">
   <div class="pos">264</div>
   <div class="body">
@@ -12360,7 +12431,7 @@
          data-find="cadet kelly is the best movie i've ever seen in my friggin' life  comedy · clown"
          data-venue="Underbelly, George Square" data-vgroup="George Square"
          data-genres="COMEDY;COMEDY|clown;COMEDY|absurdist"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29"
          data-start="1395">
   <div class="pos">265</div>
   <div class="body">
@@ -12403,7 +12474,7 @@
          data-find="poetry meets improv jazz spitnights music · live music"
          data-venue="theSpace @ Symposium Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="MUSIC;MUSIC|live music;MUSIC|spoken word"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21"
          data-start="1320">
   <div class="pos">266</div>
   <div class="body">
@@ -12575,7 +12646,7 @@
          data-find="a clown's lullaby  children's shows · theatre"
          data-venue="Rotunda Theatre" data-vgroup="Tollcross"
          data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|theatre;CHILDRENS_SHOWS|clown"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 17"
          data-start="840">
   <div class="pos">270</div>
   <div class="body">
@@ -12661,7 +12732,7 @@
          data-find="woodcutter  theatre · solo show"
          data-venue="theSpaceTriplex" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|solo show;THEATRE|new writing"
-         data-days=""
+         data-days="6 7 8 10 11 12 13 14 17 18 19 20 21 24 25 26 27 28"
          data-start="965">
   <div class="pos">272</div>
   <div class="body">
@@ -12704,7 +12775,7 @@
          data-find="annie wobbler (revisited)  theatre"
          data-venue="Pleasance Dome" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="780">
   <div class="pos">273</div>
   <div class="body">
@@ -12747,7 +12818,7 @@
          data-find="just let me have this andrew frost cabaret & variety · magic"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="CABARET;CABARET|magic;CABARET|solo show"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="925">
   <div class="pos">274</div>
   <div class="body">
@@ -12833,7 +12904,7 @@
          data-find="thermodrama  theatre · new writing"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|drama"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29 30"
          data-start="1350">
   <div class="pos">276</div>
   <div class="body">
@@ -13091,7 +13162,7 @@
          data-find="stamptown  comedy · variety"
          data-venue="Assembly George Square Gardens" data-vgroup="George Square"
          data-genres="COMEDY;COMEDY|variety;COMEDY|clown"
-         data-days=""
+         data-days="5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28"
          data-start="1310">
   <div class="pos">282</div>
   <div class="body">
@@ -13230,7 +13301,7 @@
          data-find="flamenc oh!! yllana circus · comedy"
          data-venue="Assembly Rooms" data-vgroup="New Town"
          data-genres="CIRCUS;CIRCUS|comedy;CIRCUS|flamenco"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="855">
   <div class="pos">285</div>
   <div class="body">
@@ -13518,7 +13589,7 @@
          data-find="by a thread  circus · acrobatics"
          data-venue="Assembly Rooms" data-vgroup="New Town"
          data-genres="CIRCUS;CIRCUS|acrobatics;CIRCUS|family-friendly"
-         data-days=""
+         data-days="5 6 7 8 9 10 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="955">
   <div class="pos">291</div>
   <div class="body">
@@ -13566,7 +13637,7 @@
          data-find="mad cow disease bella hull comedy · stand-up"
          data-venue="Monkey Barrel Comedy" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="750">
   <div class="pos">292</div>
   <div class="body">
@@ -13662,7 +13733,7 @@
          data-find="how to succeed in show business without really trying skank sinatra cabaret & variety · comedy"
          data-venue="Assembly George Square Studios" data-vgroup="George Square"
          data-genres="CABARET;CABARET|comedy;CABARET|music"
-         data-days=""
+         data-days="5 6 7 8 9 10 12 13 14 15 16 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1110">
   <div class="pos">294</div>
   <div class="body">
@@ -13816,7 +13887,7 @@
          data-find="the plot  theatre · new writing"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|new writing"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29 30"
          data-start="1170">
   <div class="pos">297</div>
   <div class="body">
@@ -13879,7 +13950,7 @@
          data-find="body parts  theatre · new writing"
          data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|contemporary"
-         data-days=""
+         data-days="23 24 25 26 27 28"
          data-start="880">
   <div class="pos">298</div>
   <div class="body">
@@ -13917,7 +13988,7 @@
          data-find="an tinne  music · spoken word"
          data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="MUSIC;MUSIC|spoken word;MUSIC|storytelling"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14"
          data-start="825">
   <div class="pos">299</div>
   <div class="body">
@@ -13955,7 +14026,7 @@
          data-find="cry-baby the musical  musicals & opera · musical comedy"
          data-venue="theSpace @ Venue 45" data-vgroup="Royal Mile / Old Town"
          data-genres="OPERA;OPERA|musical comedy;OPERA|musical theatre"
-         data-days=""
+         data-days="6 7 9 10"
          data-start="1230">
   <div class="pos">300</div>
   <div class="body">
@@ -13993,7 +14064,7 @@
          data-find="how to live to 100 david hoare comedy · stand-up"
          data-venue="Hoots @ Nicolson Square" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|musical comedy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="1060">
   <div class="pos">301</div>
   <div class="body">
@@ -14031,7 +14102,7 @@
          data-find="if we really were witches  theatre · comedy"
          data-venue="Paradise in The Vault" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|comedy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28 29"
          data-start="1145">
   <div class="pos">302</div>
   <div class="body">
@@ -14069,7 +14140,7 @@
          data-find="launa  theatre · physical theatre"
          data-venue="theSpace @ Niddry St" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|physical theatre;THEATRE|new writing"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21"
          data-start="725">
   <div class="pos">303</div>
   <div class="body">
@@ -14107,7 +14178,7 @@
          data-find="now look here alex kitson comedy · stand-up"
          data-venue="Hoots @ Potterrow" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1245">
   <div class="pos">304</div>
   <div class="body">
@@ -14145,7 +14216,7 @@
          data-find="pimm's without the cucumber  theatre · solo show"
          data-venue="Paradise in The Vault" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|solo show"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14"
          data-start="860">
   <div class="pos">305</div>
   <div class="body">
@@ -14183,7 +14254,7 @@
          data-find="the new year  theatre · dark comedy"
          data-venue="Greenside @ George Street" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|dark comedy;THEATRE|new writing"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14"
          data-start="835">
   <div class="pos">306</div>
   <div class="body">
@@ -14297,7 +14368,7 @@
          data-find="lovers in every lifetime operotica theatre · comedy"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|opera"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1185">
   <div class="pos">309</div>
   <div class="body">
@@ -14335,7 +14406,7 @@
          data-find="a play to lose weight 116 grams theatre · solo show"
          data-venue="ZOO Southside" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|solo show;THEATRE|alternative comedy"
-         data-days=""
+         data-days="6 7 8 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1220">
   <div class="pos">310</div>
   <div class="body">
@@ -14411,7 +14482,7 @@
          data-find="midsummer!  theatre · adaptation"
          data-venue="Assembly @ St Andrew Square" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|adaptation;THEATRE|classical"
-         data-days=""
+         data-days="5 6 7 8 9 10 12 13 14 15 16 17 18"
          data-start="750">
   <div class="pos">312</div>
   <div class="body">
@@ -14829,7 +14900,7 @@
          data-find="sing, dance, play! vasthy and friends children's shows · family-friendly"
          data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
          data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|family-friendly;CHILDRENS_SHOWS|musical theatre"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="620">
   <div class="pos">323</div>
   <div class="body">
@@ -14867,7 +14938,7 @@
          data-find="superbowl salsa  circus · international"
          data-venue="Assembly Hall" data-vgroup="Royal Mile / Old Town"
          data-genres="CIRCUS;CIRCUS|international;CIRCUS|theatre"
-         data-days=""
+         data-days="7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="840">
   <div class="pos">324</div>
   <div class="body">
@@ -14943,7 +15014,7 @@
          data-find="the entertainer alfie brown comedy · stand-up"
          data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|alternative comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1070">
   <div class="pos">326</div>
   <div class="body">
@@ -14981,7 +15052,7 @@
          data-find="the understudy  theatre · dark comedy"
          data-venue="Assembly George Square" data-vgroup="George Square"
          data-genres="THEATRE;THEATRE|dark comedy;THEATRE|satire"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 18 19 20 21 22 24 25 26 27 28 29"
          data-start="735">
   <div class="pos">327</div>
   <div class="body">
@@ -15019,7 +15090,7 @@
          data-find="tom waits war songs  music · live music"
          data-venue="Just The Tonic at Subway" data-vgroup="Cowgate"
          data-genres="MUSIC;MUSIC|live music;MUSIC|theatre"
-         data-days=""
+         data-days="5 6 7 9 10 12 13 14 15 16 18 19 20 21 22 23 24 26 27 28 29"
          data-start="750">
   <div class="pos">328</div>
   <div class="body">
@@ -15209,7 +15280,7 @@
          data-find="says hoo? lizzy hoo comedy · stand-up"
          data-venue="Assembly George Square Studios" data-vgroup="George Square"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1200">
   <div class="pos">333</div>
   <div class="body">
@@ -15247,7 +15318,7 @@
          data-find="those people  comedy · alternative comedy"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|alternative comedy;COMEDY|clown"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1380">
   <div class="pos">334</div>
   <div class="body">
@@ -15323,7 +15394,7 @@
          data-find="at your service hudson hughes comedy · character comedy"
          data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
          data-genres="COMEDY;COMEDY|character comedy;COMEDY|horror"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1390">
   <div class="pos">336</div>
   <div class="body">
@@ -15437,7 +15508,7 @@
          data-find="i'm mom  theatre · solo show"
          data-venue="Just The Tonic at Subway" data-vgroup="Cowgate"
          data-genres="THEATRE;THEATRE|solo show"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="990">
   <div class="pos">339</div>
   <div class="body">
@@ -15475,7 +15546,7 @@
          data-find="into the dark transmission theatre · immersive"
          data-venue="Traverse – Elsewhere" data-vgroup="Tollcross"
          data-genres="THEATRE;THEATRE|immersive;THEATRE|multimedia"
-         data-days=""
+         data-days="7 8 10 11 13 14 15 18 19 20 21 22"
          data-start="1300">
   <div class="pos">340</div>
   <div class="body">
@@ -15551,7 +15622,7 @@
          data-find="jazz jamboree  music · jazz"
          data-venue="Valvona \u0026 Crolla" data-vgroup=""
          data-genres="MUSIC;MUSIC|jazz"
-         data-days=""
+         data-days="11 21 27 28"
          data-start="930">
   <div class="pos">342</div>
   <div class="body">
@@ -15589,7 +15660,7 @@
          data-find="med school noah szto comedy · cabaret"
          data-venue="Assembly George Square Studios" data-vgroup="George Square"
          data-genres="COMEDY;COMEDY|cabaret;COMEDY|stand-up"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1200">
   <div class="pos">343</div>
   <div class="body">
@@ -15665,7 +15736,7 @@
          data-find="play dead  theatre · dark comedy"
          data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
          data-genres="THEATRE;THEATRE|dark comedy;THEATRE|new writing"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="940">
   <div class="pos">345</div>
   <div class="body">
@@ -15703,7 +15774,7 @@
          data-find="sand, silt, flint fiona soe paing music · multimedia"
          data-venue="Greenside @ George Street" data-vgroup="New Town"
          data-genres="MUSIC;MUSIC|multimedia;MUSIC|theatre"
-         data-days=""
+         data-days="6 7 9 10 11 12 13 14 16 17 18 19 20 21"
          data-start="620">
   <div class="pos">346</div>
   <div class="body">
@@ -15779,7 +15850,7 @@
          data-find="the late utopians  theatre · new writing"
          data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|contemporary"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="850">
   <div class="pos">348</div>
   <div class="body">
@@ -16007,7 +16078,7 @@
          data-find="a brief history of musical theatre  musicals & opera · musical theatre"
          data-venue="Edinburgh New Town Church" data-vgroup="New Town"
          data-genres="OPERA;OPERA|musical theatre"
-         data-days=""
+         data-days="11 12 13"
          data-start="1185">
   <div class="pos">354</div>
   <div class="body">
@@ -16045,7 +16116,7 @@
          data-find="don't you forget about me  theatre · solo show"
          data-venue="Assembly Roxy" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|solo show;THEATRE|new writing"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="860">
   <div class="pos">355</div>
   <div class="body">
@@ -16083,7 +16154,7 @@
          data-find="endgame by samuel beckett  theatre · physical theatre"
          data-venue="Pleasance at EICC" data-vgroup="West End"
          data-genres="THEATRE;THEATRE|physical theatre;THEATRE|absurdist"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1080">
   <div class="pos">356</div>
   <div class="body">
@@ -16121,7 +16192,7 @@
          data-find="margaret thatcher queen of hollywood  comedy · musical comedy"
          data-venue="Assembly George Square Gardens" data-vgroup="George Square"
          data-genres="COMEDY;COMEDY|musical comedy;COMEDY|drag"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1240">
   <div class="pos">357</div>
   <div class="body">
@@ -16159,7 +16230,7 @@
          data-find="autism mama  comedy · solo show"
          data-venue="Laughing Horse @ The Three Sisters" data-vgroup="Cowgate"
          data-genres="COMEDY;COMEDY|solo show"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15"
          data-start="720">
   <div class="pos">358</div>
   <div class="body">
@@ -16197,7 +16268,7 @@
          data-find="caledonia  music · folk"
          data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="MUSIC;MUSIC|folk;MUSIC|traditional"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28"
          data-start="905">
   <div class="pos">359</div>
   <div class="body">
@@ -16235,7 +16306,7 @@
          data-find="honkers  comedy"
          data-venue="Laughing Horse @ City Cafe" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14"
          data-start="1390">
   <div class="pos">360</div>
   <div class="body">
@@ -16273,7 +16344,7 @@
          data-find="sobremesa  theatre · new writing"
          data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|drama"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="700">
   <div class="pos">361</div>
   <div class="body">
@@ -16311,7 +16382,7 @@
          data-find="the beauty of sound in japanese traditional performing art 2026  music · world music"
          data-venue="St Mary's Episcopal Cathedral" data-vgroup="West End"
          data-genres="MUSIC;MUSIC|world music;MUSIC|traditional"
-         data-days=""
+         data-days="9"
          data-start="1110">
   <div class="pos">362</div>
   <div class="body">
@@ -16349,7 +16420,7 @@
          data-find="123movies.com  comedy · sketch show"
          data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|sketch show;COMEDY|alternative comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1360">
   <div class="pos">363</div>
   <div class="body">
@@ -16387,7 +16458,7 @@
          data-find="democrazy  theatre · physical theatre"
          data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|physical theatre;THEATRE|comedy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14"
          data-start="660">
   <div class="pos">364</div>
   <div class="body">
@@ -16425,7 +16496,7 @@
          data-find="i love it here simon amstell comedy"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY"
-         data-days=""
+         data-days="7 8"
          data-start="1140">
   <div class="pos">365</div>
   <div class="body">
@@ -16463,7 +16534,7 @@
          data-find="if i'm not somebody, i'm nobody lucas jefcoate comedy · stand-up"
          data-venue="Assembly Roxy" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="910">
   <div class="pos">366</div>
   <div class="body">
@@ -16501,7 +16572,7 @@
          data-find="reparations  theatre · new writing"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="840">
   <div class="pos">367</div>
   <div class="body">
@@ -16539,7 +16610,7 @@
          data-find="sleep paralysis princess huge davies comedy · musical comedy"
          data-venue="Monkey Barrel Comedy (Cabaret Voltaire)" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|musical comedy;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1290">
   <div class="pos">368</div>
   <div class="body">
@@ -16577,7 +16648,7 @@
          data-find="the fabulist  theatre · family-friendly"
          data-venue="Nicolson Square Venues" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|family-friendly;THEATRE|storytelling"
-         data-days=""
+         data-days="6 7 9 10"
          data-start="1020">
   <div class="pos">369</div>
   <div class="body">
@@ -16615,7 +16686,7 @@
          data-find="the italians in england  theatre · physical theatre"
          data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|physical theatre;THEATRE|comedy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14"
          data-start="775">
   <div class="pos">370</div>
   <div class="body">
@@ -16653,7 +16724,7 @@
          data-find="madeleine brettingham  comedy · stand-up"
          data-venue="Gilded Balloon Teviot" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|storytelling"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="1220">
   <div class="pos">371</div>
   <div class="body">
@@ -16729,7 +16800,7 @@
          data-find="roger prick  comedy · character comedy"
          data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
          data-genres="COMEDY;COMEDY|character comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29"
          data-start="1135">
   <div class="pos">373</div>
   <div class="body">
@@ -16767,7 +16838,7 @@
          data-find="scout boxall  comedy · storytelling"
          data-venue="Assembly George Square" data-vgroup="George Square"
          data-genres="COMEDY;COMEDY|storytelling;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="980">
   <div class="pos">374</div>
   <div class="body">
@@ -16805,7 +16876,7 @@
          data-find="shane torres  comedy"
          data-venue="Assembly Roxy" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 24 26 27 28 29"
          data-start="1130">
   <div class="pos">375</div>
   <div class="body">
@@ -16881,7 +16952,7 @@
          data-find="the bridge  theatre · storytelling"
          data-venue="Assembly Roxy" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|storytelling;THEATRE|stand-up"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 27 28 29"
          data-start="1180">
   <div class="pos">377</div>
   <div class="body">
@@ -16995,7 +17066,7 @@
          data-find="dust  theatre · drama"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|drama;THEATRE|new writing"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29"
          data-start="850">
   <div class="pos">380</div>
   <div class="body">
@@ -17147,7 +17218,7 @@
          data-find="that's ace  theatre · comedy"
          data-venue="Just The Tonic at The Caves" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|comedy"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="770">
   <div class="pos">384</div>
   <div class="body">
@@ -17223,7 +17294,7 @@
          data-find="seasons  children's shows · music"
          data-venue="Paradise in Augustines" data-vgroup="Royal Mile / Old Town"
          data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|music;CHILDRENS_SHOWS|puppetry"
-         data-days=""
+         data-days="7 9 10 11 12 13 14"
          data-start="675">
   <div class="pos">386</div>
   <div class="body">
@@ -17261,7 +17332,7 @@
          data-find="soft spot  circus · circus"
          data-venue="ZOO Southside" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="CIRCUS;CIRCUS|circus;CIRCUS|physical theatre"
-         data-days=""
+         data-days="6 7 8 9 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1230">
   <div class="pos">387</div>
   <div class="body">
@@ -17299,7 +17370,7 @@
          data-find="the big bad wolf  musicals & opera · family-friendly"
          data-venue="theSpace on the Mile" data-vgroup="Royal Mile / Old Town"
          data-genres="OPERA;OPERA|family-friendly;OPERA|musical theatre"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21"
          data-start="690">
   <div class="pos">388</div>
   <div class="body">
@@ -17337,7 +17408,7 @@
          data-find="trans people are awful  theatre · dark comedy"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|dark comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="920">
   <div class="pos">389</div>
   <div class="body">
@@ -17375,7 +17446,7 @@
          data-find="[parent]ified  theatre · new writing"
          data-venue="The Speakeasy at The Royal Scots Club" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|new writing"
-         data-days=""
+         data-days="9 10 11 12 13 15"
          data-start="1290">
   <div class="pos">390</div>
   <div class="body">
@@ -17451,7 +17522,7 @@
          data-find="an opportunity in kind  theatre · dark comedy"
          data-venue="theSpace on the Mile" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|dark comedy;THEATRE|farce"
-         data-days=""
+         data-days="7 9 11 13"
          data-start="1290">
   <div class="pos">392</div>
   <div class="body">
@@ -17527,7 +17598,7 @@
          data-find="cluedo  theatre · comedy"
          data-venue="St Ninian's Hall" data-vgroup="Stockbridge & North West"
          data-genres="THEATRE;THEATRE|comedy"
-         data-days=""
+         data-days="9 10 11 12 13 14 16 17 18 19 20 21"
          data-start="1170">
   <div class="pos">394</div>
   <div class="body">
@@ -17565,7 +17636,7 @@
          data-find="don't know? have a go!  theatre · dark comedy"
          data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|dark comedy;THEATRE|new writing"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14"
          data-start="995">
   <div class="pos">395</div>
   <div class="body">
@@ -17679,7 +17750,7 @@
          data-find="george, don't do that... the joy of joyce grenfell  theatre · comedy"
          data-venue="The Royal Scots Club" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|comedy"
-         data-days=""
+         data-days="10 11 12 13 14"
          data-start="810">
   <div class="pos">398</div>
   <div class="body">
@@ -17755,7 +17826,7 @@
          data-find="jacuzzi by twilight  theatre · dark comedy"
          data-venue="theSpace on the Mile" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|dark comedy;THEATRE|drama"
-         data-days=""
+         data-days="6 8 10 12 14"
          data-start="1290">
   <div class="pos">400</div>
   <div class="body">
@@ -17907,7 +17978,7 @@
          data-find="sweet  theatre · historical"
          data-venue="The Royal Scots Club" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|historical;THEATRE|new writing"
-         data-days=""
+         data-days="9 10 11 12 13 14"
          data-start="1110">
   <div class="pos">404</div>
   <div class="body">
@@ -17945,7 +18016,7 @@
          data-find="teen edition chicago musicals & opera · musical theatre"
          data-venue="The Edinburgh Academy" data-vgroup="Stockbridge & North West"
          data-genres="OPERA;OPERA|musical theatre"
-         data-days=""
+         data-days="9 10 11 12 13 14 15"
          data-start="1005">
   <div class="pos">405</div>
   <div class="body">
@@ -17983,7 +18054,7 @@
          data-find="the bear  theatre · comedy"
          data-venue="The Royal Scots Club" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|farce"
-         data-days=""
+         data-days="9 10 11 12 13 14"
          data-start="1210">
   <div class="pos">406</div>
   <div class="body">
@@ -18021,7 +18092,7 @@
          data-find="the farndale avenue housing estate townswomen's guild dramatic society's production of macbeth  theatre · family-friendly"
          data-venue="" data-vgroup=""
          data-genres="THEATRE;THEATRE|family-friendly;THEATRE|comedy"
-         data-days=""
+         data-days="6 7 9 10 11 12 13 14 16 17 18 19 20 21"
          data-start="1170">
   <div class="pos">407</div>
   <div class="body">
@@ -18059,7 +18130,7 @@
          data-find="thunderstruck  theatre · storytelling"
          data-venue="Scottish Storytelling Centre" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|storytelling;THEATRE|music"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 17"
          data-start="1120">
   <div class="pos">408</div>
   <div class="body">
@@ -18173,7 +18244,7 @@
          data-find="@jenna  theatre · character comedy"
          data-venue="C ARTS | C venues | C aquila" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|character comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1140">
   <div class="pos">411</div>
   <div class="body">
@@ -18211,7 +18282,7 @@
          data-find="homunculus  theatre · comedy"
          data-venue="theSpaceTriplex" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|farce"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 22 23 24 25 26 27 28"
          data-start="1300">
   <div class="pos">412</div>
   <div class="body">
@@ -18249,7 +18320,7 @@
          data-find="the bbc's first homosexual  theatre · lgbtq+"
          data-venue="Assembly George Square" data-vgroup="George Square"
          data-genres="THEATRE;THEATRE|historical"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15"
          data-start="780">
   <div class="pos">413</div>
   <div class="body">
@@ -18287,7 +18358,7 @@
          data-find="the lost gospel pilate theatre"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 25 26 27 28 29"
          data-start="645">
   <div class="pos">414</div>
   <div class="body">
@@ -18325,7 +18396,7 @@
          data-find="war of the worlds (on a budget)  theatre · comedy"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|musical comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14"
          data-start="720">
   <div class="pos">415</div>
   <div class="body">
@@ -18363,7 +18434,7 @@
          data-find="an hour of decay! freya parker comedy · stand-up"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|character comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="885">
   <div class="pos">416</div>
   <div class="body">
@@ -18401,7 +18472,7 @@
          data-find="bride to be  theatre · comedy"
          data-venue="Greenside @ Riddles Court" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|character comedy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14"
          data-start="1180">
   <div class="pos">417</div>
   <div class="body">
@@ -18439,7 +18510,7 @@
          data-find="could well be in eric rushton comedy · stand-up"
          data-venue="Monkey Barrel Comedy" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|storytelling"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="895">
   <div class="pos">418</div>
   <div class="body">
@@ -18477,7 +18548,7 @@
          data-find="emmaculate emma doran comedy · stand-up"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 24 26 27 28 29"
          data-start="1170">
   <div class="pos">419</div>
   <div class="body">
@@ -18515,7 +18586,7 @@
          data-find="the drag boyband musical man!fest theatre · drag"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|drag;THEATRE|musical comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 17 18 19 20 21 22 23 24 26 27 28 29 30"
          data-start="960">
   <div class="pos">420</div>
   <div class="body">
@@ -18591,7 +18662,7 @@
          data-find="a dungeons and dragons comedy tartan tabletop comedy · improv"
          data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|improv;COMEDY|podcast"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="1050">
   <div class="pos">422</div>
   <div class="body">
@@ -18629,7 +18700,7 @@
          data-find="as you like it shakespeare dice theatre · immersive"
          data-venue="Venue 13" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|immersive;THEATRE|adaptation"
-         data-days=""
+         data-days="6 7 8 10 11 12 13 14 15 17 18 19 20 21 22"
          data-start="1065">
   <div class="pos">423</div>
   <div class="body">
@@ -18819,7 +18890,7 @@
          data-find="doughboys  theatre · farce"
          data-venue="Greenside @ Riddles Court" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|farce"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21"
          data-start="1105">
   <div class="pos">428</div>
   <div class="body">
@@ -18895,7 +18966,7 @@
          data-find="fort  children's shows · circus"
          data-venue="Assembly George Square Gardens" data-vgroup="George Square"
          data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|circus;CHILDRENS_SHOWS|theatre"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15"
          data-start="685">
   <div class="pos">430</div>
   <div class="body">
@@ -19047,7 +19118,7 @@
          data-find="nuns!  theatre · comedy"
          data-venue="Assembly George Square Studios" data-vgroup="George Square"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|physical theatre"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 25 26 27 28 29 30"
          data-start="1245">
   <div class="pos">434</div>
   <div class="body">
@@ -19123,7 +19194,7 @@
          data-find="powerpoindexter ted hill comedy · multimedia"
          data-venue="Assembly George Square Studios" data-vgroup="George Square"
          data-genres="COMEDY;COMEDY|multimedia;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1080">
   <div class="pos">436</div>
   <div class="body">
@@ -19161,7 +19232,7 @@
          data-find="reel to real  theatre · disabled-led"
          data-venue="theSpaceTriplex" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE"
-         data-days=""
+         data-days="9 10 11 12 13 14"
          data-start="765">
   <div class="pos">437</div>
   <div class="body">
@@ -19275,7 +19346,7 @@
          data-find="the 40-year-old ballerino  theatre · comedy"
          data-venue="Venue 13" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|dance"
-         data-days=""
+         data-days="6 7 8 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28"
          data-start="885">
   <div class="pos">440</div>
   <div class="body">
@@ -19351,7 +19422,7 @@
          data-find="the red lantern  theatre · solo show"
          data-venue="theSpace @ Niddry St" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|solo show;THEATRE|contemporary"
-         data-days=""
+         data-days="6 7"
          data-start="1170">
   <div class="pos">442</div>
   <div class="body">
@@ -19389,7 +19460,7 @@
          data-find="under the influence  musicals & opera · musical theatre"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="OPERA;OPERA|musical theatre;OPERA|musical comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1280">
   <div class="pos">443</div>
   <div class="body">
@@ -19427,7 +19498,7 @@
          data-find="what we talk about when we talk about the jfk assassination the umbrella man spoken word · new writing"
          data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="SPOKEN_WORD;SPOKEN_WORD|new writing;SPOKEN_WORD|comedy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28"
          data-start="585">
   <div class="pos">444</div>
   <div class="body">
@@ -19579,7 +19650,7 @@
          data-find="jonty o'callaghan's got some notes: a one-man sketch show  comedy · sketch show"
          data-venue="Just The Tonic at The Caves" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|sketch show;COMEDY|solo show"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16"
          data-start="1120">
   <div class="pos">448</div>
   <div class="body">
@@ -19655,7 +19726,7 @@
          data-find="a-z of me tom read wilson cabaret & variety · revue"
          data-venue="Gilded Balloon at the Museum" data-vgroup="Royal Mile / Old Town"
          data-genres="CABARET;CABARET|revue;CABARET|musical comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15"
          data-start="1170">
   <div class="pos">450</div>
   <div class="body">
@@ -19693,7 +19764,7 @@
          data-find="an audience with virginia woolf: writing one's mind  theatre · new writing"
          data-venue="Assembly Rooms" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|drama"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="660">
   <div class="pos">451</div>
   <div class="body">
@@ -19731,7 +19802,7 @@
          data-find="grimm af  musicals & opera · comedy"
          data-venue="Assembly George Square Studios" data-vgroup="George Square"
          data-genres="OPERA;OPERA|comedy;OPERA|musical comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15"
          data-start="1115">
   <div class="pos">452</div>
   <div class="body">
@@ -19807,7 +19878,7 @@
          data-find="quentin blake's mrs armitage on wheels  children's shows · musical theatre"
          data-venue="Assembly George Square" data-vgroup="George Square"
          data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|musical theatre;CHILDRENS_SHOWS|puppetry"
-         data-days=""
+         data-days="5 6 7 8 9 10 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="660">
   <div class="pos">454</div>
   <div class="body">
@@ -19845,7 +19916,7 @@
          data-find="space in between  circus · dance"
          data-venue="Assembly @ Dance Base" data-vgroup="Grassmarket"
          data-genres="CIRCUS;CIRCUS|dance;CIRCUS|traditional"
-         data-days=""
+         data-days="8 10 11 12 13 14 15"
          data-start="870">
   <div class="pos">455</div>
   <div class="body">
@@ -19921,7 +19992,7 @@
          data-find="hamlet redux  theatre · classical"
          data-venue="C ARTS | C venues | C aurora" data-vgroup="Tollcross"
          data-genres="THEATRE;THEATRE|classical;THEATRE|drama"
-         data-days=""
+         data-days="10 12 14 15"
          data-start="1250">
   <div class="pos">457</div>
   <div class="body">
@@ -19959,7 +20030,7 @@
          data-find="measure for measure  theatre · drama"
          data-venue="theSpace @ Niddry St" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|drama;THEATRE|traditional"
-         data-days=""
+         data-days="6 7 9 10"
          data-start="670">
   <div class="pos">458</div>
   <div class="body">
@@ -19997,7 +20068,7 @@
          data-find="the great shakespeare showdown  theatre · comedy"
          data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|new writing"
-         data-days=""
+         data-days="6 7 9 10 11 12 13 14 16 17 18 19 20 21"
          data-start="910">
   <div class="pos">459</div>
   <div class="body">
@@ -20035,7 +20106,7 @@
          data-find="the land beneath our feet  theatre · political"
          data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|political;THEATRE|spoken word"
-         data-days=""
+         data-days="9 10 11 12 13"
          data-start="900">
   <div class="pos">460</div>
   <div class="body">
@@ -20073,7 +20144,7 @@
          data-find="plaything  theatre · clown"
          data-venue="Hoots @ Nicolson Square" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|clown;THEATRE|character comedy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29 30"
          data-start="790">
   <div class="pos">461</div>
   <div class="body">
@@ -20111,7 +20182,7 @@
          data-find="project holy moly matt forde comedy · stand-up"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|political"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1200">
   <div class="pos">462</div>
   <div class="body">
@@ -20149,7 +20220,7 @@
          data-find="the big bite-size breakfast show  theatre · new writing"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|compilation"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="630">
   <div class="pos">463</div>
   <div class="body">
@@ -20187,7 +20258,7 @@
          data-find="these violent delights  events · film"
          data-venue="EIFF @ Filmhouse" data-vgroup="West End"
          data-genres="EVENTS;EVENTS|film"
-         data-days=""
+         data-days="13 14"
          data-start="720">
   <div class="pos">464</div>
   <div class="body">
@@ -20263,7 +20334,7 @@
          data-find="dreamgirl  theatre · storytelling"
          data-venue="ZOO Southside" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|storytelling"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22"
          data-start="1000">
   <div class="pos">466</div>
   <div class="body">
@@ -20377,7 +20448,7 @@
          data-find="someone help her! crudi dench comedy · drag"
          data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
          data-genres="COMEDY;COMEDY|drag"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1210">
   <div class="pos">469</div>
   <div class="body">
@@ -20415,7 +20486,7 @@
          data-find="the wreck  theatre · multimedia"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|multimedia;THEATRE|puppetry"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29 30"
          data-start="630">
   <div class="pos">470</div>
   <div class="body">
@@ -20453,7 +20524,7 @@
          data-find="meteors  theatre · solo show"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|solo show;THEATRE|new writing"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="1260">
   <div class="pos">471</div>
   <div class="body">
@@ -20491,7 +20562,7 @@
          data-find="whatever happened to that guy?  theatre · comedy"
          data-venue="Pleasance Dome" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|new writing"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="880">
   <div class="pos">472</div>
   <div class="body">
@@ -20681,7 +20752,7 @@
          data-find="beetlemania  musicals & opera · comedy"
          data-venue="theSpace on the Mile" data-vgroup="Royal Mile / Old Town"
          data-genres="OPERA;OPERA|comedy;OPERA|musical comedy"
-         data-days=""
+         data-days="9 10 11 12 13 14"
          data-start="805">
   <div class="pos">477</div>
   <div class="body">
@@ -20757,7 +20828,7 @@
          data-find="i was never here (there is no spy show)  theatre · clown"
          data-venue="theSpace @ Niddry St" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|clown;THEATRE|interactive"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 22 23 24"
          data-start="1340">
   <div class="pos">479</div>
   <div class="body">
@@ -20795,7 +20866,7 @@
          data-find="jill's tupperware party  comedy · character comedy"
          data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
          data-genres="COMEDY;COMEDY|character comedy;COMEDY|alternative comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="875">
   <div class="pos">480</div>
   <div class="body">
@@ -20833,7 +20904,7 @@
          data-find="the hunger  theatre · horror"
          data-venue="theSpace @ Niddry St" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|horror;THEATRE|new writing"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21"
          data-start="590">
   <div class="pos">481</div>
   <div class="body">
@@ -20871,7 +20942,7 @@
          data-find="afronauts  circus · theatre"
          data-venue="Underbelly, George Square" data-vgroup="George Square"
          data-genres="CIRCUS;CIRCUS|theatre;CIRCUS|family-friendly"
-         data-days=""
+         data-days="5 6 7 8 9 10 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="835">
   <div class="pos">482</div>
   <div class="body">
@@ -20909,7 +20980,7 @@
          data-find="improv comedy with box of frogs  comedy · improv"
          data-venue="theSpace on the Mile" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|improv"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21"
          data-start="1230">
   <div class="pos">483</div>
   <div class="body">
@@ -20985,7 +21056,7 @@
          data-find="the bowie story  music · live music"
          data-venue="theSpace @ Symposium Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="MUSIC;MUSIC|live music;MUSIC|tribute"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1010">
   <div class="pos">485</div>
   <div class="body">
@@ -21365,7 +21436,7 @@
          data-find="clementine ii rosalie minnitt comedy · character comedy"
          data-venue="Shedinburgh @ Assembly Checkpoint" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|character comedy;COMEDY|alternative comedy"
-         data-days=""
+         data-days="10"
          data-start="1125">
   <div class="pos">495</div>
   <div class="body">
@@ -21403,7 +21474,7 @@
          data-find="operation blank  theatre · comedy"
          data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|absurdist"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28"
          data-start="1180">
   <div class="pos">496</div>
   <div class="body">
@@ -21441,7 +21512,7 @@
          data-find="primary school bangers  music · comedy"
          data-venue="Gilded Balloon Teviot" data-vgroup="Bristo Square & Teviot"
          data-genres="MUSIC;MUSIC|comedy;MUSIC|musical comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15"
          data-start="780">
   <div class="pos">497</div>
   <div class="body">
@@ -21479,7 +21550,7 @@
          data-find="moral support amelia hamilton comedy · stand-up"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|musical comedy"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1220">
   <div class="pos">498</div>
   <div class="body">
@@ -21517,7 +21588,7 @@
          data-find="not another quiz night  comedy · cabaret"
          data-venue="Gilded Balloon Teviot" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|cabaret;COMEDY|game show"
-         data-days=""
+         data-days="4 5 6 7 8 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1335">
   <div class="pos">499</div>
   <div class="body">
@@ -21555,7 +21626,7 @@
          data-find="puss puss natalia sledz comedy · clown"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|clown;COMEDY|absurdist"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29"
          data-start="1155">
   <div class="pos">500</div>
   <div class="body">
@@ -21593,7 +21664,7 @@
          data-find="we'll be alright, darling ed night comedy · stand-up"
          data-venue="Monkey Barrel Comedy" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1005">
   <div class="pos">501</div>
   <div class="body">
@@ -21631,7 +21702,7 @@
          data-find="work in progress jamali maddix comedy · work in progress"
          data-venue="Monkey Barrel Comedy" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|work in progress;COMEDY|solo show"
-         data-days=""
+         data-days="17 18 19"
          data-start="1315">
   <div class="pos">502</div>
   <div class="body">
@@ -21707,7 +21778,7 @@
          data-find="2 wongs and a white  comedy · stand-up"
          data-venue="Laughing Horse @ The Pear Tree" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22"
          data-start="960">
   <div class="pos">504</div>
   <div class="body">
@@ -21745,7 +21816,7 @@
          data-find="28.06.1980 (or how a fake version of deep purple brought rock music to mexico)  comedy · storytelling"
          data-venue="PBH's Free Fringe @ Slow Progress Cafe and Records" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|storytelling;COMEDY|theatre"
-         data-days=""
+         data-days="7 8 9 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29"
          data-start="960">
   <div class="pos">505</div>
   <div class="body">
@@ -21821,7 +21892,7 @@
          data-find="adele cliff's topical early late show with adele cliff  comedy · political"
          data-venue="Hoots @ Potterrow" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|political;COMEDY|satire"
-         data-days=""
+         data-days="6 7 8 9 12 13 14 15 16 19 20 21 22 23 26 27 28 29"
          data-start="1160">
   <div class="pos">507</div>
   <div class="body">
@@ -21859,7 +21930,7 @@
          data-find="adults only magic show  comedy · magic"
          data-venue="Assembly George Square Studios" data-vgroup="George Square"
          data-genres="COMEDY;COMEDY|magic;COMEDY|variety"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1300">
   <div class="pos">508</div>
   <div class="body">
@@ -21897,7 +21968,7 @@
          data-find="andy macleod's soho days and camden nights  spoken word · storytelling"
          data-venue="Just The Tonic at The Mash House" data-vgroup="Royal Mile / Old Town"
          data-genres="SPOKEN_WORD;SPOKEN_WORD|storytelling;SPOKEN_WORD|music"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16"
          data-start="865">
   <div class="pos">509</div>
   <div class="body">
@@ -21935,7 +22006,7 @@
          data-find="anime-zing kids! anime-zing kids! children's shows · interactive"
          data-venue="Laughing Horse @ City Cafe" data-vgroup="Royal Mile / Old Town"
          data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|interactive"
-         data-days=""
+         data-days="13 14 15 16 17 19 20 21 22 23 24 26 27 28 29"
          data-start="750">
   <div class="pos">510</div>
   <div class="body">
@@ -22125,7 +22196,7 @@
          data-find="bootleg this! michelle shocked music · storytelling"
          data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
          data-genres="MUSIC;MUSIC|storytelling;MUSIC|international"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19"
          data-start="1230">
   <div class="pos">515</div>
   <div class="body">
@@ -22163,7 +22234,7 @@
          data-find="brewed rowan hackett comedy · stand-up"
          data-venue="Just The Tonic at The Caves" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|dark comedy"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13"
          data-start="895">
   <div class="pos">516</div>
   <div class="body">
@@ -22239,7 +22310,7 @@
          data-find="class act mark row comedy · stand-up"
          data-venue="Laughing Horse @ West Port Oracle" data-vgroup="Grassmarket"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="795">
   <div class="pos">518</div>
   <div class="body">
@@ -22391,7 +22462,7 @@
          data-find="guided detour omar badawy comedy · stand-up"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|storytelling"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27"
          data-start="995">
   <div class="pos">522</div>
   <div class="body">
@@ -22467,7 +22538,7 @@
          data-find="hellbent larry dean comedy · stand-up"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|solo show"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1110">
   <div class="pos">524</div>
   <div class="body">
@@ -22581,7 +22652,7 @@
          data-find="katie pritchard is sir elton scone  comedy · musical comedy"
          data-venue="Hoots @ Nicolson Square" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|musical comedy;COMEDY|character comedy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="940">
   <div class="pos">527</div>
   <div class="body">
@@ -22657,7 +22728,7 @@
          data-find="making an impression rory bemner comedy · spoken word"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|spoken word"
-         data-days=""
+         data-days="11 12"
          data-start="1140">
   <div class="pos">529</div>
   <div class="body">
@@ -22809,7 +22880,7 @@
          data-find="one last shot sinatra theatre · true-life"
          data-venue="Le Monde" data-vgroup="New Town"
          data-genres="THEATRE;THEATRE|true-life"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="930">
   <div class="pos">533</div>
   <div class="body">
@@ -22923,7 +22994,7 @@
          data-find="settled .5 justina seselskaite comedy · lgbtq+"
          data-venue="Hoots @ Hilton (Bread Street)" data-vgroup="West End"
          data-genres="COMEDY;COMEDY|solo show"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 28 29 30"
          data-start="1190">
   <div class="pos">536</div>
   <div class="body">
@@ -22961,7 +23032,7 @@
          data-find="showstopper! the improvised musical  comedy · musical theatre"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|musical theatre;COMEDY|improv"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1040">
   <div class="pos">537</div>
   <div class="body">
@@ -23037,7 +23108,7 @@
          data-find="stay at home son jonathan rudge comedy · stand-up"
          data-venue="Just The Tonic at The Mash House" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1235">
   <div class="pos">539</div>
   <div class="body">
@@ -23075,7 +23146,7 @@
          data-find="stuart mitchell and festival friends  comedy · stand-up"
          data-venue="Hoots @ The Apex" data-vgroup="Grassmarket"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|spoken word"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="900">
   <div class="pos">540</div>
   <div class="body">
@@ -23151,7 +23222,7 @@
          data-find="ten thousand hours  circus · acrobatics"
          data-venue="Assembly Hall" data-vgroup="Royal Mile / Old Town"
          data-genres="CIRCUS;CIRCUS|acrobatics;CIRCUS|family-friendly"
-         data-days=""
+         data-days="5 6 7 8 9 10 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1050">
   <div class="pos">542</div>
   <div class="body">
@@ -23265,7 +23336,7 @@
          data-find="the four of us are dying up here ignacio lopez comedy · stand-up"
          data-venue="Hoots @ The Apex" data-vgroup="Grassmarket"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="6 7 8 9 10 11 13 14 15 16 17 19 20 21 22 23 24 26 27 28 29 30"
          data-start="1080">
   <div class="pos">545</div>
   <div class="body">
@@ -23379,7 +23450,7 @@
          data-find="the passion of mr cardboard 1⁄2  comedy · clown"
          data-venue="Underbelly, George Square" data-vgroup="George Square"
          data-genres="COMEDY;COMEDY|clown;COMEDY|theatre"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1160">
   <div class="pos">548</div>
   <div class="body">
@@ -23417,7 +23488,7 @@
          data-find="to all the boys i've loved before annie boyle comedy · stand-up"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|storytelling"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1045">
   <div class="pos">549</div>
   <div class="body">
@@ -23455,7 +23526,7 @@
          data-find="work in chonkers 1⁄2 mr chonkers comedy · acrobatics"
          data-venue="Monkey Barrel Comedy" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|acrobatics;COMEDY|jazz"
-         data-days=""
+         data-days="9 23"
          data-start="1435">
   <div class="pos">550</div>
   <div class="body">
@@ -23536,7 +23607,7 @@
          data-find="turn the cloth  theatre · new writing"
          data-venue="Gilded Balloon Teviot" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|horror"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 18 19 20 21 22 23 24 26 27 28 29 30"
          data-start="870">
   <div class="pos">552</div>
   <div class="body">
@@ -23579,7 +23650,7 @@
          data-find="lady bolognese  comedy · character comedy"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|character comedy;COMEDY|clown"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1380">
   <div class="pos">553</div>
   <div class="body">
@@ -23622,7 +23693,7 @@
          data-find="dear michelle kwan  theatre · dark comedy"
          data-venue="theSpaceTriplex" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|dark comedy;THEATRE|new writing"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28"
          data-start="905">
   <div class="pos">554</div>
   <div class="body">
@@ -23708,7 +23779,7 @@
          data-find="turn your f*cking phones off  theatre · interactive"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|interactive;THEATRE|storytelling"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="940">
   <div class="pos">556</div>
   <div class="body">
@@ -23880,7 +23951,7 @@
          data-find="replica nate kitch comedy · alternative comedy"
          data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|alternative comedy;COMEDY|absurdist"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="1020">
   <div class="pos">560</div>
   <div class="body">
@@ -23923,7 +23994,7 @@
          data-find="oops olivia raine atwood comedy · storytelling"
          data-venue="Gilded Balloon Teviot" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|storytelling;COMEDY|theatre"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="870">
   <div class="pos">561</div>
   <div class="body">
@@ -24009,7 +24080,7 @@
          data-find="don quixote (is a very big book)  theatre · puppetry"
          data-venue="Pleasance Dome" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|puppetry;THEATRE|clown"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="925">
   <div class="pos">563</div>
   <div class="body">
@@ -24052,7 +24123,7 @@
          data-find="saving britney  theatre · solo show"
          data-venue="Underbelly, George Square" data-vgroup="George Square"
          data-genres="THEATRE;THEATRE|solo show"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="1095">
   <div class="pos">564</div>
   <div class="body">
@@ -24095,7 +24166,7 @@
          data-find="atomic tales  theatre · solo show"
          data-venue="ZOO Playground" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|solo show;THEATRE|verbatim"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="915">
   <div class="pos">565</div>
   <div class="body">
@@ -24224,7 +24295,7 @@
          data-find="let's listen to some of lou bega's other songs together for an hour  comedy · stand-up"
          data-venue="Just The Tonic at The Caves" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|interactive"
-         data-days=""
+         data-days="11 18 25"
          data-start="1350">
   <div class="pos">568</div>
   <div class="body">
@@ -24267,7 +24338,7 @@
          data-find="golden ahir shah comedy · stand-up"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|storytelling"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1170">
   <div class="pos">569</div>
   <div class="body">
@@ -24353,7 +24424,7 @@
          data-find="justin elizabeth sayre is a 40-year-old woman  comedy · lgbtq+"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1090">
   <div class="pos">571</div>
   <div class="body">
@@ -24396,7 +24467,7 @@
          data-find="squeaky bum time sapphire mcintosh comedy · stand-up"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1065">
   <div class="pos">572</div>
   <div class="body">
@@ -24568,7 +24639,7 @@
          data-find="i am johnny  theatre · comedy"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|drag"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="1095">
   <div class="pos">576</div>
   <div class="body">
@@ -24611,7 +24682,7 @@
          data-find="the wing scuffle spectacular the revel puck circus circus · circus"
          data-venue="Underbelly’s Circus Hub on the Meadows" data-vgroup="Summerhall & The Meadows"
          data-genres="CIRCUS;CIRCUS|circus"
-         data-days=""
+         data-days="7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28"
          data-start="970">
   <div class="pos">577</div>
   <div class="body">
@@ -24783,7 +24854,7 @@
          data-find="ayo adenekan  comedy · stand-up"
          data-venue="Monkey Barrel Comedy" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|solo show"
-         data-days=""
+         data-days="3 4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="810">
   <div class="pos">581</div>
   <div class="body">
@@ -24955,7 +25026,7 @@
          data-find="january 6th the musical  theatre · comedy"
          data-venue="theSpaceTriplex" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|musical theatre"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 22 23 24 25 26 27 28"
          data-start="1025">
   <div class="pos">585</div>
   <div class="body">
@@ -24998,7 +25069,7 @@
          data-find="roomies  theatre · dark comedy"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|dark comedy;THEATRE|solo show"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="780">
   <div class="pos">586</div>
   <div class="body">
@@ -25127,7 +25198,7 @@
          data-find="moth and dog are dying to get out  theatre · drama"
          data-venue="Pleasance Dome" data-vgroup="Bristo Square & Teviot"
          data-genres="THEATRE;THEATRE|drama"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 15 17 18 19 20 21 22 23 25 26 27 28 29 30"
          data-start="800">
   <div class="pos">589</div>
   <div class="body">
@@ -25170,7 +25241,7 @@
          data-find="life and death of the party adam flood comedy · stand-up"
          data-venue="Monkey Barrel Comedy (Cabaret Voltaire)" data-vgroup="Royal Mile / Old Town"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|music"
-         data-days=""
+         data-days="2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1320">
   <div class="pos">590</div>
   <div class="body">
@@ -25256,7 +25327,7 @@
          data-find="coma  theatre · immersive"
          data-venue="Assembly George Square" data-vgroup="George Square"
          data-genres="THEATRE;THEATRE|immersive;THEATRE|experimental"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
          data-start="855">
   <div class="pos">592</div>
   <div class="body">
@@ -25385,7 +25456,7 @@
          data-find="rubicon bilal zafar comedy · interactive"
          data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
          data-genres="COMEDY;COMEDY|interactive;COMEDY|storytelling"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1230">
   <div class="pos">595</div>
   <div class="body">
@@ -25428,7 +25499,7 @@
          data-find="100 million fish in the aquarium shannon brooke comedy · storytelling"
          data-venue="Laughing Horse @ The Hanover Tap" data-vgroup="New Town"
          data-genres="COMEDY;COMEDY|storytelling;COMEDY|stand-up"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1095">
   <div class="pos">596</div>
   <div class="body">
@@ -25557,7 +25628,7 @@
          data-find="dancing while old davina bentley comedy · stand-up"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up;COMEDY|storytelling"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="1050">
   <div class="pos">599</div>
   <div class="body">
@@ -25729,7 +25800,7 @@
          data-find="shantify  musicals & opera · music"
          data-venue="Assembly George Square Gardens" data-vgroup="George Square"
          data-genres="OPERA;OPERA|music;OPERA|family-friendly"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
          data-start="905">
   <div class="pos">603</div>
   <div class="body">
@@ -25901,7 +25972,7 @@
          data-find="we tried it your way garrett millerick comedy · stand-up"
          data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
          data-genres="COMEDY;COMEDY|stand-up"
-         data-days=""
+         data-days="4 5 6 7 8 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
          data-start="995">
   <div class="pos">607</div>
   <div class="body">
@@ -26593,7 +26664,7 @@
          data-find="fool's gold  theatre · dark comedy"
          data-venue="theSpace on the Mile" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|dark comedy"
-         data-days=""
+         data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21"
          data-start="1400">
   <div class="pos">621</div>
   <div class="body">
@@ -26636,7 +26707,7 @@
          data-find="gridlock  theatre · drama"
          data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|drama;THEATRE|new writing"
-         data-days=""
+         data-days="4 5 6 7 8 9 10 11 12 13 14 15 16"
          data-start="780">
   <div class="pos">622</div>
   <div class="body">
@@ -26722,7 +26793,7 @@
          data-find="jane eyre convention  theatre · comedy"
          data-venue="Just The Tonic at The Mash House" data-vgroup="Royal Mile / Old Town"
          data-genres="THEATRE;THEATRE|comedy;THEATRE|new writing"
-         data-days=""
+         data-days="5 6 7 8 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27"
          data-start="755">
   <div class="pos">624</div>
   <div class="body">
@@ -26808,7 +26879,7 @@
          data-find="ships  theatre · new writing"
          data-venue="Leith Arches" data-vgroup="Leith"
          data-genres="THEATRE;THEATRE|new writing;THEATRE|immersive"
-         data-days=""
+         data-days="10 11 12 13 14"
          data-start="1080">
   <div class="pos">626</div>
   <div class="body">
@@ -26937,7 +27008,7 @@
          data-find="julius caesar variety show  theatre · new writing"
          data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
          data-genres="THEATRE;THEATRE|new writing"
-         data-days=""
+         data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
          data-start="1005">
   <div class="pos">629</div>
   <div class="body">
@@ -27327,7 +27398,7 @@
   <div data-find="#hysterical"
        data-venue="theSpace on the Mile" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|comedy"
-       data-days=""
+       data-days="6 7 8 9 10 18 19 20 21 23 27"
        data-start="1350">
     #Hysterical
     
@@ -27338,7 +27409,7 @@
   <div data-find="1 king, 2 princes and shakespeare's lie"
        data-venue="theSpace @ Symposium Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|historical;THEATRE|drama"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28"
        data-start="1095">
     1 King, 2 Princes and Shakespeare's Lie
     
@@ -27349,7 +27420,7 @@
   <div data-find="1 night at ford's theatre"
        data-venue="Rotunda Theatre" data-vgroup="Tollcross"
        data-genres="OPERA;OPERA|historical;OPERA|new writing"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22"
        data-start="1080">
     1 Night at Ford's Theatre
     
@@ -27371,7 +27442,7 @@
   <div data-find="a bunch of characters"
        data-venue="Hoots @ The Apex" data-vgroup="Grassmarket"
        data-genres="COMEDY;COMEDY|character comedy;COMEDY|sketch show"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 15 16 17 18 19 20 21"
        data-start="820">
     A Bunch of Characters
     
@@ -27382,7 +27453,7 @@
   <div data-find="a costume drama"
        data-venue="ZOO Playground" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|new writing;THEATRE|solo show"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="805">
     A Costume Drama
     
@@ -27393,7 +27464,7 @@
   <div data-find="a face"
        data-venue="theSpace on the Mile" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|drama;THEATRE|new writing"
-       data-days=""
+       data-days="9 10 11 12 13 14"
        data-start="550">
     A FACE
     
@@ -27404,7 +27475,7 @@
   <div data-find="a foot is not an appropriate prize for the tombola"
        data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|comedy;THEATRE|drag"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
        data-start="920">
     A Foot is Not an Appropriate Prize for the Tombola
     
@@ -27428,7 +27499,7 @@
   <div data-find="a hercules panto"
        data-venue="theSpace on the Mile" data-vgroup="Royal Mile / Old Town"
        data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|family-friendly"
-       data-days=""
+       data-days="9 10 11 12 13 14"
        data-start="595">
     A Hercules Panto
     
@@ -27450,7 +27521,7 @@
   <div data-find="a play on words"
        data-venue="Assembly @ St Andrew Square" data-vgroup="New Town"
        data-genres="THEATRE;THEATRE|new writing;THEATRE|comedy"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
        data-start="930">
     A Play on Words
     
@@ -27474,7 +27545,7 @@
   <div data-find="a very serious comedy"
        data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|satire;THEATRE|farce"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
        data-start="915">
     A Very Serious Comedy
     
@@ -27507,7 +27578,7 @@
   <div data-find="alex hines and sarah stafford"
        data-venue="Assembly George Square" data-vgroup="George Square"
        data-genres="COMEDY;COMEDY|theatre;COMEDY|absurdist"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 24 26 27 28 29"
        data-start="1140">
     Alex Hines And Sarah Stafford
     
@@ -27518,7 +27589,7 @@
   <div data-find="an alien love story"
        data-venue="Just The Tonic at The Mash House" data-vgroup="Royal Mile / Old Town"
        data-genres="COMEDY;COMEDY|sci-fi;COMEDY|burlesque"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1395">
     An Alien Love Story
     
@@ -27529,7 +27600,7 @@
   <div data-find="an echo in the void"
        data-venue="Assembly Roxy" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|thriller;THEATRE|drama"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28"
        data-start="1000">
     An Echo in the Void
     
@@ -27551,7 +27622,7 @@
   <div data-find="an evening with gerald lloyd-davies"
        data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
        data-genres="THEATRE;THEATRE|new writing;THEATRE|character comedy"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
        data-start="1060">
     An Evening With Gerald Lloyd-Davies
     
@@ -27575,7 +27646,7 @@
   <div data-find="an ode to the casting director"
        data-venue="Assembly George Square Studios" data-vgroup="George Square"
        data-genres="THEATRE;THEATRE|comedy;THEATRE|drama"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 13 14 15 16 17 18 20 21 22 23 24 25 26 27 28"
        data-start="720">
     An Ode to the Casting Director
     
@@ -27597,7 +27668,7 @@
   <div data-find="armageddon outta here"
        data-venue="Just The Tonic at Westside Rodeo" data-vgroup="Cowgate"
        data-genres="COMEDY;COMEDY|alternative comedy;COMEDY|sketch show"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 16"
        data-start="720">
     Armageddon Outta Here
     
@@ -27608,7 +27679,7 @@
   <div data-find="awaiting evaluation"
        data-venue="Greenside @ Riddles Court" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|absurdist;THEATRE|comedy"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28"
        data-start="685">
     Awaiting Evaluation
     
@@ -27630,7 +27701,7 @@
   <div data-find="bachelor of fine arts"
        data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|musical theatre;THEATRE|comedy"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28"
        data-start="1205">
     Bachelor of Fine Arts
     
@@ -27641,7 +27712,7 @@
   <div data-find="basic bald b*tch"
        data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
        data-genres="THEATRE;THEATRE|new writing;THEATRE|solo show"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
        data-start="955">
     BASIC BALD B*TCH
     
@@ -27674,7 +27745,7 @@
   <div data-find="birthday party"
        data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
        data-genres="CABARET;CABARET|magic;CABARET|drama"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29 30"
        data-start="690">
     Birthday Party
     
@@ -27685,7 +27756,7 @@
   <div data-find="book of shadows"
        data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
        data-genres="THEATRE;THEATRE|puppetry;THEATRE|comedy"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1110">
     BOOK OF SHADOWS
     
@@ -27707,7 +27778,7 @@
   <div data-find="carmilla"
        data-venue="Greenside @ Riddles Court" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|new writing"
-       data-days=""
+       data-days="9 10 11 12 13 14"
        data-start="760">
     Carmilla
     
@@ -27742,7 +27813,7 @@
   <div data-find="chip and gus: a comedy with balls"
        data-venue="theSpace @ Venue 45" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|comedy"
-       data-days=""
+       data-days="12 13 14 16 17 18 19 20 21 23 24 25 26 27 28"
        data-start="1100">
     Chip and Gus: A Comedy with Balls
     
@@ -27788,7 +27859,7 @@
   <div data-find="constellations"
        data-venue="theSpace on the Mile" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|contemporary;THEATRE|drama"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14"
        data-start="970">
     Constellations
     
@@ -27799,7 +27870,7 @@
   <div data-find="countdown"
        data-venue="theSpaceTriplex" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|experimental;THEATRE|new writing"
-       data-days=""
+       data-days="11 12 13 14"
        data-start="1265">
     Countdown
     
@@ -27821,7 +27892,7 @@
   <div data-find="cult"
        data-venue="Hoots @ Potterrow" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="COMEDY;COMEDY|horror;COMEDY|immersive"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22"
        data-start="1340">
     Cult
     
@@ -27867,7 +27938,7 @@
   <div data-find="day of the locust"
        data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|music;THEATRE|adaptation"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
        data-start="770">
     Day Of The Locust
     
@@ -27878,7 +27949,7 @@
   <div data-find="deluge"
        data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
        data-genres="THEATRE;THEATRE|comedy;THEATRE|physical theatre"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="930">
     Deluge
     
@@ -27889,7 +27960,7 @@
   <div data-find="diary of a dl trade"
        data-venue="PBH's Free Fringe @ Carbon" data-vgroup="Cowgate"
        data-genres="THEATRE;THEATRE|comedy;THEATRE|stand-up"
-       data-days=""
+       data-days="7 8 9 10 11 12 13 14 15 16 17"
        data-start="1075">
     Diary of a DL Trade
     
@@ -27900,7 +27971,7 @@
   <div data-find="disciples of anatomy"
        data-venue="Greenside @ George Street" data-vgroup="New Town"
        data-genres="THEATRE;THEATRE|drama"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21"
        data-start="1115">
     Disciples of Anatomy
     
@@ -27924,7 +27995,7 @@
   <div data-find="doris, dolly and the dressing room divas"
        data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
        data-genres="COMEDY;COMEDY|musical theatre"
-       data-days=""
+       data-days="4 5 6 7 8 9 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29 30"
        data-start="1200">
     Doris, Dolly and the Dressing Room Divas
     
@@ -27935,7 +28006,7 @@
   <div data-find="drag, jazz and desperation"
        data-venue="Just The Tonic at Westside Rodeo" data-vgroup="Cowgate"
        data-genres="CABARET;CABARET|drag;CABARET|cabaret"
-       data-days=""
+       data-days="8 9 10 11 12"
        data-start="1280">
     Drag, Jazz and Desperation
     
@@ -27946,7 +28017,7 @@
   <div data-find="dragon tales"
        data-venue="LifeCare Centre" data-vgroup="Stockbridge & North West"
        data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|puppetry;CHILDRENS_SHOWS|family-friendly"
-       data-days=""
+       data-days="2 3 4 5 6 7 8 9 10 11 12 13 14 15 20 21 22 27 28 29"
        data-start="600">
     Dragon Tales
     
@@ -27968,7 +28039,7 @@
   <div data-find="dreamweavers"
        data-venue="Shedinburgh @ Assembly Checkpoint" data-vgroup="Bristo Square & Teviot"
        data-genres="COMEDY;COMEDY|sketch show"
-       data-days=""
+       data-days="9 14"
        data-start="1125">
     Dreamweavers
     
@@ -27992,7 +28063,7 @@
   <div data-find="enuff is enuff"
        data-venue="Hoots @ Potterrow" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="COMEDY;COMEDY|character comedy;COMEDY|solo show"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1100">
     Enuff is Enuff
     
@@ -28003,7 +28074,7 @@
   <div data-find="eric's tales of the sea - a submariner's yarn"
        data-venue="Just The Tonic at The Caves" data-vgroup="Royal Mile / Old Town"
        data-genres="COMEDY;COMEDY|storytelling;COMEDY|true-life"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="890">
     Eric's Tales of the Sea - A Submariner's Yarn
     
@@ -28014,7 +28085,7 @@
   <div data-find="fight or flight"
        data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|drama"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14"
        data-start="1125">
     Fight or Flight
     
@@ -28025,7 +28096,7 @@
   <div data-find="fiona allen"
        data-venue="Gilded Balloon Teviot" data-vgroup="Bristo Square & Teviot"
        data-genres="COMEDY;COMEDY|stand-up;COMEDY|solo show"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28"
        data-start="1080">
     Fiona Allen
     
@@ -28069,7 +28140,7 @@
   <div data-find="from lassie to cleopatra"
        data-venue="Assembly George Square Studios" data-vgroup="George Square"
        data-genres="THEATRE;THEATRE|solo show;THEATRE|drama"
-       data-days=""
+       data-days="4 6 8 10 12 14 18 20 22 24 26 28"
        data-start="930">
     from Lassie to Cleopatra
     
@@ -28080,7 +28151,7 @@
   <div data-find="funbelievable! 90s rewind"
        data-venue="Gilded Balloon Patter House" data-vgroup="Royal Mile / Old Town"
        data-genres="COMEDY;COMEDY|magic;COMEDY|cabaret"
-       data-days=""
+       data-days="4 5 6 7 8 9 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29 30"
        data-start="1020">
     Funbelievable! 90s Rewind
     
@@ -28102,7 +28173,7 @@
   <div data-find="giddy up"
        data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="COMEDY;COMEDY|stand-up"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1285">
     Giddy Up
     
@@ -28113,7 +28184,7 @@
   <div data-find="girlfriends"
        data-venue="Greenside @ George Street" data-vgroup="New Town"
        data-genres="THEATRE;THEATRE|cabaret;THEATRE|new writing"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28"
        data-start="825">
     Girlfriends
     
@@ -28161,7 +28232,7 @@
   <div data-find="happily ever never"
        data-venue="theSpace @ Niddry St" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 16 17 18"
        data-start="1025">
     Happily Ever Never
     
@@ -28196,7 +28267,7 @@
   <div data-find="hole!"
        data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
        data-genres="OPERA;OPERA|musical comedy;OPERA|cabaret"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1290">
     HOLE!
     
@@ -28231,7 +28302,7 @@
   <div data-find="how i went to every supermarket in the world"
        data-venue="Just The Tonic at The Mash House" data-vgroup="Royal Mile / Old Town"
        data-genres="COMEDY;COMEDY|stand-up;COMEDY|storytelling"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1170">
     How I Went to Every Supermarket in the World
     
@@ -28242,7 +28313,7 @@
   <div data-find="how not to make it in america"
        data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
        data-genres="THEATRE;THEATRE|drama;THEATRE|dark comedy"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
        data-start="1280">
     How Not to Make it in America
     
@@ -28253,7 +28324,7 @@
   <div data-find="how to believe in anything"
        data-venue="Laughing Horse @ The Raging Bull" data-vgroup="West End"
        data-genres="THEATRE;THEATRE|thriller;THEATRE|solo show"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 16 17"
        data-start="1410">
     How to Believe in Anything
     
@@ -28264,7 +28335,7 @@
   <div data-find="how to feel feelings"
        data-venue="theSpaceTriplex" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|absurdist;THEATRE|dark comedy"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14"
        data-start="845">
     How to Feel Feelings
     
@@ -28275,7 +28346,7 @@
   <div data-find="how to poop in an outhouse at -58°c"
        data-venue="Greenside @ George Street" data-vgroup="New Town"
        data-genres="THEATRE;THEATRE|storytelling;THEATRE|solo show"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28"
        data-start="765">
     How to Poop in an Outhouse at -58°C
     
@@ -28308,7 +28379,7 @@
   <div data-find="if you let me speak"
        data-venue="Greenside @ George Street" data-vgroup="New Town"
        data-genres="THEATRE;THEATRE|solo show;THEATRE|comedy"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14"
        data-start="1310">
     If You Let Me Speak
     
@@ -28354,7 +28425,7 @@
   <div data-find="indy!"
        data-venue="Gilded Balloon at the Museum" data-vgroup="Royal Mile / Old Town"
        data-genres="COMEDY;COMEDY|theatre;COMEDY|family-friendly"
-       data-days=""
+       data-days="5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 24 26 27 28 29"
        data-start="975">
     INDY!
     
@@ -28378,7 +28449,7 @@
   <div data-find="irene cleans up"
        data-venue="Paradise in Augustines" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|comedy;THEATRE|drama"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14"
        data-start="1150">
     Irene Cleans Up
     
@@ -28422,7 +28493,7 @@
   <div data-find="lady of the lakes"
        data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="COMEDY;COMEDY|character comedy;COMEDY|solo show"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="980">
     Lady of the Lakes
     
@@ -28433,7 +28504,7 @@
   <div data-find="last laugh"
        data-venue="ZOO Playground" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|comedy"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29"
        data-start="1260">
     Last Laugh
     
@@ -28446,7 +28517,7 @@
   <div data-find="let's twist again!"
        data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
        data-genres="CIRCUS;CIRCUS|acrobatics;CIRCUS|circus"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29 30"
        data-start="1020">
     Let's Twist Again!
     
@@ -28457,7 +28528,7 @@
   <div data-find="life of pie"
        data-venue="Paradise in The Vault" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|comedy;THEATRE|storytelling"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14"
        data-start="735">
     Life of Pie
     
@@ -28536,7 +28607,7 @@
   <div data-find="madame chandelier's grand theft opera"
        data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|opera;CHILDRENS_SHOWS|comedy"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15"
        data-start="735">
     Madame Chandelier's Grand Theft Opera
     
@@ -28602,7 +28673,7 @@
   <div data-find="nathaniel jones"
        data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
        data-genres="COMEDY;COMEDY|character comedy"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1245">
     Nathaniel Jones
     
@@ -28637,7 +28708,7 @@
   <div data-find="newsrevue"
        data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="COMEDY;COMEDY|satire;COMEDY|sketch show"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29 30"
        data-start="1080">
     NewsRevue
     
@@ -28659,7 +28730,7 @@
   <div data-find="on some far shore"
        data-venue="Greenside @ George Street" data-vgroup="New Town"
        data-genres="OPERA;OPERA|storytelling;OPERA|folk"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21"
        data-start="625">
     On Some Far Shore
     
@@ -28694,7 +28765,7 @@
   <div data-find="other"
        data-venue="Laughing Horse @ Bar 50" data-vgroup="Cowgate"
        data-genres="COMEDY;COMEDY|stand-up"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 16 17"
        data-start="780">
     Other
     
@@ -28718,7 +28789,7 @@
   <div data-find="painter and storyteller"
        data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|painting;THEATRE|new writing"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 19 20 21 22 23 24 25 26 27 28 29"
        data-start="680">
     painter and storyteller
     
@@ -28729,7 +28800,7 @@
   <div data-find="patient 13"
        data-venue="ZOO Playground" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|comedy;THEATRE|storytelling"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 25 26 27 28 29"
        data-start="860">
     Patient 13
     
@@ -28766,7 +28837,7 @@
   <div data-find="pink boots and an alcoholic sock puppet"
        data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
        data-genres="COMEDY;COMEDY|clown;COMEDY|circus"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 25 26 27 28 29"
        data-start="1020">
     Pink Boots and an Alcoholic Sock Puppet
     
@@ -28799,7 +28870,7 @@
   <div data-find="printer of the year"
        data-venue="Underbelly, George Square" data-vgroup="George Square"
        data-genres="COMEDY;COMEDY|clown;COMEDY|absurdist"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1275">
     Printer of the Year
     
@@ -28847,7 +28918,7 @@
   <div data-find="puttana"
        data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
        data-genres="THEATRE;THEATRE|contemporary;THEATRE|experimental"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29 30"
        data-start="1275">
     Puttana
     
@@ -28880,7 +28951,7 @@
   <div data-find="rip her to shreds"
        data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
        data-genres="THEATRE;THEATRE|dark comedy;THEATRE|horror"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="755">
     RIP HER TO SHREDS
     
@@ -28902,7 +28973,7 @@
   <div data-find="romeo and juliet for bairns"
        data-venue="Scottish Storytelling Centre" data-vgroup="Royal Mile / Old Town"
        data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|immersive;CHILDRENS_SHOWS|storytelling"
-       data-days=""
+       data-days="6 7 8 9 10 12 13 14 15 16 17 19 20 21 22"
        data-start="615">
     Romeo And Juliet For Bairns
     
@@ -28926,7 +28997,7 @@
   <div data-find="secrets secrets shhh!"
        data-venue="Underbelly, George Square" data-vgroup="George Square"
        data-genres="THEATRE;THEATRE|comedy;THEATRE|sketch show"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
        data-start="945">
     Secrets Secrets Shhh!
     
@@ -28950,7 +29021,7 @@
   <div data-find="shhh! (a wordless comedy)"
        data-venue="Gilded Balloon Teviot" data-vgroup="Bristo Square & Teviot"
        data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|mime;CHILDRENS_SHOWS|physical theatre"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 18 19 20 21 22 23 25 26 27 28 29 30"
        data-start="680">
     Shhh! (A Wordless Comedy)
     
@@ -28974,7 +29045,7 @@
   <div data-find="shotgunned"
        data-venue="Assembly George Square Studios" data-vgroup="George Square"
        data-genres="THEATRE;THEATRE|drama;THEATRE|comedy"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 15 16 17 18 19 20 21 22 24 25 26 27 28 29"
        data-start="910">
     Shotgunned
     
@@ -29009,7 +29080,7 @@
   <div data-find="snow"
        data-venue="C ARTS | C venues | C aurora" data-vgroup="Tollcross"
        data-genres="CIRCUS;CIRCUS|adaptation;CIRCUS|family-friendly"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22"
        data-start="675">
     Snow
     
@@ -29020,7 +29091,7 @@
   <div data-find="sodom, the quintessence of debauchery"
        data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="CABARET;CABARET|farce;CABARET|burlesque"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21"
        data-start="1410">
     Sodom, The Quintessence of Debauchery
     
@@ -29031,7 +29102,7 @@
   <div data-find="song unburied"
        data-venue="Assembly Roxy" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|dance;THEATRE|live music"
-       data-days=""
+       data-days="8 9 10 11 12 13 14 15"
        data-start="990">
     Song Unburied
     
@@ -29055,7 +29126,7 @@
   <div data-find="take me as i am"
        data-venue="Assembly George Square Studios" data-vgroup="George Square"
        data-genres="MUSIC;MUSIC|storytelling;MUSIC|solo show"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 24 25 26 27 28 29"
        data-start="825">
     Take Me As I Am
     
@@ -29077,7 +29148,7 @@
   <div data-find="temi wilkey (lover girl)"
        data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|comedy"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 24 26 27 28 29"
        data-start="880">
     Temi Wilkey (Lover Girl)
     
@@ -29171,7 +29242,7 @@
   <div data-find="the crimes of pete"
        data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|comedy"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="770">
     THE CRIMES OF PETE
     
@@ -29182,7 +29253,7 @@
   <div data-find="the critic's way"
        data-venue="Underbelly, Cowgate" data-vgroup="Cowgate"
        data-genres="COMEDY;COMEDY|character comedy"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="910">
     The Critic's Way
     
@@ -29193,7 +29264,7 @@
   <div data-find="the hanged man's bride"
        data-venue="theSpace on the Mile" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|horror;THEATRE|storytelling"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 21 23 25 26 27"
        data-start="850">
     The Hanged Man's Bride
     
@@ -29239,7 +29310,7 @@
   <div data-find="the legend of crystal shell"
        data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="COMEDY;COMEDY|theatre"
-       data-days=""
+       data-days="11 12 13 14 15"
        data-start="1140">
     The Legend of Crystal Shell
     
@@ -29263,7 +29334,7 @@
   <div data-find="the magic bookmark"
        data-venue="Gilded Balloon Teviot" data-vgroup="Bristo Square & Teviot"
        data-genres="CHILDRENS_SHOWS;CHILDRENS_SHOWS|musical theatre;CHILDRENS_SHOWS|storytelling"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30"
        data-start="740">
     The Magic Bookmark
     
@@ -29296,7 +29367,7 @@
   <div data-find="the naked truth"
        data-venue="Paradise in Augustines" data-vgroup="Royal Mile / Old Town"
        data-genres="SPOKEN_WORD;SPOKEN_WORD|true-life"
-       data-days=""
+       data-days="6 7 9 10 11 12 13 14"
        data-start="650">
     The Naked Truth
     
@@ -29309,7 +29380,7 @@
   <div data-find="the only man who won't f*ck me"
        data-venue="ZOO Playground" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|dark comedy"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1310">
     The Only Man Who Won't F*ck Me
     
@@ -29320,7 +29391,7 @@
   <div data-find="the pod"
        data-venue="Paradise in The Vault" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|absurdist;THEATRE|comedy"
-       data-days=""
+       data-days="7 8 9 10 11 12 14"
        data-start="1185">
     The Pod
     
@@ -29331,7 +29402,7 @@
   <div data-find="the proposal"
        data-venue="Paradise in The Vault" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|comedy"
-       data-days=""
+       data-days="7 8 9 10 11 12 13 14"
        data-start="980">
     The Proposal
     
@@ -29342,7 +29413,7 @@
   <div data-find="the remains of the butler"
        data-venue="Laughing Horse @ The Counting House" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|character comedy;THEATRE|musical comedy"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="900">
     The RemAIns of the Butler
     
@@ -29353,7 +29424,7 @@
   <div data-find="the shakespeare mayhem musical"
        data-venue="Underbelly, Bristo Square" data-vgroup="Bristo Square & Teviot"
        data-genres="OPERA;OPERA|musical theatre;OPERA|devised"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="940">
     The Shakespeare Mayhem Musical
     
@@ -29364,7 +29435,7 @@
   <div data-find="the spectacular vermin sisters-taking back what's ratfully ours"
        data-venue="Just The Tonic at The Caves" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|alternative comedy"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 16"
        data-start="1370">
     The Spectacular Vermin Sisters-Taking Back What's Ratfully Ours
     
@@ -29375,7 +29446,7 @@
   <div data-find="the sumo show hirakuza"
        data-venue="Underbelly, George Square" data-vgroup="George Square"
        data-genres="CIRCUS;CIRCUS|physical theatre;CIRCUS|international"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29 30"
        data-start="1080">
     The Sumo Show HIRAKUZA
     
@@ -29419,7 +29490,7 @@
   <div data-find="the unauthorised musical parody"
        data-venue="Underbelly, George Square" data-vgroup="George Square"
        data-genres="OPERA;OPERA|musical theatre;OPERA|musical comedy"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1190">
     The Unauthorised Musical Parody
     
@@ -29430,7 +29501,7 @@
   <div data-find="the wetness"
        data-venue="Just The Tonic at The Caves" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|performance art;THEATRE|clown"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1130">
     The Wetness
     
@@ -29441,7 +29512,7 @@
   <div data-find="the wolf of poyais"
        data-venue="Assembly Roxy" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|dark comedy;THEATRE|comedy"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 24 26 27 28 29"
        data-start="1230">
     The Wolf of Poyais
     
@@ -29452,7 +29523,7 @@
   <div data-find="the yellow wallpaper"
        data-venue="Greenside @ George Street" data-vgroup="New Town"
        data-genres="THEATRE;THEATRE|dance;THEATRE|thriller"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21 23 24 25 26 27 28"
        data-start="965">
     The Yellow Wallpaper
     
@@ -29474,7 +29545,7 @@
   <div data-find="they're just small town (northern) lads"
        data-venue="Summerhall" data-vgroup="Summerhall & The Meadows"
        data-genres="THEATRE;THEATRE|solo show;THEATRE|comedy"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15"
        data-start="1155">
     THEY'RE JUST SMALL TOWN (NORTHERN) LADS
     
@@ -29485,7 +29556,7 @@
   <div data-find="this is how i got arrested..."
        data-venue="ZOO Playground" data-vgroup="Royal Mile / Old Town"
        data-genres="THEATRE;THEATRE|comedy;THEATRE|new writing"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1180">
     THIS IS HOW I GOT ARRESTED...
     
@@ -29507,7 +29578,7 @@
   <div data-find="this year i am going to die"
        data-venue="theSpace @ Surgeons' Hall" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|dark comedy;THEATRE|new writing"
-       data-days=""
+       data-days="6 8 10 12 14"
        data-start="635">
     This Year I Am Going To Die
     
@@ -29518,7 +29589,7 @@
   <div data-find="tom towelling teaches you to knit"
        data-venue="Pleasance Courtyard" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="COMEDY;COMEDY|stand-up;COMEDY|multimedia"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 12 13 14 15 16 17 19 20 21 22 23 24 26 27 28 29"
        data-start="1305">
     Tom Towelling Teaches You To Knit
     
@@ -29540,7 +29611,7 @@
   <div data-find="two halves"
        data-venue="theSpaceTriplex" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="THEATRE;THEATRE|drama;THEATRE|new writing"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 14 16 17 18 19 20 21"
        data-start="1085">
     Two Halves
     
@@ -29608,7 +29679,7 @@
   <div data-find="wench"
        data-venue="Underbelly, George Square" data-vgroup="George Square"
        data-genres="THEATRE;THEATRE|musical comedy;THEATRE|solo show"
-       data-days=""
+       data-days="4 5 6 7 8 9 10 11 12 13 14 15 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1365">
     WENCH
     
@@ -29619,7 +29690,7 @@
   <div data-find="where was i? 3."
        data-venue="Hoots @ Nicolson Square" data-vgroup="Holyrood, Southside & Pleasance Courtyard"
        data-genres="COMEDY;COMEDY|stand-up;COMEDY|alternative comedy"
-       data-days=""
+       data-days="6 7 8 9 10 11 12 13 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29"
        data-start="1130">
     Where Was I? 3.
     
@@ -29665,7 +29736,7 @@
   <div data-find="zero minus one"
        data-venue="Just The Tonic at The Caves" data-vgroup="Royal Mile / Old Town"
        data-genres="COMEDY;COMEDY|clown;COMEDY|theatre"
-       data-days=""
+       data-days="5 6 7 8 9 10 11 12 13 14 15 16 18 19 20 21 23 24 25 27 28 29"
        data-start="1210">
     Zero Minus One
     
@@ -29832,7 +29903,7 @@
         } else if (when === 'today') {
           show = r.days.indexOf(today) !== -1;
         } else {
-          show = r.days[r.days.length - 1] >= today;
+          show = r.days.indexOf(parseInt(when.slice(1), 10)) !== -1;
         }
       }
       // A show with no known time cannot satisfy a time window. Hiding it is
@@ -30091,6 +30162,20 @@
   // applied: the controls read 21:00 to 23:00 above a list showing every show at
   // every hour. A filter that says it is on while doing nothing is worse than no
   // default, so the honest reading of those boxes is now the true one.
+
+  // Dates that have already gone. Removed here rather than left out at build
+  // time, because a page written this morning is still being read tonight, and
+  // from caches for longer than that — the reader's clock is the one that knows
+  // which dates are still worth offering.
+  if (fPlaying) {
+    var gone = todayOffset();
+    [].slice.call(fPlaying.options).forEach(function (option) {
+      if (option.value.charAt(0) === 'd'
+          && parseInt(option.value.slice(1), 10) < gone) {
+        option.parentNode.removeChild(option);
+      }
+    });
+  }
 
   [fFrom, fTo, fPlaying].forEach(function (el) {
     if (el) el.addEventListener('change', apply);
