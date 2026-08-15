@@ -125,23 +125,27 @@ def draw_card(placed, when: date | None = None) -> Path:
         d.rounded_rectangle([48, y, WIDTH - 48, y + row_h - 8], radius=10, fill=CARD)
         d.text((72, y + 11), str(position), font=pos_font, fill=MUTED)
 
-        # Time and venue follow the name on the same line, in grey. The title
-        # gets what it needs up to TITLE_MAX and the detail fills what is left,
-        # falling back to the time alone and then to nothing.
+        # The name on the left, venue and time in grey on the right, both
+        # against their own margin. Ranged right, the detail forms its own
+        # column down the card rather than starting at twenty different places.
         #
-        # The cap exists because a title allowed the full width crowds out the
-        # detail on its row and unbalances the whole card — one line running to
-        # the edge among nineteen that stop short. Better a name cut at a
-        # readable length than a row that reads as a mistake.
+        # The title is capped because one allowed the full width would collide
+        # with that column, and a name cut at a readable length costs less than
+        # a row with nowhere to put its venue.
         title = _fit(d, show.title, title_font, TITLE_MAX)
         d.text((146, y + 11), title, font=title_font, fill=INK)
 
-        x = 146 + d.textlength(title, font=title_font) + 28
-        spare = WIDTH - 92 - x
-        for detail in ("  ·  ".join(t for t in (show.start_time, show.venue) if t),
+        # Where the two would meet, the venue goes before the time does: the
+        # time is the shorter of the pair and the more use to somebody deciding
+        # what to see tonight.
+        limit = WIDTH - 92
+        after_title = 146 + d.textlength(title, font=title_font) + 28
+        for detail in ("  ·  ".join(t for t in (show.venue, show.start_time) if t),
                        show.start_time or ""):
-            if detail and d.textlength(detail, font=meta_font) <= spare:
-                d.text((x, y + 15), detail, font=meta_font, fill=(140, 140, 140))
+            width = d.textlength(detail, font=meta_font)
+            if detail and limit - width >= after_title:
+                d.text((limit - width, y + 15), detail, font=meta_font,
+                       fill=(140, 140, 140))
                 break
 
     d.text((60, HEIGHT - 74), "fringestars.com", font=_font("bold", 30), fill=INK)
