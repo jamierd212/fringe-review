@@ -245,7 +245,16 @@ def draw_card(placed, when: date | None = None,
               for position, show in placed[:TOP]}
     marker_w = max((12 + (3 + d.textlength(c, font=climb_font) if c else 0)
                     for c in climbs.values() if c is not None), default=0)
-    detail_r = WIDTH - TEXT_R - (marker_w + 16 if marker_w else 0)
+    # The markers sit OUTSIDE the white boxes, in the margin, so they read as
+    # annotations on the list rather than entries in it. The boxes give up the
+    # width instead of the page: their right edge moves in, the page margin
+    # stays 48 as it is on the left, and the marker column ends flush with it.
+    #
+    # There is no room to do this without narrowing the boxes. The margin as it
+    # stood is 48px and "132" needs 46 of them, which would leave the arrow
+    # touching both the box and the edge of the card.
+    box_r = WIDTH - 48 - (marker_w + 14 if marker_w else 0)
+    detail_r = box_r - 24
     # Regular, not bold. Twenty bold names down the card left nothing for the
     # header to be louder than; the position numbers hold the weight now and the
     # titles read as a list rather than twenty separate headlines.
@@ -253,7 +262,7 @@ def draw_card(placed, when: date | None = None,
     meta_font = _font("regular", 23)
     for index, (position, show) in enumerate(placed[:TOP]):
         y = top + index * row_h
-        d.rounded_rectangle([48, y, WIDTH - 48, y + row_h - 8], radius=10, fill=CARD)
+        d.rounded_rectangle([48, y, box_r, y + row_h - 8], radius=10, fill=CARD)
 
         # Everything on the row hangs off the box's own centre line, set with
         # Pillow's middle anchor rather than by nudging each baseline. Three
@@ -301,7 +310,7 @@ def draw_card(placed, when: date | None = None,
         # form their own column clear of everything else.
         climbed = climbs.get(show.id)
         if climbed is not None:
-            _rise(d, WIDTH - TEXT_R, mid, climbed, climb_font)
+            _rise(d, WIDTH - 48, mid, climbed, climb_font)
 
     d.text((60, HEIGHT - 82), "fringestars.com", font=_font("display", 42), fill=INK)
 
