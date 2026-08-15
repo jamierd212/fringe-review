@@ -32,6 +32,8 @@ ROWS_TOP = 266         # where the first white box starts
 # trim to the header silently made the rows TALLER, spreading the white space
 # rather than reducing it — the opposite of what shrinking the header is for.
 ROW_H = 48
+# The band above the first row, and what it keeps clear at each end.
+HEADER_TOP, HEADER_BOTTOM = 42, 23
 # How wide a show's name may run before it is cut, at the length of "Man Sings
 # The Same Song Over And Over" — the longest title on the board and the one that
 # decides where this sits.
@@ -157,26 +159,31 @@ def draw_card(placed, when: date | None = None) -> Path:
 
     _logo(img)
 
-    # Two lines, so the number keeps its size. On one line the whole title has
-    # to shrink to clear the badge; stacked, only the qualifier is narrow enough
-    # to need the room, and "Top 20" stays as large as the card allows.
-    # Three lines on stated baselines, spread across the band above the first
-    # row. Set from their tops as they were before, the gaps between them came
-    # out at 4px and 3px while 68px sat empty underneath — the type was touching
-    # itself at one end of the space and nowhere near the other. Baselines are
-    # the only way to place lines of 34, 76 and 38 evenly, because each box
-    # carries a different amount of air above and below its letters.
-    number = _font("display", 76)
-    d.text((60, 73), "Edinburgh Festivals", font=_font("display", 34), fill=MUTED,
-           anchor="ls")
-    d.text((60, 166), "Top 20", font=number, fill=INK, anchor="ls")
-    # The date sits beside the number, on the same baseline, so two very
-    # different sizes still read as one line.
-    d.text((60 + d.textlength("Top 20", font=number) + 26, 166),
-           when.strftime("%-d %B %Y"), font=_font("regular", 32),
-           fill=MUTED, anchor="ls")
-    d.text((60, 234), "Critically Reviewed Shows", font=_font("display", 38),
-           fill=INK, anchor="ls")
+    # The header, laid out rather than hand-placed. Three lines share the band
+    # above the first row, and the gaps between them are computed from each
+    # line's own ascent and descent so they come out equal on the page. Hand
+    # baselines were right until a size changed, and then silently wrong: every
+    # type size carries a different amount of air above and below its letters,
+    # so numbers that look evenly spaced are not.
+    lines = [("Edinburgh Festivals", "display", 38, MUTED),
+             ("Top 20", "display", 76, INK),
+             ("Critically Reviewed Shows", "display", 38, INK)]
+    fonts = [_font(kind, size) for _, kind, size, _ in lines]
+    metrics = [f.getmetrics() for f in fonts]
+    ink = sum(a + desc for a, desc in metrics)
+    gap = (ROWS_TOP - HEADER_TOP - HEADER_BOTTOM - ink) / (len(lines) - 1)
+
+    y = HEADER_TOP
+    for (text, _, _, colour), font, (ascent, descent) in zip(lines, fonts, metrics):
+        baseline = y + ascent
+        d.text((60, baseline), text, font=font, fill=colour, anchor="ls")
+        # The date rides on the number's baseline, set as the line above it so
+        # the two read as one label rather than two decisions.
+        if text == "Top 20":
+            d.text((60 + d.textlength(text, font=font) + 26, baseline),
+                   when.strftime("%-d %B %Y"), font=fonts[0], fill=MUTED,
+                   anchor="ls")
+        y = baseline + descent + gap
 
     top, row_h = ROWS_TOP, ROW_H
     pos_font = _font("bold", 30)
