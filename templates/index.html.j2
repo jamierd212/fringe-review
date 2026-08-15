@@ -93,6 +93,25 @@
   .pub a:hover { text-decoration: underline; text-decoration-color: var(--ink); }
   a:hover { text-decoration-color: var(--ink); }
 
+  /* The controls follow you down the page. Sticky rather than fixed, so they
+     occupy their own space at the top and nothing has to be padded around them.
+     The background is opaque or the list shows through as it passes under. */
+  .topbar { position: sticky; top: 0; z-index: 50; background: var(--bg); }
+  .topbar.compact {
+    box-shadow: 0 1px 0 var(--rule), 0 6px 12px -10px rgba(0,0,0,.35);
+    padding-bottom: .45rem;
+  }
+  /* Once scrolled, the year tabs give up their space: the bar is there to keep
+     filtering and searching within reach, and you can still reach the years by
+     going back to the top. */
+  .topbar.compact nav.years a { display: none; }
+  .topbar.compact nav.years { margin-top: .45rem; }
+  .to-top {
+    padding: .3rem .85rem; border: 1px solid var(--rule); border-radius: 999px;
+    font: inherit; font-size: .9rem; font-weight: 700; color: var(--muted);
+    background: var(--card); cursor: pointer;
+  }
+  .to-top:hover { border-color: var(--ink); color: var(--ink); }
   nav.years { display: flex; gap: .4rem; margin: .9rem 0 0; flex-wrap: wrap; }
   nav.years a {
     display: inline-block; padding: .3rem .85rem; border: 1px solid var(--rule);
@@ -271,8 +290,17 @@
     Edinburgh Fringe &amp; festivals shows ranked by highest rating, featuring
     every published review we can find.
   </p>
-  {% if nav|length > 1 %}
+</header>
+
+{#- Outside the header on purpose. A sticky element only sticks within its own
+    parent, so inside the header it scrolled away with it. And one set of
+    controls rather than a second copy pinned to the top: two search boxes would
+    be two states to keep in step, and they would drift. -#}
+{% if nav|length > 1 %}
+<div class="topbar" id="topbar">
   <nav class="years" aria-label="Festival year">
+    <button type="button" class="to-top" id="to-top" hidden
+            aria-label="Back to top">&uarr; Top</button>
     {% for entry in nav %}
     <a href="{{ entry.href }}"{% if entry.current %} aria-current="page"{% endif %}>{{ entry.year }}</a>
     {% endfor %}
@@ -359,8 +387,8 @@
     <button type="button" id="f-clear">Clear</button>
   </div>
   {% endif %}
-  {% endif %}
-</header>
+</div>{# /topbar #}
+{% endif %}
 
 <p class="meta">
   Updated {{ updated }}{% if rated %} &middot;
@@ -732,6 +760,27 @@
       input.focus();
     });
   }
+  // The bar compacts once the header has scrolled past. Measured against the
+  // header rather than a made-up number, so it behaves the same on a phone as on
+  // a desktop, where the header is a very different height.
+  var topbar = document.getElementById('topbar');
+  var toTop = document.getElementById('to-top');
+  if (topbar && toTop) {
+    var heading = document.querySelector('header h1');
+    function onScroll() {
+      var past = heading
+        ? window.scrollY > heading.getBoundingClientRect().height + 40
+        : window.scrollY > 120;
+      topbar.classList.toggle('compact', past);
+      toTop.hidden = !past;
+    }
+    toTop.addEventListener('click', function () {
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+    window.addEventListener('scroll', onScroll, {passive: true});
+    onScroll();
+  }
+
   input.addEventListener('input', showClear);
   input.addEventListener('input', apply);
   input.addEventListener('search', apply);   // the clear (x) button
