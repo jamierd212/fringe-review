@@ -684,6 +684,29 @@
 
   [fVenue, fGenre, fFrom, fTo].forEach(makePicker);
 
+  // Coming back from a show should land where you left, not at the top of a
+  // list you have already scrolled through. The show is remembered on the way
+  // out, because on the way back the page has no idea which one you followed.
+  document.addEventListener('click', function (event) {
+    var link = event.target.closest && event.target.closest('a[href*="show/"]');
+    if (!link) return;
+    try { sessionStorage.setItem('fringestars-from', link.getAttribute('href')); }
+    catch (e) {}
+  });
+
+  function returnToShow() {
+    var href;
+    try { href = sessionStorage.getItem('fringestars-from'); } catch (e) { return; }
+    if (!href) return;
+    try { sessionStorage.removeItem('fringestars-from'); } catch (e) {}
+    var link = document.querySelector('a[href="' + href.replace(/"/g, '\\"') + '"]');
+    if (!link) return;                      // filtered out, or a different year
+    var row = link.closest('article.show') || link;
+    // 'center' rather than the top, so the show you were reading is where your
+    // eye already is rather than tucked under the header.
+    row.scrollIntoView({block: 'center'});
+  }
+
   input.addEventListener('input', apply);
   input.addEventListener('search', apply);   // the clear (x) button
 
@@ -870,6 +893,13 @@
         el.value = '';
         el.dispatchEvent(new Event('change', {bubbles: true}));
       }
+      // The search box is part of the filter as far as a reader is concerned,
+      // even though it sits outside the panel. Leaving it set meant Clear
+      // visibly emptied everything and the list stayed cut down.
+      if (input) {
+        input.value = '';
+        input.dispatchEvent(new Event('input', {bubbles: true}));
+      }
       venuePick.clear();
       genrePick.clear();
       reset(fVenue);
@@ -893,6 +923,9 @@
     apply();
   }
 
+  // Last, and after any filter has been applied: scrolling to a row that is
+  // about to be hidden would leave the page somewhere arbitrary.
+  returnToShow();
 
 })();
 </script>

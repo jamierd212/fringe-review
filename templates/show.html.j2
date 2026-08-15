@@ -33,7 +33,12 @@
           "Helvetica Neue", Arial, sans-serif;
   }
   .wrap { max-width: 720px; margin: 0 auto; }
-  .back { font-size: .85rem; color: var(--muted); text-decoration: none; }
+  /* The way back is the most-used control on this page, so it is the size of
+     something meant to be pressed rather than a footnote. */
+  .back {
+    font-size: 1rem; font-weight: 700; color: var(--muted);
+    text-decoration: none;
+  }
   .back:hover { color: var(--ink); }
   .card {
     background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
@@ -59,7 +64,9 @@
     border-radius: 999px; padding: .12rem .55rem;
   }
   .proglink {
-    font-size: .8rem; color: var(--muted); text-decoration: none;
+    /* Larger than the genre badge beside it: this is the one link on the page
+       that goes somewhere a reader might actually want to go next. */
+    font-size: .95rem; color: var(--muted); text-decoration: none;
     white-space: nowrap;
   }
   .proglink:hover { color: var(--star); text-decoration: underline; }
@@ -109,7 +116,7 @@
 <body>
 <div class="wrap">
 
-<a class="back" href="{{ back_href }}">&larr; Edinburgh Festivals Top-Rated Shows {{ year }}</a>
+<a class="back" href="{{ back_href }}">&larr; Back to Fringestars</a>
 
 <div class="card">
   <div class="titlerow">
