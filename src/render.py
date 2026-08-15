@@ -51,10 +51,10 @@ def playing_days(conn: sqlite3.Connection, year: int) -> dict[str, str]:
     third of the bytes across eight hundred shows, and the browser has to do
     arithmetic on them either way.
 
-    Only performances the festival has not called off. Cancelled and sold-out
-    dates are left out entirely rather than marked, because a filter's job here
-    is to answer "can I go", and a date that cannot be attended is not an
-    answer to it.
+    A date counts when a ticket can still be bought for it, by whoever sells it
+    — the festival's box office or the venue direct. Cancelled and sold-out
+    dates are left out entirely rather than marked: a date that cannot be
+    attended is not an answer to "when can I see this".
     """
     from datetime import date as _date
 

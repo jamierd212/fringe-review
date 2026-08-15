@@ -378,18 +378,17 @@
         the programme's own per-performance status — the field behind the
         calendar on a show's page — so this says what that calendar says.
 
-        It deliberately does not claim a seat is free. The festival publishes no
-        sold-out state at all, and a third of performances read "no allocation,
-        contact venue", which means the venue sells its own tickets rather than
-        that there are none. Calling this "tickets available" would have hidden
-        four of the current top twelve, every one of them bookable. "Playing" is
-        what the data supports. -#}
+        A date counts when a ticket can be bought for it, from whoever sells it.
+        That includes "no allocation, contact venue", which is a third of all
+        performances and means the venue sells its own rather than that there
+        are none — four of the current top twelve are entirely that status, and
+        every one of them is bookable. Only cancelled dates are excluded. -#}
     {% if playing %}
-    <label class="half">Playing
+    <label class="half">Tickets
       <select id="f-playing">
         <option value="">Any date</option>
-        <option value="today">Today</option>
-        <option value="any">Any day from today</option>
+        <option value="today">Available today</option>
+        <option value="any">Available from today</option>
       </select>
     </label>
     {% endif %}
