@@ -43,6 +43,8 @@ HEADER_TOP, HEADER_BOTTOM = 42, 23
 # 640, so it ran on to "Over A…" and shouldered Summerhall off the row. 630
 # gives the same words back and the venue with them.
 TITLE_MAX = 630
+# Below this a title has given up enough, and the venue shortens instead.
+TITLE_MIN = 420
 # Where a row's text starts and stops. The white card behind it runs 48 to 1032,
 # so these leave 24px of padding at each end. They were 146 and 92, which was
 # generous padding bought at the cost of the venue on the longest rows.
@@ -102,12 +104,25 @@ def _font(kind: str, size: int):
 
 
 def _fit(draw, text: str, font, room: int) -> str:
-    """Shorten text with an ellipsis until it fits the width allowed."""
+    """
+    Shorten text with an ellipsis until it fits the width allowed.
+
+    Cut back to a word where one is close enough. "Over and …" reads as a title
+    that carries on; "Over and Ove…" reads as a fault. Only the last word is
+    given up, and only if the result is still most of the room — dropping back
+    to "Man Sings the Same Song …" to avoid breaking one word would throw away
+    more than it saved.
+    """
     if draw.textlength(text, font=font) <= room:
         return text
     while text and draw.textlength(text + "…", font=font) > room:
         text = text[:-1]
-    return text.rstrip() + "…"
+    whole = text.rstrip()
+    if " " in whole:
+        trimmed = whole[:whole.rindex(" ")]
+        if draw.textlength(trimmed, font=font) >= room * 0.8:
+            whole = trimmed
+    return whole + " …" if " " in whole else whole + "…"
 
 
 def _logo(img: Image.Image) -> int:
@@ -245,16 +260,12 @@ def draw_card(placed, when: date | None = None,
               for position, show in placed[:TOP]}
     marker_w = max((12 + (3 + d.textlength(c, font=climb_font) if c else 0)
                     for c in climbs.values() if c is not None), default=0)
-    # The markers sit OUTSIDE the white boxes, in the margin, so they read as
-    # annotations on the list rather than entries in it. The boxes give up the
-    # width instead of the page: their right edge moves in, the page margin
-    # stays 48 as it is on the left, and the marker column ends flush with it.
-    #
-    # There is no room to do this without narrowing the boxes. The margin as it
-    # stood is 48px and "132" needs 46 of them, which would leave the arrow
-    # touching both the box and the edge of the card.
-    box_r = WIDTH - 48 - (marker_w + 14 if marker_w else 0)
-    detail_r = box_r - 24
+    # Inside the boxes, at their right edge. Out in the margin the markers
+    # were tidier in principle and worse on the page: the boxes had to narrow
+    # to make room, so the list ended on a ragged edge against a column that is
+    # empty on most rows.
+    box_r = WIDTH - 48
+    detail_r = WIDTH - TEXT_R - (marker_w + 16 if marker_w else 0)
     # Regular, not bold. Twenty bold names down the card left nothing for the
     # header to be louder than; the position numbers hold the weight now and the
     # titles read as a list rather than twenty separate headlines.
@@ -281,7 +292,24 @@ def draw_card(placed, when: date | None = None,
         # The title is capped because one allowed the full width would collide
         # with that column, and a name cut at a readable length costs less than
         # a row with nowhere to put its venue.
+        # The title takes its cap, and the venue shortens to fit around it —
+        # that order keeps a name whole wherever a shortened venue can still
+        # say something useful.
+        #
+        # Only where even a minimum venue will not fit does the title give way
+        # instead, two words at a time. That is one row on the board: the
+        # longest title, which was taking the whole line and leaving its venue
+        # nowhere to go. "Over and …" beside "Summerhall" beats the full name
+        # beside nothing.
+        venue, clock = show.venue or "", show.start_time or ""
+        detail = "  ·  ".join(t for t in (venue, clock) if t)
+        tail = f"  ·  {clock}" if clock else ""
+        floor = VENUE_MIN + d.textlength(tail, font=meta_font)
+
         title = _fit(d, show.title, title_font, TITLE_MAX)
+        if venue and detail_r - (TEXT_L + d.textlength(title, font=title_font) + 28) < floor:
+            title = _fit(d, show.title, title_font,
+                         max(TITLE_MIN, detail_r - floor - 28 - TEXT_L))
         d.text((TEXT_L, mid), title, font=title_font, fill=INK, anchor="lm")
 
         # Where the two would meet, the venue gives way — but by being shortened
@@ -295,10 +323,7 @@ def draw_card(placed, when: date | None = None,
         limit = detail_r
         after_title = TEXT_L + d.textlength(title, font=title_font) + 28
         room = limit - after_title
-        venue, clock = show.venue or "", show.start_time or ""
-        detail = "  ·  ".join(t for t in (venue, clock) if t)
         if venue and d.textlength(detail, font=meta_font) > room:
-            tail = f"  ·  {clock}" if clock else ""
             spare = room - d.textlength(tail, font=meta_font)
             detail = (_fit(d, venue, meta_font, spare) + tail
                       if spare >= VENUE_MIN else clock)
@@ -310,7 +335,7 @@ def draw_card(placed, when: date | None = None,
         # form their own column clear of everything else.
         climbed = climbs.get(show.id)
         if climbed is not None:
-            _rise(d, WIDTH - 48, mid, climbed, climb_font)
+            _rise(d, WIDTH - TEXT_R, mid, climbed, climb_font)
 
     d.text((60, HEIGHT - 82), "fringestars.com", font=_font("display", 42), fill=INK)
 
