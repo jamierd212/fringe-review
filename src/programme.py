@@ -511,6 +511,15 @@ def enrich(conn: sqlite3.Connection, year: int, limit: int | None = None) -> dic
         if row["performer"]:
             candidates.append(normalise(f"{row['performer']} {row['title']}"))
 
+        # A fraction in a title reaches us in whichever form the publication
+        # typed — "11 1/2 Angry Men", "11½ Angry Men", or the fraction-slash
+        # "11 1⁄2 Angry Men" — and those three normalise three different ways,
+        # none of them matching the programme, whose own URL drops the fraction
+        # and reads plain "11-angry-men". So a spelling without it is tried too.
+        without = re.sub(r"\s*(?:[½¼¾⅓⅔⅛]|\d\s*[/⁄]\s*\d)\s*", " ", row["title"])
+        if normalise(without) not in candidates:
+            candidates.append(normalise(without))
+
         # And every fuller spelling any publication has used for this show. The
         # Skinny headlined "Dane Buckley @ Pleasance Courtyard", so the show was
         # stored as "Dane Buckley" and matched nothing; The Wee Review had called
@@ -616,24 +625,31 @@ def refresh_performances(conn: sqlite3.Connection, year: int,
     if not due:
         return {"checked": 0, "dates": 0}
 
-    checked = dates = 0
+    checked = dates = failed = 0
     for row in due:
         time.sleep(DELAY)
         html = _get(row["edfringe_url"])
-        if html is None:
-            continue
-        found = _performances(html)
-        # A page that parses to nothing is a page we failed to read, not a show
-        # with no performances left. Storing the empty result would wipe a real
-        # calendar and mark it freshly checked, so the mistake would stick.
+        found = _performances(html) if html else []
+        # A page that will not read is not a show with no performances left, so
+        # nothing is stored: an empty result would wipe a real calendar. But the
+        # ATTEMPT is recorded, or the show stays permanently due and every run
+        # spends its budget on the same failure. One programme page is already a
+        # 404 — a withdrawn show whose URL will never parse again — and without
+        # this it was picked up, failed, and picked up again forever.
         if not found:
+            conn.execute(
+                "INSERT INTO performance_checks (show_id, checked_at) "
+                "VALUES (?, datetime('now')) ON CONFLICT(show_id) "
+                "DO UPDATE SET checked_at = excluded.checked_at", (row["id"],))
+            failed += 1
             continue
         store_performances(conn, row["id"], found)
         checked += 1
         dates += len(found)
     conn.commit()
-    print(f"    calendars: {checked} show(s) refreshed, {dates} performances")
-    return {"checked": checked, "dates": dates}
+    print(f"    calendars: {checked} show(s) refreshed, {dates} performances"
+          + (f", {failed} unreadable" if failed else ""))
+    return {"checked": checked, "dates": dates, "failed": failed}
 
 
 def merge_by_programme(conn: sqlite3.Connection, year: int) -> int:
