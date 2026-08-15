@@ -4,7 +4,11 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-_Nothing to check. 🎉_
+| Publication | Headline | Matched to | Confidence |
+|---|---|---|---|
+| FringeReview | [Man Sings The Same Song Again and Again Over An Hour](https://fringereview.co.uk/review/edinburgh-fringe/2026/man-sings-the-same-song-again-and-again-over-an-hour/) | Man Sings The Same Song Over And Over Again For An Hour | 95% |
+| BroadwayWorld | [JESS ROBINSON: ELTON REIMAGINED: Piccolo Tent](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-JESS-ROBINSON-ELTON-REIMAGINED-Piccolo-Tent-Assembly-George-Square-Gardens-20260815) | Elton Reimagined | 95% |
+| The Scotsman | [JLCO with Yuja Wang, Usher Hall](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/eif-music-reviews-sean-shibe-jlco-with-yuja-wang-8920073#jlco-with-yuja-wang-usher-hall) | JLCO With Yuja Wang | 95% |
 
 ## Held — not on the leaderboard
 
@@ -14,6 +18,10 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The Scotsman | [Sean Shibe, Queen’s Hall](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/eif-music-reviews-sean-shibe-jlco-with-yuja-wang-8920073#sean-shibe-queen-s-hall) | This appears to be a profile or announcement of a performer at a venue rather than a review of a named show at an Edinburgh festival. |
+| Everything Theatre | [The Doctor Will See You Now](https://everything-theatre.co.uk/2026/08/review-the-doctor-will-see-you-now-lion-unicorn-theatre/) | This headline lacks any indication of a named show, performer, or venue associated with an Edinburgh festival. |
+| Everything Theatre | [MAJENIN – A Palestinian Love Story (مجانين)](https://everything-theatre.co.uk/2026/08/review-majenin-a-palestinian-love-story-%d9%85%d8%ac%d8%a7%d9%86%d9%8a%d9%86-pleasance-dome/) | The headline appears to be a show title but lacks any context indicating this is a review of a performance at an Edinburgh festival. |
+| Everything Theatre | [Tchaikovsky](https://everything-theatre.co.uk/2026/08/review-tchaikovsky-child-of-glass-opera-holland-park/) | This is just a composer's name with no context indicating it's a review of a specific named Edinburgh festival show. |
 | RGM | [Funz and Gamez: Rebootz](https://rgm.press/edinburgh-fringe-2025-day-four-picks-of-the-day/news/#funz-and-gamez-rebootz) | not in any programme; no AI check available |
 | RGM | [Trygve Wakenshaw & Barnie Duncan: Different Party](https://rgm.press/edinburgh-fringe-2025-day-four-picks-of-the-day/news/#trygve-wakenshaw-and-barnie-duncan-different-party) | not in any programme; no AI check available |
 | RGM | [DARREN HARRIOTT: ROADMAN](https://rgm.press/edinburgh-fringe-2023-monday-7th-august-picks-of-the-day/news/#darren-harriott-roadman) | not in any programme; no AI check available |
@@ -210,7 +218,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Scotsman | [Joan Collins Blocked Me on Twitter](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-del-valle-a-true-tale-of-sex-drugs-rock-and-roll-and-redemption-24-weeks-joan-collins-blocked-me-on-twitter-a-poem-and-a-mistake-blaze-fm-bed-a-one-man-5271160#joan-collins-blocked-me-on-twitter) | This is a profile or interview piece about a performer, not a review of a named show at an Edinburgh festival. |
 | The Scotsman | [through warm temperatures](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/edinburgh-fringe-dance-physical-theatre-reviews-through-warm-temperatures-5271940#through-warm-temperatures) | The headline is a fragment that does not indicate a review of any named show at an Edinburgh festival. |
 | The Scotsman | [Bonsori Kim & Thomas Hoppe](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/edinburgh-international-festival-reviews-orpheus-and-eurydice-bonsori-kim-thomas-hoppe-5272456#bonsori-kim-and-thomas-hoppe) | This appears to be just a list of names with no indication of a review, show title, or festival context. |
-| The Scotsman | [Stampin' in the Graveyard](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-ai-the-waiting-room-an-audiovisual-journey-couac-physical-comedy-dead-air-stampin-in-the-graveyard-ai-campfire-5270185#stampin-in-graveyard) | This appears to be a title or concept rather than a review headline, with no indication it reviews a specific Edinburgh festival show. |
-| The Scotsman | [Dead Air](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-ai-the-waiting-room-an-audiovisual-journey-couac-physical-comedy-dead-air-stampin-in-the-graveyard-ai-campfire-5270185#dead-air) | This appears to be a generic title rather than a review of a named show at an Edinburgh festival, lacking context about the performance or venue. |
-| The Scotsman | [Jackie! A New Musical](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-sugar-jackie-a-new-musical-murder-at-the-fringe-2-5275264#jackie-new-musical) | This is a title without any headline text indicating it's a review of a show at an Edinburgh festival; it appears to be a show announcement or listing rather than a review article. |
-| The Scotsman | [Lymphomaniac](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-trouble-struggle-bubble-and-squeak-lymphomaniac-5275315#lymphomaniac) | This appears to be a show title rather than a review headline, as it lacks review language, critical judgment, or any indication of venue or festival context. |
