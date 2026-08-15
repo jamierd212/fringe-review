@@ -4,7 +4,9 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-_Nothing to check. 🎉_
+| Publication | Headline | Matched to | Confidence |
+|---|---|---|---|
+| Theatre & Tonic | [Don’t You Forget About Me](https://www.theatreandtonic.co.uk/edinburgh-fringe/dont-you-forget-about-me-at-assembly-roxy-downstairs-review) | Don't You Forget About Me | 75% |
 
 ## Held — not on the leaderboard
 
@@ -14,6 +16,11 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Theatre & Tonic | [Come To Where I Am](https://www.theatreandtonic.co.uk/edinburgh-fringe/come-to-where-i-am-at-shedinburgh-review) | not in any programme; no AI check available |
+| Theatre & Tonic | [Parentified](https://www.theatreandtonic.co.uk/edinburgh-fringe/parentified-ed-fringe-review) | not in any programme; no AI check available |
+| Theatre & Tonic | [Don’t know? Have a go!, theSpace](https://www.theatreandtonic.co.uk/edinburgh-fringe/dont-know-have-a-go-ed-fringe-review) | not in any programme; no AI check available |
+| Theatre & Tonic | [Mother, Maiden and Crone, Auditorium](https://www.theatreandtonic.co.uk/edinburgh-fringe/mother-maiden-and-crone-auditorium-at-bedlam-theatre-review) | not in any programme; no AI check available |
+| West End Best Friend | [REMEMBER](https://www.westendbestfriend.co.uk/news/fringe-review-remember-remember-queen-dome-at-pleasance-dome) | not in any programme; no AI check available |
 | Edinburgh Festivals Magazine | [Your Inner Diva is showing](https://edfestmag.com/your-inner-diva-is-showing/) | not in any programme; no AI check available |
 | The Scotsman | [Sean Shibe, Queen’s Hall](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/eif-music-reviews-sean-shibe-jlco-with-yuja-wang-8920073#sean-shibe-queen-s-hall) | This appears to be a profile or announcement of a performer at a venue rather than a review of a named show at an Edinburgh festival. |
 | Everything Theatre | [The Doctor Will See You Now](https://everything-theatre.co.uk/2026/08/review-the-doctor-will-see-you-now-lion-unicorn-theatre/) | This headline lacks any indication of a named show, performer, or venue associated with an Edinburgh festival. |
@@ -209,8 +216,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Scotsman | [Edinburgh Fringe theatre reviews: DYKE Systems Ltd | Homo(sapien) | Beth wants The D](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-dyke-systems-homosapien-5268364) | This is a round-up listing multiple shows ('DYKE Systems Ltd', 'Homo(sapien)', 'Beth wants The D'), not a review of a single named show. |
 | The Scotsman | [Benedetti & Sitkovetsky’s Tribute to Menuhin](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/edinburgh-international-festival-music-reviews-sitkovetsky-trio-benedetti-5268385#benedetti-and-sitkovetsky-s-tribute-to-menuhin) | This appears to be a concert or classical music performance that lacks any indication it is part of an Edinburgh festival or reviewing a named show at such a festival. |
 | The Scotsman | [Go West!](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-philosophy-of-the-world-father-away-she-goes-eelmageddon-go-west-thirsty-the-poetess-virtyouoso-an-immersive-reflection-5269531#go-west) | This appears to be a generic title or command rather than a review of a specific named show at an Edinburgh festival. |
-| The Scotsman | [Eelmageddon](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-philosophy-of-the-world-father-away-she-goes-eelmageddon-go-west-thirsty-the-poetess-virtyouoso-an-immersive-reflection-5269531#eelmageddon) | This appears to be a title or concept rather than a review headline that identifies a show being reviewed at an Edinburgh festival. |
-| The Scotsman | [Fountain Lakes In Lockdown: A Drag Parody Play](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/edinburgh-fringe-comedy-reviews-daisy-doris-may-big-night-out-phil-ellis-soppy-stern-fountain-lakes-in-lockdown-a-drag-parody-play-ria-lina-riabellion-nick-hornedo-watch-this-when-you-get-home-5271093#fountain-lakes-in-lockdown-drag-parody-play) | This appears to be a show title rather than a review headline, and contains no indication of a festival location, reviewer verdict, or review content. |
-| The Scotsman | [A Poem and a Mistake](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-del-valle-a-true-tale-of-sex-drugs-rock-and-roll-and-redemption-24-weeks-joan-collins-blocked-me-on-twitter-a-poem-and-a-mistake-blaze-fm-bed-a-one-man-5271160#poem-and-mistake) | This headline lacks the specificity needed to identify it as a review of a named Edinburgh festival show - it reads more like a generic title or conceptual piece rather than a review with the show's actual name. |
-| The Scotsman | [Joan Collins Blocked Me on Twitter](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-del-valle-a-true-tale-of-sex-drugs-rock-and-roll-and-redemption-24-weeks-joan-collins-blocked-me-on-twitter-a-poem-and-a-mistake-blaze-fm-bed-a-one-man-5271160#joan-collins-blocked-me-on-twitter) | This is a profile or interview piece about a performer, not a review of a named show at an Edinburgh festival. |
-| The Scotsman | [through warm temperatures](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/edinburgh-fringe-dance-physical-theatre-reviews-through-warm-temperatures-5271940#through-warm-temperatures) | The headline is a fragment that does not indicate a review of any named show at an Edinburgh festival. |

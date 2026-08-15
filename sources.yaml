@@ -198,6 +198,48 @@ publications:
 
   # ------------------------------------------------------ deliberately excluded
 
+  - name: Theatre & Tonic
+    slug: theatreandtonic
+    homepage: https://www.theatreandtonic.co.uk/
+    # No feed; they keep a dedicated Edinburgh section that lists the lot.
+    discovery: index
+    index_urls:
+      - https://www.theatreandtonic.co.uk/edinburgh-fringe
+    link_pattern: 'href="(/edinburgh-fringe/[a-z0-9-]{8,})"[^>]*>(.*?)</a>'
+    rating:
+      type: auto              # star characters in the page
+    fetch_page: true
+    title_from_page: true
+    title_strip_patterns:
+      # Their page titles run "<show> at <venue> Review — Theatre and Tonic".
+      # The venue is the part that stops a match: only one review in seventeen
+      # landed on a show until it came off.
+      - '\s+at\s+.*$'
+    verified: 2026-08-15
+    notes: >
+      Not every piece in the section is a rated review — previews and interviews
+      sit alongside them and are skipped for want of a rating.
+
+  - name: West End Best Friend
+    slug: westendbestfriend
+    homepage: https://westendbestfriend.co.uk/
+    # Their feed 404s; the sitemap is current and holds every review.
+    discovery: sitemap
+    sitemap: https://westendbestfriend.co.uk/sitemap.xml
+    url_must_match:
+      - 'fringe-review'
+    rating:
+      type: auto              # written as "N stars" in the copy
+    fetch_page: true
+    title_from_page: true
+    title_strip_patterns:
+      - '^\s*Fringe Review:\s*'
+      - ',\s*[^,]+$'          # trailing venue, as in "PENELOPE, Belly Button"
+    verified: 2026-08-15
+    notes: >
+      They title every festival piece "Fringe Review: <SHOW>, <venue> at <venue>",
+      so the URL filter keeps their year-round West End coverage out.
+
   - name: Edinburgh Festivals Magazine
     slug: edfestmag
     homepage: https://edfestmag.com/
