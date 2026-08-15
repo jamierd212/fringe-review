@@ -186,41 +186,27 @@ CREATE TABLE IF NOT EXISTS performance_checks (
 # honoured if it ever turns true, which costs nothing and covers the case where
 # it means something we have not seen.
 #
-# NO_ALLOCATION_CONTACT_VENUE is the one that misleads. It does not mean sold
-# out; it means the Fringe box office holds no allocation because the venue
-# sells its own. It is a third of all performances and the ONLY status on some
-# of the best-reviewed shows on the board — Next to Normal, For Dolores,
-# Mayflies and Cathy are entirely this. Reading it as unavailable would hide
-# four of the top twelve from a reader looking for a ticket, every one of which
-# can be bought.
+# NO_ALLOCATION_CONTACT_VENUE is the one that misleads, and it misled us. The
+# name reads like "the venue sells these, ask them" — but the festival's own
+# calendar legend renders it "No allocation remaining", in RED, alongside
+# Cancelled. It means the box office has none left. It is the sold-out signal,
+# and the enum simply does not use the words.
+#
+# Read the wrong way round it inverts the whole filter, which is what it did
+# here: sold-out dates were being counted as available.
+#
+# It does conflate two situations, and the data cannot fully separate them. A
+# show the festival never held an allocation for reads red on every date from
+# the day it goes on sale, the same as one that has sold out. Where a show is
+# red on some dates and cyan on others, the red ones have gone; where it is red
+# throughout, the tickets were probably never the festival's to sell. Either
+# way the reader cannot buy that date here, which is the question being asked.
 CANCELLED = "CANCELLED"
 VIA_VENUE = "NO_ALLOCATION_CONTACT_VENUE"
-# How full a performance is — the thing a reader most wants and the one thing
-# this module cannot get. It is not in the page: the pre-rendered payload carries
-# soldOut: false on everything because it is built once and never revisited. The
-# live figure comes from the festival's ticketing API,
-#
-#     https://edfringe-tikketr-web-api.equhost.com/graphql
-#     query PerformancePrices($performanceId: String!)
-#       -> performanceAvailabilityLevel, performancePercentageRemaining
-#
-# whose robots.txt allows us (use=reference) and which needs no token: the site
-# only sends Authorization when a visitor happens to be logged in. What stops us
-# is Cloudflare, which answers our requests with a "Just a moment..." challenge
-# page. Solving that is not something this crawler will do, so availability is
-# out of reach unless the festival opens the door.
-#
-# If it ever is opened, the shape of the job is small, because both end states
-# are permanent: a date that has sold out stays sold out, and a date that has
-# passed stays passed. So a performance is checked until one of those happens
-# and then never again. Only the dates being displayed need it at all — today's
-# is ~800 queries, against 10,000 for the whole remaining calendar. Returns and
-# late allocations do happen, so sold-out dates would want a weekly second look
-# rather than never; that is a small addition to a small job.
-
-# Dates a reader can act on: everything the festival has not called off.
+# Dates the festival will actually sell. VIA_VENUE is NOT among them: that is
+# the red one.
 BOOKABLE = ("TICKETS_AVAILABLE", "TWO_FOR_ONE", "PREVIEW_SHOW", "EVENT_SPECIFIC",
-            "FREE_TICKETED", "FREE_NON_TICKETED", VIA_VENUE)
+            "FREE_TICKETED", "FREE_NON_TICKETED")
 
 
 def _performances(html: str) -> list[tuple[str, str, str]]:
