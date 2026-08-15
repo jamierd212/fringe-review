@@ -203,27 +203,22 @@ CREATE TABLE IF NOT EXISTS performance_checks (
 # way the reader cannot buy that date here, which is the question being asked.
 CANCELLED = "CANCELLED"
 VIA_VENUE = "NO_ALLOCATION_CONTACT_VENUE"
-# Dates a reader may still get into. VIA_VENUE is among them, and this was
-# argued both ways before the festival's own words settled it. Its message on a
-# red date reads:
+# Dates the festival will actually sell a ticket for. VIA_VENUE is NOT among
+# them, and this was argued round in a circle before it settled.
 #
-#   "The performance has no ticket allocation remaining. Please check with the
-#    venue box office for further ticket allocation."
+# The festival shows those dates in red, labelled "No allocation remaining", and
+# its message points the reader at the venue box office. So a red date is not
+# provably sold out — the venue may have seats — but it is provably not on sale
+# here, and a filter headed "tickets available" that returns them is wrong in
+# the direction that wastes somebody's evening.
 #
-# That is not sold out. It is the box office saying it has none and pointing the
-# reader at somebody who might — and it is a per-venue template, identical for
-# Summerhall and Pleasance, so it carries no per-performance meaning either.
-#
-# Excluding these hid the number one show on the board. Bigfoot is at
-# Summerhall, red on all but two dates, and perfectly bookable; four of the top
-# five were in the same position. A leaderboard of acclaim that drops its best
-# reviewed show because the festival is not the one selling it has failed at the
-# only job it has.
-#
-# The cost is that sold-out cannot be shown at all. Nothing here can express it:
-# the one field that could is behind a bot challenge we will not solve.
+# Excluding them was tried once before and hid the number one show from the
+# board entirely. That objection has gone: the leaderboard no longer filters by
+# default, so a show whose venue sells direct still sits at the top of the list
+# where it belongs. It is only absent from "on sale today", which is honest —
+# the festival is not selling it today.
 BOOKABLE = ("TICKETS_AVAILABLE", "TWO_FOR_ONE", "PREVIEW_SHOW", "EVENT_SPECIFIC",
-            "FREE_TICKETED", "FREE_NON_TICKETED", VIA_VENUE)
+            "FREE_TICKETED", "FREE_NON_TICKETED")
 
 
 def _performances(html: str) -> list[tuple[str, str, str]]:
