@@ -345,6 +345,41 @@ def draw_card(placed, when: date | None = None,
     return path
 
 
+VENUE_SOCIALS = Path(__file__).resolve().parent.parent / "data" / "venue-socials.json"
+# Instagram's own limit on how many accounts one photo may tag.
+TAG_LIMIT = 20
+
+
+def _venue_tags(placed, taken: set[str], slots: int) -> list[tuple[str, str]]:
+    """
+    Venue handles to fill the spare tag slots, busiest first.
+
+    Shows come first because they are what the post is about, but a card rarely
+    has twenty handles — the companies that list one are a subset — and an
+    untagged slot is wasted reach. Venues have far larger followings than the
+    acts they house, so the leftovers are worth more spent there.
+
+    Matched on the start of the programme's venue name, so "Assembly Roxy" and
+    "Assembly @ St Andrew Square" both reach Assembly and count as one tag
+    rather than three. Handles come from each venue's own website; a venue we
+    have no published handle for is left alone rather than guessed at.
+    """
+    import json
+    from collections import Counter
+
+    if slots <= 0 or not VENUE_SOCIALS.exists():
+        return []
+    known = {k: v for k, v in json.loads(VENUE_SOCIALS.read_text()).items()
+             if not k.startswith("_")}
+    counts: Counter = Counter()
+    for _position, show in placed[:TOP]:
+        name = show.venue or ""
+        match = next((k for k in known if name.startswith(k)), None)
+        if match and known[match].lower() not in taken:
+            counts[match] += 1
+    return [(venue, known[venue]) for venue, _n in counts.most_common(slots)]
+
+
 def caption(conn: sqlite3.Connection, placed, when: date | None = None) -> str:
     """
     The caption: the twenty in order, with a mention where we have one.
@@ -389,7 +424,17 @@ def caption(conn: sqlite3.Connection, placed, when: date | None = None) -> str:
         handle = handles.get(show.id)
         (tags if handle else missing).append(
             f"@{handle}" if handle else f"{position}. {show.title}")
-    lines = ["Tag these in the photo (Instagram allows 20):", ""] + tags
+
+    # Spare slots go to the venues carrying the most of today's twenty. Photo
+    # tags are hidden until someone taps the image, so these cost the caption
+    # nothing while reaching an audience far larger than most of the acts have.
+    venues = _venue_tags(placed, {t.lstrip("@").lower() for t in tags},
+                         TAG_LIMIT - len(tags))
+    lines = [f"Tag these in the photo ({len(tags) + len(venues)} of "
+             f"{TAG_LIMIT} Instagram allows):", ""] + tags
+    if venues:
+        lines += ["", "Venues, filling the spare slots:", ""] + [
+            f"@{handle}   ({venue})" for venue, handle in venues]
     if missing:
         lines += ["", "No handle on their programme entry — worth a look if you "
                       "want them tagged:", ""] + missing
