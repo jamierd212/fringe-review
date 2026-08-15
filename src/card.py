@@ -84,17 +84,21 @@ def draw_card(placed, when: date | None = None) -> Path:
         d.rounded_rectangle([48, y, WIDTH - 48, y + row_h - 8], radius=10, fill=CARD)
         d.text((72, y + 11), str(position), font=pos_font, fill=MUTED)
 
-        # Time and venue follow the name on the same line, in grey. The detail is
-        # measured first and the title given what is left: the venue is the part
-        # a reader acts on, so it keeps its room and the title gives way.
-        detail = "  ·  ".join(x for x in (show.start_time, show.venue) if x)
+        # Time and venue follow the name on the same line, in grey — but only
+        # where the name has left room. The title is what identifies the show,
+        # so it is never shortened to fit the detail; the detail gives way
+        # instead, first to the time alone and then to nothing.
         room = WIDTH - 146 - 92
-        detail_w = d.textlength(detail, font=meta_font) if detail else 0
-        title = _fit(d, show.title, title_font, room - detail_w - 28)
+        title = _fit(d, show.title, title_font, room)
         d.text((146, y + 11), title, font=title_font, fill=INK)
-        if detail:
-            x = 146 + d.textlength(title, font=title_font) + 28
-            d.text((x, y + 15), detail, font=meta_font, fill=(140, 140, 140))
+
+        x = 146 + d.textlength(title, font=title_font) + 28
+        spare = WIDTH - 92 - x
+        for detail in ("  ·  ".join(t for t in (show.start_time, show.venue) if t),
+                       show.start_time or ""):
+            if detail and d.textlength(detail, font=meta_font) <= spare:
+                d.text((x, y + 15), detail, font=meta_font, fill=(140, 140, 140))
+                break
 
     d.text((60, HEIGHT - 74), "fringestars.com", font=_font("bold", 30), fill=INK)
 
