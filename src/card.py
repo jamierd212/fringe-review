@@ -131,18 +131,23 @@ def draw_card(placed, when: date | None = None) -> Path:
     # Two lines, so the number keeps its size. On one line the whole title has
     # to shrink to clear the badge; stacked, only the qualifier is narrow enough
     # to need the room, and "Top 20" stays as large as the card allows.
-    d.text((60, 54), "EDINBURGH FESTIVALS", font=_font("bold", 34), fill=MUTED)
-
-    # The date sits beside the number, on its baseline rather than its box, so
-    # the two sit on one line however their sizes differ. Anchored, not nudged:
-    # the previous arrangement stacked them and a fourth line of header was more
-    # than the space could carry once the badge grew.
+    # Three lines on stated baselines, spread across the band above the first
+    # row. Set from their tops as they were before, the gaps between them came
+    # out at 4px and 3px while 68px sat empty underneath — the type was touching
+    # itself at one end of the space and nowhere near the other. Baselines are
+    # the only way to place lines of 34, 76 and 38 evenly, because each box
+    # carries a different amount of air above and below its letters.
     number = _font("bold", 76)
-    d.text((60, 165), "Top 20", font=number, fill=INK, anchor="ls")
-    d.text((60 + d.textlength("Top 20", font=number) + 26, 165),
+    d.text((60, 77), "Edinburgh Festivals", font=_font("bold", 34), fill=MUTED,
+           anchor="ls")
+    d.text((60, 177), "Top 20", font=number, fill=INK, anchor="ls")
+    # The date sits beside the number, on the same baseline, so two very
+    # different sizes still read as one line.
+    d.text((60 + d.textlength("Top 20", font=number) + 26, 177),
            when.strftime("%-d %B %Y"), font=_font("regular", 32),
            fill=MUTED, anchor="ls")
-    d.text((60, 184), "Critically Reviewed Shows", font=_font("bold", 38), fill=INK)
+    d.text((60, 250), "Critically Reviewed Shows", font=_font("bold", 38),
+           fill=INK, anchor="ls")
 
     top = ROWS_TOP
     row_h = (HEIGHT - top - 96) // TOP
