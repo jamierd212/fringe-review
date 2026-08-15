@@ -2,8 +2,10 @@
 Draw the day's top twenty as an image, and write the caption to go with it.
 
 Instagram has no text-only post, so a leaderboard has to become a picture. The
-card is 1080x1350 — the tallest crop Instagram shows without cutting, so twenty
-rows fit at a size that can be read on a phone without opening the image.
+card is 1080x1280. Instagram's feed will not show anything taller than 4:5, and
+1080x1350 is exactly 4:5 — sitting on the line, where any rounding in their
+pipeline takes a slice off it. A little inside the limit is never cropped, and
+twenty rows still fit at a size that can be read on a phone.
 
 Nothing is posted. The card and its caption are written to a folder for a person
 to upload, which is also why the caption is a separate file: it is meant to be
@@ -24,14 +26,14 @@ from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 OUT = Path(__file__).resolve().parent.parent / "data" / "instagram"
 LOGO = Path(__file__).resolve().parent.parent / "assets" / "logo.png"
-WIDTH, HEIGHT = 1080, 1350
+WIDTH, HEIGHT = 1080, 1280
 TOP = 20
 LOGO_H = 190           # the height of the header block it sits beside
 ROWS_TOP = 266         # where the first white box starts
 # Fixed rather than derived from the space left over. Deriving it meant every
 # trim to the header silently made the rows TALLER, spreading the white space
 # rather than reducing it — the opposite of what shrinking the header is for.
-ROW_H = 48
+ROW_H = 46
 # The band above the first row, and what it keeps clear at each end.
 HEADER_TOP, HEADER_BOTTOM = 42, 23
 # How wide a show's name may run before it is cut, at the length of "Man Sings
@@ -105,24 +107,36 @@ def _font(kind: str, size: int):
 
 def _fit(draw, text: str, font, room: int) -> str:
     """
-    Shorten text with an ellipsis until it fits the width allowed.
+    Shorten text with an ellipsis so that the RESULT fits the width allowed.
 
-    Cut back to a word where one is close enough. "Over and …" reads as a title
-    that carries on; "Over and Ove…" reads as a fault. Only the last word is
-    given up, and only if the result is still most of the room — dropping back
-    to "Man Sings the Same Song …" to avoid breaking one word would throw away
-    more than it saved.
+    The result, not the text before the ellipsis. An earlier version measured
+    the string plus "…" and then returned it plus " …", so anything it shortened
+    came back a space wider than it had promised. The caller checked the width
+    it was given, found it over, and drew nothing at all — which is how a row
+    lost its venue and its time together.
+
+    Where a whole word can be given up and most of the room still used, it is:
+    "Over and …" reads as a title carrying on, "Over and Ove…" as a fault.
     """
     if draw.textlength(text, font=font) <= room:
         return text
-    while text and draw.textlength(text + "…", font=font) > room:
-        text = text[:-1]
-    whole = text.rstrip()
-    if " " in whole:
-        trimmed = whole[:whole.rindex(" ")]
-        if draw.textlength(trimmed, font=font) >= room * 0.8:
-            whole = trimmed
-    return whole + " …" if " " in whole else whole + "…"
+
+    def marked(stem: str) -> str:
+        return stem + (" …" if " " in stem else "…")
+
+    cut = ""
+    for i in range(len(text), 0, -1):
+        stem = text[:i].rstrip()
+        if stem and draw.textlength(marked(stem), font=font) <= room:
+            cut = stem
+            break
+    if not cut:
+        return "…"
+    if " " in cut:
+        trimmed = cut[:cut.rindex(" ")].rstrip()
+        if trimmed and draw.textlength(marked(trimmed), font=font) >= room * 0.8:
+            cut = trimmed
+    return marked(cut)
 
 
 def _logo(img: Image.Image) -> int:
