@@ -27,6 +27,10 @@ LOGO = Path(__file__).resolve().parent.parent / "assets" / "logo.png"
 WIDTH, HEIGHT = 1080, 1350
 TOP = 20
 LOGO_H = 190           # the height of the header block it sits beside
+# How wide a show's name may run before it is cut. Set by eye, at the length of
+# "Man Sings The Same Song Over And Over" — the longest title on the board and
+# the one that decides where this needs to sit.
+TITLE_MAX = 640
 
 # The site's own palette, so the card is recognisably the same thing.
 BG = (249, 228, 224)
@@ -121,12 +125,15 @@ def draw_card(placed, when: date | None = None) -> Path:
         d.rounded_rectangle([48, y, WIDTH - 48, y + row_h - 8], radius=10, fill=CARD)
         d.text((72, y + 11), str(position), font=pos_font, fill=MUTED)
 
-        # Time and venue follow the name on the same line, in grey — but only
-        # where the name has left room. The title is what identifies the show,
-        # so it is never shortened to fit the detail; the detail gives way
-        # instead, first to the time alone and then to nothing.
-        room = WIDTH - 146 - 92
-        title = _fit(d, show.title, title_font, room)
+        # Time and venue follow the name on the same line, in grey. The title
+        # gets what it needs up to TITLE_MAX and the detail fills what is left,
+        # falling back to the time alone and then to nothing.
+        #
+        # The cap exists because a title allowed the full width crowds out the
+        # detail on its row and unbalances the whole card — one line running to
+        # the edge among nineteen that stop short. Better a name cut at a
+        # readable length than a row that reads as a mistake.
+        title = _fit(d, show.title, title_font, TITLE_MAX)
         d.text((146, y + 11), title, font=title_font, fill=INK)
 
         x = 146 + d.textlength(title, font=title_font) + 28
