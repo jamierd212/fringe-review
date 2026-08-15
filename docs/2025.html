@@ -333,7 +333,7 @@
 
 
 <p class="meta">
-  Updated 15 August 2026, 15:30 BST &middot;
+  Updated 15 August 2026, 15:35 BST &middot;
   2145 rated reviews across 1434 shows
 </p>
 
@@ -46990,7 +46990,7 @@
     var from = fFrom ? minutes(fFrom.value) : null;
     var to = fTo ? minutes(fTo.value) : null;
     var when = fPlaying ? fPlaying.value : '';
-    var today = when ? todayOffset() : 0;
+    var today = fPlaying ? todayOffset() : 0;
     var hits = 0;
     for (var i = 0; i < rows.length; i++) {
       var r = rows[i];
@@ -47018,13 +47018,22 @@
           if (r.genres.indexOf(genres[g]) !== -1) { show = true; break; }
         }
       }
-      // A show we hold no calendar for cannot answer this, so it drops out
-      // rather than being offered as something that might be on. That is the
-      // same rule the time filter follows, and for the same reason: silence is
-      // not a yes.
-      if (show && when) {
+      // "Any date" is not a no-op: it drops shows whose run is over, which is
+      // what a filter headed "tickets available" has to mean. It is the
+      // default, so the board shows what can still be booked unless someone
+      // asks otherwise.
+      //
+      // A show we hold no calendar for is treated differently by each. Under
+      // "any date" it stays, because we cannot show its run has ended and
+      // hiding it would silently drop all five EIF shows and 54 Fringe shows we
+      // never matched to a programme entry. Under a named date it goes, because
+      // claiming it plays that night is a claim we cannot make. Not knowing is
+      // a reason to keep quiet, not a reason to assert either way.
+      if (show) {
         if (!r.days.length) {
-          show = false;
+          show = !when;
+        } else if (!when) {
+          show = r.days[r.days.length - 1] >= today;
         } else if (when === 'today') {
           show = r.days.indexOf(today) !== -1;
         } else {
@@ -47508,6 +47517,12 @@
     [fFrom, fTo].forEach(function (el) {
       if (el) el.dispatchEvent(new Event('change', {bubbles: true}));
     });
+    apply();
+  } else if (fPlaying) {
+    // Nothing restored, but the board still has a default to honour: "Any
+    // date" hides runs that have ended, and it has to do that on arrival
+    // rather than waiting for the reader to touch a control they have no
+    // reason to touch.
     apply();
   }
 
