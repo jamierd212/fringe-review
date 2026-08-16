@@ -6,9 +6,9 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| Binge Fringe | [REVIEW: The Passion of Mr Cardboard](https://www.bingefringe.com/2026/08/15/review-the-passion-of-mr-cardboard-miles-calderon-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | The Passion of Mr Cardboard | 92% |
-| North West End | [Spencer Jones (Dogs) – Pleasance Dome](https://northwestend.com/spencer-jones-dogs-pleasance-dome/) | Spencer Jones | 92% |
-| The Stage | [Gemini/Romantic 4:48am review at Edinburgh Fringe: dynamic](https://www.thestage.co.uk/reviews/gemini-romantic-448am-review-assembly-dance-base-edinburgh-hk-soul) | HK Soul Showcase: Gemini and Romantic 4:48am | 95% |
+| Edinburgh Reviews | [Review: HR The Musical, Fringe 2026](https://edinburgh-reviews.co.uk/review-hr-the-musical-fringe-2026/) | HR The Musical | 82% |
+| The List | [The Only Man Who Won’t Fuck Me](https://list.co.uk/news/the-only-man-who-wont-fuck-me-theatre-review-sex-love-and-danger-48856) | The Only Man Who Won't F*ck Me | 92% |
+| A Young(ish) Perspective | [This Shining Night](https://ayoungishperspective.co.uk/2026/08/16/review-this-shining-night/) | This Shining Night, Usher Hall | 95% |
 
 ## Held — not on the leaderboard
 
@@ -18,6 +18,9 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The Scotsman | [Fringe comedy reviews: Elf Lyons Is The Woman on the Edge | Brendan Scannell: The Abyss + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-elf-lyons-is-the-woman-on-the-edge-brendan-scannell-the-abyss-8923550) | This is a round-up headline reviewing multiple shows rather than a single named show. |
+| The Scotsman | [EIF music reviews:  Up Late with Gnoss | YOLA & Big Noise | Death of Gesualdo](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/eif-music-reviews-up-late-with-gnoss-yola-big-noise-death-of-gesualdo-8923536) | This is a round-up of multiple music reviews (three different shows/performances) rather than a review of a single named show. |
+| EdFringeReview | [Auld Lang Sing 2026](https://www.edfringereview.com/review/r/0YrGSXbs7qD1J48tFkrD) | This appears to be an announcement or preview of a 2026 show rather than a review of a performance. |
 | Grapevine Magazine | [Mandy: Prince of Darkness — Peter Mandelson in his own words](https://www.thegrapevinemag.com/theatre/1jxz6spratfp6wljiduquv1jex72lc) | This is a profile or interview piece about Peter Mandelson, not a review of a named theatrical show at an Edinburgh festival. |
 | Binge Fringe | [REVIEW: The Void](https://www.bingefringe.com/2026/08/15/review-the-void-edith-alibec-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | The headline lacks essential context identifying this as a review of a named show at an Edinburgh festival; it could refer to many things called 'The Void' or be a review of something elsewhere. |
 | Binge Fringe | [REVIEW: Shakespeare x5](https://www.bingefringe.com/2026/08/15/review-shakespeare-x5-hand-theatre-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | This appears to be a round-up or list reviewing multiple Shakespeare productions rather than a single named show. |
@@ -215,6 +218,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Scotsman | [Edinburgh Fringe reviews: Skye: A Thriller | When Billy Met  Alasdair](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-skye-a-thriller-when-billy-met-alasdair-5260128) | This is a round-up reviewing multiple shows at the Fringe, not a single named show. |
 | The Scotsman | [Edinburgh Fringe Theatre reviews: Rift | | Red Like Fruit + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/edinburgh-fringe-theatre-reviews-rift-red-like-fruit-standing-in-the-shadows-of-giants-5254719) | This is a round-up reviewing multiple shows (Rift, Red Like Fruit and others), not a single named show. |
 | The Scotsman | [Ego Show](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/edinburgh-fringe-theatre-reviews-this-is-not-about-me-centre-of-the-universe-more-5260839#ego-show) | This appears to be just a title without context indicating it is a review of a specific show at an Edinburgh festival. |
-| The Scotsman | [What ever happened to Harmony Banks?](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/edinburgh-fringe-theatre-reviews-this-is-not-about-me-centre-of-the-universe-more-5260839#what-ever-happened-to-harmony-banks) | This is a profile or interview about a performer, not a review of a named show at an Edinburgh festival. |
-| The Scotsman | [Centre of the Universe](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/edinburgh-fringe-theatre-reviews-this-is-not-about-me-centre-of-the-universe-more-5260839#centre-of-universe) | This is a generic title that could refer to many things and does not clearly indicate a review of a named Edinburgh festival show. |
-| The Scotsman | [Edinburgh Fringe Dance reviews: Apocalipsync | Candlelight](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/edinburgh-fringe-dance-reviews-apocalipsync-candlelight-5261507) | This is a round-up of multiple shows (indicated by the pipe separator), not a review of a single named show. |
