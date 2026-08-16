@@ -268,15 +268,34 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
     #
     # The URL is the identity of a review, and it is the table's primary key, so
     # the same review cannot be stored twice however often it is collected.
+    #
+    # What is NOT a second review is the same article at two addresses.
+    # BroadwayWorld publishes one piece under several of its regional sections,
+    # so Jess Robinson arrived twice — /scotland/ and /westend/ — with the same
+    # headline, date and rating, and counted twice. Comparing URLs alone missed
+    # it, because the URLs really are different.
+    #
+    # So the identity of a review is its publication, its headline, its date and
+    # its rating together. Two critics disagree about at least one of those; a
+    # syndicated copy matches on all four. That separates 65 genuine second
+    # opinions from 23 duplicates in this year's data.
     rows = conn.execute(
-        """SELECT show_id, publication, url, stars, original, converted, rounded
+        """SELECT show_id, publication, url, stars, original, converted, rounded,
+                  headline, published
              FROM reviews
             WHERE stars IS NOT NULL AND show_id IS NOT NULL
             ORDER BY published DESC"""
     )
+    seen_articles: set[tuple] = set()
     for r in rows:
         if r["show_id"] not in shows:
             continue
+        article = (r["show_id"], r["publication"],
+                   (r["headline"] or "").strip().casefold(),
+                   str(r["published"])[:10], r["stars"])
+        if article in seen_articles:
+            continue
+        seen_articles.add(article)
         shows[r["show_id"]].reviews.append(
             ReviewRef(
                 publication=r["publication"],
