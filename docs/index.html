@@ -385,7 +385,6 @@
     </label>
     <label class="inline">Tickets available
       <select id="f-playing"><option value="">Any date</option>
-        <option value="any">Still on sale</option>
         <option value="today">Today</option><option value="" disabled>──────────</option>
         
         <option value="d2">Mon 3 Aug</option>
@@ -457,7 +456,7 @@
 
 
 <p class="meta">
-  Updated 16 August 2026, 11:24 BST &middot;
+  Updated 16 August 2026, 11:29 BST &middot;
   1639 rated reviews across 903 shows
 </p>
 
@@ -31597,8 +31596,6 @@
       if (show && when) {
         if (!r.days.length) {
           show = false;
-        } else if (when === 'any') {
-          show = r.days[r.days.length - 1] >= today;
         } else if (when === 'today') {
           show = r.days.indexOf(today) !== -1;
         } else {

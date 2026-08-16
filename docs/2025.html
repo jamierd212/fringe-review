@@ -344,7 +344,7 @@
 
 
 <p class="meta">
-  Updated 16 August 2026, 11:24 BST &middot;
+  Updated 16 August 2026, 11:29 BST &middot;
   2145 rated reviews across 1434 shows
 </p>
 
@@ -46019,8 +46019,6 @@
       if (show && when) {
         if (!r.days.length) {
           show = false;
-        } else if (when === 'any') {
-          show = r.days[r.days.length - 1] >= today;
         } else if (when === 'today') {
           show = r.days.indexOf(today) !== -1;
         } else {

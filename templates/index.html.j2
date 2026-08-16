@@ -431,12 +431,9 @@
     <label class="inline">Tickets available
       <select id="f-playing">
         {#- "Any date" is the neutral state and filters nothing: the board
-            lists what was acclaimed, whether or not it is still selling.
-            "Still on sale" is the one that answers the ticket question across
-            the whole of the rest of the festival, rather than one night of it —
-            without it a reader can ask "on Thursday?" but not "at all?". -#}
+            lists what was acclaimed, whether or not it is still selling. The
+            dates below answer the ticket question. -#}
         <option value="">Any date</option>
-        <option value="any">Still on sale</option>
         <option value="today">Today</option>
         {#- Every date the board has a show on. Dates already past are removed
             by the browser on load, against its own clock, because which ones
@@ -670,8 +667,6 @@
       if (show && when) {
         if (!r.days.length) {
           show = false;
-        } else if (when === 'any') {
-          show = r.days[r.days.length - 1] >= today;
         } else if (when === 'today') {
           show = r.days.indexOf(today) !== -1;
         } else {
