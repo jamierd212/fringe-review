@@ -952,20 +952,6 @@ publications:
 
       A young people's arts magazine with substantial Fringe coverage.
 
-  - name: Theatre Weekly
-    slug: theatreweekly
-    homepage: https://theatreweekly.com/
-    feed: https://theatreweekly.com/feed/
-    rating:
-      type: auto
-    enabled: false
-    verified: 2026-08-03
-    notes: >
-      NOT YET WORKING: feed is readable and robots.txt is clear, but all ten
-      August 2025 items sampled were casting announcements and press releases,
-      not reviews, so where the rating lives is still unknown. Recheck during
-      the festival, when there will be real reviews to look at.
-
   - name: Reviews Gate
     slug: reviewsgate
     homepage: https://reviewsgate.com/

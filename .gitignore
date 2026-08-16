@@ -11,3 +11,10 @@ fringe-review/
 README.md
 data/outbox.json
 data/instagram/
+
+# SQLite rollback journals. Transient, machine-local, and never part of the
+# committed database — one was left behind by an interrupted run and offered
+# itself up for commit.
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
