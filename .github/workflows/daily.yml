@@ -2,11 +2,16 @@ name: Daily review sweep
 
 on:
   schedule:
-    # 07:00 UTC = 08:00 BST. GitHub cron is UTC only, so change this to
-    # "0 8 * * *" if you ever want 08:00 during British WINTER time.
+    # Twice a day, in UTC, because GitHub cron knows nothing else. Both are
+    # written for BRITISH SUMMER TIME, which is when the festival happens;
+    # add an hour to each if you ever want the same clock times in winter.
+    #
     # Scheduled runs sit in a queue and can start 5-20 minutes late — and
     # occasionally far later: 3 August 2026 was delivered nine hours behind.
-    - cron: '0 7 * * *'
+    - cron: '0 7 * * *'      # 08:00 BST — the morning board
+    - cron: '0 17 * * *'     # 18:00 BST — catches the day's reviews and,
+                             # more usefully, re-reads availability before
+                             # anyone decides what to see tonight.
 
   workflow_dispatch:
     inputs:
