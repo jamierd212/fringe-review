@@ -46,6 +46,11 @@ class Candidate:
     # Identifier in the publication's own API, when the rating has to be looked
     # up separately from discovery (The List's list endpoint omits it).
     api_id: int | None = None
+    # Who wrote it, where the source says. EdFringeReview runs on volunteer
+    # critics and two of them reviewing the same show is ordinary and worth
+    # keeping; the SAME one reviewing it twice is not, and only a name can tell
+    # those apart.
+    reviewer: str | None = None
 
 
 class Collector:
@@ -524,6 +529,7 @@ class Collector:
                     published=value("createdAt"),
                     publication=pub["name"],
                     known_stars=int(float(stars)),
+                    reviewer=value("reviewer") or None,
                 ))
             token = payload.get("nextPageToken")
             if not token:
@@ -1044,13 +1050,13 @@ def run(conn, backfill: tuple[int, int] | None = None, limit: int | None = None,
             conn.execute(
                 """INSERT INTO reviews
                      (url, publication, headline, stars, original,
-                      converted, rounded, published, method)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                      converted, rounded, published, method, reviewer)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                    ON CONFLICT(url) DO NOTHING""",
                 (
                     cand.url, cand.publication, cand.title, rating.stars,
                     rating.original, int(rating.converted), int(rating.rounded),
-                    cand.published, rating.method,
+                    cand.published, rating.method, cand.reviewer,
                 ),
             )
 

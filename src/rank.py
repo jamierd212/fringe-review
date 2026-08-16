@@ -281,7 +281,7 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
     # opinions from 23 duplicates in this year's data.
     rows = conn.execute(
         """SELECT show_id, publication, url, stars, original, converted, rounded,
-                  headline, published
+                  headline, published, reviewer
              FROM reviews
             WHERE stars IS NOT NULL AND show_id IS NOT NULL
             ORDER BY published DESC"""
@@ -290,9 +290,15 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
     for r in rows:
         if r["show_id"] not in shows:
             continue
-        article = (r["show_id"], r["publication"],
-                   (r["headline"] or "").strip().casefold(),
-                   str(r["published"])[:10], r["stars"])
+        # Where the source names the writer, that settles it outright: the same
+        # person cannot review the same show twice, and two different people
+        # reviewing it is exactly what is worth keeping. Only where nobody is
+        # named does it fall back to comparing the article itself.
+        article = ((r["show_id"], r["publication"], "by", r["reviewer"])
+                   if r["reviewer"] else
+                   (r["show_id"], r["publication"],
+                    (r["headline"] or "").strip().casefold(),
+                    str(r["published"])[:10], r["stars"]))
         if article in seen_articles:
             continue
         seen_articles.add(article)

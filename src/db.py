@@ -43,6 +43,11 @@ CREATE TABLE IF NOT EXISTS reviews (
     published    TEXT,
     confidence   REAL,
     method       TEXT,
+    -- Who wrote it, where the source names them. EdFringeReview runs on
+    -- volunteer critics: two of them reviewing the same show is ordinary and
+    -- both verdicts are worth showing, while the same one reviewing it twice is
+    -- a duplicate. Only a name separates those.
+    reviewer     TEXT,
     first_seen   TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -100,9 +105,13 @@ CREATE INDEX IF NOT EXISTS idx_aliases_alias ON aliases(alias);
 def _add_missing_columns(conn: sqlite3.Connection) -> None:
     """Add columns introduced after a database was first created."""
     have = {r[1] for r in conn.execute("PRAGMA table_info(shows)")}
-    for name in ("genre", "subgenre", "venue", "start_time", "duration"):
+    for name in ("genre", "subgenre", "venue", "start_time", "duration",
+                 "presented_by"):
         if name not in have:
             conn.execute(f"ALTER TABLE shows ADD COLUMN {name} TEXT")
+    have = {r[1] for r in conn.execute("PRAGMA table_info(reviews)")}
+    if "reviewer" not in have:
+        conn.execute("ALTER TABLE reviews ADD COLUMN reviewer TEXT")
 
 
 def connect(path: Path | str = DB_PATH) -> sqlite3.Connection:
