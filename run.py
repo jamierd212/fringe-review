@@ -148,13 +148,19 @@ def main() -> int:
         # climbed, and it is drawn after the standings are recorded, so by then
         # yesterday's positions are already today's.
         yesterday = standings.positions(conn, date.today().year)
+        # Read before update overwrites it, like the positions above: these are
+        # the shows worth tagging, and tagging is done by hand one name at a
+        # time, so the list has to be short to be done at all.
+        highs = standings.peaks(conn, date.today().year, placed)
         notes = standings.update(conn, date.today().year, placed)
         queued = standings.queue(notes)
         # The day's card and caption, for posting by hand. Drawn every run
         # because the board moves every run; nothing is sent anywhere.
         image = card.draw_card(placed, previous=yesterday)
         _text, named = card.caption(conn, placed)
+        tagging = card.movers(conn, placed, yesterday, highs)
         print(f"  card: {image.name} ({named} of 20 with an Instagram handle)")
+        print(f"  movers: {tagging} show(s) at a new high, listed for tagging")
         if queued:
             print(f"\n  {queued} show(s) climbed — messages waiting in data/outbox.json")
             print("  Review and send with:  python tools/post_outbox.py")

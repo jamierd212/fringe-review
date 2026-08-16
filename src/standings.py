@@ -107,6 +107,26 @@ def positions(conn: sqlite3.Connection, year: int) -> dict[str, int]:
         "SELECT show_id, position FROM standings WHERE year = ?", (year,))}
 
 
+def peaks(conn: sqlite3.Connection, year: int, placed) -> set[str]:
+    """
+    Shows that have just gone higher than they have ever been.
+
+    Read before update() records today. A show that sat at 5, slipped to 10 and
+    climbed back to 6 has no news: it has been higher. Reaching 4 is news.
+
+    This is the whole tagging list. Instagram has no bulk tagging — each handle
+    is tapped onto the photo and typed by hand — so a list of fifteen is five
+    minutes of fiddling every morning and a list of three is under a minute.
+    Restricting it to real highs is what makes the job small enough to do.
+    """
+    _migrate(conn)
+    best = {row[0]: row[1] for row in conn.execute(
+        "SELECT show_id, best FROM standings WHERE year = ? AND best IS NOT NULL",
+        (year,))}
+    return {show.id for position, show in placed
+            if best.get(show.id) is None or position < best[show.id]}
+
+
 def update(conn: sqlite3.Connection, year: int, placed, notify: bool = True) -> list[dict]:
     """
     Record today's positions and return the notes for shows that rose.

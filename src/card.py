@@ -366,6 +366,46 @@ def draw_card(placed, when: date | None = None,
     return path
 
 
+def movers(conn: sqlite3.Connection, placed, previous: dict[str, int] | None,
+            peaks: set[str] | None, when: date | None = None) -> int:
+    """
+    The day's tagging list: shows that have just gone higher than ever before.
+
+    Written as its own small file because Instagram has no bulk tagging. Each
+    handle is tapped onto the photo and typed by hand, so the length of this
+    list is the length of the job — fifteen names is five minutes every morning,
+    three is under one. Only real highs earn a place.
+
+    A show already at its ceiling is not here even if it climbed today, because
+    it has been this high before and the company has already heard about it.
+    """
+    when = when or date.today()
+    handles = {
+        row[0]: row[1]
+        for row in conn.execute(
+            "SELECT show_id, handle FROM socials WHERE network = 'instagram'")
+    }
+    rows, unhandled = [], []
+    for position, show in placed[:TOP]:
+        if peaks is not None and show.id not in peaks:
+            continue
+        was = (previous or {}).get(show.id)
+        climb = f"up {was - position}" if was and was > position else "new entry"
+        handle = handles.get(show.id)
+        (rows if handle else unhandled).append(
+            f"@{handle}" + " " * max(1, 22 - len(handle or "")) +
+            f"#{position}, {climb}, highest yet" if handle
+            else f"#{position} {show.title} ({climb})")
+
+    lines = [f"Tag these in the photo — {when.strftime('%-d %B')}", ""]
+    lines += rows or ["Nothing at a new high today. Nothing to tag."]
+    if unhandled:
+        lines += ["", "At a new high but no handle published:", ""] + unhandled
+    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / f"movers-{when.isoformat()}.txt").write_text("\n".join(lines) + "\n")
+    return len(rows)
+
+
 def caption(conn: sqlite3.Connection, placed, when: date | None = None) -> str:
     """
     The caption: the twenty in order, with a mention where we have one.
