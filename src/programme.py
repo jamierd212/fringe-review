@@ -296,6 +296,40 @@ def _presented_by(html: str) -> str:
     return name.strip(" .,") if 1 < len(name) <= 120 else ""
 
 
+OVERRIDES = None
+_OVERRIDES_FILE = None
+
+
+def _overrides() -> dict:
+    """Shows whose venue and time we hold against the programme, by hand."""
+    global OVERRIDES, _OVERRIDES_FILE
+    if OVERRIDES is None:
+        import json
+        from pathlib import Path
+        _OVERRIDES_FILE = Path(__file__).resolve().parent.parent / "data" / "show-overrides.json"
+        try:
+            OVERRIDES = {k: v for k, v in json.loads(_OVERRIDES_FILE.read_text()).items()
+                         if not k.startswith("_")}
+        except (OSError, ValueError):
+            OVERRIDES = {}
+    return OVERRIDES
+
+
+def apply_overrides(conn: sqlite3.Connection) -> int:
+    """Write the hand-held facts in, so they survive a rebuild from scratch."""
+    n = 0
+    for show_id, fields in _overrides().items():
+        venue, clock = fields.get("venue", ""), fields.get("start_time", "")
+        cur = conn.execute("SELECT venue, start_time FROM shows WHERE id = ?",
+                           (show_id,)).fetchone()
+        if cur and ((venue and cur[0] != venue) or (clock and cur[1] != clock)):
+            conn.execute("UPDATE shows SET venue = COALESCE(NULLIF(?, ''), venue), "
+                         "start_time = COALESCE(NULLIF(?, ''), start_time) WHERE id = ?",
+                         (venue, clock, show_id))
+            n += 1
+    return n
+
+
 def store_room(conn: sqlite3.Connection, show_id: str, html: str) -> str:
     """
     Re-read the venue and start time, and return what changed.
@@ -309,6 +343,12 @@ def store_room(conn: sqlite3.Connection, show_id: str, html: str) -> str:
 
     The calendar pass already has the page open, so this costs nothing.
     """
+    # A show we have been told about directly is left alone. The programme is
+    # usually right and always eventually right, but a company emailing to say
+    # they have moved room is ahead of it, and an automatic re-read would undo
+    # them every night without anyone noticing.
+    if show_id in _overrides():
+        return ""
     details = _fringe_details(html)
     venue, clock = details.get("venue", ""), details.get("start_time", "")
     if not venue and not clock:

@@ -137,6 +137,11 @@ def main() -> int:
         # second between requests. That is most of this run, and it buys the
         # only part of the page that goes stale overnight.
         programme.refresh_performances(conn, current, stale_days=0, limit=1000)
+        # Last, so a hand-held fact wins over whatever the programme said.
+        fixed = programme.apply_overrides(conn)
+        if fixed:
+            print(f"  overrides: {fixed} show(s) held against the programme")
+        conn.commit()
 
     # Record where everything stands, and note any show that has climbed inside
     # the top twenty. Writes to an outbox; sends nothing.
