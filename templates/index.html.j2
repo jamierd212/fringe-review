@@ -33,13 +33,13 @@
           "Helvetica Neue", Arial, sans-serif;
   }
   .wrap { max-width: 820px; margin: 0 auto; }
-  header { border-bottom: 3px solid #ccc; padding-bottom: .45rem; margin-bottom: .3rem; }
+  header { border-bottom: 3px solid #ccc; padding-bottom: .1rem; margin-bottom: .3rem; }
   h1 { font-size: 2rem; margin: 0 0 .15rem; letter-spacing: -.01em; line-height: 1.12; }
   h1 .line2 { display: block; }   /* inherits h1's size, weight and colour */
   /* Its own line-height rather than the body's 1.55: at .85rem that leaves
      several pixels of leading hanging under the last line, which read as a
      gap above the rule that no margin was actually setting. */
-  .sub { color: var(--muted); font-size: .85rem; line-height: 1.35; }
+  .sub { color: var(--muted); font-size: .85rem; line-height: 1.28; }
   .meta {
     color: var(--muted); font-size: .7rem; line-height: 1.3;
     margin: .4rem 0 .6rem;
@@ -75,9 +75,13 @@
   }
 
   ul.reviews { list-style: none; margin: .08rem 0 0; padding: 0; }
+  /* The stars set the height of a review row, not the publication name, so
+     shrinking the name alone buys nothing vertically — the line-height and the
+     padding are what actually close the rows up. The stars are left at their
+     size deliberately: they are the thing being read. */
   ul.reviews li {
     display: flex; gap: .7rem; align-items: baseline;
-    padding: .09rem 0; line-height: 1.2; border-top: 1px solid var(--rule);
+    padding: .02rem 0; line-height: 1.1; border-top: 1px solid var(--rule);
     flex-wrap: wrap;
   }
   ul.reviews li:first-child { border-top: 0; }
@@ -87,8 +91,9 @@
     font-size: 1.15rem;         /* slightly larger than the surrounding text */
   }
   .s3 .rating, .s2 .rating, .s1 .rating { color: var(--muted); }
-  .pub { flex: 1; min-width: 0; }
-  .pub { overflow-wrap: anywhere; }
+  /* Smaller than the body text: the publication is the attribution, the stars
+     are the verdict, and at equal size they competed. */
+  .pub { flex: 1; min-width: 0; font-size: .88rem; overflow-wrap: anywhere; }
   a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 2px; }
   /* Publication names are links, but a column of underlines competes with the
      stars beside them. Underline only on hover, so they still read as links. */
