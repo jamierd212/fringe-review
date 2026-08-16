@@ -366,18 +366,48 @@ def draw_card(placed, when: date | None = None,
     return path
 
 
-def movers(conn: sqlite3.Connection, placed, previous: dict[str, int] | None,
-            peaks: set[str] | None, when: date | None = None) -> int:
+VENUE_SOCIALS = Path(__file__).resolve().parent.parent / "data" / "venue-socials.json"
+TAG_LIMIT = 20        # Instagram's own limit on tags per photo
+
+
+def _venue_counts(placed) -> list[tuple[str, str, int]]:
     """
-    The day's tagging list: shows that have just gone higher than ever before.
+    Venue handles, with how many of today's twenty each one houses.
 
-    Written as its own small file because Instagram has no bulk tagging. Each
-    handle is tapped onto the photo and typed by hand, so the length of this
-    list is the length of the job — fifteen names is five minutes every morning,
-    three is under one. Only real highs earn a place.
+    Matched on the start of the programme's venue name, so "Assembly Roxy" and
+    "Assembly @ St Andrew Square" both reach Assembly and count once. Handles
+    come from each venue's own website; a venue with no published handle is left
+    out rather than guessed at.
+    """
+    import json
+    from collections import Counter
 
-    A show already at its ceiling is not here even if it climbed today, because
-    it has been this high before and the company has already heard about it.
+    if not VENUE_SOCIALS.exists():
+        return []
+    known = {k: v for k, v in json.loads(VENUE_SOCIALS.read_text()).items()
+             if not k.startswith("_")}
+    counts: Counter = Counter()
+    for _position, show in placed[:TOP]:
+        name = show.venue or ""
+        match = next((k for k in known if name.startswith(k)), None)
+        if match:
+            counts[match] += 1
+    return [(venue, known[venue], n) for venue, n in counts.most_common()]
+
+
+def tags(conn: sqlite3.Connection, placed, previous: dict[str, int] | None,
+         peaks: set[str] | None, when: date | None = None) -> int:
+    """
+    Everyone who could be tagged today, sorted so the choosing is quick.
+
+    Instagram has no bulk tagging — each handle is tapped onto the photo and
+    typed by hand — and allows twenty. So this is a menu rather than an
+    instruction: venues first, because they have the followings and have already
+    proved they respond; then shows with actual news; then the rest.
+
+    A show at a new high is worth telling because something happened. A show
+    holding the same position for the ninth day is not, and hearing about it
+    daily is how an account gets muted.
     """
     when = when or date.today()
     handles = {
@@ -385,25 +415,39 @@ def movers(conn: sqlite3.Connection, placed, previous: dict[str, int] | None,
         for row in conn.execute(
             "SELECT show_id, handle FROM socials WHERE network = 'instagram'")
     }
-    rows, unhandled = [], []
-    for position, show in placed[:TOP]:
-        if peaks is not None and show.id not in peaks:
-            continue
-        was = (previous or {}).get(show.id)
-        climb = f"up {was - position}" if was and was > position else "new entry"
-        handle = handles.get(show.id)
-        (rows if handle else unhandled).append(
-            f"@{handle}" + " " * max(1, 22 - len(handle or "")) +
-            f"#{position}, {climb}, highest yet" if handle
-            else f"#{position} {show.title} ({climb})")
+    lines = [f"Tag people — {when.strftime('%-d %B')}   "
+             f"(Instagram allows {TAG_LIMIT}; pick from these)", ""]
 
-    lines = [f"Tag these in the photo — {when.strftime('%-d %B')}", ""]
-    lines += rows or ["Nothing at a new high today. Nothing to tag."]
-    if unhandled:
-        lines += ["", "At a new high but no handle published:", ""] + unhandled
+    venues = _venue_counts(placed)
+    if venues:
+        lines += ["VENUES — most of today's twenty first", ""]
+        lines += [f"  @{handle}{' ' * max(1, 22 - len(handle))}"
+                  f"{n} of the twenty   ({venue})" for venue, handle, n in venues]
+        lines += [""]
+
+    news, steady, missing = [], [], []
+    for position, show in placed[:TOP]:
+        handle = handles.get(show.id)
+        was = (previous or {}).get(show.id)
+        if not handle:
+            missing.append(f"  #{position} {show.title}")
+        elif peaks is not None and show.id in peaks:
+            climb = f"up {was - position}" if was and was > position else "new entry"
+            news.append(f"  @{handle}{' ' * max(1, 22 - len(handle))}"
+                        f"#{position}, {climb}, highest yet")
+        else:
+            steady.append(f"  @{handle}{' ' * max(1, 22 - len(handle))}#{position}")
+
+    lines += ["SHOWS AT A NEW HIGH — these have something to hear", ""]
+    lines += news or ["  (none today)"]
+    if steady:
+        lines += ["", "OTHER SHOWS IN THE TWENTY", ""] + steady
+    if missing:
+        lines += ["", "NO HANDLE PUBLISHED", ""] + missing
+
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / f"movers-{when.isoformat()}.txt").write_text("\n".join(lines) + "\n")
-    return len(rows)
+    (OUT / f"tags-{when.isoformat()}.txt").write_text("\n".join(lines) + "\n")
+    return len(venues) + len(news) + len(steady)
 
 
 def caption(conn: sqlite3.Connection, placed, when: date | None = None) -> str:
@@ -423,7 +467,12 @@ def caption(conn: sqlite3.Connection, placed, when: date | None = None) -> str:
         row[0]: row[1]
         for row in conn.execute("SELECT show_id, handle FROM socials WHERE network = 'instagram'")
     }
-    lines = [f"Edinburgh Festivals Top 20 — {when.strftime('%-d %B')}", ""]
+    # The address sits above the list rather than only at the end. Instagram
+    # does not linkify anything in a caption, so this is text a reader has to
+    # type — which they will only do if they see it before twenty show names
+    # rather than after them.
+    lines = [f"Edinburgh Festivals Top 20 — {when.strftime('%-d %B')}", "",
+             "www.fringestars.com", ""]
     for position, show in placed[:TOP]:
         handle = handles.get(show.id)
         lines.append(f"{position}. {show.title}"

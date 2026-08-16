@@ -158,9 +158,9 @@ def main() -> int:
         # because the board moves every run; nothing is sent anywhere.
         image = card.draw_card(placed, previous=yesterday)
         _text, named = card.caption(conn, placed)
-        tagging = card.movers(conn, placed, yesterday, highs)
+        taggable = card.tags(conn, placed, yesterday, highs)
         print(f"  card: {image.name} ({named} of 20 with an Instagram handle)")
-        print(f"  movers: {tagging} show(s) at a new high, listed for tagging")
+        print(f"  tags: {taggable} handle(s) to choose from")
         if queued:
             print(f"\n  {queued} show(s) climbed — messages waiting in data/outbox.json")
             print("  Review and send with:  python tools/post_outbox.py")
