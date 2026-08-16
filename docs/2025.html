@@ -91,9 +91,10 @@
     font-size: 1.15rem;         /* slightly larger than the surrounding text */
   }
   .s3 .rating, .s2 .rating, .s1 .rating { color: var(--muted); }
-  /* Smaller than the body text: the publication is the attribution, the stars
-     are the verdict, and at equal size they competed. */
-  .pub { flex: 1; min-width: 0; font-size: .88rem; overflow-wrap: anywhere; }
+  /* Left at body size. Tried at .88rem to fit more shows on a screen, and it
+     did read as smaller rather than tidier — the names are what you scan when
+     you already trust the stars. The height came from the rows, not here. */
+  .pub { flex: 1; min-width: 0; overflow-wrap: anywhere; }
   a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 2px; }
   /* Publication names are links, but a column of underlines competes with the
      stars beside them. Underline only on hover, so they still read as links. */
@@ -341,7 +342,7 @@
 
 
 <p class="meta">
-  Updated 16 August 2026, 11:13 BST &middot;
+  Updated 16 August 2026, 11:17 BST &middot;
   2145 rated reviews across 1434 shows
 </p>
 
