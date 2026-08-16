@@ -151,7 +151,7 @@
 <body>
 <div class="wrap">
 
-<a class="back" href="../../2025.html">&larr; Back to Fringestars</a>
+<a class="back" href="../../2026.html">&larr; Back to Fringestars</a>
 
 <div class="card">
   <div class="titlerow">
@@ -202,7 +202,7 @@
     Star ratings are the publications&rsquo; own; this page collates and links to
     them. Ratings published on other scales are converted, rounded down and
     labelled. Spotted a mistake?
-    <a href="mailto:corrections@fringestars.com" rel="noopener">email corrections@fringestars.com</a>.
+    <a href="mailto:corrections@fringestars.com" rel="noopener">email corrections@fringestars.com</a>.Please allow 24 hours for new reviews to be collected from the web.
   </p>
 </footer>
 
@@ -217,12 +217,22 @@
   // so the return link carries it home without needing storage, which a new tab
   // would not have.
   (function () {
-    var query = location.search.slice(1);
-    if (!query) return;
-    var back = document.querySelector('a[href$="2026.html"], a[href*=".html"]');
-    if (back && back.getAttribute('href').indexOf('?') === -1) {
-      back.setAttribute('href', back.getAttribute('href') + '?' + query);
+    var back = document.querySelector('a.back');
+    if (!back) return;
+    // "board" says which leaderboard the reader came from; anything else is a
+    // filter to hand back. A reader who arrived from search has neither, and
+    // keeps the default, which is the live year rather than this show's own.
+    var kept = [], board = '';
+    location.search.slice(1).split('&').forEach(function (pair) {
+      if (!pair) return;
+      if (pair.indexOf('board=') === 0) { board = pair.slice(6); }
+      else { kept.push(pair); }
+    });
+    var href = back.getAttribute('href');
+    if (/^\d{4}\.html$/.test(board)) {
+      href = href.replace(/[^\/]+$/, board);
     }
+    back.setAttribute('href', href + (kept.length ? '?' + kept.join('&') : ''));
   })();
 </script>
 </body>

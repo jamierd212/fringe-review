@@ -296,6 +296,39 @@ def _presented_by(html: str) -> str:
     return name.strip(" .,") if 1 < len(name) <= 120 else ""
 
 
+def store_room(conn: sqlite3.Connection, show_id: str, html: str) -> str:
+    """
+    Re-read the venue and start time, and return what changed.
+
+    Runs are extended, rooms are swapped and times move — "Absolute Bus Stops of
+    Northern Europe and Beyond" went from Paradise in The Vault at 11:30 to
+    Paradise in Augustines at 13:50 partway through the festival. enrich() only
+    fills these in when they are MISSING, so a show that moved kept its old room
+    on the board indefinitely and a reader who trusted it went to the wrong
+    building.
+
+    The calendar pass already has the page open, so this costs nothing.
+    """
+    details = _fringe_details(html)
+    venue, clock = details.get("venue", ""), details.get("start_time", "")
+    if not venue and not clock:
+        return ""
+    row = conn.execute("SELECT venue, start_time FROM shows WHERE id = ?",
+                       (show_id,)).fetchone()
+    was_venue, was_time = (row[0] or "", row[1] or "") if row else ("", "")
+    changed = []
+    if venue and venue != was_venue:
+        changed.append(f"{was_venue or '—'} -> {venue}")
+    if clock and clock != was_time:
+        changed.append(f"{was_time or '—'} -> {clock}")
+    if not changed:
+        return ""
+    conn.execute("UPDATE shows SET venue = COALESCE(NULLIF(?, ''), venue), "
+                 "start_time = COALESCE(NULLIF(?, ''), start_time) WHERE id = ?",
+                 (venue, clock, show_id))
+    return ", ".join(changed)
+
+
 def store_company(conn: sqlite3.Connection, show_id: str, name: str) -> bool:
     """Record the company, adding the column the first time it is needed."""
     if not name:
@@ -731,7 +764,7 @@ def refresh_performances(conn: sqlite3.Connection, year: int,
     if not due:
         return {"checked": 0, "dates": 0}
 
-    checked = dates = failed = renamed = credited = 0
+    checked = dates = failed = renamed = credited = movements = 0
     for row in due:
         time.sleep(DELAY)
         html = _get(row["edfringe_url"])
@@ -754,12 +787,17 @@ def refresh_performances(conn: sqlite3.Connection, year: int,
             renamed += 1
         if store_company(conn, row["id"], _presented_by(html)):
             credited += 1
+        moved = store_room(conn, row["id"], html)
+        if moved:
+            movements += 1
+            print(f"      moved: {row['title'][:38]}  {moved}")
         checked += 1
         dates += len(found)
     conn.commit()
     print(f"    calendars: {checked} show(s) refreshed, {dates} performances"
           + (f", {renamed} renamed" if renamed else "")
           + (f", {credited} credited" if credited else "")
+          + (f", {movements} moved" if movements else "")
           + (f", {failed} unreadable" if failed else ""))
     return {"checked": checked, "dates": dates, "failed": failed, "renamed": renamed}
 

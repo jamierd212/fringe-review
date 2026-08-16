@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Crimes of Pete &ndash; reviews and star ratings, Edinburgh 2026</title>
-<meta name="description" content="Every star-rated review we can find for The Crimes of Pete at the Edinburgh Fringe 2026, averaging 2.0 out of 5 across 1 reviews.">
+<meta name="description" content="Every star-rated review we can find for The Crimes of Pete at the Edinburgh Fringe 2026, averaging 3.0 out of 5 across 2 reviews.">
 <link rel="canonical" href="https://fringestars.com/show/2026-crimes-of-pete/">
 <meta property="og:site_name" content="Edinburgh Festivals Top-Rated Shows">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://fringestars.com/show/2026-crimes-of-pete/">
 <meta property="og:title" content="The Crimes of Pete &ndash; Edinburgh 2026 reviews">
-<meta property="og:description" content="The Crimes of Pete &mdash; 1&times;2&#9733; (2.0/5 across 1 review)">
+<meta property="og:description" content="The Crimes of Pete &mdash; 1&times;4&#9733; 1&times;2&#9733; (3.0/5 across 2 reviews)">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="The Crimes of Pete &ndash; Edinburgh 2026">
-<meta name="twitter:description" content="The Crimes of Pete &mdash; 1&times;2&#9733; (2.0/5 across 1 review)">
+<meta name="twitter:description" content="The Crimes of Pete &mdash; 1&times;4&#9733; 1&times;2&#9733; (3.0/5 across 2 reviews)">
 <style>
   :root {
     --ink: #1a1a1a; --muted: #6b6b6b; --rule: #ecdcd9;
@@ -120,12 +120,26 @@
   },
   "aggregateRating": {
     "@type": "AggregateRating",
-    "ratingValue": "2.0",
-    "reviewCount": 1,
+    "ratingValue": "3.0",
+    "reviewCount": 2,
     "bestRating": 5,
     "worstRating": 1
   },
   "review": [
+    {
+      "@type": "Review",
+      "author": {
+        "@type": "Organization",
+        "name": "The Wee Review"
+      },
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": 4,
+        "bestRating": 5,
+        "worstRating": 1
+      },
+      "url": "https://theweereview.com/review/the-crimes-of-pete/"
+    },
     {
       "@type": "Review",
       "author": {
@@ -171,8 +185,8 @@
 
   <div class="summary">
     
-      <span class="avg">2.0<small> / 5</small></span>
-      <small>average across 1 review</small>
+      <span class="avg">3.0<small> / 5</small></span>
+      <small>average across 2 reviews</small>
     
   </div>
 
@@ -180,6 +194,12 @@
     
       
     
+      
+      <li class="s4">
+        <span class="rating" title="4 out of 5">★★★★☆</span>
+        <span class="pub"><a href="https://theweereview.com/review/the-crimes-of-pete/" target="_blank" rel="nofollow noopener">The Wee Review</a></span>
+        
+      </li>
       
     
       
@@ -203,7 +223,7 @@
     Star ratings are the publications&rsquo; own; this page collates and links to
     them. Ratings published on other scales are converted, rounded down and
     labelled. Spotted a mistake?
-    <a href="mailto:corrections@fringestars.com" rel="noopener">email corrections@fringestars.com</a>.
+    <a href="mailto:corrections@fringestars.com" rel="noopener">email corrections@fringestars.com</a>.Please allow 24 hours for new reviews to be collected from the web.
   </p>
 </footer>
 
@@ -218,12 +238,22 @@
   // so the return link carries it home without needing storage, which a new tab
   // would not have.
   (function () {
-    var query = location.search.slice(1);
-    if (!query) return;
-    var back = document.querySelector('a[href$="2026.html"], a[href*=".html"]');
-    if (back && back.getAttribute('href').indexOf('?') === -1) {
-      back.setAttribute('href', back.getAttribute('href') + '?' + query);
+    var back = document.querySelector('a.back');
+    if (!back) return;
+    // "board" says which leaderboard the reader came from; anything else is a
+    // filter to hand back. A reader who arrived from search has neither, and
+    // keeps the default, which is the live year rather than this show's own.
+    var kept = [], board = '';
+    location.search.slice(1).split('&').forEach(function (pair) {
+      if (!pair) return;
+      if (pair.indexOf('board=') === 0) { board = pair.slice(6); }
+      else { kept.push(pair); }
+    });
+    var href = back.getAttribute('href');
+    if (/^\d{4}\.html$/.test(board)) {
+      href = href.replace(/[^\/]+$/, board);
     }
+    back.setAttribute('href', href + (kept.length ? '?' + kept.join('&') : ''));
   })();
 </script>
 </body>

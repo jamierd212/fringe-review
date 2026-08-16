@@ -344,7 +344,7 @@
 
 
 <p class="meta">
-  Updated 16 August 2026, 12:16 BST &middot;
+  Updated 16 August 2026, 19:56 BST &middot;
   2145 rated reviews across 1434 shows
 </p>
 
@@ -45872,7 +45872,8 @@
     own; this page only counts them.
   </p>
   <p>
-    Spotted a mistake? <a href="mailto:corrections@fringestars.com" rel="noopener">email corrections@fringestars.com</a>
+    Spotted a mistake? <a href="mailto:corrections@fringestars.com" rel="noopener">email corrections@fringestars.com</a>.
+    Please allow 24 hours for new reviews to be collected from the web
     and we&rsquo;ll fix it. Publications wanting a rating amended or removed:
     same route &mdash; it will be actioned.
   </p>
@@ -46215,10 +46216,17 @@
     // filter was lost on the way back. Carried in the URL it survives a new
     // tab, a restored tab, a shared link and a browser that has thrown its
     // storage away.
-    var query = location.search.slice(1);
+    // The board names itself in the link as well as passing its filters, so a
+    // show page knows which board to send the reader back to. Without it every
+    // show returns to the live year, which is right for someone arriving from
+    // search and wrong for someone reading last year's board.
+    var here = location.pathname.split('/').pop() || '';
+    var parts = [];
+    if (location.search.length > 1) parts.push(location.search.slice(1));
+    if (/^\d{4}\.html$/.test(here)) parts.push('board=' + here);
     var href = link.getAttribute('href');
-    if (query && href.indexOf('?') === -1) {
-      link.setAttribute('href', href + '?' + query);
+    if (parts.length && href.indexOf('?') === -1) {
+      link.setAttribute('href', href + '?' + parts.join('&'));
     }
   });
 

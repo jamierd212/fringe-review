@@ -318,7 +318,14 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                              (show.id,)).fetchone()["festival"] or "", "Fringe")
             page = show_tpl.render(
                 show=show, year=this_year, festival_name=festival_name,
-                site_url=SITE_URL, back_href="../../" + page_name(this_year),
+                # Back to the LIVE board, not the year this show belongs to.
+                # Old show pages are reached from search far more often than by
+                # anyone browsing an old year, and sending a first-time visitor
+                # from a 2025 review to a 2025 leaderboard is a dead end. A
+                # reader who genuinely came from the 2025 board is sent back
+                # there instead — the board says so in the link it was followed
+                # from, and the page reads it.
+                site_url=SITE_URL, back_href="../../" + page_name(landing),
                 jsonld=show_jsonld(show, this_year, festival_name),
                 contact_url=defaults.get(
                     "contact_url",
