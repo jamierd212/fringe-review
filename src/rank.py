@@ -252,20 +252,31 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
             start_time=row["start_time"] or "",
         )
 
-    # One review per publication per show: a re-review should not count twice.
-    # `published DESC` keeps the most recent.
+    # Every review, including a second one from the same publication.
+    #
+    # This used to keep one per publication per show, on the reasoning that a
+    # re-review should not count twice. The data says otherwise: of 77 cases
+    # where a publication reviewed the same show more than once, ALL had
+    # different URLs and none was a republication. EdFringeReview accounts for
+    # 69 of them and runs on volunteer critics, so two of its reviewers seeing
+    # the same show is ordinary — and their verdicts often differ, which is the
+    # interesting part rather than a fault.
+    #
+    # Suppressing one of them was not neutral: it kept whichever was published
+    # later, so Dane Buckley's 4 star from the 11th vanished behind a 5 star
+    # from the 13th and his average read a clean 5.0.
+    #
+    # The URL is the identity of a review, and it is the table's primary key, so
+    # the same review cannot be stored twice however often it is collected.
     rows = conn.execute(
         """SELECT show_id, publication, url, stars, original, converted, rounded
              FROM reviews
             WHERE stars IS NOT NULL AND show_id IS NOT NULL
             ORDER BY published DESC"""
     )
-    claimed: set[tuple[str, str]] = set()
     for r in rows:
-        key = (r["show_id"], r["publication"])
-        if key in claimed or r["show_id"] not in shows:
+        if r["show_id"] not in shows:
             continue
-        claimed.add(key)
         shows[r["show_id"]].reviews.append(
             ReviewRef(
                 publication=r["publication"],
