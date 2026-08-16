@@ -456,7 +456,7 @@
 
 
 <p class="meta">
-  Updated 16 August 2026, 11:29 BST &middot;
+  Updated 16 August 2026, 11:36 BST &middot;
   1639 rated reviews across 903 shows
 </p>
 
@@ -31786,6 +31786,17 @@
     if (!link) return;
     try { sessionStorage.setItem('fringestars-from', link.getAttribute('href')); }
     catch (e) {}
+    // The filter also travels IN the link, not only in storage. sessionStorage
+    // belongs to one tab: a review opens with target="_blank", and anything
+    // that ends up browsing in that new tab has no storage to read, so the
+    // filter was lost on the way back. Carried in the URL it survives a new
+    // tab, a restored tab, a shared link and a browser that has thrown its
+    // storage away.
+    var query = location.search.slice(1);
+    var href = link.getAttribute('href');
+    if (query && href.indexOf('?') === -1) {
+      link.setAttribute('href', href + '?' + query);
+    }
   });
 
   function returnToShow() {

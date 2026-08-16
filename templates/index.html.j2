@@ -857,6 +857,17 @@
     if (!link) return;
     try { sessionStorage.setItem('fringestars-from', link.getAttribute('href')); }
     catch (e) {}
+    // The filter also travels IN the link, not only in storage. sessionStorage
+    // belongs to one tab: a review opens with target="_blank", and anything
+    // that ends up browsing in that new tab has no storage to read, so the
+    // filter was lost on the way back. Carried in the URL it survives a new
+    // tab, a restored tab, a shared link and a browser that has thrown its
+    // storage away.
+    var query = location.search.slice(1);
+    var href = link.getAttribute('href');
+    if (query && href.indexOf('?') === -1) {
+      link.setAttribute('href', href + '?' + query);
+    }
   });
 
   function returnToShow() {

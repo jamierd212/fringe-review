@@ -254,5 +254,19 @@
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
         data-cf-beacon='{"token": "0730ec74a6644f20aeb877089108726f"}'></script>
 
+<script>
+  // Send the reader back to the board as they left it. The filter arrives in
+  // this page's own URL — put there by the board when the link was followed —
+  // so the return link carries it home without needing storage, which a new tab
+  // would not have.
+  (function () {
+    var query = location.search.slice(1);
+    if (!query) return;
+    var back = document.querySelector('a[href$="2026.html"], a[href*=".html"]');
+    if (back && back.getAttribute('href').indexOf('?') === -1) {
+      back.setAttribute('href', back.getAttribute('href') + '?' + query);
+    }
+  })();
+</script>
 </body>
 </html>
