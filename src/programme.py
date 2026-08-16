@@ -271,6 +271,44 @@ def _official_title(html: str) -> str:
     return title if 2 < len(title) <= 160 else ""
 
 
+def _presented_by(html: str) -> str:
+    """
+    The company as the programme credits it.
+
+    Some entries write the credit as a sentence — "Avalon & Tellus Studio
+    present" — so the trailing verb is trimmed. What is wanted is the name, not
+    the sentence it appears in.
+    """
+    import json
+
+    m = re.search(r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>',
+                  html, re.S)
+    if not m:
+        return ""
+    try:
+        event = json.loads(m.group(1))["props"]["pageProps"]["data"]["event"]
+    except (KeyError, TypeError, ValueError):
+        return ""
+    if not isinstance(event, dict):
+        return ""
+    name = (event.get("presentedBy") or "").strip()
+    name = re.sub(r"\s+(presents?|present|in association with)\.?$", "", name, flags=re.I)
+    return name.strip(" .,") if 1 < len(name) <= 120 else ""
+
+
+def store_company(conn: sqlite3.Connection, show_id: str, name: str) -> bool:
+    """Record the company, adding the column the first time it is needed."""
+    if not name:
+        return False
+    columns = {row[1] for row in conn.execute("PRAGMA table_info(shows)")}
+    if "presented_by" not in columns:
+        conn.execute("ALTER TABLE shows ADD COLUMN presented_by TEXT")
+    before = conn.execute("SELECT presented_by FROM shows WHERE id = ?",
+                          (show_id,)).fetchone()
+    conn.execute("UPDATE shows SET presented_by = ? WHERE id = ?", (name, show_id))
+    return not before or before[0] != name
+
+
 def adopt_title(conn: sqlite3.Connection, show_id: str, current: str,
                 official: str) -> bool:
     """
@@ -693,7 +731,7 @@ def refresh_performances(conn: sqlite3.Connection, year: int,
     if not due:
         return {"checked": 0, "dates": 0}
 
-    checked = dates = failed = renamed = 0
+    checked = dates = failed = renamed = credited = 0
     for row in due:
         time.sleep(DELAY)
         html = _get(row["edfringe_url"])
@@ -714,11 +752,14 @@ def refresh_performances(conn: sqlite3.Connection, year: int,
         store_performances(conn, row["id"], found)
         if adopt_title(conn, row["id"], row["title"], _official_title(html)):
             renamed += 1
+        if store_company(conn, row["id"], _presented_by(html)):
+            credited += 1
         checked += 1
         dates += len(found)
     conn.commit()
     print(f"    calendars: {checked} show(s) refreshed, {dates} performances"
           + (f", {renamed} renamed" if renamed else "")
+          + (f", {credited} credited" if credited else "")
           + (f", {failed} unreadable" if failed else ""))
     return {"checked": checked, "dates": dates, "failed": failed, "renamed": renamed}
 

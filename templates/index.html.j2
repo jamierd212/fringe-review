@@ -68,7 +68,9 @@
     color: var(--muted); border: 1px solid var(--rule); border-radius: 999px;
     padding: .12rem .55rem;
   }
-  .performer { color: var(--muted); font-size: .85rem; }
+  /* The performer is no longer shown on the board — the list reads faster as
+     titles alone — but it is still in data-find, so searching a comedian's name
+     still finds their show. */
   @media (max-width: 560px) {
     .titlerow { flex-direction: column; gap: .2rem; }
     .meta-right { align-self: flex-start; }
@@ -471,7 +473,6 @@
     <div class="titlerow">
       <span class="titlewrap">
         <h2><a href="{{ show.page }}" title="All reviews for {{ show.title }}">{{ show.title }}</a></h2>
-        {% if show.performer %}<span class="performer">{{ show.performer }}</span>{% endif %}
       </span>
       <span class="meta-right">
         {% if show.genre %}<span class="genre">{{ show.genre }}</span>{% endif %}
