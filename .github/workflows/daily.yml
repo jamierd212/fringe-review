@@ -46,6 +46,12 @@ jobs:
 
       - run: pip install -r requirements.txt
 
+      # One second, and it would have saved a day's board: Pillow was added to
+      # a local virtualenv and not to requirements, so the sweep imported
+      # run.py on a clean checkout and died before it fetched anything.
+      - name: Check requirements cover the imports
+        run: python tools/check_requirements.py
+
       - name: Collect, match and render
         env:
           # Used for ambiguous show matches and for admitting shows that are not

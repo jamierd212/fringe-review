@@ -6,5 +6,6 @@ rapidfuzz>=3.9
 Jinja2>=3.1
 PyYAML>=6.0
 certifi>=2024.7
+Pillow>=10.0
 anthropic>=0.69
 pydantic>=2.8

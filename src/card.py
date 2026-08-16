@@ -171,7 +171,11 @@ def _logo(img: Image.Image) -> int:
     if not LOGO.exists():
         return 0
     logo = Image.open(LOGO).convert("RGBA")
-    if min(logo.getchannel("A").get_flattened_data()) == 255:
+    # getextrema() rather than reading every pixel: it answers the only
+    # question here — is any of this transparent — in one pass, and it has
+    # existed in Pillow forever, where get_flattened_data() is recent enough
+    # to force a high version floor for no gain.
+    if logo.getchannel("A").getextrema()[0] == 255:
         corner = logo.getpixel((0, 0))[:3]
         flat = Image.new("RGB", logo.size, corner)
         difference = ImageChops.difference(logo.convert("RGB"), flat).convert("L")
