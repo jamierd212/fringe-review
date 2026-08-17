@@ -906,6 +906,14 @@ publications:
     pages: 6
     exclude_title_patterns:
       - "\\b(wins|won|receives|awarded|announces)\\b"
+    title_strip_patterns:
+      # Every headline ends "<show> - Edinburgh Festival Fringe". Left on, that
+      # suffix is most of the string, so the fuzzy matcher scored two unrelated
+      # shows as near-identical and filed them together: on the 2025 board TWENTY
+      # separate musicals became one entry called "Edinburgh Festival Fringe",
+      # which ranked first with 20 reviews. "Badgers" landed on "Little Pink
+      # Dress" in 2026 the same way.
+      - "\\s*[-\u2013\u2014]\\s*Edinburgh [Ff]estival [Ff]ringe\\s*$"
     enabled: false
     verified: 2026-08-11
     notes: >
