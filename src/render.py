@@ -81,6 +81,40 @@ def playing_days(conn: sqlite3.Connection, year: int) -> dict[str, str]:
     return {k: " ".join(str(n) for n in sorted(v)) for k, v in days.items()}
 
 
+def venue_days(conn: sqlite3.Connection, year: int) -> dict[str, str]:
+    """
+    Dates the festival has no allocation left for, in the same offset form.
+
+    Kept apart from the bookable ones because they answer a different question.
+    The festival's own message for these reads "no ticket allocation remaining,
+    please check with the venue box office" — so a reader may still get in, but
+    not through the box office this filter otherwise speaks for. Offering them
+    by default would overstate what we know; hiding them entirely conceals a
+    real chance of a ticket. So they are carried separately and shown on
+    request.
+    """
+    from datetime import date as _date
+
+    base = _date(year, 8, 1).toordinal()
+    days: dict[str, set[int]] = {}
+    try:
+        rows = conn.execute(
+            """SELECT p.show_id, p.date FROM performances p
+                 JOIN shows s ON s.id = p.show_id
+                WHERE s.year = ? AND p.status = ?""",
+            (year, programme.VIA_VENUE),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return {}
+    for show_id, when in rows:
+        try:
+            offset = _date(*map(int, when.split("-"))).toordinal() - base
+        except (TypeError, ValueError):
+            continue
+        days.setdefault(show_id, set()).add(offset)
+    return {k: " ".join(str(n) for n in sorted(v)) for k, v in days.items()}
+
+
 def playing_dates(year: int, days: dict[str, str]) -> list[tuple[int, str]]:
     """
     Every date the board has a show on, as (offset, "Sat 16 Aug").
@@ -264,7 +298,10 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
         hours = [f"{(9 + i) % 24:02d}:00" for i in range(24)]
         genre_sections, genre_subs = genres.options(ranked + rest)
         playing = playing_days(conn, this_year)
-        dates = playing_dates(this_year, playing)
+        viavenue = venue_days(conn, this_year)
+        dates = playing_dates(this_year, {**playing, **{
+            k: (playing.get(k, '') + ' ' + v).strip()
+            for k, v in viavenue.items()}})
 
         def build(canonical: str) -> str:
             return template.render(
@@ -289,6 +326,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 genre_subs=genre_subs,
                 hours=hours,
                 playing=playing,
+                viavenue=viavenue,
                 playing_dates=dates,
                 playing_epoch=f"{this_year}-08-01",
             )

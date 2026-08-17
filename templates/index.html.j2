@@ -210,6 +210,32 @@
   .picker-list .picker-rule { height: 1px; background: var(--rule); margin: .15rem 0; }
   .picker-empty { padding: .5rem .55rem; font-size: .85rem; color: var(--muted); }
   .filters .times { display: flex; align-items: center; gap: .35rem; }
+  /* Times and tickets side by side, with the checkbox under both — they are one
+     question about when, and splitting them across the panel made them read as
+     three unrelated controls. */
+  .filters .whenrow {
+    display: flex; flex-wrap: wrap; align-items: end; gap: .45rem .8rem;
+    flex: 1 1 100%;
+  }
+  /* "Starts between" sits above its boxes and "Tickets available" beside its
+     own, so the two labels never shared a baseline and the row broke. Both are
+     laid out the same way here: label on top, controls under. */
+  .filters .whenrow label.inline {
+    flex-direction: column; align-items: start; gap: .1rem; white-space: normal;
+  }
+  .filters .whenrow label.inline select { max-width: 11rem; }
+  .filters label.check {
+    flex: 1 1 100%; flex-direction: row; align-items: center; gap: .4rem;
+    font-size: .82rem;
+  }
+  /* The hour boxes only ever hold "09:00" or "Any time", so the 15rem the other
+     controls use is nine tenths air.
+     Sized on the PICKER BUTTON, not the select. The selects here are
+     display:none — iOS ignores author CSS on a native dropdown, so these are
+     drawn as buttons — and styling the hidden element did nothing at all while
+     appearing to work. */
+  .filters .times .picker > button.picker-open { width: 7.4rem; min-width: 0; }
+  .filters label.check input { margin: 0; }
   /* Label beside the box rather than above it. "Tickets available" is the
      longest label of the four, and stacked it pushed the panel a row taller
      while leaving most of that row empty. Sized to content so it does not
@@ -398,6 +424,7 @@
       <span class="chosen" id="f-genre-chosen"></span>
     </label>
     {% endif %}
+    <div class="whenrow">
     <label class="span">Starts between
       <span class="times">
         {#- Whole hours rather than a time picker: show times are only useful
@@ -416,36 +443,34 @@
         </select>
       </span>
     </label>
-    {#- Under the times, and set on one line: its label is the longest of the
-        four and stacked it made the panel a row taller for no gain.
-
-        The dates come from the programme's own per-performance status — the
-        field behind the calendar on a show's page — so this says what that
-        calendar says. A date counts when a ticket can be bought for it, from
-        whoever sells it. That includes "no allocation, contact venue", a third
-        of all performances, which means the venue sells its own rather than
-        that there are none: four of the current top twelve are entirely that
-        status and every one of them is bookable. Only cancelled dates are
-        excluded. -#}
+    {#- Beside the times, because both ask when. The dates come from the
+        programme's own per-performance status — the field behind the calendar
+        on a show's page — so this says what that calendar says. -#}
     {% if playing %}
     <label class="inline">Tickets available
       <select id="f-playing">
-        {#- "Any date" is the neutral state and filters nothing: the board
-            lists what was acclaimed, whether or not it is still selling. The
-            dates below answer the ticket question. -#}
+        {#- "Any date" is the neutral state and filters nothing: the board lists
+            what was acclaimed, whether or not it is still selling. The dates
+            below answer the ticket question. -#}
         <option value="">Any date</option>
         <option value="today">Today</option>
-        {#- Every date the board has a show on. Dates already past are removed
-            by the browser on load, against its own clock, because which ones
-            have gone depends on when the page is read rather than when it was
-            written. -#}
         <option value="" disabled>──────────</option>
         {% for offset, label in playing_dates %}
         <option value="d{{ offset }}">{{ label }}</option>
         {% endfor %}
       </select>
     </label>
+    {#- Off by default, because "no allocation remaining" is the festival saying
+        it cannot sell you one. Its own message adds "please check with the
+        venue box office", so the chance is real but it is not ours to promise —
+        which is why this is a choice the reader makes rather than an assumption
+        we make for them. -#}
+    <label class="check">
+      <input type="checkbox" id="f-venue-too">
+      Include no Fringe allocation (check venue)
+    </label>
     {% endif %}
+    </div>
     <button type="button" id="f-clear">Clear</button>
 
   </div>
@@ -464,6 +489,7 @@
          data-venue="{{ show.venue }}" data-vgroup="{{ venue_group(show.venue) }}"
          data-genres="{{ genre_keys(show)|join(';') }}"
          data-days="{{ playing.get(show.id, '') }}"
+         data-vdays="{{ viavenue.get(show.id, '') }}"
          data-start="{{ show.start_minutes }}">
   <div class="pos">{{ position }}</div>
   <div class="body">
@@ -499,6 +525,7 @@
        data-venue="{{ show.venue }}" data-vgroup="{{ venue_group(show.venue) }}"
        data-genres="{{ genre_keys(show)|join(';') }}"
        data-days="{{ playing.get(show.id, '') }}"
+       data-vdays="{{ viavenue.get(show.id, '') }}"
        data-start="{{ show.start_minutes }}">
     {{ show.title }}
     {% for review in show.reviews %}
@@ -583,6 +610,7 @@
   var fTo = document.getElementById('f-to');
   var fClear = document.getElementById('f-clear');
   var fPlaying = document.getElementById('f-playing');
+  var fVenueToo = document.getElementById('f-venue-too');
 
   rows.forEach(function (r) {
     r.venue = r.el.getAttribute('data-venue') || '';
@@ -598,6 +626,10 @@
     // typed into the search box was the one thing that could make it stutter.
     var days = r.el.getAttribute('data-days') || '';
     r.days = days ? days.split(' ').map(Number) : [];
+    // Dates the festival has no allocation for. Kept apart so the reader can
+    // decide whether "the venue might" counts as available.
+    var vdays = r.el.getAttribute('data-vdays') || '';
+    r.vdays = vdays ? vdays.split(' ').map(Number) : [];
   });
 
   // Today, as the same offset. Computed in the browser rather than baked in at
@@ -628,6 +660,7 @@
     var from = fFrom ? minutes(fFrom.value) : null;
     var to = fTo ? minutes(fTo.value) : null;
     var when = fPlaying ? fPlaying.value : '';
+    var venueToo = !!(fVenueToo && fVenueToo.checked);
     var today = fPlaying ? todayOffset() : 0;
     var hits = 0;
     for (var i = 0; i < rows.length; i++) {
@@ -666,12 +699,15 @@
       // show we hold no calendar for goes then, because claiming it plays that
       // night is a claim we cannot make.
       if (show && when) {
-        if (!r.days.length) {
+        // With the box ticked, a date the festival cannot sell counts too: its
+        // own message says to try the venue box office.
+        var on = venueToo && r.vdays.length ? r.days.concat(r.vdays) : r.days;
+        if (!on.length) {
           show = false;
         } else if (when === 'today') {
-          show = r.days.indexOf(today) !== -1;
+          show = on.indexOf(today) !== -1;
         } else {
-          show = r.days.indexOf(parseInt(when.slice(1), 10)) !== -1;
+          show = on.indexOf(parseInt(when.slice(1), 10)) !== -1;
         }
       }
       // A show with no known time cannot satisfy a time window. Hiding it is
@@ -963,7 +999,7 @@
     });
   }
 
-  [fFrom, fTo, fPlaying].forEach(function (el) {
+  [fFrom, fTo, fPlaying, fVenueToo].forEach(function (el) {
     if (el) el.addEventListener('change', apply);
   });
 
@@ -1149,6 +1185,7 @@
       reset(fFrom);
       reset(fTo);
       reset(fPlaying);
+      if (fVenueToo) fVenueToo.checked = false;
       apply();          // Clear means clear: back to every show, not back to "from now"
       // And put the panel away. Clear is the last thing anyone does in it, and
       // leaving it open hides the list they have just asked to see all of.
