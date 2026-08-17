@@ -108,7 +108,8 @@ def report(conn: sqlite3.Connection, publications: list[dict],
     # silent: the silence is the symptom and the failed fetch is the cause.
     named = {n for n, _ in dead}
     quiet = [(n, w) for n, w in quiet if n not in named]
-    broken = check_links(conn, collector) if collector is not None else []
+    broken = (check_links(conn, collector, publications)
+              if collector is not None else [])
     # Keyed on the kind of fault and the source, not the wording: "nothing for
     # 4 days" becomes "nothing for 5 days" tomorrow, and that is the same fault.
     current = {f"silent:{n}": ("Source silent", n, why) for n, why in quiet}
@@ -171,8 +172,8 @@ def _page_text(html: str) -> str:
     return re.sub(r"<[^>]+>", " ", html).lower()
 
 
-def check_links(conn: sqlite3.Connection, collector, per_publication: int = 2
-                ) -> list[tuple[str, str]]:
+def check_links(conn: sqlite3.Connection, collector, publications: list[dict],
+                per_publication: int = 2) -> list[tuple[str, str]]:
     """
     Fetch a few published links per publication and confirm the review is there.
 
@@ -187,6 +188,14 @@ def check_links(conn: sqlite3.Connection, collector, per_publication: int = 2
             url TEXT PRIMARY KEY, checked_at TEXT DEFAULT CURRENT_TIMESTAMP,
             ok INTEGER, detail TEXT)""")
 
+    # Publications whose pages render nothing server-side cannot be checked this
+    # way, and reporting them is worse than not checking: EdFringeReview's review
+    # pages are a 3.8KB shell with the text loaded afterwards from Firestore,
+    # which is exactly why it is collected through that API. Looking for the show
+    # name in the HTML will never find it, so every sample "led nowhere" and the
+    # sweep failed every run on a fault that did not exist.
+    unreadable = {p["name"] for p in publications if p.get("api")}
+
     rows = conn.execute("""
         SELECT r.url, r.publication, r.headline
         FROM reviews r LEFT JOIN link_checks c ON c.url = r.url
@@ -195,6 +204,8 @@ def check_links(conn: sqlite3.Connection, collector, per_publication: int = 2
 
     picked: dict[str, list] = {}
     for url, pub, headline in rows:
+        if pub in unreadable:
+            continue
         got = picked.setdefault(pub, [])
         if len(got) < per_publication:
             got.append((url, headline))
