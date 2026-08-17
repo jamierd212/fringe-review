@@ -176,15 +176,23 @@ class Show:
         return (c[5] + c[4]) > 0
 
 
-# What each rating is worth when ordering the board. A five is worth two, a four
-# one, and everything below zero costs: a three is -1, a two -2, a one -3.
+# What each rating is worth when ordering the board. A five is worth three, a
+# four one, and everything below zero costs: a three is -1, a two -2, a one -3.
 #
-# The asymmetry is the point. Three stars is a mild review, not a neutral one, so
-# a show that collects a lot of them should not climb on volume alone — which is
-# what the previous rule allowed, because it counted only golds and silvers and
-# treated threes as a tiebreak. Cathy stood above Jitters on twelve reviews
-# averaging 3.9 against seven averaging 4.3.
-POINTS = {5: 2, 4: 1, 3: -1, 2: -2, 1: -3}
+# Two asymmetries, both deliberate.
+#
+# Downwards: three stars is a mild review, not a neutral one, so a show cannot
+# climb on volume alone. That is what the previous Olympic key allowed — it read
+# golds, then silvers, and stopped at the first difference, so everything below
+# was free. Cathy stood eighth on twelve reviews averaging 3.9, above Jitters on
+# seven averaging 4.3.
+#
+# Upwards: a five is worth three fours rather than two. At 5=2 the sum let ten
+# good-not-great reviews outrank a shorter excellent record — The Singer reached
+# third on 4.20 with two fives and eight fours, above Elf Lyons on 4.83. Widening
+# the gap says a rave is a different kind of thing from a recommendation, not
+# merely more of one.
+POINTS = {5: 3, 4: 1, 3: -1, 2: -2, 1: -3}
 
 
 def score(show: Show) -> int:
