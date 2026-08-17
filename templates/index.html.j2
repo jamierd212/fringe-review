@@ -217,16 +217,38 @@
     display: flex; flex-wrap: wrap; align-items: end; gap: .45rem .8rem;
     flex: 1 1 100%;
   }
-  /* "Starts between" sits above its boxes and "Tickets available" beside its
-     own, so the two labels never shared a baseline and the row broke. Both are
-     laid out the same way here: label on top, controls under. */
+  /* Both labels sit above their controls, so the two dropdowns land on one
+     line rather than the labels doing. The row aligns on its TOP edge for the
+     same reason: with align-items:end the tickets column, being taller by a
+     checkbox, pushed its dropdown down and the two boxes no longer lined up. */
+  .filters .whenrow { align-items: start; }
   .filters .whenrow label.inline {
     flex-direction: column; align-items: start; gap: .1rem; white-space: normal;
+    flex: 0 0 auto;
   }
   .filters .whenrow label.inline select { max-width: 11rem; }
+  /* The checkbox belongs to the ticket dates, not to the row, so it stays in
+     their column and reads as qualifying that control.
+     Wrapping rather than stacking: beside the dropdown where the panel is wide
+     enough, dropping underneath where it is not. The nowrap keeps the phrase
+     whole, so the break happens between the two controls and never inside the
+     sentence. */
+  .filters .tickets {
+    display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .6rem;
+    /* Takes whatever the times leave and wraps inside it, so the checkbox sits
+       beside the dropdown when the panel is wide and drops beneath it when it
+       is not — without ever pushing the dropdown itself off the times' line.
+       min-width is the dropdown's own width, so the column can shrink to that
+       and no further. */
+    /* An explicit basis, not auto: auto measures the column at its full content
+       width — dropdown AND checkbox side by side — so the whole block was too
+       wide to sit beside the times and dropped to its own row. Sized to the
+       dropdown alone, it fits beside them and the checkbox wraps inside it. */
+    flex: 1 1 11rem; min-width: 11rem;
+  }
   .filters label.check {
-    flex: 1 1 100%; flex-direction: row; align-items: center; gap: .4rem;
-    font-size: .82rem;
+    flex-direction: row; align-items: center; gap: .4rem;
+    font-size: .8rem; white-space: nowrap;
   }
   /* The hour boxes only ever hold "09:00" or "Any time", so the 15rem the other
      controls use is nine tenths air.
@@ -252,6 +274,10 @@
     align-self: end;
   }
   .filters #f-clear:hover { border-color: var(--ink); color: var(--ink); }
+  /* Inside the when-row, on the same line as the controls it clears, rather
+     than alone underneath them. align-self overrides the row's top alignment so
+     it sits with the boxes and not with their labels. */
+  .filters .whenrow #f-clear { align-self: start; margin-top: 1.35rem; }
   /* Chosen genres, listed under the picker so several can be held at once.
      The whole chip is the remove button: there is no other action it could
      have, and a separate × is a small target on a phone. */
@@ -447,6 +473,7 @@
         programme's own per-performance status — the field behind the calendar
         on a show's page — so this says what that calendar says. -#}
     {% if playing %}
+    <div class="tickets">
     <label class="inline">Tickets available
       <select id="f-playing">
         {#- "Any date" is the neutral state and filters nothing: the board lists
@@ -469,9 +496,10 @@
       <input type="checkbox" id="f-venue-too">
       Include no Fringe allocation (check venue)
     </label>
-    {% endif %}
     </div>
+    {% endif %}
     <button type="button" id="f-clear">Clear</button>
+    </div>
 
   </div>
   {% endif %}
