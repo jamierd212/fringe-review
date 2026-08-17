@@ -6,11 +6,7 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| EdFringeReview | [Shoot From The Hip](https://www.edfringereview.com/review/r/rE4cchhRWYGihjKrsnVx) | Shoot From The Hip | 74% |
-| The Reviews Hub | [Edinburgh Fringe 2026: Good Girl – Blether at Gilded Balloon Patter House, Edinburgh](https://www.thereviewshub.com/edinburgh-fringe-2026-good-girl-blether-at-gilded-balloon-patter-house-edinburgh/) | Good Girl | 82% |
-| FringeReview | [Ben Hart: Labyrinth](https://fringereview.co.uk/review/edinburgh-fringe/2026/ben-hart-labyrinth/) | Labyrinth | 86% |
-| The Student | [MC Hammersmith: Ice Ice Baby](https://thestudentnews.co.uk/2026/08/16/fringe-2026-mc-hammersmith-ice-ice-baby/) | Ice Ice Baby | 86% |
-| One4Review | [Rob Preston: Amazing Global Solutions   4★★★★½](https://one4review.co.uk/2026/08/rob-preston-amazing-global-solutions-4%e2%98%85%e2%98%85%e2%98%85%e2%98%85%c2%bd/) | Rob Preston: Amazing Global Solutions | 95% |
+| BroadwayWorld | [DANNY O'BRIEN: SURE LOOK](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-DANNY-OBRIEN-SURE-LOOK-BE-GRAND-The-Comedy-Attic-The-Beehive-Inn-20260817) | Danny O'Brien: Sure Look, Be Grand. | 95% |
 
 ## Held — not on the leaderboard
 
