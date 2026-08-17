@@ -187,12 +187,13 @@ class Show:
 # was free. Cathy stood eighth on twelve reviews averaging 3.9, above Jitters on
 # seven averaging 4.3.
 #
-# Upwards: a five is worth three fours rather than two. At 5=2 the sum let ten
-# good-not-great reviews outrank a shorter excellent record — The Singer reached
-# third on 4.20 with two fives and eight fours, above Elf Lyons on 4.83. Widening
-# the gap says a rave is a different kind of thing from a recommendation, not
-# merely more of one.
-POINTS = {5: 3, 4: 1, 3: -1, 2: -2, 1: -3}
+# Upwards: a five is worth four fours. At 5=2 the sum let ten good-not-great
+# reviews outrank a shorter excellent record — The Singer reached third on 4.20
+# with two fives and eight fours, above Elf Lyons on 4.83. At 5=3 that was
+# corrected but four unbeaten records of three fives each still sat below a show
+# averaging 3.9 on twelve reviews. A rave is a different kind of thing from a
+# recommendation, and the gap has to be wide enough to say so.
+POINTS = {5: 4, 4: 1, 3: -1, 2: -2, 1: -3}
 
 
 def score(show: Show) -> int:
