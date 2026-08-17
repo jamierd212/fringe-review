@@ -285,8 +285,18 @@ def from_numeric(text: str) -> Rating | None:
     # a boundary that is not another word, is what separates a rating from a
     # sentence: "These two star performers" was read as two stars and published
     # as the rating for a show the same publication had given three.
-    m = re.search(r"\b(one|two|three|four|five|[1-5])[\s-]+stars\b"
-                  r"|\b(one|two|three|four|five|[1-5])[\s-]+star\b(?!\s+\w)",
+    # A decimal first: "4.3 stars" is a real thing some publications write, and
+    # reading it as a whole number picks the WRONG digit. The \b in the pattern
+    # below sits happily between "." and "3", so "4.3 stars" was published as
+    # three stars — a full star and a bit below what the reviewer gave. Matched
+    # here and rounded down, which is what the site says it does with ratings on
+    # other scales.
+    m = re.search(r"\b(\d\.\d+)\s*stars?\b", text, re.I)
+    if m:
+        return _make(float(m.group(1)), 5, f"{m.group(1)} stars", "words")
+
+    m = re.search(r"(?<![.\d])\b(one|two|three|four|five|[1-5])[\s-]+stars\b"
+                  r"|(?<![.\d])\b(one|two|three|four|five|[1-5])[\s-]+star\b(?!\s+\w)",
                   text, re.I)
     if m:
         value = WORD_NUMBERS[(m.group(1) or m.group(2)).lower()]
