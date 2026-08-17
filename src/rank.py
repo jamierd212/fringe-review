@@ -176,36 +176,46 @@ class Show:
         return (c[5] + c[4]) > 0
 
 
+# What each rating is worth when ordering the board. A five is worth two, a four
+# one, and everything below zero costs: a three is -1, a two -2, a one -3.
+#
+# The asymmetry is the point. Three stars is a mild review, not a neutral one, so
+# a show that collects a lot of them should not climb on volume alone — which is
+# what the previous rule allowed, because it counted only golds and silvers and
+# treated threes as a tiebreak. Cathy stood above Jitters on twelve reviews
+# averaging 3.9 against seven averaging 4.3.
+POINTS = {5: 2, 4: 1, 3: -1, 2: -2, 1: -3}
+
+
+def score(show: Show) -> int:
+    """The show's total under POINTS. Order only; never displayed."""
+    return sum(POINTS[stars] * n for stars, n in show.counts.items() if stars in POINTS)
+
+
 def rank_key(show: Show) -> tuple:
     """
     Sort key. Python compares tuples left to right, and negating a number turns
     an ascending sort into a descending one.
 
-    Olympic, with medals that can be taken away. A 5-star review is a gold and a
-    4-star a silver, exactly as before — any gold still outranks any number of
-    silvers. What is new is that poor reviews cancel them: a 1-star cancels a
-    gold, a 2-star cancels a silver, and 3-stars break ties. So a show with two
-    5-star reviews and a 1-star now ranks below a show with a single clean
-    5-star, which is the honest reading of its record.
+    A points total, then the average, then the title so the order is stable.
 
-    This replaces total review count as the tiebreak, which had it backwards:
-    among shows with identical 5- and 4-star records, the one with an EXTRA
-    3-star review ranked higher, because more reviews counted as better. That
-    put a show averaging 4.0 above one averaging 4.5.
+    This replaces an Olympic ordering — golds, then silvers, with ones and twos
+    cancelling them — which had a flaw worth recording. Lexicographic ordering
+    stops at the first difference, so a single extra five-star settled a
+    comparison outright and everything below it was never read. A show could
+    gather any number of middling reviews without cost.
 
-    Deliberately NOT a points sum. Scoring 5s and 4s as +3/+2 and summing lets
-    three silvers outrank a gold: on the 2025 data it put a show with no 5-star
-    reviews at all into the top 12, and pushed a perfect three-5-star record
-    into second place. Lexicographic ordering is what makes this Olympic.
+    The old docstring warned that a points sum lets three silvers outrank a gold,
+    and that is still true here: two fours (+2) beat one five (+2) on the average
+    tiebreak. What has changed is that the sum can go DOWN. Threes, twos and ones
+    all subtract, so volume is only an advantage while the reviews are good, and
+    a show cannot climb by being widely seen and mildly liked.
 
-    The displayed figure stays the plain average, which is a fact about the
-    show. This key decides order only — it is not a score anyone is shown.
+    The displayed figure stays the plain average, which is a fact about the show.
+    This decides order only — it is not a score anyone is shown.
     """
-    c = show.counts
     return (
-        -(c[5] - c[1]),             # golds, less the 1-star reviews that cancel them
-        -(c[4] - c[2]),             # then silvers, less the 2-stars
-        c[3],                       # then fewest 3-star reviews
+        -score(show),               # best total first
         -show.mean,                 # then the better average
         show.title.casefold(),      # then alphabetical, so the order is stable
     )
