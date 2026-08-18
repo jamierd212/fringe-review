@@ -6,7 +6,8 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| Musical Theatre Review | [The 25th Annual Putnam County Spelling Bee](https://musicaltheatrereview.com/the-25th-annual-putnam-county-spelling-bee-edinburgh-festival-fringe/) | The 25th Annual Putnam County Spelling Bee | 75% |
+| Broadway Baby | [PACE](https://broadwaybaby.com/shows/a-deeply-human-performance/837668) | PACE | 75% |
+| Broadway Baby | [Argonauts](https://broadwaybaby.com/shows/interesting-and-engaging-theatre-about-theatre/834122) | Argonauts | 89% |
 
 ## Held — not on the leaderboard
 
