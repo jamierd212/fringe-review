@@ -926,22 +926,6 @@ publications:
       so require_edinburgh applies, and award announcements are excluded because
       "Hot Mess wins Best Musical Award" scored five stars against the real show.
 
-  - name: WhatsOnStage
-    slug: whatsonstage
-    homepage: https://www.whatsonstage.com/
-    feed: https://www.whatsonstage.com/rss.xml
-    rating:
-      type: auto            # star characters on the review page
-    fetch_page: true
-    require_edinburgh: true
-    pages: 1
-    verified: 2026-08-03
-    notes: >
-      A rolling 50-item feed with no date archive, mostly casting news and
-      listicles — only 1 of 6 sampled items was a rated review. Included because
-      it is a significant theatre publication and the cost of checking is one
-      request a day, not because the yield is high.
-
   - name: Voice Magazine
     slug: voicemag
     homepage: https://www.voicemag.uk/

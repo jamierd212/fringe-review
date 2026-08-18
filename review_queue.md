@@ -4,16 +4,7 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-| Publication | Headline | Matched to | Confidence |
-|---|---|---|---|
-| FringeReview | [Fake](https://fringereview.co.uk/review/edinburgh-fringe/2026/fake/) | Fake | 75% |
-| The Skinny | [Sami Abu Wardeh @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/sami-abu-wardeh-pleasance-courtyard) | Sami Abu Wardeh | 75% |
-| The Reviews Hub | [Edinburgh Fringe 2026: This is not America – Pleasance Courtyard, Edinburgh](https://www.thereviewshub.com/edinburgh-fringe-2026-this-is-not-america-pleasance-courtyard-edinburgh/) | This is not America | 80% |
-| The Skinny | [Rory Cargill @ Assembly George Square](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/rory-cargill-assembly-george-square) | Rory Cargill | 80% |
-| The Skinny | [Harriet Richardson @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/harriet-richardson-pleasance-courtyard) | Harriet Richardson | 86% |
-| One4Review | [Ania Magliano:Peach fuzz  4★★★★½](https://one4review.co.uk/2026/08/ania-maglianopeach-fuzz-4%e2%98%85%e2%98%85%e2%98%85%e2%98%85%c2%bd/) | Ania Magliano: Peach Fuzz | 92% |
-| ThreeWeeks Edinburgh | [A Microscopic Odessey](https://threeweeksedinburgh.com/article/a-microscopic-odessey-mycelium-theatre-company/) | A Microscopic Odyssey | 95% |
-| One4Review | [Is Pepsi Okay? Gareth Waugh 4 ½ ****](https://one4review.co.uk/2026/08/is-pepsi-okay-gareth-waugh-4-%c2%bd/) | Gareth Waugh: Is Pepsi OK? | 96% |
+_Nothing to check. 🎉_
 
 ## Held — not on the leaderboard
 
@@ -23,6 +14,8 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Broadway Baby | [Britain\u2019s Got Nonsense](https://broadwaybaby.com/shows/this-play-is-crying-out-for-farce/834408) | not in any programme; no AI check available |
+| Broadway Baby | [Only Bones \u2013 Daniel Nodder](https://broadwaybaby.com/shows/only-bones-daniel-nodder/833238) | not in any programme; no AI check available |
 | The QR | [Owl at Home](https://theqr.co.uk/2026/08/18/edfringe-review-owl-at-home-theatr-iolo-2/) | This appears to be a book or story title rather than a review of a named show at an Edinburgh festival. |
 | The QR | [The Very Best of Tommy Cooper](https://theqr.co.uk/2026/08/18/edfringe-review-the-very-best-of-tommy-cooper-just-like-that-2/) | This appears to be a compilation or retrospective of Tommy Cooper material rather than a review of a single named show at an Edinburgh festival. |
 | A Young(ish) Perspective | [The Durham Review: Raiders of the Lost Laughs](https://ayoungishperspective.co.uk/2026/08/18/review-the-durham-review-raiders-of-the-lost-laughs-belly-dancer-at-underbelly-cowgate/) | This appears to be a round-up or series review rather than a review of one named show at an Edinburgh festival. |
@@ -221,5 +214,3 @@ table and re-run `python run.py --match` to let it back in.
 | One4Review | [Phil Ellis – Bath Mat 4.5 ⭐️⭐️⭐️⭐️.5](https://one4review.co.uk/2026/08/phil-ellis-bath-mat-4-5-%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f-5/) | This appears to be a brief rating snippet rather than a review article of a specific show at an Edinburgh festival. |
 | All Edinburgh Theatre | [Where Are All the Tall Grandmas?](https://www.alledinburghtheatre.com/where-are-all-the-tall-grandmas-monkey-barrel-comedy-edfringe-2026-review/) | This headline does not identify a specific show, performance, or exhibition at an Edinburgh festival. |
 | All Edinburgh Theatre | [An Infinite Monkey Attempts To Write the Complete Works of Shakespeare](https://www.alledinburghtheatre.com/an-infinite-monkey-eusc-greenside-george-street-edfringe-2026-review/) | This headline appears to be a playful or metaphorical title without indicating it reviews a specific named show at an Edinburgh festival. |
-| The Scotsman | [best edinburgh fringe comedy 2026 four five star shows reviews](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/best-edinburgh-fringe-comedy-2026-four-five-star-shows-reviews-8840196) | This is a round-up of multiple shows with ratings, not a review of a single named show. |
-| WhatsOnStage | [Ariana Grande’s stage exit, Trainspotting’s fate and top shows at the Edinburgh Festivals](https://www.whatsonstage.com/news/ariana-grandes-stage-exit-trainspottings-fate-and-top-shows-at-the-edinburgh-festivals_1728828/) | This is a round-up covering multiple topics and shows rather than a review of a single named show. |
