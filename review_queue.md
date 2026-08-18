@@ -6,27 +6,14 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| EdFringeReview | [Shoot From The Hip](https://www.edfringereview.com/review/r/rE4cchhRWYGihjKrsnVx) | Shoot From The Hip | 74% |
-| BroadwayWorld | [LANDSFRAU](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-LANDSFRAU-TechCube-0-Summerhall-20260817) | LANDSFRAU هموطن | 75% |
-| The Skinny | [Demi Adejuyigbe @ Pleasance Dome](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/demi-adejuyigbe-pleasance-dome) | Demi Adejuyigbe | 75% |
-| One4Review | [Sherlock Holmes: The Death and Life   4****](https://one4review.co.uk/2026/08/sherlock-holmes-the-death-and-life-4/) | The Death and Life | 76% |
-| One4Review | [Out of the Blue– 5*****](https://one4review.co.uk/2026/08/out-of-the-blue-5-2/) | Out of the Blue | 76% |
-| Edinburgh Reviews | [Review: Dune! The Musical, Fringe 2026](https://edinburgh-reviews.co.uk/review-dune-the-musical-fringe-2026/) | Dune! The Musical | 77% |
-| The Skinny | [Paul Hilleard @ Monkey Barrel Comedy](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/paul-hilleard-monkey-barrel-comedy) | Paul Hilleard | 81% |
-| BroadwayWorld | [DANNY O'BRIEN: SURE LOOK](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-DANNY-OBRIEN-SURE-LOOK-BE-GRAND-The-Comedy-Attic-The-Beehive-Inn-20260817) | SURE LOOK | 84% |
-| The Reviews Hub | [Edinburgh Fringe 2026: Good Girl – Blether at Gilded Balloon Patter House, Edinburgh](https://www.thereviewshub.com/edinburgh-fringe-2026-good-girl-blether-at-gilded-balloon-patter-house-edinburgh/) | Good Girl 4. .5 | 85% |
-| The Student | [MC Hammersmith: Ice Ice Baby](https://thestudentnews.co.uk/2026/08/16/fringe-2026-mc-hammersmith-ice-ice-baby/) | MC Hammersmith: Ice Ice Nepo Baby | 85% |
-| FringeReview | [Ben Hart: Labyrinth](https://fringereview.co.uk/review/edinburgh-fringe/2026/ben-hart-labyrinth/) | Labyrinth | 86% |
-| The Stage | [Argonauts review at Edinburgh Fringe: execution is lacking](https://www.thestage.co.uk/reviews/argonauts-review-zoo-playground-edinburgh-technis) | Argonauts | 89% |
-| FringeReview | [Katie Norris: Mother Succubus](https://fringereview.co.uk/review/edinburgh-fringe/2026/katie-norris-mother-succubus/) | Mother Succubus 1⁄2 | 93% |
-| One4Review | [Rob Preston: Amazing Global Solutions   4★★★★½](https://one4review.co.uk/2026/08/rob-preston-amazing-global-solutions-4%e2%98%85%e2%98%85%e2%98%85%e2%98%85%c2%bd/) | Rob Preston: Amazing Global Solutions | 95% |
-| All Edinburgh Theatre | [Four Walls and a Roof (EIF)](https://www.alledinburghtheatre.com/four-walls-and-a-roof-lina-majdalanie-and-rabih-mroue-studio-theatre-eif-2026-review/) | Four Walls and a Roof | 95% |
-| Binge Fringe | [REVIEW: Aidan Greene: Stuttermilk Pancakes, Lisa Richards, EdFringe 2026](https://www.bingefringe.com/2026/08/17/review-aidan-greene-stuttermilk-pancakes-lisa-richards-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | Aidan Greene: Stuttermilk Pancakes | 95% |
-| The Skinny | [Maya Ricote @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/maya-ricote-pleasance-courtyard) | Maya Ricote: Ay Am! | 95% |
-| Corr Blimey | [Edinburgh Festival Fringe 2026 Review: Elf Lyons is The Women on the Edge](https://corrblimey.uk/2026/08/18/edinburgh-festival-fringe-2026-review-elf-lyons-is-the-women-on-the-edge-beyond-at-pleasance-courtyard/) | Elf Lyons is The Woman on the Edge | 96% |
-| Theatre Weekly | [Alan Bennett’s Talking Heads](https://theatreweekly.com/edinburgh-fringe-review-alan-bennetts-talking-heads-at-the-royal-scots-club-the-speakeasy/) | Alan Bennett's Talking Heads | 97% |
-| Edinburgh Festivals Magazine | [Heated Rivalry: The Unauthorized Musical Parody](https://edfestmag.com/heated-rivalry-the-unauthorized-musical-parody/) | Heated Rivalry: The Unauthorized Musical Parody | 98% |
-| One4Review | [Jordan Brookes: The Part of You That’s Always Screaming 4.5 ☆☆☆☆](https://one4review.co.uk/2026/08/jordan-brookes-the-part-of-you-thats-always-screaming-4-5-%e2%98%86%e2%98%86%e2%98%86%e2%98%86/) | Jordan Brookes: The Part of You That's Always Screaming | 98% |
+| FringeReview | [Fake](https://fringereview.co.uk/review/edinburgh-fringe/2026/fake/) | Fake | 75% |
+| The Skinny | [Sami Abu Wardeh @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/sami-abu-wardeh-pleasance-courtyard) | Sami Abu Wardeh | 75% |
+| The Reviews Hub | [Edinburgh Fringe 2026: This is not America – Pleasance Courtyard, Edinburgh](https://www.thereviewshub.com/edinburgh-fringe-2026-this-is-not-america-pleasance-courtyard-edinburgh/) | This is not America | 80% |
+| The Skinny | [Rory Cargill @ Assembly George Square](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/rory-cargill-assembly-george-square) | Rory Cargill | 80% |
+| The Skinny | [Harriet Richardson @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/harriet-richardson-pleasance-courtyard) | Harriet Richardson | 86% |
+| One4Review | [Ania Magliano:Peach fuzz  4★★★★½](https://one4review.co.uk/2026/08/ania-maglianopeach-fuzz-4%e2%98%85%e2%98%85%e2%98%85%e2%98%85%c2%bd/) | Ania Magliano: Peach Fuzz | 92% |
+| ThreeWeeks Edinburgh | [A Microscopic Odessey](https://threeweeksedinburgh.com/article/a-microscopic-odessey-mycelium-theatre-company/) | A Microscopic Odyssey | 95% |
+| One4Review | [Is Pepsi Okay? Gareth Waugh 4 ½ ****](https://one4review.co.uk/2026/08/is-pepsi-okay-gareth-waugh-4-%c2%bd/) | Gareth Waugh: Is Pepsi OK? | 96% |
 
 ## Held — not on the leaderboard
 
@@ -36,6 +23,10 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The QR | [Owl at Home](https://theqr.co.uk/2026/08/18/edfringe-review-owl-at-home-theatr-iolo-2/) | This appears to be a book or story title rather than a review of a named show at an Edinburgh festival. |
+| The QR | [The Very Best of Tommy Cooper](https://theqr.co.uk/2026/08/18/edfringe-review-the-very-best-of-tommy-cooper-just-like-that-2/) | This appears to be a compilation or retrospective of Tommy Cooper material rather than a review of a single named show at an Edinburgh festival. |
+| A Young(ish) Perspective | [The Durham Review: Raiders of the Lost Laughs](https://ayoungishperspective.co.uk/2026/08/18/review-the-durham-review-raiders-of-the-lost-laughs-belly-dancer-at-underbelly-cowgate/) | This appears to be a round-up or series review rather than a review of one named show at an Edinburgh festival. |
+| A Young(ish) Perspective | [A History of Paper](https://ayoungishperspective.co.uk/2026/08/18/review-a-history-of-paper/) | This headline lacks any indication of a specific show, performer, venue, or Edinburgh festival context. |
 | Binge Fringe | [REVIEW: A&E](https://www.bingefringe.com/2026/08/17/review-ae-wide-eye-productions-edinburgh-fringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | This appears to be a generic reference to the TV show 'A&E' (the television network/channel) rather than a specific named Edinburgh festival show or performance. |
 | The List | [Lambchop: Punching The Clown album review – Choral folk-country calm](https://list.co.uk/news/lambchop-punching-the-clown-album-review-choral-folk-country-calm-48550) | This is a music album review, not a review of a live performance or show at an Edinburgh festival. |
 | The List | [Teenage Sex And Death At Camp Miasma](https://list.co.uk/news/teenage-sex-and-death-at-camp-miasma-film-review-bloody-good-fun-48491) | This appears to be a title rather than a review headline, with no clear indication it reviews a specific Edinburgh festival show. |
@@ -232,7 +223,3 @@ table and re-run `python run.py --match` to let it back in.
 | All Edinburgh Theatre | [An Infinite Monkey Attempts To Write the Complete Works of Shakespeare](https://www.alledinburghtheatre.com/an-infinite-monkey-eusc-greenside-george-street-edfringe-2026-review/) | This headline appears to be a playful or metaphorical title without indicating it reviews a specific named show at an Edinburgh festival. |
 | The Scotsman | [best edinburgh fringe comedy 2026 four five star shows reviews](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/best-edinburgh-fringe-comedy-2026-four-five-star-shows-reviews-8840196) | This is a round-up of multiple shows with ratings, not a review of a single named show. |
 | WhatsOnStage | [Ariana Grande’s stage exit, Trainspotting’s fate and top shows at the Edinburgh Festivals](https://www.whatsonstage.com/news/ariana-grandes-stage-exit-trainspottings-fate-and-top-shows-at-the-edinburgh-festivals_1728828/) | This is a round-up covering multiple topics and shows rather than a review of a single named show. |
-| All Edinburgh Theatre | [EdFringe 2026: Cabaret, Comedy, Dance and Spoken Word](https://www.alledinburghtheatre.com/edfringe-2026-cabaret-comedy-dance-spoken-word-made-in-edinburgh-listings/) | This is an announcement or preview of the Fringe programme categories, not a review of a single named show. |
-| All Edinburgh Theatre | [Dragon Tales & Dragon Babies](https://www.alledinburghtheatre.com/dragon-tales-dragon-babies-lifecare-centre-edfringe-2026-review/) | This appears to be a generic title without clear review language, show context, or Edinburgh festival attribution. |
-| All Edinburgh Theatre | [EdFringe 2026: Grassroots Theatre](https://www.alledinburghtheatre.com/edfringe-2026-grassroots-theatre-made-in-edinburgh-listings/) | This appears to be an announcement or preview about the 2026 Fringe line-up rather than a review of one named show. |
-| All Edinburgh Theatre | [EdFringe 2026: Musicals and Opera](https://www.alledinburghtheatre.com/edfringe-2026-musicals-and-opera-made-in-edinburgh-listings/) | This is a round-up or listing of multiple shows in a category, not a review of a single named show. |
