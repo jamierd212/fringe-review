@@ -6,7 +6,10 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| Binge Fringe | [REVIEW: Steve Burns: Alive](https://www.bingefringe.com/2026/08/18/review-steve-burns-alive-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | Alive | 80% |
+| FringeReview | [Kinder](https://fringereview.co.uk/review/edinburgh-fringe/2026/kinder-2/) | Kinder | 75% |
+| The Skinny | [Ed Night @ Monkey Barrel Comedy](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/ed-night-monkey-barrel) | Ed Night | 77% |
+| The Skinny | [Christopher Hall @ Gilded Balloon Teviot: Fringe review](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/christopher-hall-gilded-balloon-teviot) | Christopher Hall | 82% |
+| A Young(ish) Perspective | [Carys Should be the UK’s Next Eurovision Entry  at Theatre 3 at theSpace](https://ayoungishperspective.co.uk/2026/08/19/review-carys-should-be-the-uks-next-eurovision-entry-at-theatre-3-at-thespace-surgeons-hall/) | Carys Should be the UK’s Next Eurovision Entry | 95% |
 
 ## Held — not on the leaderboard
 
@@ -16,6 +19,14 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The Scotsman | [Fringe comedy reviews: Dan Tiernan | Tom Cashman | Stephen Catling | Dee Allum | Thermos Museum Books + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-dan-tiernan-tom-cashman-stephen-catling-dee-allum-thermos-museum-books-more-8929077) | This is a round-up of multiple shows/acts, not a review of a single named show. |
+| The Scotsman | [Kleio Quartet, Makoto Ozone & Sheku Kanneh-Mason](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/edinburgh-international-festival-reviews-ihsane-cortoalto-kleio-quartet-makoto-ozone-sheku-kanneh-mason-8929301#kleio-quartet-makoto-ozone-and-sheku-kanneh-mason) | This appears to be a listing or announcement of multiple performers rather than a review of a single named show. |
+| BroadwayWorld | [GIRLFRIENDS-A NOT SO STRAIGHT PLAY](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-GIRLFRIENDS-A-NOT-SO-STRAIGHT-PLAY-Greenside-George-Street-20260819) | This appears to be a title or announcement rather than a review headline, lacking the language pattern typical of a festival review article. |
+| The Stage | [Jeeves Takes Charge review at the Charing Cross Theatre, London: Fun - if unfocused](https://www.thestage.co.uk/reviews/jeeves-takes-charge-review-charing-cross-theatre-london-sam-harrison-wodehouse) | This reviews a show at the Charing Cross Theatre in London, not at an Edinburgh festival. |
+| The Stage | [Anansi the Spider at the Picnic Lawn, Regent’s Park Open Air Theatre, London](https://www.thestage.co.uk/reviews/anansi-the-spider-review-picnic-lawn-regents-park-open-air-theatre-london) | This show is at Regent's Park in London, not at an Edinburgh festival. |
+| A Young(ish) Perspective | [Situationsh*t](https://ayoungishperspective.co.uk/2026/08/19/review-situationsht/) | This appears to be just a show title without any review context or indication it reviews a specific Edinburgh festival performance. |
+| A Young(ish) Perspective | [Mountains and Seas  at theSpace](https://ayoungishperspective.co.uk/2026/08/19/review-mountains-and-seas-at-thespace-niddry-street/) | The headline lacks clear review language and context indicating this is a festival review rather than just a venue name and show title. |
+| The Student | [SPF5000](https://thestudentnews.co.uk/2026/08/19/fringe-2026-spf5000/) | This appears to be a product name or acronym rather than a headline indicating a review of a named Edinburgh festival show. |
 | EdFringeReview | [Love in the Time of Fifth Grade](https://www.edfringereview.com/review/r/wfoGkwAAK62DxDFG4VjK) | This appears to be a generic title without clear indication it reviews a specific named show at an Edinburgh festival. |
 | Everything Theatre | [Firebrand](https://everything-theatre.co.uk/2026/08/review-firebrand-the-water-rats/) | This appears to be just a title with no context indicating it's a review of a specific Edinburgh festival show rather than a general headline or reference. |
 | Bouquets & Brickbats | [The End of Oak Street](https://bouquetsbrickbatsreviews.com/2026/08/19/the-end-of-oak-street/) | This appears to be a generic title rather than a review of a named Edinburgh festival show, with no clear indication it reviews a specific performance at an Edinburgh festival. |
@@ -208,11 +219,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Wee Review | [Blue Heron](https://theweereview.com/review/blue-heron/) | A single title with no context does not indicate this is a review of a show at an Edinburgh festival. |
 | The Wee Review | [Hold the Fort](https://theweereview.com/review/hold-the-fort/) | This headline lacks sufficient context to identify it as a review of a named Edinburgh festival show; it appears to be a generic title without clear indication of a specific performance or production. |
 | The Wee Review | [Garbage](https://theweereview.com/review/garbage/) | The headline 'Garbage' alone does not identify a specific named show or provide context indicating it reviews a single Edinburgh festival performance. |
-| The Wee Review | [Hot 8 Brass Band](https://theweereview.com/review/hot-8-brass-band/) | This is a band name with no indication that it's a review of a specific performance or appearance, lacking context about a festival show. |
-| The Wee Review | [Panda Bear & Sonic Boom – A ? of WHEN](https://theweereview.com/review/panda-bear-sonic-boom-a-of-when/) | This appears to be a music collaboration or album title rather than a review of a named show at an Edinburgh festival. |
-| The Wee Review | [Margaret Glaspy – I Am Both](https://theweereview.com/review/margaret-glaspy-i-am-both/) | This appears to be an album title rather than a review of a named Edinburgh festival show or performance. |
-| FringeReview | [Woody Sez: The Life & Music Of Woody Guthrie](https://fringereview.co.uk/review/edinburgh-fringe/2026/woody-sez-the-life-music-of-woody-guthrie/) | The headline lacks any indication this is a review of a show at an Edinburgh festival - it reads as a generic title without location, venue, or festival context. |
-| One4Review | [Kool & The Gang 4 ⭐️⭐️⭐️⭐️](https://one4review.co.uk/2026/08/kool-the-gang-4-%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f/) | This is a rating without context, likely part of a round-up or list rather than a review of a single identified show at an Edinburgh festival. |
-| Chortle | [Portrait Of A Tom As A Young Neenan](https://www.chortle.co.uk/review/2026/08/09/61233/portrait_of_a_tom_as_a_young_neenan) | This appears to be a title or reference to a work, but without context indicating it's a review of a named show at an Edinburgh festival, it reads more like a headline fragment or artwork title rather than a review article. |
-| FringeReview | [Blizzard (WIP)](https://fringereview.co.uk/review/edinburgh-fringe/2026/blizzard-wip/) | This appears to be a show title only with no review content, publication context, or Edinburgh festival confirmation, making it impossible to verify as a festival review. |
-| ThreeWeeks Edinburgh | [Spencer Jones: Dogs (Soho Theatre)](https://threeweeksedinburgh.com/article/spencer-jones-dogs-soho-theatre/) | This show is at Soho Theatre in London, not at an Edinburgh festival. |
