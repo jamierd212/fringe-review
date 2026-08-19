@@ -4,7 +4,9 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-_Nothing to check. 🎉_
+| Publication | Headline | Matched to | Confidence |
+|---|---|---|---|
+| Binge Fringe | [REVIEW: Steve Burns: Alive](https://www.bingefringe.com/2026/08/18/review-steve-burns-alive-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | Alive | 80% |
 
 ## Held — not on the leaderboard
 
@@ -14,6 +16,10 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| EdFringeReview | [Love in the Time of Fifth Grade](https://www.edfringereview.com/review/r/wfoGkwAAK62DxDFG4VjK) | This appears to be a generic title without clear indication it reviews a specific named show at an Edinburgh festival. |
+| Everything Theatre | [Firebrand](https://everything-theatre.co.uk/2026/08/review-firebrand-the-water-rats/) | This appears to be just a title with no context indicating it's a review of a specific Edinburgh festival show rather than a general headline or reference. |
+| Bouquets & Brickbats | [The End of Oak Street](https://bouquetsbrickbatsreviews.com/2026/08/19/the-end-of-oak-street/) | This appears to be a generic title rather than a review of a named Edinburgh festival show, with no clear indication it reviews a specific performance at an Edinburgh festival. |
+| All Edinburgh Theatre | [Doctor Faustus](https://www.alledinburghtheatre.com/doctor-faustus-edinburgh-festival-of-the-sacred-arts-st-johns-church-edfringe-2026-review/) | This is just a title with no context indicating it reviews a specific Edinburgh festival performance rather than being a news item, preview, or reference to the classical work itself. |
 | Broadway Baby | [Britain\u2019s Got Nonsense](https://broadwaybaby.com/shows/this-play-is-crying-out-for-farce/834408) | not in any programme; no AI check available |
 | Broadway Baby | [Only Bones \u2013 Daniel Nodder](https://broadwaybaby.com/shows/only-bones-daniel-nodder/833238) | not in any programme; no AI check available |
 | The QR | [Owl at Home](https://theqr.co.uk/2026/08/18/edfringe-review-owl-at-home-theatr-iolo-2/) | This appears to be a book or story title rather than a review of a named show at an Edinburgh festival. |
@@ -210,7 +216,3 @@ table and re-run `python run.py --match` to let it back in.
 | Chortle | [Portrait Of A Tom As A Young Neenan](https://www.chortle.co.uk/review/2026/08/09/61233/portrait_of_a_tom_as_a_young_neenan) | This appears to be a title or reference to a work, but without context indicating it's a review of a named show at an Edinburgh festival, it reads more like a headline fragment or artwork title rather than a review article. |
 | FringeReview | [Blizzard (WIP)](https://fringereview.co.uk/review/edinburgh-fringe/2026/blizzard-wip/) | This appears to be a show title only with no review content, publication context, or Edinburgh festival confirmation, making it impossible to verify as a festival review. |
 | ThreeWeeks Edinburgh | [Spencer Jones: Dogs (Soho Theatre)](https://threeweeksedinburgh.com/article/spencer-jones-dogs-soho-theatre/) | This show is at Soho Theatre in London, not at an Edinburgh festival. |
-| ThreeWeeks Edinburgh | [Bigfoot Ripped My Dog In Half I Saw It  (Xhloe and Natasha, Soho Theatre and SoHo Playhouse)](https://threeweeksedinburgh.com/article/bigfoot-ripped-my-dog-in-half-i-saw-it-xhloe-and-natasha-soho-theatre-and-soho-playhouse/) | This reviews a show at Soho Theatre and SoHo Playhouse, which are in London's West End, not at an Edinburgh festival. |
-| One4Review | [Phil Ellis – Bath Mat 4.5 ⭐️⭐️⭐️⭐️.5](https://one4review.co.uk/2026/08/phil-ellis-bath-mat-4-5-%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f-5/) | This appears to be a brief rating snippet rather than a review article of a specific show at an Edinburgh festival. |
-| All Edinburgh Theatre | [Where Are All the Tall Grandmas?](https://www.alledinburghtheatre.com/where-are-all-the-tall-grandmas-monkey-barrel-comedy-edfringe-2026-review/) | This headline does not identify a specific show, performance, or exhibition at an Edinburgh festival. |
-| All Edinburgh Theatre | [An Infinite Monkey Attempts To Write the Complete Works of Shakespeare](https://www.alledinburghtheatre.com/an-infinite-monkey-eusc-greenside-george-street-edfringe-2026-review/) | This headline appears to be a playful or metaphorical title without indicating it reviews a specific named show at an Edinburgh festival. |
