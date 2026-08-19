@@ -49,7 +49,7 @@ MIN_FUZZY_LEN = 8
 @dataclass
 class Verdict:
     admit: bool
-    tier: str                 # "programme" | "ai" | "held"
+    tier: str                 # "programme" | "ai" | "held" | "defer"
     reason: str
     festival: str | None = None
     url: str | None = None
@@ -84,9 +84,15 @@ class Gatekeeper:
 
         # No programme entry and no model available. Admitting would reopen the
         # hole; rejecting outright would throw away real shows on a day the API
-        # is down. Hold it, so the decision is deferred to a person.
-        self.counts["held"] += 1
-        return Verdict(False, "held", "not in any programme; no AI check available")
+        # is down. So it is deferred — but NOT recorded as a hold, because a hold
+        # is never reconsidered and this is not a decision. The check did not
+        # run; the answer is unknown, not no.
+        #
+        # Recording it as a hold condemned 99 reviews. They were refused by local
+        # runs on a machine with no API key, and the sweep — which has one —
+        # never looked at them again.
+        self.counts["deferred"] += 1
+        return Verdict(False, "defer", "no AI check available; will retry")
 
     def _in_programme(self, aliases: list[str]) -> tuple[str, str, str] | None:
         for alias in aliases:

@@ -113,6 +113,15 @@ def run(conn: sqlite3.Connection, year: int, gate: bool = True) -> dict[str, int
             # nothing is lost and the decision can be reversed by deleting the
             # hold and re-running --match.
             verdict = keeper.last_verdict
+            # A deferral is not a refusal. Where the admission check could not
+            # run — no model available — no hold is written and the review is
+            # left unmatched for a run that can answer. Writing one here made
+            # "we could not ask" permanent, because holds are never
+            # reconsidered: it condemned 99 reviews refused by local runs on a
+            # machine with no API key.
+            if verdict.tier == "defer":
+                counts["deferred"] = counts.get("deferred", 0) + 1
+                continue
             conn.execute(
                 """INSERT OR REPLACE INTO holds (url, headline, publication, reason)
                    VALUES (?, ?, ?, ?)""",
