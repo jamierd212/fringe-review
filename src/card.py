@@ -31,7 +31,7 @@ OUT = Path(__file__).resolve().parent.parent / "data" / "instagram"
 LOGO = Path(__file__).resolve().parent.parent / "assets" / "logo.png"
 WIDTH, HEIGHT = 1080, 1350
 TOP = 20
-LOGO_H = 190           # the height of the header block it sits beside
+LOGO_H = 205           # the height of the header block it sits beside
 ROWS_TOP = 266         # where the first white box starts
 # Fixed rather than derived from the space left over. Deriving it meant every
 # trim to the header silently made the rows TALLER, spreading the white space
