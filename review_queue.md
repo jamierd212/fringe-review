@@ -6,9 +6,11 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| Chortle | [After Arthur](https://www.chortle.co.uk/review/2026/08/20/61369/after_arthur) | After Arthur | 78% |
-| Corr Blimey | [Edinburgh Festival Fringe 2026 Review: Hareth Mutch Means Well](https://corrblimey.uk/2026/08/21/edinburgh-festival-fringe-2026-review-hareth-mutch-means-well-stand-1-at-the-stand-comedy-club/) | Gareth Mutch Means Well | 96% |
-| BroadwayWorld | [AN (EARLY) EVENING WITH GREGOR FISHER](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-AN-EARLY-EVENING-WITH-GREGOR-FISHER-Gilded-Balloon-20260821) | An (Early) Evening with Gregor Fisher .5 | 97% |
+| A Young(ish) Perspective | [In Other Words](https://ayoungishperspective.co.uk/2026/08/21/review-in-other-words-2/) | In Other Words | 93% |
+| Edinburgh Reviews | [Review: Tale of the Firebird – Concerto for Violin, Fire & Acrobatic Orchestra, Fringe 2026](https://edinburgh-reviews.co.uk/review-tale-of-the-firebird-concerto-for-violin-fire-acrobatic-orchestra-fringe-2026/) | Tale of the Firebird - Concerto for Violin, Fire & Acrobatic Orchestra physical | 94% |
+| British Theatre Guide | [The Big Bite-Size Breakfast Show: menu one](https://www.britishtheatreguide.info/reviews/the-big-bite-si-pleasance-court-25899) | The Big Bite-Size Breakfast Show | 95% |
+| Theatre Weekly | [MUSE: The Shakespeare Mayhem Musical at Underbelly, Bristo Square (Cowbarn)](https://theatreweekly.com/edinburgh-fringe-review-muse-the-shakespeare-mayhem-musical-at-underbelly-bristo-square-cowbarn/) | MUSE: The Shakespeare Mayhem Musical | 95% |
+| One4Review | [Rachel Fairburn : Vexy Beats 4****](https://one4review.co.uk/2026/08/rachel-fairburn-vexy-beats-4/) | Rachel Fairburn: Vexy Beasts | 98% |
 
 ## Held — not on the leaderboard
 
@@ -18,6 +20,11 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The Scotsman | [Fringe theatre reviews: Chip and Gus: A Comedy with Balls | The Trials of Magnus Coffinkey  + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-chip-and-gus-a-comedy-with-balls-the-trials-of-magnus-coffinkey-8933784) | This is a round-up of multiple shows, not a review of one named show. |
+| The Scotsman | [EIF music reviews:  Voices of Canada: Orchestre Symphonique de Montréal | Maxim Emelyanychev + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/eif-music-reviews-voices-of-canada-maxim-emelyanychev-derya-turkan-friends-8934417) | This is a round-up of multiple festival performances (indicated by '+ more'), not a review of a single named show. |
+| Everything Theatre | [The Waiting](https://everything-theatre.co.uk/2026/08/review-the-waiting-riverside-studios/) | This headline is too generic and lacks context about a specific show, performer, or venue at an Edinburgh festival. |
+| EdFringeReview | [Love in the Time of Fifth Grade](https://www.edfringereview.com/review/r/b08IzU39dh9VayutFReP) | This appears to be a generic title without clear indication it reviews a specific named show at an Edinburgh festival. |
+| The Stage | [A History of Paper at Pitlochry Festival Theatre: technically exquisite](https://www.thestage.co.uk/reviews/a-history-of-paper-review-pitlochry-festival-theatre) | Pitlochry Festival Theatre is in Pitlochry, Scotland, not Edinburgh, so this review is not of a show at an Edinburgh festival. |
 | The Wee Review | [Lambchop – Punching the Clown](https://theweereview.com/review/lambchop-punching-the-clown/) | This appears to be a song or album title rather than a review of a named show at an Edinburgh festival. |
 | The List | [Stop! That! Train!](https://list.co.uk/news/stop-that-train-film-review-a-gloriously-silly-ride-48923) | This headline is too generic to identify as a review of a specific named Edinburgh festival show; it lacks the context needed to confirm it reviews a particular performance. |
 | The Scotsman | [Fringe comedy reviews: Dane Buckley | Andrew White | Rob Auton | Sasha Nezlobin + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-dane-buckley-andrew-white-rob-auton-sasha-nezlobin-8933538) | This is a round-up reviewing multiple different shows and comedians, not a review of a single named show. |
@@ -213,8 +220,3 @@ table and re-run `python run.py --match` to let it back in.
 | FringeReview | [Blizzard (WIP)](https://fringereview.co.uk/review/edinburgh-fringe/2026/blizzard-wip/) | This appears to be a show title only with no review content, publication context, or Edinburgh festival confirmation, making it impossible to verify as a festival review. |
 | ThreeWeeks Edinburgh | [Spencer Jones: Dogs (Soho Theatre)](https://threeweeksedinburgh.com/article/spencer-jones-dogs-soho-theatre/) | This show is at Soho Theatre in London, not at an Edinburgh festival. |
 | ThreeWeeks Edinburgh | [Bigfoot Ripped My Dog In Half I Saw It  (Xhloe and Natasha, Soho Theatre and SoHo Playhouse)](https://threeweeksedinburgh.com/article/bigfoot-ripped-my-dog-in-half-i-saw-it-xhloe-and-natasha-soho-theatre-and-soho-playhouse/) | This reviews a show at Soho Theatre and SoHo Playhouse, which are in London's West End, not at an Edinburgh festival. |
-| One4Review | [Phil Ellis – Bath Mat 4.5 ⭐️⭐️⭐️⭐️.5](https://one4review.co.uk/2026/08/phil-ellis-bath-mat-4-5-%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f-5/) | This appears to be a brief rating snippet rather than a review article of a specific show at an Edinburgh festival. |
-| All Edinburgh Theatre | [Where Are All the Tall Grandmas?](https://www.alledinburghtheatre.com/where-are-all-the-tall-grandmas-monkey-barrel-comedy-edfringe-2026-review/) | This headline does not identify a specific show, performance, or exhibition at an Edinburgh festival. |
-| All Edinburgh Theatre | [An Infinite Monkey Attempts To Write the Complete Works of Shakespeare](https://www.alledinburghtheatre.com/an-infinite-monkey-eusc-greenside-george-street-edfringe-2026-review/) | This headline appears to be a playful or metaphorical title without indicating it reviews a specific named show at an Edinburgh festival. |
-| The Scotsman | [best edinburgh fringe comedy 2026 four five star shows reviews](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/best-edinburgh-fringe-comedy-2026-four-five-star-shows-reviews-8840196) | This is a round-up of multiple shows with ratings, not a review of a single named show. |
-| WhatsOnStage | [Ariana Grande’s stage exit, Trainspotting’s fate and top shows at the Edinburgh Festivals](https://www.whatsonstage.com/news/ariana-grandes-stage-exit-trainspottings-fate-and-top-shows-at-the-edinburgh-festivals_1728828/) | This is a round-up covering multiple topics and shows rather than a review of a single named show. |
