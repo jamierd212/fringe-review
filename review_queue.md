@@ -6,11 +6,7 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| A Young(ish) Perspective | [In Other Words](https://ayoungishperspective.co.uk/2026/08/21/review-in-other-words-2/) | In Other Words | 93% |
-| Edinburgh Reviews | [Review: Tale of the Firebird – Concerto for Violin, Fire & Acrobatic Orchestra, Fringe 2026](https://edinburgh-reviews.co.uk/review-tale-of-the-firebird-concerto-for-violin-fire-acrobatic-orchestra-fringe-2026/) | Tale of the Firebird - Concerto for Violin, Fire & Acrobatic Orchestra physical | 94% |
-| British Theatre Guide | [The Big Bite-Size Breakfast Show: menu one](https://www.britishtheatreguide.info/reviews/the-big-bite-si-pleasance-court-25899) | The Big Bite-Size Breakfast Show | 95% |
-| Theatre Weekly | [MUSE: The Shakespeare Mayhem Musical at Underbelly, Bristo Square (Cowbarn)](https://theatreweekly.com/edinburgh-fringe-review-muse-the-shakespeare-mayhem-musical-at-underbelly-bristo-square-cowbarn/) | MUSE: The Shakespeare Mayhem Musical | 95% |
-| One4Review | [Rachel Fairburn : Vexy Beats 4****](https://one4review.co.uk/2026/08/rachel-fairburn-vexy-beats-4/) | Rachel Fairburn: Vexy Beasts | 98% |
+| The Skinny | [Kate Dehnert @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/kate-dehnert-pleasance-courtyard) | Kate Dehnert: Echo | 85% |
 
 ## Held — not on the leaderboard
 
@@ -20,6 +16,10 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Theatre Weekly | [My Grandpa Doesn’t Follow Me On Instagram: A Guide To Trans-generational Road-Tripping](https://theatreweekly.com/edinburgh-fringe-review-my-grandpa-doesnt-follow-me-on-instagram-a-guide-to-trans-generational-road-tripping-at-underbelly-cowgate-jelly-belly/) | This appears to be a guide or article rather than a review of a specific named show at an Edinburgh festival. |
+| West End Best Friend | [FLY](https://www.westendbestfriend.co.uk/news/fringe-review-fly-you-fools-beyond-at-pleasance-courtyard) | A single word headline lacks sufficient context to identify a specific named show at an Edinburgh festival. |
+| A Young(ish) Perspective | [Latch](https://ayoungishperspective.co.uk/2026/08/21/review-latch/) | The headline is just a single word with no context indicating it reviews a named show at an Edinburgh festival. |
+| A Young(ish) Perspective | [Abigail’s Party](https://ayoungishperspective.co.uk/2026/08/21/review-abigails-party-2/) | This is a title alone with no context indicating it's a review of a show at an Edinburgh festival; it could be a classic play, a news item, or many other things. |
 | The Scotsman | [Fringe theatre reviews: Chip and Gus: A Comedy with Balls | The Trials of Magnus Coffinkey  + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-chip-and-gus-a-comedy-with-balls-the-trials-of-magnus-coffinkey-8933784) | This is a round-up of multiple shows, not a review of one named show. |
 | The Scotsman | [EIF music reviews:  Voices of Canada: Orchestre Symphonique de Montréal | Maxim Emelyanychev + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/eif-music-reviews-voices-of-canada-maxim-emelyanychev-derya-turkan-friends-8934417) | This is a round-up of multiple festival performances (indicated by '+ more'), not a review of a single named show. |
 | Everything Theatre | [The Waiting](https://everything-theatre.co.uk/2026/08/review-the-waiting-riverside-studios/) | This headline is too generic and lacks context about a specific show, performer, or venue at an Edinburgh festival. |
@@ -216,7 +216,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Wee Review | [Margaret Glaspy – I Am Both](https://theweereview.com/review/margaret-glaspy-i-am-both/) | This appears to be an album title rather than a review of a named Edinburgh festival show or performance. |
 | FringeReview | [Woody Sez: The Life & Music Of Woody Guthrie](https://fringereview.co.uk/review/edinburgh-fringe/2026/woody-sez-the-life-music-of-woody-guthrie/) | The headline lacks any indication this is a review of a show at an Edinburgh festival - it reads as a generic title without location, venue, or festival context. |
 | One4Review | [Kool & The Gang 4 ⭐️⭐️⭐️⭐️](https://one4review.co.uk/2026/08/kool-the-gang-4-%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f%e2%ad%90%ef%b8%8f/) | This is a rating without context, likely part of a round-up or list rather than a review of a single identified show at an Edinburgh festival. |
-| Chortle | [Portrait Of A Tom As A Young Neenan](https://www.chortle.co.uk/review/2026/08/09/61233/portrait_of_a_tom_as_a_young_neenan) | This appears to be a title or reference to a work, but without context indicating it's a review of a named show at an Edinburgh festival, it reads more like a headline fragment or artwork title rather than a review article. |
-| FringeReview | [Blizzard (WIP)](https://fringereview.co.uk/review/edinburgh-fringe/2026/blizzard-wip/) | This appears to be a show title only with no review content, publication context, or Edinburgh festival confirmation, making it impossible to verify as a festival review. |
-| ThreeWeeks Edinburgh | [Spencer Jones: Dogs (Soho Theatre)](https://threeweeksedinburgh.com/article/spencer-jones-dogs-soho-theatre/) | This show is at Soho Theatre in London, not at an Edinburgh festival. |
-| ThreeWeeks Edinburgh | [Bigfoot Ripped My Dog In Half I Saw It  (Xhloe and Natasha, Soho Theatre and SoHo Playhouse)](https://threeweeksedinburgh.com/article/bigfoot-ripped-my-dog-in-half-i-saw-it-xhloe-and-natasha-soho-theatre-and-soho-playhouse/) | This reviews a show at Soho Theatre and SoHo Playhouse, which are in London's West End, not at an Edinburgh festival. |
