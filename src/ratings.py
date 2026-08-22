@@ -271,7 +271,15 @@ def from_numeric(text: str) -> Rating | None:
     if m:
         value, maximum = float(m.group(1)), float(m.group(2))
         if maximum in (4, 5, 6, 10, 100):
-            return _make(value, maximum, f"{_tidy(value)}/{_tidy(maximum)}", "numeric")
+            # Only a rating that survives _make ends the search. A fraction shape
+            # is not proof of a rating: Bouquets & Brickbats date every review
+            # "15/06/26" at the top, which reads as 15 out of 6, and returning
+            # that impossible result threw away the "4 stars" printed further
+            # down. A match that cannot be a rating should not silence the
+            # strategies that follow it.
+            found = _make(value, maximum, f"{_tidy(value)}/{_tidy(maximum)}", "numeric")
+            if found:
+                return found
 
     # NOTE: bare percentages are deliberately NOT treated as ratings here.
     # Free text and page markup are full of them — layout widths, "up 4% on last
