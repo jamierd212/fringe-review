@@ -28,13 +28,21 @@ YEAR = 2026
 # The festival files a show under one genre and up to two subgenres. Stand-up is
 # in COMEDY, but a great deal of comedy is filed as THEATRE, CABARET or OPERA
 # with comedy named underneath — dark comedy, musical comedy, character comedy.
-# Taking only the section drops EVITA TOO, Bog Witch and Linus Karp, all of
-# which are in the comedy top thirteen.
+# Taking only the section drops Bog Witch, Linus Karp and Trans People Are
+# Awful, all of which are in the comedy top thirteen.
+#
+# A musical that lists comedy second is a different thing: EVITA TOO is filed
+# "Musical theatre,Comedy" and belongs on the main board, not at number four of
+# the comedy twenty. Excluded by naming musical theatre rather than by demanding
+# comedy come first, which would also have thrown out Linus Karp, The Pitch and
+# The Bob Ross Effect for listing another tag ahead of it. Musical COMEDY stays:
+# that is a kind of comedy, not a musical with jokes in.
 SELECT = """
     SELECT id FROM shows
      WHERE year = ?
        AND (UPPER(COALESCE(genre, '')) = 'COMEDY'
             OR LOWER(COALESCE(subgenre, '')) LIKE '%comedy%')
+       AND LOWER(COALESCE(subgenre, '')) NOT LIKE '%musical theatre%'
 """
 
 
