@@ -196,6 +196,28 @@ def _logo(img: Image.Image) -> int:
     return logo.width
 
 
+def _footer(d: ImageDraw.ImageDraw, shows: int, reviews: int) -> None:
+    """
+    What the ranking is drawn from, and where to see the rest of it.
+
+    The address is the only part set in the display face: it is the thing a
+    reader has to remember, and Instagram will not make it a link, so it has to
+    carry itself. Sized down until the line fits the margins rather than fixed,
+    because the counts grow all festival and "10,000" is wider than "1,000".
+    """
+    lead = f"Collated from {shows:,} shows and {reviews:,} reviews - see the full ranking at "
+    site = "fringestars.com"
+    room = WIDTH - 120
+    for size in range(30, 15, -1):
+        regular, bold = _font("regular", size), _font("display", size)
+        if d.textlength(lead, font=regular) + d.textlength(site, font=bold) <= room:
+            break
+    baseline = HEIGHT - 74
+    d.text((60, baseline), lead, font=regular, fill=MUTED, anchor="ls")
+    d.text((60 + d.textlength(lead, font=regular), baseline), site,
+           font=bold, fill=INK, anchor="ls")
+
+
 def _climb(previous: dict[str, int] | None, show, position: int) -> str | None:
     """
     How far this show has come, as it will be written, or None if it has not.
@@ -276,11 +298,16 @@ def draw_card(placed, when: date | None = None,
         # so the top line reads as one label. What the card is a top twenty OF
         # rides beside the number instead, set smaller than it: "Top 20" is the
         # thing, "Comedy" says which twenty.
-        rider = (when.strftime("%-d %B %Y") if text == "Edinburgh Festivals"
-                 else qualifier if text == "Top 20" else "")
-        if rider:
+        # The date is joined to the festival name by a dash, in its type. What
+        # the twenty is OF is set in the number's own size and colour, because it
+        # is part of the title and not a note beside it.
+        if text == "Edinburgh Festivals":
+            d.text((60 + d.textlength(text, font=font) + 18, baseline),
+                   f"- {when.strftime('%-d %B %Y')}", font=fonts[0], fill=MUTED,
+                   anchor="ls")
+        elif text == "Top 20" and qualifier:
             d.text((60 + d.textlength(text, font=font) + 26, baseline),
-                   rider, font=fonts[0], fill=MUTED, anchor="ls")
+                   qualifier, font=font, fill=colour, anchor="ls")
         y = baseline + descent + gap
 
     top, row_h = ROWS_TOP, ROW_H
@@ -373,7 +400,9 @@ def draw_card(placed, when: date | None = None,
         if climbed is not None:
             _rise(d, WIDTH - TEXT_R, mid, climbed, climb_font)
 
-    d.text((60, HEIGHT - 82), "fringestars.com", font=_font("display", 42), fill=INK)
+    # Counted from the board being drawn, so the comedy card says what the comedy
+    # ranking rests on rather than repeating the whole site's figures.
+    _footer(d, len(placed), sum(len(show.reviews) for _, show in placed))
 
     OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / f"{slug}-{when.isoformat()}.png"
