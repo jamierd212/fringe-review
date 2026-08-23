@@ -804,7 +804,7 @@ def refresh_performances(conn: sqlite3.Connection, year: int,
     if not due:
         return {"checked": 0, "dates": 0}
 
-    checked = dates = failed = renamed = credited = movements = 0
+    checked = dates = failed = renamed = credited = movements = handles = 0
     for row in due:
         time.sleep(DELAY)
         html = _get(row["edfringe_url"])
@@ -831,6 +831,18 @@ def refresh_performances(conn: sqlite3.Connection, year: int,
         if moved:
             movements += 1
             print(f"      moved: {row['title'][:38]}  {moved}")
+        # Accounts too. These were read once, when the show was first enriched,
+        # and never again — so a company that added its Instagram after we had
+        # already described the show stayed uncreditable for the rest of the
+        # festival. Ten of the comedy twenty were in that position: handles
+        # published on their own programme entry, never collected, and the
+        # caption silent about them because guessing one is not allowed.
+        for network, handle in (_socials(html) or {}).items():
+            handles += conn.execute(
+                """INSERT INTO socials (show_id, network, handle) VALUES (?, ?, ?)
+                   ON CONFLICT(show_id, network) DO UPDATE SET handle = excluded.handle
+                   WHERE socials.handle IS NOT excluded.handle""",
+                (row["id"], network, handle)).rowcount
         checked += 1
         dates += len(found)
     conn.commit()
@@ -838,6 +850,7 @@ def refresh_performances(conn: sqlite3.Connection, year: int,
           + (f", {renamed} renamed" if renamed else "")
           + (f", {credited} credited" if credited else "")
           + (f", {movements} moved" if movements else "")
+          + (f", {handles} handle(s)" if handles else "")
           + (f", {failed} unreadable" if failed else ""))
     return {"checked": checked, "dates": dates, "failed": failed, "renamed": renamed}
 
