@@ -205,7 +205,7 @@ def _footer(d: ImageDraw.ImageDraw, shows: int, reviews: int) -> None:
     carry itself. Sized down until the line fits the margins rather than fixed,
     because the counts grow all festival and "10,000" is wider than "1,000".
     """
-    lead = f"Collated from {shows:,} shows and {reviews:,} reviews - see the full ranking at "
+    lead = f"Collated from {shows:,} shows and {reviews:,} reviews - see full rankings at "
     site = "fringestars.com"
     room = WIDTH - 120
     # The address is set larger than the sentence carrying it, not merely bolder.
