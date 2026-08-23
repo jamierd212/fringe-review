@@ -36,11 +36,12 @@ LIMIT = 300
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS standings (
     year     INTEGER NOT NULL,
+    board    TEXT NOT NULL DEFAULT 'all',
     show_id  TEXT NOT NULL,
     position INTEGER NOT NULL,
     best     INTEGER,
     seen_at  TEXT DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (year, show_id)
+    PRIMARY KEY (year, board, show_id)
 );
 """
 
@@ -58,6 +59,29 @@ def _migrate(conn: sqlite3.Connection) -> None:
     if "best" not in columns:
         conn.execute("ALTER TABLE standings ADD COLUMN best INTEGER")
         conn.execute("UPDATE standings SET best = position WHERE best IS NULL")
+
+    # A second board — the comedy twenty — needs its own positions, and the key
+    # was (year, show_id), so recording one would have overwritten the other and
+    # the main card's arrows would have started measuring against comedy.
+    # The primary key has to change, which SQLite will not do in place, so the
+    # table is rebuilt. Everything recorded so far is the whole-board history.
+    if "board" not in columns:
+        conn.executescript("""
+            ALTER TABLE standings RENAME TO standings_pre_board;
+            CREATE TABLE standings (
+                year     INTEGER NOT NULL,
+                board    TEXT NOT NULL DEFAULT 'all',
+                show_id  TEXT NOT NULL,
+                position INTEGER NOT NULL,
+                best     INTEGER,
+                seen_at  TEXT DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (year, board, show_id)
+            );
+            INSERT INTO standings (year, board, show_id, position, best, seen_at)
+                SELECT year, 'all', show_id, position, best, seen_at
+                  FROM standings_pre_board;
+            DROP TABLE standings_pre_board;
+        """)
 
 
 def _plural(n: int, word: str) -> str:
@@ -94,7 +118,8 @@ def compose(show, position: int, previous: int) -> str:
     return text
 
 
-def positions(conn: sqlite3.Connection, year: int) -> dict[str, int]:
+def positions(conn: sqlite3.Connection, year: int,
+              board: str = "all") -> dict[str, int]:
     """
     Where every show stood at the end of the last run.
 
@@ -104,10 +129,12 @@ def positions(conn: sqlite3.Connection, year: int) -> dict[str, int]:
     """
     _migrate(conn)
     return {row[0]: row[1] for row in conn.execute(
-        "SELECT show_id, position FROM standings WHERE year = ?", (year,))}
+        "SELECT show_id, position FROM standings WHERE year = ? AND board = ?",
+        (year, board))}
 
 
-def peaks(conn: sqlite3.Connection, year: int, placed) -> set[str]:
+def peaks(conn: sqlite3.Connection, year: int, placed,
+          board: str = "all") -> set[str]:
     """
     Shows that have just gone higher than they have ever been.
 
@@ -121,13 +148,15 @@ def peaks(conn: sqlite3.Connection, year: int, placed) -> set[str]:
     """
     _migrate(conn)
     best = {row[0]: row[1] for row in conn.execute(
-        "SELECT show_id, best FROM standings WHERE year = ? AND best IS NOT NULL",
-        (year,))}
+        "SELECT show_id, best FROM standings "
+        "WHERE year = ? AND board = ? AND best IS NOT NULL",
+        (year, board))}
     return {show.id for position, show in placed
             if best.get(show.id) is None or position < best[show.id]}
 
 
-def update(conn: sqlite3.Connection, year: int, placed, notify: bool = True) -> list[dict]:
+def update(conn: sqlite3.Connection, year: int, placed, notify: bool = True,
+           board: str = "all") -> list[dict]:
     """
     Record today's positions and return the notes for shows that rose.
 
@@ -140,7 +169,8 @@ def update(conn: sqlite3.Connection, year: int, placed, notify: bool = True) -> 
     before = {
         row[0]: row[1]
         for row in conn.execute(
-            "SELECT show_id, position FROM standings WHERE year = ?", (year,))
+            "SELECT show_id, position FROM standings WHERE year = ? AND board = ?",
+            (year, board))
     }
 
     notes: list[dict] = []
@@ -160,14 +190,14 @@ def update(conn: sqlite3.Connection, year: int, placed, notify: bool = True) -> 
                     "written_at": datetime.now().isoformat(timespec="seconds"),
                 })
         conn.execute(
-            """INSERT INTO standings (year, show_id, position, best, seen_at)
-               VALUES (?, ?, ?, ?, datetime('now'))
-               ON CONFLICT(year, show_id) DO UPDATE SET
+            """INSERT INTO standings (year, board, show_id, position, best, seen_at)
+               VALUES (?, ?, ?, ?, ?, datetime('now'))
+               ON CONFLICT(year, board, show_id) DO UPDATE SET
                    position = excluded.position,
                    best = MIN(COALESCE(standings.best, excluded.position),
                               excluded.position),
                    seen_at = excluded.seen_at""",
-            (year, show.id, position, position),
+            (year, board, show.id, position, position),
         )
     conn.commit()
     return notes

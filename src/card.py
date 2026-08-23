@@ -70,6 +70,9 @@ INK = (26, 26, 26)
 MUTED = (107, 107, 107)
 STAR = (198, 40, 40)
 CARD = (255, 255, 255)
+# A second page colour, for a card that is a section of the board rather than
+# the whole of it. The logo is keyed off its own corner, so it sits on either.
+BG_GREEN = (226, 241, 226)
 
 # Inter, carried in the repository rather than taken from the machine.
 #
@@ -224,9 +227,18 @@ def _rise(d: ImageDraw.ImageDraw, right: float, mid: float, places: str,
 
 
 def draw_card(placed, when: date | None = None,
-              previous: dict[str, int] | None = None) -> Path:
+              previous: dict[str, int] | None = None,
+              strapline: str = "Critically Acclaimed Shows",
+              qualifier: str = "",
+              bg: tuple[int, int, int] = BG,
+              slug: str = "top20") -> Path:
     """
     Render the top twenty. Returns the path written.
+
+    `qualifier` rides beside "Top 20" to say which twenty this is, `strapline`
+    is the third header line and `slug` names the file, so the same
+    card can be drawn for a section of the board — the comedy twenty, say —
+    without a second copy of the layout to keep in step with this one.
 
     `previous` is where each show stood at the end of the last run, used to
     mark the ones that have climbed. Posting the same twenty names every
@@ -237,7 +249,7 @@ def draw_card(placed, when: date | None = None,
     year, when every show is new and none of them has moved.
     """
     when = when or date.today()
-    img = Image.new("RGB", (WIDTH, HEIGHT), BG)
+    img = Image.new("RGB", (WIDTH, HEIGHT), bg)
     d = ImageDraw.Draw(img)
 
     _logo(img)
@@ -250,7 +262,7 @@ def draw_card(placed, when: date | None = None,
     # so numbers that look evenly spaced are not.
     lines = [("Edinburgh Festivals", "display", 38, MUTED),
              ("Top 20", "display", 76, INK),
-             ("Critically Acclaimed Shows", "display", 38, INK)]
+             (strapline, "display", 38, INK)]
     fonts = [_font(kind, size) for _, kind, size, _ in lines]
     metrics = [f.getmetrics() for f in fonts]
     ink = sum(a + desc for a, desc in metrics)
@@ -260,12 +272,15 @@ def draw_card(placed, when: date | None = None,
     for (text, _, _, colour), font, (ascent, descent) in zip(lines, fonts, metrics):
         baseline = y + ascent
         d.text((60, baseline), text, font=font, fill=colour, anchor="ls")
-        # The date rides on the number's baseline, set as the line above it so
-        # the two read as one label rather than two decisions.
-        if text == "Top 20":
+        # The date sits beside the festival name, in the festival name's own type,
+        # so the top line reads as one label. What the card is a top twenty OF
+        # rides beside the number instead, set smaller than it: "Top 20" is the
+        # thing, "Comedy" says which twenty.
+        rider = (when.strftime("%-d %B %Y") if text == "Edinburgh Festivals"
+                 else qualifier if text == "Top 20" else "")
+        if rider:
             d.text((60 + d.textlength(text, font=font) + 26, baseline),
-                   when.strftime("%-d %B %Y"), font=fonts[0], fill=MUTED,
-                   anchor="ls")
+                   rider, font=fonts[0], fill=MUTED, anchor="ls")
         y = baseline + descent + gap
 
     top, row_h = ROWS_TOP, ROW_H
@@ -361,7 +376,7 @@ def draw_card(placed, when: date | None = None,
     d.text((60, HEIGHT - 82), "fringestars.com", font=_font("display", 42), fill=INK)
 
     OUT.mkdir(parents=True, exist_ok=True)
-    path = OUT / f"top20-{when.isoformat()}.png"
+    path = OUT / f"{slug}-{when.isoformat()}.png"
     img.save(path, "PNG", optimize=True)
     return path
 
@@ -396,7 +411,8 @@ def _venue_counts(placed) -> list[tuple[str, str, int]]:
 
 
 def tags(conn: sqlite3.Connection, placed, previous: dict[str, int] | None,
-         peaks: set[str] | None, when: date | None = None) -> int:
+         peaks: set[str] | None, when: date | None = None,
+         heading: str = "Tag people", slug: str = "") -> int:
     """
     Everyone who could be tagged today, sorted so the choosing is quick.
 
@@ -415,7 +431,7 @@ def tags(conn: sqlite3.Connection, placed, previous: dict[str, int] | None,
         for row in conn.execute(
             "SELECT show_id, handle FROM socials WHERE network = 'instagram'")
     }
-    lines = [f"Tag people — {when.strftime('%-d %B')}   "
+    lines = [f"{heading} — {when.strftime('%-d %B')}   "
              f"(Instagram allows {TAG_LIMIT}; pick from these)", ""]
 
     venues = _venue_counts(placed)
@@ -446,11 +462,13 @@ def tags(conn: sqlite3.Connection, placed, previous: dict[str, int] | None,
         lines += ["", "NO HANDLE PUBLISHED", ""] + missing
 
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / f"tags-{when.isoformat()}.txt").write_text("\n".join(lines) + "\n")
+    (OUT / f"{slug}tags-{when.isoformat()}.txt").write_text("\n".join(lines) + "\n")
     return len(venues) + len(news) + len(steady)
 
 
-def caption(conn: sqlite3.Connection, placed, when: date | None = None) -> str:
+def caption(conn: sqlite3.Connection, placed, when: date | None = None,
+            heading: str = "Edinburgh Festivals Top 20",
+            slug: str = "") -> str:
     """
     The caption: the twenty in order, with a mention where we have one.
 
@@ -471,7 +489,7 @@ def caption(conn: sqlite3.Connection, placed, when: date | None = None) -> str:
     # does not linkify anything in a caption, so this is text a reader has to
     # type — which they will only do if they see it before twenty show names
     # rather than after them.
-    lines = [f"Edinburgh Festivals Top 20 — {when.strftime('%-d %B')}", "",
+    lines = [f"{heading} — {when.strftime('%-d %B')}", "",
              "www.fringestars.com", ""]
     for position, show in placed[:TOP]:
         handle = handles.get(show.id)
@@ -491,7 +509,7 @@ def caption(conn: sqlite3.Connection, placed, when: date | None = None) -> str:
               "#edfringe #edinburghfringe #edfringe2026 #fringe #theatre #comedy"]
     text = "\n".join(lines)
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / f"caption-{when.isoformat()}.txt").write_text(text)
+    (OUT / f"{slug}caption-{when.isoformat()}.txt").write_text(text)
 
     # The handles on their own, in order, for tagging the photo in the app.
     # A caption mention notifies; a photo tag notifies AND puts the post in that
