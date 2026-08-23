@@ -6,12 +6,8 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| The Guardian | [Elouise Eftos: Aphrodite review – ‘Australia’s first attractive comedian’ asks if love is real](https://www.theguardian.com/stage/2026/aug/22/elouise-eftos-aphrodite-review) | Elouise Eftos: Aphrodite | 92% |
-| The Wee Review | [Japanese Grandma Funeral](https://theweereview.com/review/japanese-grandma-funeral/) | Japanese Grandma Funeral | 92% |
-| One4Review | [Mama G and the Magic Bookmark 4****](https://one4review.co.uk/2026/08/mama-g-and-the-magic-bookmark-4/) | Mama G: The Magic Bookmark | 95% |
-| The Guardian | [Hang Time review – a chilling picture of the horrors of racial violence](https://www.theguardian.com/stage/2026/aug/22/hang-time-review-royal-lyceum-theatre-edinburgh) | Hang Time (EIF) | 95% |
-| The Wee Review | [Only Fans for Therapy](https://theweereview.com/review/only-fans-for-therapy/) | OnlyFans for Therapy | 95% |
-| Binge Fringe | [REVIEW: This Is How I Got Arrested…, Azaelia Slade](https://www.bingefringe.com/2026/08/22/review-this-is-how-i-got-arrested-azaelia-slade-slade-productions-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | This Is How I Got Arrested... | 95% |
+| Chortle | [Hypnotist Matt Hale: Funbelievable! 90s](https://www.chortle.co.uk/review/2026/08/22/61382/hypnotist_matt_hale%3A_funbelievable%21_90s) | Hypnotist Matt Hale: Funbelievable! 90s Rewind | 85% |
+| Binge Fringe | [REVIEW: Heated Rivalry: The Unauthorized Musical Parody, Alan Kliffer](https://www.bingefringe.com/2026/08/23/review-heated-rivalry-the-unauthorized-musical-parody-alan-kliffer-christian-palomares-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | Heated Rivalry: The Unauthorized Musical Parody | 95% |
 
 ## Held — not on the leaderboard
 
@@ -21,6 +17,8 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Everything Theatre | [Dying To Meet You](https://everything-theatre.co.uk/2026/08/review-dying-to-meet-you-the-courtyard-theatre/) | This appears to be a generic title without context indicating it reviews a specific named show at an Edinburgh festival. |
+| A Young(ish) Perspective | [Who Killed Marilyn?](https://ayoungishperspective.co.uk/2026/08/22/review-who-killed-marilyn/) | This headline alone does not indicate it reviews a named show at an Edinburgh festival; it could be a news story, documentary review, or other article unrelated to festival theatre. |
 | Binge Fringe | [REVIEW: January 6th the Musical, Kiely Sugayan, Jessie Ballard](https://www.bingefringe.com/2026/08/22/review-january-6th-the-musical-kiely-sugayan-jessie-ballard-speakerphone-productions-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | This appears to be a review or roundup listing multiple shows/acts rather than a single named show, and lacks clear indication of an Edinburgh festival venue or context. |
 | Everything Theatre | [The Little Woman In My Head Must Die](https://everything-theatre.co.uk/2026/08/review-the-little-woman-in-my-head-must-die-the-gatehouse/) | This appears to be a title or artistic work rather than a review headline, lacking the typical structure and language of a festival show review. |
 | Everything Theatre | [The Three Little Wolves](https://everything-theatre.co.uk/2026/08/review-the-three-little-wolves-the-puppet-barge-theatre/) | This appears to be a title rather than a review headline, with no clear indication it reviews a specific Edinburgh festival show. |
@@ -219,5 +217,3 @@ table and re-run `python run.py --match` to let it back in.
 | The List | [Mothman: A Romance](https://list.co.uk/news/mothman-a-romance-musical-review-goofy-unpredictable-surrealism-48698) | This appears to be a title or book reference rather than a review of a specific show at an Edinburgh festival, and no review context or festival attribution is provided in the headline alone. |
 | The Scotsman | [Nate Kitch](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-kate-dehnert-echo-lara-ricote-inkling-jennifer-jane-happy-tea-hannah-platt-cult-classic-abbie-edwards-knee-touch-nate-kitch-8877197#nate-kitch) | This is just a performer's name with no indication of a specific show, review, or Edinburgh festival context. |
 | The Scotsman | [Fringe children's show reviews: The Letterman | Supervillain | A Clown's Lullaby](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/childrens-shows/fringe-childrens-show-reviews-the-letterman-supervillain-a-clowns-lullaby-8847308) | This is a round-up reviewing multiple shows, not a single named show. |
-| The Scotsman | [Fringe theatre reviews: Giraffe | Turn Your F*cking Phones Off + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-giraffe-turn-your-fcking-phones-off-a-gay-masseurs-guide-to-happy-endings-the-toe-poke-8886153) | This is a round-up review covering multiple shows (Giraffe, Turn Your F*cking Phones Off, and others), not a review of a single named show. |
-| The Scotsman | [First Night at The Hub, The Hub](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/eif-music-reviews-first-night-at-the-hub-nyo-of-the-usa-beth-taylor-hamish-brown-8890873#first-night-at-hub-hub) | This appears to be a venue name rather than a specific named show, performance, or exhibition being reviewed. |
