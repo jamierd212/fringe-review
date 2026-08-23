@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS standings (
     board    TEXT NOT NULL DEFAULT 'all',
     show_id  TEXT NOT NULL,
     position INTEGER NOT NULL,
+    previous INTEGER,
     best     INTEGER,
     seen_at  TEXT DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (year, board, show_id)
@@ -65,6 +66,13 @@ def _migrate(conn: sqlite3.Connection) -> None:
     # the main card's arrows would have started measuring against comedy.
     # The primary key has to change, which SQLite will not do in place, so the
     # table is rebuilt. Everything recorded so far is the whole-board history.
+    # What today's recording replaced. Without it the table knows only where a
+    # show stands now, so drawing a card twice in one day read back this
+    # morning's positions as the baseline and every arrow disappeared: the card
+    # reported no movement because it had overwritten what it measures against.
+    if "previous" not in columns and "board" in columns:
+        conn.execute("ALTER TABLE standings ADD COLUMN previous INTEGER")
+
     if "board" not in columns:
         conn.executescript("""
             ALTER TABLE standings RENAME TO standings_pre_board;
@@ -129,7 +137,10 @@ def positions(conn: sqlite3.Connection, year: int,
     """
     _migrate(conn)
     return {row[0]: row[1] for row in conn.execute(
-        "SELECT show_id, position FROM standings WHERE year = ? AND board = ?",
+        """SELECT show_id,
+                  CASE WHEN date(seen_at) = date('now')
+                       THEN COALESCE(previous, position) ELSE position END
+             FROM standings WHERE year = ? AND board = ?""",
         (year, board))}
 
 
@@ -193,6 +204,9 @@ def update(conn: sqlite3.Connection, year: int, placed, notify: bool = True,
             """INSERT INTO standings (year, board, show_id, position, best, seen_at)
                VALUES (?, ?, ?, ?, ?, datetime('now'))
                ON CONFLICT(year, board, show_id) DO UPDATE SET
+                   previous = CASE WHEN date(standings.seen_at) = date('now')
+                                   THEN standings.previous
+                                   ELSE standings.position END,
                    position = excluded.position,
                    best = MIN(COALESCE(standings.best, excluded.position),
                               excluded.position),

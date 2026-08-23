@@ -50,6 +50,9 @@ def main() -> int:
     # Read before update() overwrites them, as the main card does.
     previous = standings.positions(conn, YEAR, board=BOARD)
     highs = standings.peaks(conn, YEAR, placed, board=BOARD)
+
+    # Safe to run repeatedly: standings keep what today's recording replaced, so
+    # a redraw still measures against the last card rather than against itself.
     standings.update(conn, YEAR, placed, notify=False, board=BOARD)
 
     when = date.today()

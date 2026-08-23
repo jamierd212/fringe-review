@@ -208,11 +208,16 @@ def _footer(d: ImageDraw.ImageDraw, shows: int, reviews: int) -> None:
     lead = f"Collated from {shows:,} shows and {reviews:,} reviews - see the full ranking at "
     site = "fringestars.com"
     room = WIDTH - 120
-    for size in range(30, 15, -1):
-        regular, bold = _font("regular", size), _font("display", size)
+    # The address is set larger than the sentence carrying it, not merely bolder.
+    # It is the one thing on the card a reader has to act on, and Instagram will
+    # not make it a link.
+    for size in range(26, 13, -1):
+        regular = _font("regular", size)
+        bold = _font("display", size + 12)
         if d.textlength(lead, font=regular) + d.textlength(site, font=bold) <= room:
             break
-    baseline = HEIGHT - 74
+    # Both sit on one baseline, so the larger type grows upward off the smaller.
+    baseline = HEIGHT - 70
     d.text((60, baseline), lead, font=regular, fill=MUTED, anchor="ls")
     d.text((60 + d.textlength(lead, font=regular), baseline), site,
            font=bold, fill=INK, anchor="ls")
