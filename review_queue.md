@@ -4,9 +4,7 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-| Publication | Headline | Matched to | Confidence |
-|---|---|---|---|
-| The Skinny | [Kate Dehnert @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/kate-dehnert-pleasance-courtyard) | Kate Dehnert: Echo | 85% |
+_Nothing to check. 🎉_
 
 ## Held — not on the leaderboard
 

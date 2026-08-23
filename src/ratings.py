@@ -641,9 +641,67 @@ def split_roundup(html: str) -> list[tuple[str, Rating]]:
             heading = ""
         elif tag.name in ("strong", "b", "h2", "h3", "h4") and 3 < len(text) < 90:
             heading = text
-    return out
+    if out:
+        return out
+
+    # A third shape, where the round-up is not in the page at all. The Scotsman
+    # renders article copy on the client, so the stars a reader sees never appear
+    # in the HTML we fetch — but the whole piece is carried in the schema.org
+    # articleBody, where paragraphs are separated by runs of two spaces and each
+    # review opens "Show Name ★★★★ Venue (Venue 33) until 30 August". That is the
+    # first shape again, so the same rule reads it: the text before the stars is
+    # the show. Fifty-four of their round-ups were on the board as nothing at all
+    # until this was noticed.
+    return _from_article_body(html, seen)
 
 
 def _tidy(n: float) -> str:
     """Render 5.0 as '5' but 4.5 as '4.5'."""
     return str(int(n)) if float(n).is_integer() else str(n)
+
+
+def _from_article_body(html: str, seen: set[str]) -> list[tuple[str, Rating]]:
+    """
+    Round-up reviews read out of the schema.org articleBody.
+
+    Used when the copy is rendered on the client and the fetched HTML holds no
+    stars. Paragraphs arrive separated by runs of two or more spaces; a
+    paragraph that opens with a name and a star run is one review.
+    """
+    m = re.search(r'"articleBody"\s*:\s*"((?:[^"\\]|\\.)*)"', html)
+    if not m:
+        return []
+    try:
+        body = json.loads('"' + m.group(1) + '"')
+    except ValueError:
+        return []
+
+    out: list[tuple[str, Rating]] = []
+    for para in re.split(r"\s{2,}", body):
+        para = para.strip()
+        if not para or not any(ch in para for ch in FILLED_STARS):
+            continue
+        first = min(i for i, ch in enumerate(para) if ch in FILLED_STARS)
+        title = para[:first].strip(" -–—:,|").strip()
+        # Count the run where it stands rather than calling from_star_chars,
+        # which needs three stars before it will believe a run is a rating. That
+        # caution is right when scanning a whole page, where a lone star may be
+        # decoration; here the shape has already identified the run as this
+        # review's rating, and refusing to read it lost every ★ and ★★ the
+        # Scotsman gave — the harshest verdicts, silently absent from the board.
+        # The run is written both ways in the same publication: "★★★★" in one
+        # article and "★ ★ ★ ★" in the next, so the spaces have to be allowed
+        # for or a spaced rating reads as one star.
+        span = re.match(rf"(?:[{FILLED_STARS}]\s*)+", para[first:])
+        stars = sum(1 for ch in span.group(0) if ch in FILLED_STARS)
+        rating = _make(stars, 5, span.group(0).strip(), "star_chars")
+        # A paragraph of prose that happens to mention stars is not a review:
+        # a real one names the show and nothing else before the rating.
+        if rating is None or not (3 < len(title) < 90):
+            continue
+        key = title.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append((title, rating))
+    return out

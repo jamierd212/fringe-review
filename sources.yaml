@@ -374,6 +374,30 @@ publications:
       name as the Fringe writes it, which is unusually clean. Not every article
       is a rated review; the ones without a rating are skipped.
 
+  - name: Entertainment Now
+    slug: entertainmentnow
+    homepage: https://entertainment-now.com/
+    feed: https://entertainment-now.com/feed/
+    pages: 5
+    rating:
+      # Their rating is a graphic, and the graphic is not called a star. The file
+      # is Twinkle-4.png, so every search for "star" in a filename, an alt text
+      # or the copy came back empty and the site was written off twice as a
+      # publication that does not rate anything. It rates everything.
+      type: pattern
+      pattern: '/Twinkle-([1-5])(?:-\d+x\d+)?\.png'
+      scale: 5
+    fetch_page: true
+    require_title_match: '\bReview\b'
+    title_strip_patterns:
+      - '^\s*Edfringe\s+(?:Comedy|Theatre|Music|Dance)?\s*Review:\s*'
+      - '^\s*Review:\s*'
+    verified: 2026-08-22
+    notes: >
+      robots.txt is "Disallow:" with nothing after it. The feed carries ten
+      items, so the archive needs the index for a real backfill. Kate Copstick's
+      "Fringe Gems" pieces are not rated and are skipped.
+
   - name: RGM
     slug: rgm
     homepage: https://rgm.press/
