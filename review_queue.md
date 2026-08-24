@@ -6,13 +6,12 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| Everything Theatre | [Renée Rossi: God Bomb](https://everything-theatre.co.uk/2026/08/review-renee-rossi-god-bomb-hen-chickens-theatre/) | God Bomb | 75% |
-| North West End | [James Phelan: Showman – Underbelly Circus Hub](https://northwestend.com/james-phelan-showman-underbelly-circus-hub/) | Showman | 87% |
-| Chortle | [Keeley Hazell: Everyone&#39;s Seen My Tits](https://www.chortle.co.uk/review/2026/08/23/61403/keeley_hazell%3A_everyones_seen_my_tits) | Keeley Hazell: Everyone's Seen My Tits | 92% |
-| BroadwayWorld | [CELYA AB: WE MUST STOP MEETING LIKE…](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-CELYA-AB-WE-MUST-STOP-MEETING-LIKE-THIS-Monkey-Barrel-20260824) | Celya AB: We Must Stop Meeting Like This | 93% |
-| Theatre & Tonic | [Cecily Hitchcock: Family Recipe, Cellar](https://www.theatreandtonic.co.uk/edinburgh-fringe/cecily-hitchcock-family-recipe-cellar-ed-fringe-review) | Cecily Hitchcock: Family Recipe | 95% |
-| Chortle | [Pierre Novellie: Okay, One More Then Bed](https://www.chortle.co.uk/review/2026/08/23/61405/pierre_novellie%3A_okay%2C_one_more_then_bed) | Pierre Novellie: Okay, One More Then Bedtime | 95% |
-| The Scotsman | [Mr Bergmann of Deadman’s Point](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-steak-out-mr-bergmann-of-deadmans-point-sobremesa-the-understudy-8937646#mr-bergmann-of-deadman-s-point) | Mr Bergmann of Deadman's Point | 98% |
+| The Reviews Hub | [Edinburgh International Film Festival 2026: The State of Us](https://www.thereviewshub.com/edinburgh-international-film-festival-2026-the-state-of-us/) | The State of Us | 75% |
+| The Skinny | [Kate Dolan @ Monkey Barrel](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/kate-dolan-trout-monkey-barrel) | Kate Dolan | 77% |
+| The Skinny | [Raj Poojara @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/raj-poojara-pleasance-courtyard) | Raj Poojara | 81% |
+| The Scotsman | [Celine Kuklowsky: Bed Boy](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-jenny-gorelick-ed-night-celine-kuklowsky-carl-carzana-rob-preston-8937986#celine-kuklowsky-bed-boy) | Bed Boy | 86% |
+| The Skinny | [Emmeline Downie @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/emmeline-downie-pleasance-courtyard) | Emmeline Downie | 86% |
+| BroadwayWorld | [LORNA ROSE TREEN: NOW THAT'S WHAT I…](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-LORNA-ROSE-TREEN-NOW-THATS-WHAT-I-CALL-CHARACTERS-Pleasance-20260824) | Lorna Rose Treen: Now That's What I Call Characters | 95% |
 
 ## Held — not on the leaderboard
 
@@ -22,6 +21,11 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Binge Fringe | [REVIEW: Spill Your Guts](https://www.bingefringe.com/2026/08/24/review-spill-your-guts-hendrik-quast-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | The headline lacks sufficient specificity to confirm this is a review of a single named show at an Edinburgh festival rather than a generic round-up or article about the concept. |
+| The Wee Review | [Catherine Opie, Del LaGrace Volcano & Gemma Rolls-Bentley: Radical Imagery](https://theweereview.com/review/catherine-opie-del-lagrace-volcano-gemma-rolls-bentley-radical-imagery/) | This appears to be a profile or exhibition listing of artists rather than a review of a single named show at an Edinburgh festival. |
+| The Stage | [As You Like It at Shakespeare’s Globe, London: campily entertaining](https://www.thestage.co.uk/reviews/as-you-like-it-review-shakespeares-globe-london) | This reviews a show at Shakespeare's Globe in London, not at an Edinburgh festival. |
+| The Stage | [The Sorcerer's Apprentice review at the Little Angel Theatre, London](https://www.thestage.co.uk/reviews/the-sorcerers-apprentice-review-little-angel-theatre-london-oliver-hymans) | This reviews a show at the Little Angel Theatre in London, not at an Edinburgh festival. |
+| One4Review | [Whisky Wanderer – Scotch Malt Whisky Society  5*****](https://one4review.co.uk/2026/08/21739/) | This appears to be a rating or listing entry rather than a review article of a single named show at an Edinburgh festival. |
 | EdFringeReview | [The Manchester Revue Saves The World](https://www.edfringereview.com/review/r/kK1xl0GaQHwkCW7LjhCP) | The headline does not specify that this is a review of a show at an Edinburgh festival; it appears to be either a preview or an announcement about a Manchester-based revue with no indication of an Edinburgh festival venue. |
 | Everything Theatre | [Marie Curie: Exposed](https://everything-theatre.co.uk/2026/08/review-marie-curie-exposed-etcetera-theatre/) | This appears to be a generic title that could refer to multiple things (documentary, exhibition, book) rather than a named show at an Edinburgh festival, and lacks sufficient context to confirm it's reviewing a single Edinburgh festival production. |
 | Everything Theatre | [The Art of Evil](https://everything-theatre.co.uk/2026/08/review-the-art-of-evil-courtyard-theatre/) | This appears to be a generic title rather than a review of a named show at an Edinburgh festival, lacking context about a specific performance or venue. |
@@ -217,8 +221,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Guardian | [Vile statues, writhing liquorice and kids marooned online: Edinburgh art festival review](https://www.theguardian.com/artanddesign/2026/aug/14/edinburgh-art-festival-review) | This is a round-up review covering multiple artworks or exhibits at the Edinburgh art festival, not a review of one named show. |
 | The Skinny | [Zoe Wohlfeld @ Underbelly Cowgate](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/zoe-wohlfeld-underbelly-cowgate) | This appears to be a venue listing or schedule entry rather than a review headline, lacking evaluative language or critical content. |
 | The List | [Maribou State](https://list.co.uk/news/maribou-state-music-review-woozy-and-elastic-48793) | The headline is only a name with no review text, context, or indication it reviews a specific Edinburgh festival show. |
-| The Scotsman | [Fringe comedy reviews: Madeleine Brettingham | Pierre Novellie | Those People | Paddy Young | Tom Ballard](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/edinburgh-fringe-comedy-reviews-madeleine-brettingham-pierre-novellie-those-people-paddy-young-tom-ballard-8918204) | This is a round-up of multiple shows in a single review, not a review of one named show. |
-| The Scotsman | [Fringe theatre reviews: Big Stuff | Gameplay | Long Way Home | Saving Britney + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-big-stuff-gameplay-long-way-home-saving-britney-in-the-cold-light-operation-blank-8919289) | This is a round-up review of multiple shows, not a review of a single named show. |
-| The List | [SpinQueen™](https://list.co.uk/news/spinqueen-theatre-review-raw-unfiltered-rage-48787) | This appears to be a trademarked product name rather than a review headline of an Edinburgh festival show. |
-| The Scotsman | [Fringe dance reviews: not for glory | Collaborator | Snow | CODE | Common Ground](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/fringe-dance-reviews-not-for-glory-collaborator-snow-code-common-ground-8917734) | This is a round-up of multiple shows, not a review of a single named show. |
-| The Scotsman | [A&E](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-the-king-of-all-birds-baby-everything-puttana-the-second-best-school-shooting-ae-the-painted-revolutionary-8917948#and-e) | This headline is far too vague to identify a specific show or review at an Edinburgh festival. |
