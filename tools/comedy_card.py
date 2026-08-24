@@ -31,18 +31,17 @@ YEAR = 2026
 # Taking only the section drops Bog Witch, Linus Karp and Trans People Are
 # Awful, all of which are in the comedy top thirteen.
 #
-# A musical that lists comedy second is a different thing: EVITA TOO is filed
-# "Musical theatre,Comedy" and belongs on the main board, not at number four of
-# the comedy twenty. Excluded by naming musical theatre rather than by demanding
-# comedy come first, which would also have thrown out Linus Karp, The Pitch and
-# The Bob Ross Effect for listing another tag ahead of it. Musical COMEDY stays:
-# that is a kind of comedy, not a musical with jokes in.
+# Musicals are in. They were briefly excluded on the theory that a musical which
+# lists comedy second is a musical first — which threw out 21 shows, six of them
+# filed by the festival in the COMEDY section itself. A rule about subgenres had
+# no business overruling the genre, and "musical" says how a show is performed,
+# not whether it is funny: Showstopper!, Impromptunes and One Man Musical are
+# comedy by any reading.
 SELECT = """
     SELECT id FROM shows
      WHERE year = ?
        AND (UPPER(COALESCE(genre, '')) = 'COMEDY'
             OR LOWER(COALESCE(subgenre, '')) LIKE '%comedy%')
-       AND LOWER(COALESCE(subgenre, '')) NOT LIKE '%musical theatre%'
 """
 
 
