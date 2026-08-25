@@ -6,12 +6,10 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| The Reviews Hub | [Edinburgh International Film Festival 2026: The State of Us](https://www.thereviewshub.com/edinburgh-international-film-festival-2026-the-state-of-us/) | The State of Us | 75% |
-| The Skinny | [Kate Dolan @ Monkey Barrel](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/kate-dolan-trout-monkey-barrel) | Kate Dolan | 77% |
-| The Skinny | [Raj Poojara @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/raj-poojara-pleasance-courtyard) | Raj Poojara | 81% |
-| The Scotsman | [Celine Kuklowsky: Bed Boy](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-jenny-gorelick-ed-night-celine-kuklowsky-carl-carzana-rob-preston-8937986#celine-kuklowsky-bed-boy) | Bed Boy | 86% |
-| The Skinny | [Emmeline Downie @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/emmeline-downie-pleasance-courtyard) | Emmeline Downie | 86% |
-| BroadwayWorld | [LORNA ROSE TREEN: NOW THAT'S WHAT I…](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-LORNA-ROSE-TREEN-NOW-THATS-WHAT-I-CALL-CHARACTERS-Pleasance-20260824) | Lorna Rose Treen: Now That's What I Call Characters | 95% |
+| Theatre Weekly | [Best of the West End Musicals](https://theatreweekly.com/edinburgh-fringe-review-best-of-the-west-end-musicals-at-theatre-1-at-thespace-surgeons-hall/) | Best of the West End! | 85% |
+| All Edinburgh Theatre | [A Play of Two Halves](https://www.alledinburghtheatre.com/a-play-of-two-halves-two-halves-productions-tynecastle-park-edfringe-2026-review/) | A play of 2 Halves | 95% |
+| Theatre Weekly | [The Séance Starter Kit™](https://theatreweekly.com/edinburgh-fringe-review-the-seance-starter-kit-at-the-speakeasy-at-the-royal-scots-club/) | The Séance Starter Kit, The Speakeasy | 95% |
+| Binge Fringe | [REVIEW: Japanese Grandma Funeral, Kento Morita](https://www.bingefringe.com/2026/08/24/review-japanese-grandma-funeral-kento-morita-edinburgh-fringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | Japanese Grandma Funeral | 95% |
 
 ## Held — not on the leaderboard
 
@@ -21,6 +19,9 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The Scotsman | [Edinburgh Art Festival reviews: Del LaGrace Volcano | Emii Alrai | Richard Maguire |  Sgàire Wood](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/art/edinburgh-art-festival-reviews-del-lagrace-volcano-emii-alrai-richard-maguire-sgaire-wood-8939797) | This is a round-up of multiple artists/exhibitions, not a review of a single named show. |
+| Everything Theatre | [The Sorcerer’s Apprentice](https://everything-theatre.co.uk/2026/08/review-the-sorcerers-apprentice-little-angel-theatre/) | This appears to be a title rather than a review headline, lacking indicators of a review format or Edinburgh festival context. |
+| A Young(ish) Perspective | [The Waiting](https://ayoungishperspective.co.uk/2026/08/24/review-the-waiting/) | This headline is too generic and lacks context about a specific show, performer, or venue at an Edinburgh festival. |
 | Binge Fringe | [REVIEW: Spill Your Guts](https://www.bingefringe.com/2026/08/24/review-spill-your-guts-hendrik-quast-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | The headline lacks sufficient specificity to confirm this is a review of a single named show at an Edinburgh festival rather than a generic round-up or article about the concept. |
 | The Wee Review | [Catherine Opie, Del LaGrace Volcano & Gemma Rolls-Bentley: Radical Imagery](https://theweereview.com/review/catherine-opie-del-lagrace-volcano-gemma-rolls-bentley-radical-imagery/) | This appears to be a profile or exhibition listing of artists rather than a review of a single named show at an Edinburgh festival. |
 | The Stage | [As You Like It at Shakespeare’s Globe, London: campily entertaining](https://www.thestage.co.uk/reviews/as-you-like-it-review-shakespeares-globe-london) | This reviews a show at Shakespeare's Globe in London, not at an Edinburgh festival. |
@@ -218,6 +219,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Scotsman | [Fringe comedy reviews: Phil Nichol | Sam Eley is Basil Crumbwick | Finlay Christie | Maxx Eddy](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-phil-nichol-sam-eley-is-basil-crumbwick-finlay-christie-maxx-eddy-8921235) | This is a round-up of multiple comedy reviews listing several different shows, not a review of one named show. |
 | The Scotsman | [Fringe comedy reviews: Bebe Cave | Eleanor Morton | Sophie Duker | Olga Koch](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-bebe-cave-eleanor-morton-sophie-duker-olga-koch-8920590) | This is a round-up reviewing multiple named shows, not a review of a single show. |
 | The Scotsman | [Fringe dance reviews: The Palestinian Circus: A Step and a Half | Tale of the Firebird + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/fringe-dance-reviews-the-palestinian-circus-a-step-and-a-half-tale-of-the-firebird-double-take-8921471) | This is a round-up reviewing multiple shows ("+ more"), not a single named show. |
-| The Guardian | [Vile statues, writhing liquorice and kids marooned online: Edinburgh art festival review](https://www.theguardian.com/artanddesign/2026/aug/14/edinburgh-art-festival-review) | This is a round-up review covering multiple artworks or exhibits at the Edinburgh art festival, not a review of one named show. |
-| The Skinny | [Zoe Wohlfeld @ Underbelly Cowgate](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/zoe-wohlfeld-underbelly-cowgate) | This appears to be a venue listing or schedule entry rather than a review headline, lacking evaluative language or critical content. |
-| The List | [Maribou State](https://list.co.uk/news/maribou-state-music-review-woozy-and-elastic-48793) | The headline is only a name with no review text, context, or indication it reviews a specific Edinburgh festival show. |
