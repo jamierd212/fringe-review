@@ -6,9 +6,10 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| EdFringeReview | [Bush! The Musical](https://www.edfringereview.com/review/r/ppzgQqJ7f5kIJu0DfKYa) | Bush! The Musical | 82% |
-| The Scotsman | [Lucy Best: Unbelievable](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-tether-aliens-lucy-best-unbelievable-the-woman-in-the-mirror-the-reunion-8940127#lucy-best-unbelievable) | Unbelievable | 83% |
-| Everything Theatre | [The Bride](https://everything-theatre.co.uk/2026/08/review-the-bride-camden-peoples-theatre/) | The Bride | 91% |
+| British Theatre Guide | [The Colour of Water](https://www.britishtheatreguide.info/reviews/the-colour-of-w-thespace-25939) | The Colour of Water | 89% |
+| Chortle | [MC Hammersmith: Ice Ice Nepo Baby](https://www.chortle.co.uk/review/2026/08/25/61435/mc_hammersmith%3A_ice_ice_nepo_baby) | MC Hammersmith: Ice Ice Nepo Baby | 94% |
+| One4Review | [Steffan Alun — Windows 4.5****.5](https://one4review.co.uk/2026/08/steffan-alun-windows-4-5-5/) | Steffan Alun: Windows | 95% |
+| Corr Blimey | [Edinburgh Festival Fringe 2026 Review: 3 Time I Killed](https://corrblimey.uk/2026/08/26/edinburgh-festival-fringe-2026-review-3-times-i-killed-playground-1-at-zoo-playground/) | 3 Times I Killed | 97% |
 
 ## Held — not on the leaderboard
 
@@ -18,6 +19,13 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Binge Fringe | [REVIEW: July 15th to…, Stephanie Chu](https://www.bingefringe.com/2026/08/25/review-july-15th-to-stephanie-chu-juno-chen-peiyi-zhong-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | The headline lacks a show name and appears to be a date reference rather than a review of a specific named Edinburgh festival show. |
+| Binge Fringe | [REVIEW: Crocodile Rock, Sleeping Warrior & A Play](https://www.bingefringe.com/2026/08/25/review-crocodile-rock-sleeping-warrior-a-play-a-pie-and-a-pint-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | This appears to be a round-up reviewing multiple shows rather than a single named show. |
+| Everything Theatre | [The Old Strumpet Poet of Brighton](https://everything-theatre.co.uk/2026/08/review-the-old-strumpet-poet-of-brighton-etcetera-theatre/) | This appears to be a review of a show in Brighton, not at an Edinburgh festival. |
+| EdFringeReview | [Oil & Whiskey](https://www.edfringereview.com/review/r/49hb6EXwHXFi4lsZVuRi) | This appears to be a title or name without context indicating it is a review of a specific Edinburgh festival show. |
+| Everything Theatre | [My First Time](https://everything-theatre.co.uk/2026/08/review-my-first-time-ectectera-theatre/) | This headline lacks any indication of a specific show name, performer, venue, or Edinburgh festival context. |
+| Everything Theatre | [The Magician’s Table](https://everything-theatre.co.uk/2026/08/review-the-magicians-table-the-vaults/) | This appears to be a title rather than a review headline, with no clear indication that it reviews a specific Edinburgh festival show. |
+| FringeReview | [White Silence](https://fringereview.co.uk/review/edinburgh-fringe/2026/white-silence/) | This headline alone provides no context indicating it reviews a specific show at an Edinburgh festival, reads more like a title or concept than a review. |
 | Grapevine Magazine | [Soup of the Week: And Steve](https://www.thegrapevinemag.com/theatre/qzx8mn2gvv48ka3zh8wt5wxk9jpir5) | This appears to be a regular column or feature about soup rather than a review of an Edinburgh festival show. |
 | Binge Fringe | [REVIEW: Pink Rabbit, Farah Ashraf and NAZAR Arts](https://www.bingefringe.com/2026/08/25/review-pink-rabbit-farah-ashraf-and-nazar-arts-little-stitch-productions-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | This appears to be a round-up reviewing multiple shows or acts rather than a single named show at an Edinburgh festival. |
 | The List | [Bitter Christmas](https://list.co.uk/news/bitter-christmas-film-review-a-filmmakers-woes-48987) | This appears to be a generic title without clear indication it reviews a specific named show at an Edinburgh festival, and lacks identifying details about venue, performer, or festival context. |
@@ -211,10 +219,3 @@ table and re-run `python run.py --match` to let it back in.
 | Everything Theatre | [The Doctor Will See You Now](https://everything-theatre.co.uk/2026/08/review-the-doctor-will-see-you-now-lion-unicorn-theatre/) | This headline lacks any indication of a named show, performer, or venue associated with an Edinburgh festival. |
 | Everything Theatre | [MAJENIN – A Palestinian Love Story (مجانين)](https://everything-theatre.co.uk/2026/08/review-majenin-a-palestinian-love-story-%d9%85%d8%ac%d8%a7%d9%86%d9%8a%d9%86-pleasance-dome/) | The headline appears to be a show title but lacks any context indicating this is a review of a performance at an Edinburgh festival. |
 | Everything Theatre | [Tchaikovsky](https://everything-theatre.co.uk/2026/08/review-tchaikovsky-child-of-glass-opera-holland-park/) | This is just a composer's name with no context indicating it's a review of a specific named Edinburgh festival show. |
-| Everything Theatre | [Puffling Percy](https://everything-theatre.co.uk/2026/08/review-puffling-percy-little-angel-theatre/) | This appears to be a title rather than a review headline, with no indication it reviews a specific Edinburgh festival show. |
-| Theatre Weekly | [SpinQueen™](https://theatreweekly.com/edinburgh-fringe-review-spinqueen-at-greenside-george-street-jade-studio/) | This appears to be a trademarked product name rather than a review headline of an Edinburgh festival show. |
-| The Skinny | [Doomsday Jockeys @ Pizza Geeks](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/doomsday-jockeys-pizza-geeks) | This appears to be a venue listing or event announcement rather than a review of a specific named show at an Edinburgh festival. |
-| Grapevine Magazine | [Dreadfully Unrelatable and Deeply Hilarious: A Review of Alfie Dundas’ First Class Panic](https://www.thegrapevinemag.com/theatre/e3wxyv3if69x7sjwrlol3o3lpslul1) | While this appears to be a review of a show titled 'First Class Panic' by Alfie Dundas, there is no indication in the headline that this show is at an Edinburgh festival. |
-| Grapevine Magazine | [It’s a Heated Rivalry at This Fringe: But This One’s a Sure Bet](https://www.thegrapevinemag.com/theatre/rb03sx53oeb5s1jzorazee4d7wrh8o) | This is a round-up or comparison piece about multiple shows at the Fringe, not a review of a single named show. |
-| Grapevine Magazine | [The Oracle Has Spoken: Lara Ricote Is a Phenom](https://www.thegrapevinemag.com/theatre/the-oracle-has-spoken-lara-ricote-is-a-phenom) | This appears to be a profile or interview piece about a performer rather than a review of a specific named show at an Edinburgh festival. |
-| The List | [The End Of Oak Street](https://list.co.uk/news/the-end-of-oak-street-film-review-fearsome-family-fun-48815) | This headline is ambiguous and could refer to a news story, fictional work, or other content, but lacks clear indicators that it reviews a named Edinburgh festival show. |
