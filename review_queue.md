@@ -6,10 +6,17 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| British Theatre Guide | [The Colour of Water](https://www.britishtheatreguide.info/reviews/the-colour-of-w-thespace-25939) | The Colour of Water | 89% |
-| Chortle | [MC Hammersmith: Ice Ice Nepo Baby](https://www.chortle.co.uk/review/2026/08/25/61435/mc_hammersmith%3A_ice_ice_nepo_baby) | MC Hammersmith: Ice Ice Nepo Baby | 94% |
-| One4Review | [Steffan Alun — Windows 4.5****.5](https://one4review.co.uk/2026/08/steffan-alun-windows-4-5-5/) | Steffan Alun: Windows | 95% |
-| Corr Blimey | [Edinburgh Festival Fringe 2026 Review: 3 Time I Killed](https://corrblimey.uk/2026/08/26/edinburgh-festival-fringe-2026-review-3-times-i-killed-playground-1-at-zoo-playground/) | 3 Times I Killed | 97% |
+| EdFringeReview | [Kevin [The Musical] ](https://www.edfringereview.com/review/r/giFRsNMi0LuiTGTWqqtq) | Kevin [The Musical] | 74% |
+| The Student | [God Complex](https://thestudentnews.co.uk/2026/08/27/fringe-2026-god-complex/) | God Complex | 78% |
+| Chortle | [Clementine](https://www.chortle.co.uk/review/2026/08/25/61444/rosalie_minnitt%3A_clementine_2) | Rosalie Minnitt: Clementine | 85% |
+| The List | [Sarah McGuinness: Grit, Glitter And Gaslight](https://list.co.uk/news/sarah-mcguinness-grit-glitter-and-gaslight-theatre-review-all-guns-blazing-49001) | Grit, Glamour and Gaslight | 85% |
+| All Edinburgh Theatre | [The Court 1](https://www.alledinburghtheatre.com/the-court-1-edinburgh-little-theatre-braw-venues-grand-lodge-edfringe-2026-review/) | The Court 1 | 86% |
+| One4Review | [Sophies Surprise 29th – 5*****](https://one4review.co.uk/2026/08/sophies-surprise-29th-5-4/) | Sophie's Surprise 29th | 93% |
+| ThreeWeeks Edinburgh | [Laughing Horse Clean Pick Of The Fringe](https://threeweeksedinburgh.com/article/laughing-horse-clean-pick-of-the-fringe-laughing-horse-comedy-free-festival/) | Laughing Horse Pick of the Fringe | 95% |
+| The Student | [REDACTED: The Coverup of A Coverup of A Coverup](https://thestudentnews.co.uk/2026/08/26/fringe-2026-redacted-the-coverup-of-a-coverup-of-a-coverup/) | REDACTED: The Cover-Up of a Cover-Up of a Cover-Up | 95% |
+| Binge Fringe | [REVIEW: Whalefall or Song to Dance with My Death, Teatro Volatil](https://www.bingefringe.com/2026/08/27/review-whalefall-or-song-to-dance-with-my-death-teatro-volatil-ed-fringe-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | Whale Fall or Song to Dance With My Death | 95% |
+| Binge Fringe | [REVIEW: You and Me (and Whoever Comes Next), Patch of Blue](https://www.bingefringe.com/2026/08/27/review-you-and-me-and-whoever-comes-next-patch-of-blue-3hc-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | You and Me (and Whoever Comes Next) | 95% |
+| The Scotsman | [Aalex Mandel-Dallal: Where Was I?](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-emma-holland-aalex-mandel-dallal-tom-neenan-alan-jay-lizzy-hoo-8944130#aalex-mandel-dallal-where-was-i) | Aalex Mandel-Dallal: Where Was I? | 97% |
 
 ## Held — not on the leaderboard
 
@@ -19,6 +26,17 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Chortle | [John Achkar](https://www.chortle.co.uk/review/2026/08/26/61463/john_achkar) | This is a bare name with no context indicating it's a review of a specific show at an Edinburgh festival. |
+| Everything Theatre | [Only Bones](https://everything-theatre.co.uk/2026/08/review-only-bones-assembly-roxy/) | This headline is too vague to confirm it reviews a single named Edinburgh festival show; it could be a title, round-up, or something else entirely. |
+| Everything Theatre | [Terry’s Been Murdered!](https://everything-theatre.co.uk/2026/08/review-terrys-been-murdered-hen-and-chickens/) | The headline appears to be a news item or announcement rather than a review of a named Edinburgh festival show. |
+| The Stage | [A Slow Fire at Jermyn Street Theatre, London: post-apocalyptic dram](https://www.thestage.co.uk/reviews/a-slow-fire-review-jermyn-street-theatre-london) | This reviews a show at Jermyn Street Theatre in London, not at an Edinburgh festival. |
+| The Stage | [Who Killed Marilyn? at the Emerald Theatre, London: grimly prurient](https://www.thestage.co.uk/reviews/who-killed-marilyn-review-emerald-theatre-london) | This reviews a show playing in London, not at an Edinburgh festival. |
+| Theatre Weekly | [Los años maravillosos](https://theatreweekly.com/edinburgh-fringe-review-los-anos-maravillosos-at-paradise-in-augustines-the-snug/) | This appears to be a Spanish-language title (meaning 'The Wonderful Years') with no context indicating it's a review of a specific Edinburgh festival show, nor any indication it's a review at all. |
+| A Young(ish) Perspective | [Silence of the Lambs](https://ayoungishperspective.co.uk/2026/08/26/review-silence-of-the-lambs/) | This appears to be a famous film title rather than a review of a named show at an Edinburgh festival. |
+| A Young(ish) Perspective | [The Magic Flute](https://ayoungishperspective.co.uk/2026/08/27/review-the-magic-flute-5/) | This is just a title with no context indicating it's a review of a specific Edinburgh festival production, and appears to be missing review context or attribution. |
+| A Young(ish) Perspective | [Barleycorn](https://ayoungishperspective.co.uk/2026/08/26/review-barleycorn/) | This is just a title with no context indicating it's a review of a specific Edinburgh festival show. |
+| The Student | [Kool Story Bro](https://thestudentnews.co.uk/2026/08/26/fringe-2026-kool-story-bro/) | This appears to be a title or phrase rather than a review headline, with no indication of a festival show, performer, or review content. |
+| FringeReview | [Gumshoe](https://fringereview.co.uk/review/edinburgh-fringe/2026/gumshoe/) | This is just a title with no context indicating it reviews a specific Edinburgh festival show rather than being a generic headline or reference. |
 | Binge Fringe | [REVIEW: July 15th to…, Stephanie Chu](https://www.bingefringe.com/2026/08/25/review-july-15th-to-stephanie-chu-juno-chen-peiyi-zhong-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | The headline lacks a show name and appears to be a date reference rather than a review of a specific named Edinburgh festival show. |
 | Binge Fringe | [REVIEW: Crocodile Rock, Sleeping Warrior & A Play](https://www.bingefringe.com/2026/08/25/review-crocodile-rock-sleeping-warrior-a-play-a-pie-and-a-pint-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | This appears to be a round-up reviewing multiple shows rather than a single named show. |
 | Everything Theatre | [The Old Strumpet Poet of Brighton](https://everything-theatre.co.uk/2026/08/review-the-old-strumpet-poet-of-brighton-etcetera-theatre/) | This appears to be a review of a show in Brighton, not at an Edinburgh festival. |
@@ -208,14 +226,3 @@ table and re-run `python run.py --match` to let it back in.
 | Binge Fringe | [REVIEW: The Void](https://www.bingefringe.com/2026/08/15/review-the-void-edith-alibec-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | The headline lacks essential context identifying this as a review of a named show at an Edinburgh festival; it could refer to many things called 'The Void' or be a review of something elsewhere. |
 | Binge Fringe | [REVIEW: Shakespeare x5](https://www.bingefringe.com/2026/08/15/review-shakespeare-x5-hand-theatre-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | This appears to be a round-up or list reviewing multiple Shakespeare productions rather than a single named show. |
 | The Wee Review | [Jim E. Brown](https://theweereview.com/review/jim-e-brown/) | This is just a name with no indication of a review, show title, festival, or any evaluative content about a performance. |
-| The List | [Boys Don’t](https://list.co.uk/news/boys-dont-dance-review-an-inclusive-life-story-48843) | The headline alone provides no context indicating this is a review of a named show at an Edinburgh festival; it could be a round-up, article, or review of something elsewhere. |
-| Everything Theatre | [Unleashed](https://everything-theatre.co.uk/2026/08/review-unleashed-etcetera-theatre/) | The headline is too vague and generic to identify as a review of a specific named show at an Edinburgh festival. |
-| Everything Theatre | [Broken Boys](https://everything-theatre.co.uk/2026/08/review-broken-boys-hen-and-chickens-theatre/) | Headline alone is insufficient to confirm this is a review of a named show at an Edinburgh festival rather than a generic title, news item, or other content type. |
-| Everything Theatre | [ADvsHD](https://everything-theatre.co.uk/2026/08/review-advshd-rosemary-branch-theatre/) | This appears to be an acronym or abbreviation rather than a recognizable show title or review headline, and without additional context it's unclear if it references a specific Edinburgh festival performance. |
-| Everything Theatre | [ZomBeebies](https://everything-theatre.co.uk/2026/08/review-zombeebies-bridewell-theatre/) | This appears to be only a title with no context indicating it reviews a specific show at an Edinburgh festival. |
-| The Student | [A&E](https://thestudentnews.co.uk/2026/08/15/fringe-2026-ae/) | This headline is far too vague to identify a specific show or review at an Edinburgh festival. |
-| A Young(ish) Perspective | [The Doctor Will See You Now](https://ayoungishperspective.co.uk/2026/08/15/review-the-doctor-will-see-you-now/) | This headline lacks any indication of a named show, performer, or venue associated with an Edinburgh festival. |
-| The Scotsman | [Sean Shibe, Queen’s Hall](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/eif-music-reviews-sean-shibe-jlco-with-yuja-wang-8920073#sean-shibe-queen-s-hall) | This appears to be a profile or announcement of a performer at a venue rather than a review of a named show at an Edinburgh festival. |
-| Everything Theatre | [The Doctor Will See You Now](https://everything-theatre.co.uk/2026/08/review-the-doctor-will-see-you-now-lion-unicorn-theatre/) | This headline lacks any indication of a named show, performer, or venue associated with an Edinburgh festival. |
-| Everything Theatre | [MAJENIN – A Palestinian Love Story (مجانين)](https://everything-theatre.co.uk/2026/08/review-majenin-a-palestinian-love-story-%d9%85%d8%ac%d8%a7%d9%86%d9%8a%d9%86-pleasance-dome/) | The headline appears to be a show title but lacks any context indicating this is a review of a performance at an Edinburgh festival. |
-| Everything Theatre | [Tchaikovsky](https://everything-theatre.co.uk/2026/08/review-tchaikovsky-child-of-glass-opera-holland-park/) | This is just a composer's name with no context indicating it's a review of a specific named Edinburgh festival show. |
