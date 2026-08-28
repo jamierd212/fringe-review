@@ -6,17 +6,10 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| EdFringeReview | [Kevin [The Musical] ](https://www.edfringereview.com/review/r/giFRsNMi0LuiTGTWqqtq) | Kevin [The Musical] | 74% |
-| The Student | [God Complex](https://thestudentnews.co.uk/2026/08/27/fringe-2026-god-complex/) | God Complex | 78% |
-| Chortle | [Clementine](https://www.chortle.co.uk/review/2026/08/25/61444/rosalie_minnitt%3A_clementine_2) | Rosalie Minnitt: Clementine | 85% |
-| The List | [Sarah McGuinness: Grit, Glitter And Gaslight](https://list.co.uk/news/sarah-mcguinness-grit-glitter-and-gaslight-theatre-review-all-guns-blazing-49001) | Grit, Glamour and Gaslight | 85% |
-| All Edinburgh Theatre | [The Court 1](https://www.alledinburghtheatre.com/the-court-1-edinburgh-little-theatre-braw-venues-grand-lodge-edfringe-2026-review/) | The Court 1 | 86% |
-| One4Review | [Sophies Surprise 29th – 5*****](https://one4review.co.uk/2026/08/sophies-surprise-29th-5-4/) | Sophie's Surprise 29th | 93% |
-| ThreeWeeks Edinburgh | [Laughing Horse Clean Pick Of The Fringe](https://threeweeksedinburgh.com/article/laughing-horse-clean-pick-of-the-fringe-laughing-horse-comedy-free-festival/) | Laughing Horse Pick of the Fringe | 95% |
-| The Student | [REDACTED: The Coverup of A Coverup of A Coverup](https://thestudentnews.co.uk/2026/08/26/fringe-2026-redacted-the-coverup-of-a-coverup-of-a-coverup/) | REDACTED: The Cover-Up of a Cover-Up of a Cover-Up | 95% |
-| Binge Fringe | [REVIEW: Whalefall or Song to Dance with My Death, Teatro Volatil](https://www.bingefringe.com/2026/08/27/review-whalefall-or-song-to-dance-with-my-death-teatro-volatil-ed-fringe-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | Whale Fall or Song to Dance With My Death | 95% |
-| Binge Fringe | [REVIEW: You and Me (and Whoever Comes Next), Patch of Blue](https://www.bingefringe.com/2026/08/27/review-you-and-me-and-whoever-comes-next-patch-of-blue-3hc-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | You and Me (and Whoever Comes Next) | 95% |
-| The Scotsman | [Aalex Mandel-Dallal: Where Was I?](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-emma-holland-aalex-mandel-dallal-tom-neenan-alan-jay-lizzy-hoo-8944130#aalex-mandel-dallal-where-was-i) | Aalex Mandel-Dallal: Where Was I? | 97% |
+| The Guardian | [Clown Show review – after 250 years, the American dream explodes over one anarchic night](https://www.theguardian.com/stage/2026/aug/28/clown-show-review-kings-theatre-edinburgh) | Clown Show | 78% |
+| One4Review | [Michael Shafar – Inapproptiate – 3.5***](https://one4review.co.uk/2026/08/michael-shafar-inapproptiate-3-5/) | Michael Shafar: Inappropriate | 92% |
+| A Young(ish) Perspective | [The Hypochrondiac](https://ayoungishperspective.co.uk/2026/08/28/review-the-hypochrondiac-the-space/) | The Hypochondriac | 92% |
+| One4Review | [The Pig With The Dragon Tattoos – Lance Mao 3 ***](https://one4review.co.uk/2026/08/the-pig-with-the-dragon-tattoos-lance-mao-3/) | Lance Mao: The Pig with the Dragon Tattoo | 98% |
 
 ## Held — not on the leaderboard
 
@@ -26,6 +19,12 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Binge Fringe | [REVIEW: MAN!FEST: The Drag Boyband Musical, OnTheNose Productions, Chichester Festival Theatre](https://www.bingefringe.com/2026/08/28/review-manfest-the-drag-boyband-musical-onthenose-productions-chichester-festival-theatre-pleasance-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | This is a review of a show at Chichester Festival Theatre, not an Edinburgh festival. |
+| The Scotsman | [Campitalism](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-campitalism-the-problem-handle-with-care-women-of-will-meet-mayor-max-chameleon-mirage-8946777#campitalism) | This appears to be a single word or title without context indicating it reviews a specific Edinburgh festival show, performance, or exhibition. |
+| EdFringeReview | [9/11 Birds and the Bees](https://www.edfringereview.com/review/r/v1KbRcExyJEzUsYeYzkq) | This appears to be a title rather than a review headline, with no indication it reviews a specific Edinburgh festival show. |
+| The Stage | [a small and quiet light review at the Minerva Theatre, Chichester Festival Theatre](https://www.thestage.co.uk/reviews/a-small-and-quiet-light-review-minerva-chichester-festival-theatre-orange-tree-theatre) | This reviews a show at Chichester Festival Theatre, not at an Edinburgh festival. |
+| The Guardian | [BBCSSO/Runnicles review – resplendent recounting of Mahler’s fratricidal fairytale](https://www.theguardian.com/music/2026/aug/28/bbcsso-runnicles-review-mahler-usher-hall-edinburgh) | This is a review of a classical music performance by the BBC Scottish Symphony Orchestra conducted by Runnicles, not a show at an Edinburgh festival. |
+| The QR | [Oil & Whiskey](https://theqr.co.uk/2026/08/28/edfringe-review-oil-whiskey-2/) | This appears to be a title or name without context indicating it is a review of a specific Edinburgh festival show. |
 | Chortle | [John Achkar](https://www.chortle.co.uk/review/2026/08/26/61463/john_achkar) | This is a bare name with no context indicating it's a review of a specific show at an Edinburgh festival. |
 | Everything Theatre | [Only Bones](https://everything-theatre.co.uk/2026/08/review-only-bones-assembly-roxy/) | This headline is too vague to confirm it reviews a single named Edinburgh festival show; it could be a title, round-up, or something else entirely. |
 | Everything Theatre | [Terry’s Been Murdered!](https://everything-theatre.co.uk/2026/08/review-terrys-been-murdered-hen-and-chickens/) | The headline appears to be a news item or announcement rather than a review of a named Edinburgh festival show. |
@@ -220,9 +219,3 @@ table and re-run `python run.py --match` to let it back in.
 | Musical Theatre Review | [Tilly No-Body](https://musicaltheatrereview.com/tilly-no-body-edinburgh-festival-fringe/) | This appears to be a title or name rather than a review headline, as it lacks review language, critical descriptors, or clear indication of being a review of a show. |
 | Musical Theatre Review | [Cheese and Guava or Romeo and Juliet](https://musicaltheatrereview.com/cheese-and-guava-or-romeo-and-juliet-edinburgh-festival-fringe/) | This appears to be a title rather than a review headline, lacking review language or clear indication it's assessing a single Edinburgh festival show. |
 | The Scotsman | [Fringe comedy reviews: Elf Lyons Is The Woman on the Edge | Brendan Scannell: The Abyss + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-elf-lyons-is-the-woman-on-the-edge-brendan-scannell-the-abyss-8923550) | This is a round-up headline reviewing multiple shows rather than a single named show. |
-| The Scotsman | [EIF music reviews:  Up Late with Gnoss | YOLA & Big Noise | Death of Gesualdo](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/music/eif-music-reviews-up-late-with-gnoss-yola-big-noise-death-of-gesualdo-8923536) | This is a round-up of multiple music reviews (three different shows/performances) rather than a review of a single named show. |
-| EdFringeReview | [Auld Lang Sing 2026](https://www.edfringereview.com/review/r/0YrGSXbs7qD1J48tFkrD) | This appears to be an announcement or preview of a 2026 show rather than a review of a performance. |
-| Grapevine Magazine | [Mandy: Prince of Darkness — Peter Mandelson in his own words](https://www.thegrapevinemag.com/theatre/1jxz6spratfp6wljiduquv1jex72lc) | This is a profile or interview piece about Peter Mandelson, not a review of a named theatrical show at an Edinburgh festival. |
-| Binge Fringe | [REVIEW: The Void](https://www.bingefringe.com/2026/08/15/review-the-void-edith-alibec-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | The headline lacks essential context identifying this as a review of a named show at an Edinburgh festival; it could refer to many things called 'The Void' or be a review of something elsewhere. |
-| Binge Fringe | [REVIEW: Shakespeare x5](https://www.bingefringe.com/2026/08/15/review-shakespeare-x5-hand-theatre-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | This appears to be a round-up or list reviewing multiple Shakespeare productions rather than a single named show. |
-| The Wee Review | [Jim E. Brown](https://theweereview.com/review/jim-e-brown/) | This is just a name with no indication of a review, show title, festival, or any evaluative content about a performance. |
