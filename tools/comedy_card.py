@@ -65,7 +65,7 @@ def main() -> int:
     when = date.today()
     image = card.draw_card(placed, when=when, previous=previous,
                            qualifier="- Comedy", bg=card.BG_GREEN,
-                           slug="comedy20")
+                           totals=rank.totals(conn, YEAR), slug="comedy20")
     _text, named = card.caption(conn, placed, when=when,
                                 heading="Edinburgh Festivals Comedy Top 20",
                                 slug="comedy-")

@@ -263,6 +263,7 @@ def draw_card(placed, when: date | None = None,
               strapline: str = "Critically Acclaimed Shows",
               qualifier: str = "",
               bg: tuple[int, int, int] = BG,
+              totals: tuple[int, int] | None = None,
               slug: str = "top20") -> Path:
     """
     Render the top twenty. Returns the path written.
@@ -410,9 +411,12 @@ def draw_card(placed, when: date | None = None,
         if climbed is not None:
             _rise(d, WIDTH - TEXT_R, mid, climbed, climb_font)
 
-    # Counted from the board being drawn, so the comedy card says what the comedy
-    # ranking rests on rather than repeating the whole site's figures.
-    _footer(d, len(placed), sum(len(show.reviews) for _, show in placed))
+    # `totals` is what the website says at the foot of its own page — every show
+    # and every review we hold for the year. Falling back to counting the twenty
+    # shown would say something smaller and different, so callers pass it.
+    shows, reviews = totals or (len(placed),
+                                sum(len(show.reviews) for _, show in placed))
+    _footer(d, shows, reviews)
 
     OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / f"{slug}-{when.isoformat()}.png"

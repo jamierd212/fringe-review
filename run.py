@@ -161,7 +161,8 @@ def main() -> int:
         queued = standings.queue(notes)
         # The day's card and caption, for posting by hand. Drawn every run
         # because the board moves every run; nothing is sent anywhere.
-        image = card.draw_card(placed, previous=yesterday)
+        image = card.draw_card(placed, previous=yesterday,
+                               totals=rank.totals(conn, date.today().year))
         _text, named = card.caption(conn, placed)
         taggable = card.tags(conn, placed, yesterday, highs)
         print(f"  card: {image.name} ({named} of 20 with an Instagram handle)")

@@ -277,11 +277,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 (this_year,),
             )
         })
-        rated = conn.execute(
-            """SELECT COUNT(*) FROM reviews r JOIN shows s ON s.id = r.show_id
-                WHERE s.year = ? AND r.stars IS NOT NULL""",
-            (this_year,),
-        ).fetchone()[0]
+        _show_total, rated = rank.totals(conn, this_year)
 
         # Only the current festival has a live programme, so past years have no
         # venues to offer and the filter is left out of those pages entirely.
@@ -312,7 +308,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 nav=[dict(n, current=(n["year"] == this_year)) for n in nav],
                 updated=now.strftime("%-d %B %Y, %H:%M %Z"),
                 rated=rated,
-                show_count=len(ranked) + len(rest),
+                show_count=_show_total,
                 publications=publications,
                 contact_url=defaults.get(
                     "contact_url",

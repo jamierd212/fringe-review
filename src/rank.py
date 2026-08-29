@@ -230,6 +230,25 @@ def rank_key(show: Show) -> tuple:
     )
 
 
+def totals(conn: sqlite3.Connection, year: int) -> tuple[int, int]:
+    """
+    (shows, reviews) the year's board is built from.
+
+    Everything we hold for the year, not only what the ranking orders: a show
+    with nothing above three stars is listed rather than ranked, and its reviews
+    were still collected, read and published. The website has always said so at
+    the foot of the page; the cards were quietly claiming the smaller number,
+    and two figures for the same thing is one too many.
+    """
+    row = conn.execute(
+        """SELECT COUNT(DISTINCT s.id), COUNT(*)
+             FROM reviews r JOIN shows s ON s.id = r.show_id
+            WHERE s.year = ? AND r.stars IS NOT NULL""",
+        (year,),
+    ).fetchone()
+    return row[0], row[1]
+
+
 def years(conn: sqlite3.Connection) -> list[int]:
     """Festival years we hold rated reviews for, newest first."""
     rows = conn.execute(

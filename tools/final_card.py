@@ -30,7 +30,8 @@ def main() -> int:
     image = card.draw_card(placed, when=when, previous=previous,
                            qualifier="- Overall",
                            strapline="Final Weekend Standings",
-                           bg=card.BG_PURPLE, slug="final20")
+                           bg=card.BG_PURPLE, totals=rank.totals(conn, YEAR),
+                           slug="final20")
     _text, named = card.caption(conn, placed, when=when,
                                 heading="Edinburgh Festivals Top 20 — Final Weekend",
                                 slug="final-")
