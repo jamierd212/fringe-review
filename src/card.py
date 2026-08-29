@@ -73,6 +73,7 @@ CARD = (255, 255, 255)
 # A second page colour, for a card that is a section of the board rather than
 # the whole of it. The logo is keyed off its own corner, so it sits on either.
 BG_GREEN = (226, 241, 226)
+BG_PURPLE = (232, 226, 243)
 
 # Inter, carried in the repository rather than taken from the machine.
 #
@@ -205,15 +206,19 @@ def _footer(d: ImageDraw.ImageDraw, shows: int, reviews: int) -> None:
     carry itself. Sized down until the line fits the margins rather than fixed,
     because the counts grow all festival and "10,000" is wider than "1,000".
     """
-    lead = f"Collated from {shows:,} shows and {reviews:,} reviews - see full rankings at "
+    lead = f"{reviews:,} reviews of {shows:,} shows - full rankings at "
     site = "fringestars.com"
     room = WIDTH - 120
-    # The address is set larger than the sentence carrying it, not merely bolder.
-    # It is the one thing on the card a reader has to act on, and Instagram will
-    # not make it a link.
-    for size in range(26, 13, -1):
+    # As large as the margins allow, rather than a size chosen once and left to
+    # be wrong later: the counts grow all festival, and "10,000" is wider than
+    # "1,000". Sizes are tried from the top down and the first that fits wins.
+    #
+    # The address is set larger again, and in the display face. It is the one
+    # thing on the card a reader has to act on, and Instagram will not make it a
+    # link, so it has to carry itself.
+    for size in range(44, 13, -1):
         regular = _font("regular", size)
-        bold = _font("display", size + 12)
+        bold = _font("display", size + 8)
         if d.textlength(lead, font=regular) + d.textlength(site, font=bold) <= room:
             break
     # Both sit on one baseline, so the larger type grows upward off the smaller.
