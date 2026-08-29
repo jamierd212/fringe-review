@@ -398,6 +398,30 @@ publications:
       items, so the archive needs the index for a real backfill. Kate Copstick's
       "Fringe Gems" pieces are not rated and are skipped.
 
+  - name: Edinburgh Guide
+    slug: edinburghguide
+    homepage: https://edinburghguide.com/
+    feed: https://edinburghguide.com/rss.xml
+    pages: 5
+    rating:
+      # Drupal states it outright in a labelled field: "Rating (out of 5) 4".
+      # The generic reader finds nothing there — its "N out of M" pattern wants
+      # the number first, and here the number comes after the label, so twenty of
+      # their reviews read as unrated and were left out.
+      type: css
+      selector: ".field--name-field-rating .field__item"
+      scale: 5
+    fetch_page: true
+    require_title_match: "[Rr]eview"
+    title_strip_patterns:
+      - ',\s*[^,]*Review\s*$'
+      - ',\s*[^,]+$'          # trailing venue
+    verified: 2026-08-29
+    notes: >
+      Reviews the festivals alongside general Edinburgh coverage, so the title
+      filter does the work. The rating field is absent on previews and features,
+      which are skipped as unrated.
+
   - name: RGM
     slug: rgm
     homepage: https://rgm.press/
