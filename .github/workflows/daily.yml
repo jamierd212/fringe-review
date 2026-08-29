@@ -120,17 +120,41 @@ jobs:
           # so only commit if the index actually has something staged.
           if git diff --staged --quiet; then
             echo "No new reviews today."
-          else
-            if [ -n "${BACKFILL:-}" ]; then
-              git commit -m "Backfill ${BACKFILL}"
-            else
-              git commit -m "Reviews $(date -u +%Y-%m-%d)"
-            fi
-            # The scheduled run may have pushed while a long backfill was
-            # running, so rebase onto whatever landed rather than failing.
-            git pull --rebase --autostash
-            git push
+            exit 0
           fi
+          if [ -n "${BACKFILL:-}" ]; then
+            git commit -m "Backfill ${BACKFILL}"
+          else
+            git commit -m "Reviews $(date -u +%Y-%m-%d)"
+          fi
+          # If the remote moved while this run was collecting, combine the two
+          # rather than replaying onto them. data/reviews.db is binary, so there
+          # is no diff for a rebase to replay: "pull --rebase" simply fails, and
+          # with it the whole run. That is not theoretical — three consecutive
+          # sweeps collected a day each, failed here, and threw all of it away,
+          # which is why the ticket filter spent a week quoting a stale calendar.
+          #
+          # The database is an accumulating record, so the resolution is to take
+          # both sides and rebuild the pages from the result.
+          for attempt in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "push rejected; merging what landed while this run collected (attempt ${attempt})"
+            git fetch origin main
+            git show origin/main:data/reviews.db > "${RUNNER_TEMP:-/tmp}/remote.db"
+            git merge --no-commit --no-ff origin/main || true
+            # Ours is this run's database and its rendered pages; the remote copy
+            # is merged into the database below, and the pages are regenerated
+            # from the result rather than picked between.
+            git checkout --ours -- data/reviews.db docs review_queue.md || true
+            python tools/merge_db.py data/reviews.db "${RUNNER_TEMP:-/tmp}/remote.db"
+            python run.py --render
+            git add data/reviews.db docs/ review_queue.md
+            git commit -m "Merge the sweep with what landed while it ran"
+          done
+          echo "could not push after three attempts" >&2
+          exit 1
 
       # Deliberately last, and deliberately allowed to fail the run: the day's
       # reviews are already committed and pushed above, so failing here costs
