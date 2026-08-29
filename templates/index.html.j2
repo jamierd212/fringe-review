@@ -476,10 +476,16 @@
     <div class="tickets">
     <label class="inline">Tickets available
       <select id="f-playing">
-        {#- "Any date" is the neutral state and filters nothing: the board lists
-            what was acclaimed, whether or not it is still selling. The dates
-            below answer the ticket question. -#}
-        <option value="">Any date</option>
+        {#- The neutral state comes first and filters nothing: the board lists
+            what was acclaimed, whether or not it is still selling. It is drawn as
+            a dash rather than left empty, because the control shows the chosen
+            option's text and an empty one reads as broken.
+
+            "Any date" used to BE the neutral state, which meant the one option a
+            reader would pick to answer "can I still get in?" was the one that did
+            nothing at all. It now means what it says. -#}
+        <option value="">&mdash;</option>
+        <option value="any">Any date</option>
         <option value="today">Today</option>
         <option value="" disabled>──────────</option>
         {% for offset, label in playing_dates %}
@@ -732,6 +738,14 @@
         var on = venueToo && r.vdays.length ? r.days.concat(r.vdays) : r.days;
         if (!on.length) {
           show = false;
+        } else if (when === 'any') {
+          // Still selling on some date from today onwards. Dates already past do
+          // not count: a show whose last performance was on Tuesday is not one
+          // anybody can get a ticket for, and that is the whole question.
+          show = false;
+          for (var d = 0; d < on.length; d++) {
+            if (on[d] >= today) { show = true; break; }
+          }
         } else if (when === 'today') {
           show = on.indexOf(today) !== -1;
         } else {

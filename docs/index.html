@@ -438,7 +438,8 @@
     </label>
     <div class="tickets">
     <label class="inline">Tickets available
-      <select id="f-playing"><option value="">Any date</option>
+      <select id="f-playing"><option value="">&mdash;</option>
+        <option value="any">Any date</option>
         <option value="today">Today</option>
         <option value="" disabled>──────────</option>
         
@@ -516,7 +517,7 @@
 
 
 <p class="meta">
-  Updated 29 August 2026, 08:47 BST &middot;
+  Updated 29 August 2026, 09:03 BST &middot;
   5773 rated reviews across 1884 shows
 </p>
 
@@ -80963,6 +80964,14 @@
         var on = venueToo && r.vdays.length ? r.days.concat(r.vdays) : r.days;
         if (!on.length) {
           show = false;
+        } else if (when === 'any') {
+          // Still selling on some date from today onwards. Dates already past do
+          // not count: a show whose last performance was on Tuesday is not one
+          // anybody can get a ticket for, and that is the whole question.
+          show = false;
+          for (var d = 0; d < on.length; d++) {
+            if (on[d] >= today) { show = true; break; }
+          }
         } else if (when === 'today') {
           show = on.indexOf(today) !== -1;
         } else {
