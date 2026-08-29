@@ -20,7 +20,15 @@ OUTPUT_DIR = ROOT / "docs"
 
 # Used for canonical URLs and the sitemap. A custom domain only needs changing
 # here — nothing else in the codebase hard-codes the site address.
-SITE_URL = "https://fringestars.com"
+#
+# With the www, because that is what is actually served: docs/CNAME points the
+# domain at www.fringestars.com and the bare host 301s to it. Declaring the bare
+# host canonical while redirecting away from it told search engines the real
+# address was one that immediately sends them somewhere else, and left every one
+# of the 3,405 sitemap URLs pointing at a redirect. They resolve it by picking
+# the host that answers — so anything measuring the bare host sees nothing,
+# whatever the site is really doing.
+SITE_URL = "https://www.fringestars.com"
 
 # Venue -> geographic group, built from the festivals' own venue pages by
 # tools/venue_groups.py. Kept as data rather than derived at render time: it
