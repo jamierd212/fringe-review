@@ -6,12 +6,8 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| One4Review | [Liz Bains – Born To Be Mild 4****](https://one4review.co.uk/2026/08/liz-bains-born-to-be-mild-4/) | Born To Be Mild | 77% |
-| All Edinburgh Theatre | [Moving On: A New Musical](https://www.alledinburghtheatre.com/moving-on-happy-sad-productions-paradise-in-augustines-edfringe-2026-review/) | A New Musical | 78% |
-| Edinburgh Festivals Magazine | [Michael McPheat is BRUTAL!](https://edfestmag.com/michael-mcpheat-is-brutal/) | Michael McPheat is BRUTAL! | 95% |
-| Entertainment Now | [Becoming Doctor Ruth](https://entertainment-now.com/2026/08/edfringe-review-becoming-doctor-ruth/) | Becoming Dr Ruth | 95% |
-| EdFringeReview | [Vittorio Angelone - you can't Say Nothing anymore](https://www.edfringereview.com/review/r/22OrCWUeOjX0tGKLoTxu) | Vittorio Angelone: you can't Say Nothing any more | 98% |
-| One4Review | [Tomatoes Tried to Kill Me but Banjos Saved My Life – 4.5 ****/5](https://one4review.co.uk/2026/08/tomatoes-tried-to-kill-me-but-banjos-saved-my-life-4-5-5/) | Tomatoes Tried to Kill Me but Banjos Saved My Life | 98% |
+| All Edinburgh Theatre | [After the Fact](https://www.alledinburghtheatre.com/after-the-fact-blue-bird-productions-thespace-niddry-street-edfringe-2026-review/) | After the Fact | 76% |
+| EdFringeReview | [Julie Belliveau: Enlightened?](https://www.edfringereview.com/review/r/iAn22OXfzebPdaOTnSJ2) | Enlightened? | 76% |
 
 ## Held — not on the leaderboard
 
@@ -21,6 +17,10 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Everything Theatre | [The Glory Days](https://everything-theatre.co.uk/2026/08/review-the-glory-days-etcetera-theatre/) | This is a generic title without identifying a specific named show, performer, or venue at an Edinburgh festival. |
+| Everything Theatre | [Trouble In Tahiti/Seven Deadly Sins](https://everything-theatre.co.uk/2026/08/review-trouble-in-tahiti-seven-deadly-sins-opera-holland-park/) | This appears to be a title pair without context indicating it reviews a specific show at an Edinburgh festival, and may be a list or round-up. |
+| A Young(ish) Perspective | [You & It](https://ayoungishperspective.co.uk/2026/08/29/review-you-it/) | The headline lacks context indicating this is a review of a named show at an Edinburgh festival; it appears to be a generic title without identifying information about the performance or venue. |
+| A Young(ish) Perspective | [Midnight in Nashville](https://ayoungishperspective.co.uk/2026/08/29/review-midnight-in-nashville/) | This appears to be a generic title without identifying it as a specific show at an Edinburgh festival, and lacks context indicating it's a festival review. |
 | EdFringeReview | [Learning to Human ](https://www.edfringereview.com/review/r/yOB8OyCLWuEnKf5oSkVS) | This appears to be a show title rather than a review headline, as it lacks review language, rating indicators, or descriptive text about a performance at an Edinburgh festival. |
 | Everything Theatre | [Falling Out](https://everything-theatre.co.uk/2026/08/review-falling-out-hen-and-chickens-theatre/) | This headline is too generic and lacks any identifying information about a specific show, performer, or Edinburgh festival context to determine if it reviews a single named show. |
 | Everything Theatre | [Three Ghosts of Silvertown](https://everything-theatre.co.uk/2026/08/review-three-ghosts-of-silvertown-tate-institute/) | This appears to be a work title rather than a review headline, lacking the critical language, rating, or venue information typical of a festival show review. |
@@ -217,7 +217,3 @@ table and re-run `python run.py --match` to let it back in.
 | Everything Theatre | [Blub](https://everything-theatre.co.uk/2026/08/review-blub-polka-theatre/) | The headline 'Blub' is too vague and lacks any context indicating it reviews a named show at an Edinburgh festival. |
 | Everything Theatre | [The Untold Fable of Fritz](https://everything-theatre.co.uk/2026/08/review-the-untold-fable-of-fritz-rosemary-branch-theatre/) | This appears to be a title or work itself rather than a review headline, with no indication of festival context or review content. |
 | Everything Theatre | [If Not Tomorrow](https://everything-theatre.co.uk/2026/08/review-if-not-tomorrow-the-hope-theatre/) | This appears to be just a title without context indicating it reviews a specific Edinburgh festival show, and lacks the structure of a review article. |
-| Everything Theatre | [Off and On](https://everything-theatre.co.uk/2026/08/review-off-and-on-bridewell-theatre/) | The headline is too generic and lacks any indication of a specific show, performer, or Edinburgh festival context. |
-| Everything Theatre | [I Pie With My Little Lie Something Beginning with Murder](https://everything-theatre.co.uk/2026/08/review-i-pie-with-my-little-lie-something-beginning-with-murder-hen-and-chickens-theatre/) | This appears to be a playful title or wordplay rather than a clear review headline of a named Edinburgh festival show. |
-| Everything Theatre | [Pity Parade](https://everything-theatre.co.uk/2026/08/review-pity-parade-hen-and-chickens-theatre/) | This appears to be a show title alone without context indicating it's a review of a named Edinburgh festival performance. |
-| The Stage | [Bigger review at the Edinburgh Fringe: empowering](https://www.thestage.co.uk/reviews/bigger-review-institut-francais-decosse-edinburgh-sofiane-chalal) | The headline appears to be a fragment or truncated text that lacks a clear show title, making it impossible to identify a specific named show being reviewed. |
