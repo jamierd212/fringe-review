@@ -6,8 +6,8 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| All Edinburgh Theatre | [After the Fact](https://www.alledinburghtheatre.com/after-the-fact-blue-bird-productions-thespace-niddry-street-edfringe-2026-review/) | After the Fact | 76% |
-| EdFringeReview | [Julie Belliveau: Enlightened?](https://www.edfringereview.com/review/r/iAn22OXfzebPdaOTnSJ2) | Enlightened? | 76% |
+| The Student | [An Audience with Marvin Herbert](https://thestudentnews.co.uk/2026/08/30/fringe-2026-an-audience-with-marvin-herbert/) | An Audience with Marvin Herbert | 75% |
+| All Edinburgh Theatre | [Clown Show (EIF)](https://www.alledinburghtheatre.com/clown-show-geoff-sobelle-kings-theatre-eif-2026-review/) | Clown Show | 85% |
 
 ## Held — not on the leaderboard
 
@@ -17,6 +17,8 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Corr Blimey | [Camden Fringe 2026 Review: Children of Empire](https://corrblimey.uk/2026/08/30/camden-fringe-2026-review-children-of-empire-rosemayr-branch-theatre-london/) | This reviews a show at Camden Fringe, not an Edinburgh festival. |
+| Everything Theatre | [Walk The Bard; Elm Court](https://everything-theatre.co.uk/2026/08/review-walk-the-bard-elm-court-middle-temple/) | This appears to be a title or location reference rather than a review headline, lacking review language or critical assessment indicators. |
 | Everything Theatre | [The Glory Days](https://everything-theatre.co.uk/2026/08/review-the-glory-days-etcetera-theatre/) | This is a generic title without identifying a specific named show, performer, or venue at an Edinburgh festival. |
 | Everything Theatre | [Trouble In Tahiti/Seven Deadly Sins](https://everything-theatre.co.uk/2026/08/review-trouble-in-tahiti-seven-deadly-sins-opera-holland-park/) | This appears to be a title pair without context indicating it reviews a specific show at an Edinburgh festival, and may be a list or round-up. |
 | A Young(ish) Perspective | [You & It](https://ayoungishperspective.co.uk/2026/08/29/review-you-it/) | The headline lacks context indicating this is a review of a named show at an Edinburgh festival; it appears to be a generic title without identifying information about the performance or venue. |
@@ -215,5 +217,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Scotsman | [Fringe theatre reviews: FUCCBOIS: LIVE IN CONCERT | MAN!FEST: The Drag Boyband Musical | Doughboys](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-and-musicals-reviews-fuccbois-live-in-concert-manfest-the-drag-boyband-musical-doughboys-8924724) | This is a round-up of multiple shows rather than a review of a single named show. |
 | The Scotsman | [Fringe comedy reviews: Kate Smurthwaite | Ray O Leary | Julian Clary | Chris Forbes + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-kate-smurthwaite-ray-o-learyjulian-clary-chris-forbes-lucas-jefcoate-8925052) | This is a round-up reviewing multiple named shows, not a single show review. |
 | Everything Theatre | [Blub](https://everything-theatre.co.uk/2026/08/review-blub-polka-theatre/) | The headline 'Blub' is too vague and lacks any context indicating it reviews a named show at an Edinburgh festival. |
-| Everything Theatre | [The Untold Fable of Fritz](https://everything-theatre.co.uk/2026/08/review-the-untold-fable-of-fritz-rosemary-branch-theatre/) | This appears to be a title or work itself rather than a review headline, with no indication of festival context or review content. |
-| Everything Theatre | [If Not Tomorrow](https://everything-theatre.co.uk/2026/08/review-if-not-tomorrow-the-hope-theatre/) | This appears to be just a title without context indicating it reviews a specific Edinburgh festival show, and lacks the structure of a review article. |
