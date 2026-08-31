@@ -580,6 +580,13 @@
     stars, rounded down, and labelled. Star ratings are the publications&rsquo;
     own; this page only counts them.
   </p>
+  {% if greylist %}<p>
+    <strong>Shown but not counted:</strong> {{ greylist|join(", ") }}. We hold too
+    few ratings from these to know what their stars mean, so they appear on a
+    show&rsquo;s page &mdash; credited and linked &mdash; without moving its
+    position. This is about how much we know, not about the writing, and it is
+    reviewed each year.
+  </p>{% endif %}
   <p>
     Spotted a mistake? <a href="{{ contact_url }}" rel="noopener">{{ contact_label }}</a>.
     Please allow 24 hours for new reviews to be collected from the web

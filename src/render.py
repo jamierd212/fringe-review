@@ -316,6 +316,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 nav=[dict(n, current=(n["year"] == this_year)) for n in nav],
                 updated=now.strftime("%-d %B %Y, %H:%M %Z"),
                 rated=rated,
+                greylist=sorted(rank.greylist()),
                 show_count=_show_total,
                 publications=publications,
                 contact_url=defaults.get(

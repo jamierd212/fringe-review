@@ -165,6 +165,10 @@
         <span class="rating" title="{{ level }} out of 5">{{ level|stars }}</span>
         <span class="pub"><a href="{{ review.url }}" target="_blank" rel="nofollow noopener">{{ review.publication }}</a></span>
         {% if review.note %}<span class="note">{{ review.note }}</span>{% endif %}
+        {#- Shown, credited and linked, but not counted. Saying so is the point:
+            a rating that quietly does nothing would be worse than not listing it,
+            because the reader would take it as part of the total. -#}
+        {% if not review.counted %}<span class="note" title="Shown and credited, but not counted toward the ranking: we have too few ratings from this publication to know what its stars mean.">not counted</span>{% endif %}
       </li>
       {% endfor %}
     {% endfor %}
