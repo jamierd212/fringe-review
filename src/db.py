@@ -121,6 +121,22 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_reviews_once
                     'https://', ''), 'http://', ''), 'www.', ''), '/'),
                 CASE WHEN instr(url, '#') > 0
                      THEN lower(substr(url, instr(url, '#') + 1)) ELSE '' END);
+-- And once per critic, whatever the address. A publication can reissue a review
+-- under a new URL, or hold two ids for the same piece — EdFringeReview had one
+-- review of Elvis in Chaos stored twice that way, same critic, same date, same
+-- three stars, two links. The URL rule above cannot see that: the addresses are
+-- genuinely different.
+--
+-- Only where a reviewer is actually recorded, which today means EdFringeReview
+-- alone: everywhere else the column is NULL, and NULLs do not collide in SQLite,
+-- so this constrains exactly the reviews that carry the evidence for it. Two
+-- different critics at the same publication reviewing the same show remains a
+-- second opinion and is still counted, which is the whole point of keeping the
+-- reviewer at all.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_reviews_one_per_critic
+    ON reviews (show_id, publication, reviewer)
+    WHERE reviewer IS NOT NULL AND TRIM(reviewer) <> '';
+
 CREATE INDEX IF NOT EXISTS idx_aliases_alias ON aliases(alias);
 """
 
