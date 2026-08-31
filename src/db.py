@@ -98,6 +98,29 @@ CREATE TABLE IF NOT EXISTS holds (
 );
 
 CREATE INDEX IF NOT EXISTS idx_reviews_show ON reviews(show_id);
+
+-- One review of one show from one publication, whatever the URL happens to look
+-- like that day. The primary key is the URL, which does not catch a review that
+-- arrives twice under two spellings of the same address: http against https, a
+-- trailing slash, a www, %E2%98%85 against %e2%98%85, or a round-up article
+-- collected whole and later split into its shows. Each of those got counted as
+-- a second opinion and moved a show up the board.
+--
+-- The fragment is deliberately kept: it is what separates the shows inside a
+-- round-up, so #bigfoot and #jolly-fisherman are genuinely different reviews.
+-- It is only dropped for the comparison when one side has no fragment at all,
+-- which is the whole-article row a split has replaced.
+--
+-- Enforced here rather than in the collector because four different things
+-- write reviews — the sweep, tools/add_reviews.py, the backfill and any script
+-- written in a hurry — and only the database sees all of them.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_reviews_once
+    ON reviews (show_id, publication,
+                rtrim(replace(replace(replace(
+                    lower(substr(url, 1, instr(url || '#', '#') - 1)),
+                    'https://', ''), 'http://', ''), 'www.', ''), '/'),
+                CASE WHEN instr(url, '#') > 0
+                     THEN lower(substr(url, instr(url, '#') + 1)) ELSE '' END);
 CREATE INDEX IF NOT EXISTS idx_aliases_alias ON aliases(alias);
 """
 
