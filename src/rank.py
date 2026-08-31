@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
+
+from rapidfuzz import fuzz
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -355,6 +357,17 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
             ORDER BY published DESC"""
     )
     seen_articles: set[tuple] = set()
+    # Headlines already counted for a (show, publication, rating), so a near-miss
+    # can be recognised. Exact comparison is not enough: Corr Blimey published
+    # "Elf Lyons is The Woman on the Edge" and "...The Women on the Edge" on the
+    # same day, one letter apart, and the show was ranked on the same review
+    # twice. Neither the URL, the date, the rating nor the headline was identical,
+    # so nothing that demands equality could see it.
+    #
+    # This has to be similarity, and similarity cannot be a database constraint —
+    # which is why it lives here, where the board is actually computed, rather
+    # than as another index that would catch one more shape and miss the next.
+    headlines: dict[tuple, list[str]] = {}
     for r in rows:
         if r["show_id"] not in shows:
             continue
@@ -362,14 +375,30 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
         # person cannot review the same show twice, and two different people
         # reviewing it is exactly what is worth keeping. Only where nobody is
         # named does it fall back to comparing the article itself.
-        article = ((r["show_id"], r["publication"], "by", r["reviewer"])
-                   if r["reviewer"] else
-                   (r["show_id"], r["publication"],
-                    (r["headline"] or "").strip().casefold(),
-                    str(r["published"])[:10], r["stars"]))
-        if article in seen_articles:
-            continue
-        seen_articles.add(article)
+        if r["reviewer"]:
+            article = (r["show_id"], r["publication"], "by", r["reviewer"])
+            if article in seen_articles:
+                continue
+            seen_articles.add(article)
+        else:
+            head = (r["headline"] or "").strip().casefold()
+            key = (r["show_id"], r["publication"], r["stars"])
+            # Only against the same show, publication AND rating. Two entries
+            # from one round-up — "Escape Room: The Musical" and "Footballer's
+            # Wives: The Musical", both matched to a show called "A Musical" —
+            # are near-identical as strings and must stay two reviews; they are
+            # a matching fault, and collapsing them would hide it. What separates
+            # them from a real duplicate is that a duplicate is nearly the same
+            # sentence, not merely the same shape.
+            # 95, chosen with the real cases measured rather than guessed: the
+            # Elf Lyons pair scores 98.6, and the closest thing that must NOT
+            # collapse — Corr Blimey's reviews of two different films, "…2026
+            # Review: Abandoned" and "…Review: Hungry" — scores 88.9. The gap is
+            # wide enough to sit in, and narrow enough to be worth stating.
+            if head and any(fuzz.ratio(head, prior) >= 95
+                            for prior in headlines.get(key, ())):
+                continue
+            headlines.setdefault(key, []).append(head)
         shows[r["show_id"]].reviews.append(
             ReviewRef(
                 publication=r["publication"],
