@@ -108,8 +108,10 @@ CREATE INDEX IF NOT EXISTS idx_reviews_show ON reviews(show_id);
 --
 -- The fragment is deliberately kept: it is what separates the shows inside a
 -- round-up, so #bigfoot and #jolly-fisherman are genuinely different reviews.
--- It is only dropped for the comparison when one side has no fragment at all,
--- which is the whole-article row a split has replaced.
+--
+-- It therefore does NOT catch the whole-article row that a split replaces —
+-- the two keys differ, one having no fragment — and an index cannot express
+-- "equal unless one side is empty". The triggers below do that instead.
 --
 -- Enforced here rather than in the collector because four different things
 -- write reviews — the sweep, tools/add_reviews.py, the backfill and any script
@@ -151,6 +153,36 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_reviews_one_per_headline
     ON reviews (show_id, publication, LOWER(TRIM(headline)), stars)
     WHERE (reviewer IS NULL OR TRIM(reviewer) = '')
       AND headline IS NOT NULL AND TRIM(headline) <> '';
+
+-- A round-up collected whole, then split into its shows, leaves two rows for the
+-- same show: the article read as one review, headline naming five shows, and the
+-- piece that actually belongs to it. The Scotsman's Bigfoot review was on the
+-- board twice that way. Deleting the stale rows is not enough, because the next
+-- merge from the scheduled sweep brings its own copy back.
+--
+-- Triggers rather than an index, because the rule is conditional: a fragment
+-- distinguishes reviews from each other, EXCEPT against a row with no fragment
+-- at all from the same article, which the split supersedes.
+CREATE TRIGGER IF NOT EXISTS split_replaces_whole_article
+AFTER INSERT ON reviews WHEN instr(NEW.url, '#') > 0
+BEGIN
+    DELETE FROM reviews
+     WHERE show_id = NEW.show_id AND publication = NEW.publication
+       AND instr(url, '#') = 0
+       AND url = substr(NEW.url, 1, instr(NEW.url, '#') - 1);
+END;
+
+-- And the same in the other order: once the pieces exist, the whole article is
+-- not a review of any one of them and must not come back.
+CREATE TRIGGER IF NOT EXISTS whole_article_yields_to_split
+BEFORE INSERT ON reviews WHEN instr(NEW.url, '#') = 0
+BEGIN
+    SELECT RAISE(IGNORE) WHERE EXISTS (
+        SELECT 1 FROM reviews
+         WHERE show_id = NEW.show_id AND publication = NEW.publication
+           AND instr(url, '#') > 0
+           AND substr(url, 1, instr(url, '#') - 1) = NEW.url);
+END;
 
 CREATE INDEX IF NOT EXISTS idx_aliases_alias ON aliases(alias);
 """
