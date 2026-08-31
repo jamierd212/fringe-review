@@ -137,6 +137,21 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_reviews_one_per_critic
     ON reviews (show_id, publication, reviewer)
     WHERE reviewer IS NOT NULL AND TRIM(reviewer) <> '';
 
+-- Where no byline is recorded, the headline stands in for one. Corr Blimey
+-- republished its review of Trans People Are Awful a day later at a new address
+-- -- corrblimey.uk/2026/08/18/... and .../08/19/... -- same words, same five
+-- stars, and no author stored, so neither rule above could see it and the show
+-- was ranked on the same opinion twice.
+--
+-- Only where the reviewer is unknown. Where it IS known the rule above governs,
+-- and two critics at one publication reviewing one show stay two reviews even
+-- when their headline is just the show's name, which is how EdFringeReview
+-- writes them.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_reviews_one_per_headline
+    ON reviews (show_id, publication, LOWER(TRIM(headline)), stars)
+    WHERE (reviewer IS NULL OR TRIM(reviewer) = '')
+      AND headline IS NOT NULL AND TRIM(headline) <> '';
+
 CREATE INDEX IF NOT EXISTS idx_aliases_alias ON aliases(alias);
 """
 
