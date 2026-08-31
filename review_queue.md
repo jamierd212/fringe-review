@@ -4,7 +4,11 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-_Nothing to check. 🎉_
+| Publication | Headline | Matched to | Confidence |
+|---|---|---|---|
+| Binge Fringe | [REVIEW: 2Flamenco](https://www.bingefringe.com/2026/08/31/review-2flamenco-tuflamenco-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | 2Flamenco | 84% |
+| Binge Fringe | [REVIEW: Concerts of the Future, House of Oz](https://www.bingefringe.com/2026/08/31/review-concerts-of-the-future-house-of-oz-the-sonicrats-and-the-melbourne-symphony-orchestra-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | Concerts of the Future | 85% |
+| FringeReview | [ShakeItUp: The Improvised Shakespeare Show](https://fringereview.co.uk/review/edinburgh-fringe/2026/shakeitup-the-improvised-shakespeare-show-2/) | Shake It Up! The Improvised Shakespeare Show | 95% |
 
 ## Held — not on the leaderboard
 
@@ -14,6 +18,9 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Everything Theatre | [The Bear That Wasn’t; OPEN Southall](https://everything-theatre.co.uk/2026/08/review-the-bear-that-wasnt-open-southall-parkside-yards/) | The venue 'OPEN Southall' indicates this show is in Southall (London), not at an Edinburgh festival. |
+| Edinburgh Guide | [EIF26](https://edinburghguide.com/festival/2026/eif26-berliner-philharmoniker-elgar-tchaikovsky-usher-hall-review-22137) | The headline is just a code or reference number with no indication of a show name, review content, or Edinburgh festival context. |
+| A Young(ish) Perspective | [Something About England](https://ayoungishperspective.co.uk/2026/08/31/review-something-about-england/) | The headline is too generic and lacks any indication of a specific show, performer, venue, or Edinburgh festival context. |
 | The List | [The Upside Down](https://list.co.uk/news/the-upside-down-cabaret-review-scintillating-seduction-49096) | This appears to be just a show title without context indicating it's a review of a specific Edinburgh festival performance. |
 | EdFringeReview | [This Is How I Got Arrested (after smuggling drugs across the border but never actually getting caught with any drugs)](https://www.edfringereview.com/review/r/GvjSmXZY0ADgoVeZBFp6) | This appears to be a show title rather than a review headline, lacking any review framing, verdict, or indication that it assesses a performance. |
 | Everything Theatre | [Medusa’s Voice](https://everything-theatre.co.uk/2026/08/review-medusas-voice-the-courtyard-theatre/) | This appears to be a show title rather than a review headline, as it lacks review language or critical commentary. |
@@ -211,6 +218,3 @@ table and re-run `python run.py --match` to let it back in.
 | A Young(ish) Perspective | [A History of Paper](https://ayoungishperspective.co.uk/2026/08/18/review-a-history-of-paper/) | This headline lacks any indication of a specific show, performer, venue, or Edinburgh festival context. |
 | Binge Fringe | [REVIEW: A&E](https://www.bingefringe.com/2026/08/17/review-ae-wide-eye-productions-edinburgh-fringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | This appears to be a generic reference to the TV show 'A&E' (the television network/channel) rather than a specific named Edinburgh festival show or performance. |
 | The List | [Lambchop: Punching The Clown album review – Choral folk-country calm](https://list.co.uk/news/lambchop-punching-the-clown-album-review-choral-folk-country-calm-48550) | This is a music album review, not a review of a live performance or show at an Edinburgh festival. |
-| The List | [Teenage Sex And Death At Camp Miasma](https://list.co.uk/news/teenage-sex-and-death-at-camp-miasma-film-review-bloody-good-fun-48491) | This appears to be a title rather than a review headline, with no clear indication it reviews a specific Edinburgh festival show. |
-| The Scotsman | [Fringe opera and musicals reviews: Girlhood in the Bathroom | Our Seventh String + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/opera-and-musical-theatre/fringe-opera-and-musicals-reviews-girlhood-in-the-bathroom-our-seventh-string-8924693) | This is a round-up review of multiple shows, not a review of a single named show. |
-| The Scotsman | [Fringe theatre reviews: 44 Minutes | Stay | Weiner Beacon | The Hunger Artist + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-44-minutes-stay-weiner-beacon-the-hunger-artist-the-witches-of-macbeth-8924519) | This is a round-up of multiple shows rather than a review of a single named show. |
