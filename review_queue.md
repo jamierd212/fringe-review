@@ -4,10 +4,7 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-| Publication | Headline | Matched to | Confidence |
-|---|---|---|---|
-| The Student | [An Audience with Marvin Herbert](https://thestudentnews.co.uk/2026/08/30/fringe-2026-an-audience-with-marvin-herbert/) | An Audience with Marvin Herbert | 75% |
-| All Edinburgh Theatre | [Clown Show (EIF)](https://www.alledinburghtheatre.com/clown-show-geoff-sobelle-kings-theatre-eif-2026-review/) | Clown Show | 85% |
+_Nothing to check. 🎉_
 
 ## Held — not on the leaderboard
 
@@ -17,6 +14,9 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The List | [The Upside Down](https://list.co.uk/news/the-upside-down-cabaret-review-scintillating-seduction-49096) | This appears to be just a show title without context indicating it's a review of a specific Edinburgh festival performance. |
+| EdFringeReview | [This Is How I Got Arrested (after smuggling drugs across the border but never actually getting caught with any drugs)](https://www.edfringereview.com/review/r/GvjSmXZY0ADgoVeZBFp6) | This appears to be a show title rather than a review headline, lacking any review framing, verdict, or indication that it assesses a performance. |
+| Everything Theatre | [Medusa’s Voice](https://everything-theatre.co.uk/2026/08/review-medusas-voice-the-courtyard-theatre/) | This appears to be a show title rather than a review headline, as it lacks review language or critical commentary. |
 | Corr Blimey | [Camden Fringe 2026 Review: Children of Empire](https://corrblimey.uk/2026/08/30/camden-fringe-2026-review-children-of-empire-rosemayr-branch-theatre-london/) | This reviews a show at Camden Fringe, not an Edinburgh festival. |
 | Everything Theatre | [Walk The Bard; Elm Court](https://everything-theatre.co.uk/2026/08/review-walk-the-bard-elm-court-middle-temple/) | This appears to be a title or location reference rather than a review headline, lacking review language or critical assessment indicators. |
 | Everything Theatre | [The Glory Days](https://everything-theatre.co.uk/2026/08/review-the-glory-days-etcetera-theatre/) | This is a generic title without identifying a specific named show, performer, or venue at an Edinburgh festival. |
@@ -214,6 +214,3 @@ table and re-run `python run.py --match` to let it back in.
 | The List | [Teenage Sex And Death At Camp Miasma](https://list.co.uk/news/teenage-sex-and-death-at-camp-miasma-film-review-bloody-good-fun-48491) | This appears to be a title rather than a review headline, with no clear indication it reviews a specific Edinburgh festival show. |
 | The Scotsman | [Fringe opera and musicals reviews: Girlhood in the Bathroom | Our Seventh String + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/opera-and-musical-theatre/fringe-opera-and-musicals-reviews-girlhood-in-the-bathroom-our-seventh-string-8924693) | This is a round-up review of multiple shows, not a review of a single named show. |
 | The Scotsman | [Fringe theatre reviews: 44 Minutes | Stay | Weiner Beacon | The Hunger Artist + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-reviews-44-minutes-stay-weiner-beacon-the-hunger-artist-the-witches-of-macbeth-8924519) | This is a round-up of multiple shows rather than a review of a single named show. |
-| The Scotsman | [Fringe theatre reviews: FUCCBOIS: LIVE IN CONCERT | MAN!FEST: The Drag Boyband Musical | Doughboys](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/theatre-and-stage/fringe-theatre-and-musicals-reviews-fuccbois-live-in-concert-manfest-the-drag-boyband-musical-doughboys-8924724) | This is a round-up of multiple shows rather than a review of a single named show. |
-| The Scotsman | [Fringe comedy reviews: Kate Smurthwaite | Ray O Leary | Julian Clary | Chris Forbes + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-kate-smurthwaite-ray-o-learyjulian-clary-chris-forbes-lucas-jefcoate-8925052) | This is a round-up reviewing multiple named shows, not a single show review. |
-| Everything Theatre | [Blub](https://everything-theatre.co.uk/2026/08/review-blub-polka-theatre/) | The headline 'Blub' is too vague and lacks any context indicating it reviews a named show at an Edinburgh festival. |
