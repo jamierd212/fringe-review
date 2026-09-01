@@ -4,10 +4,7 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-| Publication | Headline | Matched to | Confidence |
-|---|---|---|---|
-| The List | [Turn Your Fucking Phones Off](https://list.co.uk/news/turn-your-fucking-phones-off-theatre-review-dystopian-web-49125) | Turn Your F*cking Phones Off | 93% |
-| The List | [Laughing Out Lonely](https://list.co.uk/news/laughing-out-lonely-theatre-review-remarkably-expressive-49132) | Laughing Out Lonely, OPE-N | 95% |
+_Nothing to check. 🎉_
 
 ## Held — not on the leaderboard
 
@@ -17,6 +14,9 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Everything Theatre | [A Slow Fire](https://everything-theatre.co.uk/2026/09/review-a-slow-fire-jermyn-street-theatre/) | The headline lacks context about whether this reviews a specific named show at an Edinburgh festival, reading more like a generic title than a review attribution. |
+| The Stage | [You and It at the King’s Head Theatre, London: reprogramming needed](https://www.thestage.co.uk/reviews/you-and-it-review-kings-head-theatre-london) | This reviews a show at the King's Head Theatre in London, not at an Edinburgh festival. |
+| The Stage | [The Tempest review – fun 'semi-opera'](https://www.thestage.co.uk/reviews/the-tempest-review-vache-baroque) | The headline does not name a specific show or venue, so it cannot be confirmed as reviewing a single named Edinburgh festival production. |
 | Binge Fringe | [REVIEW: Nose Job](https://www.bingefringe.com/2026/09/01/review-nose-job-heads-on-crooked-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | The headline lacks any indication of an Edinburgh festival venue, performer name, or specific show identity beyond a generic title. |
 | The List | [Taverna Miresia: Mario, Bella, Anastasia](https://list.co.uk/news/taverna-miresia-mario-bella-anastasia-theatre-review-uncompromising-drama-49126) | This appears to be a restaurant or venue name with character names, not a review of a named Edinburgh festival show. |
 | BroadwayWorld | [OIL AND WHISKEY](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-OIL-AND-WHISKEY-The-Street-20260831) | This appears to be a title without context indicating it's a review of a named Edinburgh festival show rather than a general topic or round-up. |
@@ -214,6 +214,3 @@ table and re-run `python run.py --match` to let it back in.
 | EdFringeReview | [Love in the Time of Fifth Grade](https://www.edfringereview.com/review/r/wfoGkwAAK62DxDFG4VjK) | This appears to be a generic title without clear indication it reviews a specific named show at an Edinburgh festival. |
 | Everything Theatre | [Firebrand](https://everything-theatre.co.uk/2026/08/review-firebrand-the-water-rats/) | This appears to be just a title with no context indicating it's a review of a specific Edinburgh festival show rather than a general headline or reference. |
 | Bouquets & Brickbats | [The End of Oak Street](https://bouquetsbrickbatsreviews.com/2026/08/19/the-end-of-oak-street/) | This appears to be a generic title rather than a review of a named Edinburgh festival show, with no clear indication it reviews a specific performance at an Edinburgh festival. |
-| All Edinburgh Theatre | [Doctor Faustus](https://www.alledinburghtheatre.com/doctor-faustus-edinburgh-festival-of-the-sacred-arts-st-johns-church-edfringe-2026-review/) | This is just a title with no context indicating it reviews a specific Edinburgh festival performance rather than being a news item, preview, or reference to the classical work itself. |
-| The QR | [Owl at Home](https://theqr.co.uk/2026/08/18/edfringe-review-owl-at-home-theatr-iolo-2/) | This appears to be a book or story title rather than a review of a named show at an Edinburgh festival. |
-| The QR | [The Very Best of Tommy Cooper](https://theqr.co.uk/2026/08/18/edfringe-review-the-very-best-of-tommy-cooper-just-like-that-2/) | This appears to be a compilation or retrospective of Tommy Cooper material rather than a review of a single named show at an Edinburgh festival. |
