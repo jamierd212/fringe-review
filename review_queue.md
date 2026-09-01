@@ -6,9 +6,8 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| Binge Fringe | [REVIEW: 2Flamenco](https://www.bingefringe.com/2026/08/31/review-2flamenco-tuflamenco-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | 2Flamenco | 84% |
-| Binge Fringe | [REVIEW: Concerts of the Future, House of Oz](https://www.bingefringe.com/2026/08/31/review-concerts-of-the-future-house-of-oz-the-sonicrats-and-the-melbourne-symphony-orchestra-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | Concerts of the Future | 85% |
-| FringeReview | [ShakeItUp: The Improvised Shakespeare Show](https://fringereview.co.uk/review/edinburgh-fringe/2026/shakeitup-the-improvised-shakespeare-show-2/) | Shake It Up! The Improvised Shakespeare Show | 95% |
+| The List | [Turn Your Fucking Phones Off](https://list.co.uk/news/turn-your-fucking-phones-off-theatre-review-dystopian-web-49125) | Turn Your F*cking Phones Off | 93% |
+| The List | [Laughing Out Lonely](https://list.co.uk/news/laughing-out-lonely-theatre-review-remarkably-expressive-49132) | Laughing Out Lonely, OPE-N | 95% |
 
 ## Held — not on the leaderboard
 
@@ -18,6 +17,10 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| Binge Fringe | [REVIEW: Nose Job](https://www.bingefringe.com/2026/09/01/review-nose-job-heads-on-crooked-edfringe-2026-%e2%98%85%e2%98%85%e2%98%85/) | The headline lacks any indication of an Edinburgh festival venue, performer name, or specific show identity beyond a generic title. |
+| The List | [Taverna Miresia: Mario, Bella, Anastasia](https://list.co.uk/news/taverna-miresia-mario-bella-anastasia-theatre-review-uncompromising-drama-49126) | This appears to be a restaurant or venue name with character names, not a review of a named Edinburgh festival show. |
+| BroadwayWorld | [OIL AND WHISKEY](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-OIL-AND-WHISKEY-The-Street-20260831) | This appears to be a title without context indicating it's a review of a named Edinburgh festival show rather than a general topic or round-up. |
+| A Young(ish) Perspective | [Hipster Hell](https://ayoungishperspective.co.uk/2026/08/31/review-hipster-hell-pbhs-free-fringe-brewdog-lothian-rd/) | The headline alone provides no context indicating this reviews a named show at an Edinburgh festival; it could be a roundup, venue review, or other content. |
 | Everything Theatre | [The Bear That Wasn’t; OPEN Southall](https://everything-theatre.co.uk/2026/08/review-the-bear-that-wasnt-open-southall-parkside-yards/) | The venue 'OPEN Southall' indicates this show is in Southall (London), not at an Edinburgh festival. |
 | Edinburgh Guide | [EIF26](https://edinburghguide.com/festival/2026/eif26-berliner-philharmoniker-elgar-tchaikovsky-usher-hall-review-22137) | The headline is just a code or reference number with no indication of a show name, review content, or Edinburgh festival context. |
 | A Young(ish) Perspective | [Something About England](https://ayoungishperspective.co.uk/2026/08/31/review-something-about-england/) | The headline is too generic and lacks any indication of a specific show, performer, venue, or Edinburgh festival context. |
@@ -214,7 +217,3 @@ table and re-run `python run.py --match` to let it back in.
 | All Edinburgh Theatre | [Doctor Faustus](https://www.alledinburghtheatre.com/doctor-faustus-edinburgh-festival-of-the-sacred-arts-st-johns-church-edfringe-2026-review/) | This is just a title with no context indicating it reviews a specific Edinburgh festival performance rather than being a news item, preview, or reference to the classical work itself. |
 | The QR | [Owl at Home](https://theqr.co.uk/2026/08/18/edfringe-review-owl-at-home-theatr-iolo-2/) | This appears to be a book or story title rather than a review of a named show at an Edinburgh festival. |
 | The QR | [The Very Best of Tommy Cooper](https://theqr.co.uk/2026/08/18/edfringe-review-the-very-best-of-tommy-cooper-just-like-that-2/) | This appears to be a compilation or retrospective of Tommy Cooper material rather than a review of a single named show at an Edinburgh festival. |
-| A Young(ish) Perspective | [The Durham Review: Raiders of the Lost Laughs](https://ayoungishperspective.co.uk/2026/08/18/review-the-durham-review-raiders-of-the-lost-laughs-belly-dancer-at-underbelly-cowgate/) | This appears to be a round-up or series review rather than a review of one named show at an Edinburgh festival. |
-| A Young(ish) Perspective | [A History of Paper](https://ayoungishperspective.co.uk/2026/08/18/review-a-history-of-paper/) | This headline lacks any indication of a specific show, performer, venue, or Edinburgh festival context. |
-| Binge Fringe | [REVIEW: A&E](https://www.bingefringe.com/2026/08/17/review-ae-wide-eye-productions-edinburgh-fringe-2026-%e2%98%85%e2%98%85%e2%98%85%e2%98%85/) | This appears to be a generic reference to the TV show 'A&E' (the television network/channel) rather than a specific named Edinburgh festival show or performance. |
-| The List | [Lambchop: Punching The Clown album review – Choral folk-country calm](https://list.co.uk/news/lambchop-punching-the-clown-album-review-choral-folk-country-calm-48550) | This is a music album review, not a review of a live performance or show at an Edinburgh festival. |
