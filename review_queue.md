@@ -4,7 +4,9 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-_Nothing to check. 🎉_
+| Publication | Headline | Matched to | Confidence |
+|---|---|---|---|
+| The Skinny | [Zachary Ruane @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/zachary-ruane-pleasance-courtyard) | Zachary Ruane: Comedy | 85% |
 
 ## Held — not on the leaderboard
 
@@ -14,6 +16,7 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| A Young(ish) Perspective | [John Achkar](https://ayoungishperspective.co.uk/2026/09/01/review-john-achkar-just-the-spare-room/) | This is a bare name with no context indicating it's a review of a specific show at an Edinburgh festival. |
 | Everything Theatre | [A Slow Fire](https://everything-theatre.co.uk/2026/09/review-a-slow-fire-jermyn-street-theatre/) | The headline lacks context about whether this reviews a specific named show at an Edinburgh festival, reading more like a generic title than a review attribution. |
 | The Stage | [You and It at the King’s Head Theatre, London: reprogramming needed](https://www.thestage.co.uk/reviews/you-and-it-review-kings-head-theatre-london) | This reviews a show at the King's Head Theatre in London, not at an Edinburgh festival. |
 | The Stage | [The Tempest review – fun 'semi-opera'](https://www.thestage.co.uk/reviews/the-tempest-review-vache-baroque) | The headline does not name a specific show or venue, so it cannot be confirmed as reviewing a single named Edinburgh festival production. |
@@ -213,4 +216,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Student | [SPF5000](https://thestudentnews.co.uk/2026/08/19/fringe-2026-spf5000/) | This appears to be a product name or acronym rather than a headline indicating a review of a named Edinburgh festival show. |
 | EdFringeReview | [Love in the Time of Fifth Grade](https://www.edfringereview.com/review/r/wfoGkwAAK62DxDFG4VjK) | This appears to be a generic title without clear indication it reviews a specific named show at an Edinburgh festival. |
 | Everything Theatre | [Firebrand](https://everything-theatre.co.uk/2026/08/review-firebrand-the-water-rats/) | This appears to be just a title with no context indicating it's a review of a specific Edinburgh festival show rather than a general headline or reference. |
-| Bouquets & Brickbats | [The End of Oak Street](https://bouquetsbrickbatsreviews.com/2026/08/19/the-end-of-oak-street/) | This appears to be a generic title rather than a review of a named Edinburgh festival show, with no clear indication it reviews a specific performance at an Edinburgh festival. |
