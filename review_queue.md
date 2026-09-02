@@ -6,7 +6,7 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| The Skinny | [Zachary Ruane @ Pleasance Courtyard](https://www.theskinny.co.uk/festivals/edinburgh-fringe/comedy/zachary-ruane-pleasance-courtyard) | Zachary Ruane: Comedy | 85% |
+| EdFringeReview | [Ian Stone - ‘The Pleb’s Pow Wow’](https://www.edfringereview.com/review/r/pnfcXU6tFZrdRRHoKv5s) | Ian Stone | 94% |
 
 ## Held — not on the leaderboard
 
@@ -16,6 +16,12 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The List | [Late Fame](https://list.co.uk/news/late-fame-film-review-a-satire-on-success-49154) | The headline is too generic and lacks any identifying information about a specific show, festival, or venue to verify it reviews a named Edinburgh festival performance. |
+| The List | [Assassin's Creed Black Flag Resynced review: A pirate’s life, reborn](https://list.co.uk/news/assassins-creed-black-flag-resynced-review-a-pirates-life-reborn-49157) | This is a review of a video game remaster, not a theatrical show or performance at an Edinburgh festival. |
+| The Stage | [Electra/Persona review starring Cate Blanchett at the National Theatre, London](https://www.thestage.co.uk/reviews/electrapersona-review-lyttelton-theatre-national-theatre-london) | This is a review of a show at the National Theatre in London, not at an Edinburgh festival. |
+| Everything Theatre | [Midnight in Nashville](https://everything-theatre.co.uk/2026/09/review-midnight-in-nashville-the-glitch/) | This appears to be a generic title without identifying it as a specific show at an Edinburgh festival, and lacks context indicating it's a festival review. |
+| EdFringeReview | [This Is How I Got Arrested (after smuggling drugs across the border but never actually getting caught with any drugs)](https://www.edfringereview.com/review/r/hU3fg7FX36aabuqTkGiH) | This appears to be a show title rather than a review headline, lacking any review framing, verdict, or indication that it assesses a performance. |
+| British Theatre Guide | [Via Dolorosa](https://www.britishtheatreguide.info/reviews/via-dolorosa-thespacetriplex-25980) | This appears to be only a show title with no context indicating it's a review of a specific Edinburgh festival performance. |
 | A Young(ish) Perspective | [John Achkar](https://ayoungishperspective.co.uk/2026/09/01/review-john-achkar-just-the-spare-room/) | This is a bare name with no context indicating it's a review of a specific show at an Edinburgh festival. |
 | Everything Theatre | [A Slow Fire](https://everything-theatre.co.uk/2026/09/review-a-slow-fire-jermyn-street-theatre/) | The headline lacks context about whether this reviews a specific named show at an Edinburgh festival, reading more like a generic title than a review attribution. |
 | The Stage | [You and It at the King’s Head Theatre, London: reprogramming needed](https://www.thestage.co.uk/reviews/you-and-it-review-kings-head-theatre-london) | This reviews a show at the King's Head Theatre in London, not at an Edinburgh festival. |
@@ -210,9 +216,3 @@ table and re-run `python run.py --match` to let it back in.
 | The Scotsman | [Kleio Quartet, Makoto Ozone & Sheku Kanneh-Mason](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/edinburgh-international-festival-reviews-ihsane-cortoalto-kleio-quartet-makoto-ozone-sheku-kanneh-mason-8929301#kleio-quartet-makoto-ozone-and-sheku-kanneh-mason) | This appears to be a listing or announcement of multiple performers rather than a review of a single named show. |
 | BroadwayWorld | [GIRLFRIENDS-A NOT SO STRAIGHT PLAY](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-GIRLFRIENDS-A-NOT-SO-STRAIGHT-PLAY-Greenside-George-Street-20260819) | This appears to be a title or announcement rather than a review headline, lacking the language pattern typical of a festival review article. |
 | The Stage | [Jeeves Takes Charge review at the Charing Cross Theatre, London: Fun - if unfocused](https://www.thestage.co.uk/reviews/jeeves-takes-charge-review-charing-cross-theatre-london-sam-harrison-wodehouse) | This reviews a show at the Charing Cross Theatre in London, not at an Edinburgh festival. |
-| The Stage | [Anansi the Spider at the Picnic Lawn, Regent’s Park Open Air Theatre, London](https://www.thestage.co.uk/reviews/anansi-the-spider-review-picnic-lawn-regents-park-open-air-theatre-london) | This show is at Regent's Park in London, not at an Edinburgh festival. |
-| A Young(ish) Perspective | [Situationsh*t](https://ayoungishperspective.co.uk/2026/08/19/review-situationsht/) | This appears to be just a show title without any review context or indication it reviews a specific Edinburgh festival performance. |
-| A Young(ish) Perspective | [Mountains and Seas  at theSpace](https://ayoungishperspective.co.uk/2026/08/19/review-mountains-and-seas-at-thespace-niddry-street/) | The headline lacks clear review language and context indicating this is a festival review rather than just a venue name and show title. |
-| The Student | [SPF5000](https://thestudentnews.co.uk/2026/08/19/fringe-2026-spf5000/) | This appears to be a product name or acronym rather than a headline indicating a review of a named Edinburgh festival show. |
-| EdFringeReview | [Love in the Time of Fifth Grade](https://www.edfringereview.com/review/r/wfoGkwAAK62DxDFG4VjK) | This appears to be a generic title without clear indication it reviews a specific named show at an Edinburgh festival. |
-| Everything Theatre | [Firebrand](https://everything-theatre.co.uk/2026/08/review-firebrand-the-water-rats/) | This appears to be just a title with no context indicating it's a review of a specific Edinburgh festival show rather than a general headline or reference. |
