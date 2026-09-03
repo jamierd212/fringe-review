@@ -4,9 +4,7 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-| Publication | Headline | Matched to | Confidence |
-|---|---|---|---|
-| EdFringeReview | [Ian Stone - ‘The Pleb’s Pow Wow’](https://www.edfringereview.com/review/r/pnfcXU6tFZrdRRHoKv5s) | Ian Stone | 94% |
+_Nothing to check. 🎉_
 
 ## Held — not on the leaderboard
 
@@ -16,6 +14,10 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The List | [Leviticus](https://list.co.uk/news/leviticus-film-review-horror-with-a-human-face-49162) | This is just a title with no context indicating it's a review of a show at an Edinburgh festival. |
+| The Stage | [A Month in the Country review at the Donmar Warehouse starring Sophie Okonedo](https://www.thestage.co.uk/reviews/a-month-in-the-country-review-donmar-warehouse-london-brian-friel-sophie-okonedo) | This reviews a show at the Donmar Warehouse in London, not at an Edinburgh festival. |
+| Everything Theatre | [You & It](https://everything-theatre.co.uk/2026/09/review-you-it-kings-head-theatre/) | The headline lacks context indicating this is a review of a named show at an Edinburgh festival; it appears to be a generic title without identifying information about the performance or venue. |
+| The Stage | [Present Laughter review at Theatre Royal Bath: entertaining](https://www.thestage.co.uk/reviews/present-laughter-review-theatre-royal-bath-tracy-ann-oberman) | This is a review of a show at Theatre Royal Bath, not at an Edinburgh festival. |
 | The List | [Late Fame](https://list.co.uk/news/late-fame-film-review-a-satire-on-success-49154) | The headline is too generic and lacks any identifying information about a specific show, festival, or venue to verify it reviews a named Edinburgh festival performance. |
 | The List | [Assassin's Creed Black Flag Resynced review: A pirate’s life, reborn](https://list.co.uk/news/assassins-creed-black-flag-resynced-review-a-pirates-life-reborn-49157) | This is a review of a video game remaster, not a theatrical show or performance at an Edinburgh festival. |
 | The Stage | [Electra/Persona review starring Cate Blanchett at the National Theatre, London](https://www.thestage.co.uk/reviews/electrapersona-review-lyttelton-theatre-national-theatre-london) | This is a review of a show at the National Theatre in London, not at an Edinburgh festival. |
@@ -212,7 +214,3 @@ table and re-run `python run.py --match` to let it back in.
 | Musical Theatre Review | [Do Zombies Dream of Undead Sheep?](https://musicaltheatrereview.com/do-zombies-dream-of-undead-sheep-edinburgh-festival-fringe/) | This appears to be a creative title but lacks context indicating it reviews a specific named show at an Edinburgh festival. |
 | Musical Theatre Review | [Encounter](https://musicaltheatrereview.com/encounter-edinburgh-festival-fringe/) | This single word is too vague to identify it as a review of a named show at an Edinburgh festival. |
 | Musical Theatre Review | [I Was a Teenage She-Devil](https://musicaltheatrereview.com/i-was-a-teenage-she-devil-edinburgh-festival-fringe/) | This appears to be a title or work rather than a review headline, with no indication it reviews a show at an Edinburgh festival. |
-| The Scotsman | [Fringe comedy reviews: Dan Tiernan | Tom Cashman | Stephen Catling | Dee Allum | Thermos Museum Books + more](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/comedy/fringe-comedy-reviews-dan-tiernan-tom-cashman-stephen-catling-dee-allum-thermos-museum-books-more-8929077) | This is a round-up of multiple shows/acts, not a review of a single named show. |
-| The Scotsman | [Kleio Quartet, Makoto Ozone & Sheku Kanneh-Mason](https://www.scotsman.com/arts-and-culture/edinburgh-festivals/dance-and-physical-theatre/edinburgh-international-festival-reviews-ihsane-cortoalto-kleio-quartet-makoto-ozone-sheku-kanneh-mason-8929301#kleio-quartet-makoto-ozone-and-sheku-kanneh-mason) | This appears to be a listing or announcement of multiple performers rather than a review of a single named show. |
-| BroadwayWorld | [GIRLFRIENDS-A NOT SO STRAIGHT PLAY](https://www.broadwayworld.com/scotland/article/EDINBURGH-2026-Review-GIRLFRIENDS-A-NOT-SO-STRAIGHT-PLAY-Greenside-George-Street-20260819) | This appears to be a title or announcement rather than a review headline, lacking the language pattern typical of a festival review article. |
-| The Stage | [Jeeves Takes Charge review at the Charing Cross Theatre, London: Fun - if unfocused](https://www.thestage.co.uk/reviews/jeeves-takes-charge-review-charing-cross-theatre-london-sam-harrison-wodehouse) | This reviews a show at the Charing Cross Theatre in London, not at an Edinburgh festival. |
