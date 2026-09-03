@@ -4,7 +4,9 @@ Matches the robot was not fully confident about. Check each one; if two
 entries are the same show, add the wrong spelling to the `aliases` table
 pointing at the right `show_id` and re-run `python run.py --match`.
 
-_Nothing to check. 🎉_
+| Publication | Headline | Matched to | Confidence |
+|---|---|---|---|
+| One4Review | [Adrian Mnkowicz: Latin Stars America 4****](https://one4review.co.uk/2026/09/adrian-mnkowicz-latin-stars-america-4/) | Latin Stars America | 75% |
 
 ## Held — not on the leaderboard
 
@@ -14,6 +16,11 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The List | [Dexys Midnight Runners: Love album review – A life in song](https://list.co.uk/news/dexys-midnight-runners-love-album-review-a-life-in-song-49163) | This is a music album review, not a review of a performance or show at an Edinburgh festival. |
+| The List | [Mirko Ilić: Nightmares And Daydreams – AC 2020](https://list.co.uk/news/mirko-ilic-nightmares-and-daydreams-ac-2020-book-review-lockdowns-darkest-dreams-49166) | This appears to be an artwork or exhibition title with a date code, not a review headline indicating coverage of a specific Edinburgh festival show. |
+| The List | [Phoebe Bridgers: Lost Weekend album review – Death becomes her](https://list.co.uk/news/phoebe-bridgers-lost-weekend-album-review-death-becomes-her-49167) | This is a music album review, not a review of a live show or performance at an Edinburgh festival. |
+| Everything Theatre | [Twelfth Night](https://everything-theatre.co.uk/2026/09/twelfth-night-drayton-arms/) | This is just a title with no indication it's a review of a specific Edinburgh festival production, rather than a general reference to Shakespeare's play. |
+| A Young(ish) Perspective | [A BEGINNER’S GUIDE TO WIDOWHOOD](https://ayoungishperspective.co.uk/2026/09/03/review-a-beginners-guide-to-widowhood/) | This appears to be a generic title without clear indication of a specific Edinburgh festival show, venue, performer name, or production details. |
 | The List | [Leviticus](https://list.co.uk/news/leviticus-film-review-horror-with-a-human-face-49162) | This is just a title with no context indicating it's a review of a show at an Edinburgh festival. |
 | The Stage | [A Month in the Country review at the Donmar Warehouse starring Sophie Okonedo](https://www.thestage.co.uk/reviews/a-month-in-the-country-review-donmar-warehouse-london-brian-friel-sophie-okonedo) | This reviews a show at the Donmar Warehouse in London, not at an Edinburgh festival. |
 | Everything Theatre | [You & It](https://everything-theatre.co.uk/2026/09/review-you-it-kings-head-theatre/) | The headline lacks context indicating this is a review of a named show at an Edinburgh festival; it appears to be a generic title without identifying information about the performance or venue. |
@@ -209,8 +216,3 @@ table and re-run `python run.py --match` to let it back in.
 | Musical Theatre Review | [1457, The Boy at Rest](https://musicaltheatrereview.com/1457-the-boy-at-rest-edinburgh-festival-fringe/) | This appears to be a title or work rather than a review headline, lacking review language or attribution to a specific Edinburgh festival show. |
 | Musical Theatre Review | [A Stan is Born!](https://musicaltheatrereview.com/a-stan-is-born-edinburgh-festival-fringe/) | The headline lacks any indication of a named show, performer, or Edinburgh festival context, appearing to be a generic or unclear title without sufficient identifying information. |
 | Musical Theatre Review | [0G Crush](https://musicaltheatrereview.com/0g-crush-edinburgh-festival-fringe/) | This appears to be a show title only, without any indication that it is a review of a performance at an Edinburgh festival. |
-| Musical Theatre Review | [Miss Brexit](https://musicaltheatrereview.com/miss-brexit-edinburgh-festival-fringe/) | This appears to be a standalone title without context indicating it reviews a specific named show at an Edinburgh festival. |
-| Musical Theatre Review | [Count Dykula](https://musicaltheatrereview.com/count-dykula-edinburgh-festival-fringe/) | This appears to be just a show title without any review content, context, or indication it reviews a specific Edinburgh festival performance. |
-| Musical Theatre Review | [Do Zombies Dream of Undead Sheep?](https://musicaltheatrereview.com/do-zombies-dream-of-undead-sheep-edinburgh-festival-fringe/) | This appears to be a creative title but lacks context indicating it reviews a specific named show at an Edinburgh festival. |
-| Musical Theatre Review | [Encounter](https://musicaltheatrereview.com/encounter-edinburgh-festival-fringe/) | This single word is too vague to identify it as a review of a named show at an Edinburgh festival. |
-| Musical Theatre Review | [I Was a Teenage She-Devil](https://musicaltheatrereview.com/i-was-a-teenage-she-devil-edinburgh-festival-fringe/) | This appears to be a title or work rather than a review headline, with no indication it reviews a show at an Edinburgh festival. |
