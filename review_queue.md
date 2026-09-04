@@ -6,7 +6,7 @@ pointing at the right `show_id` and re-run `python run.py --match`.
 
 | Publication | Headline | Matched to | Confidence |
 |---|---|---|---|
-| One4Review | [Adrian Mnkowicz: Latin Stars America 4****](https://one4review.co.uk/2026/09/adrian-mnkowicz-latin-stars-america-4/) | Latin Stars America | 75% |
+| One4Review | [Hannah Morton : Crushed 4****](https://one4review.co.uk/2026/09/hannah-morton-crushed-4/) | Crushed | 83% |
 
 ## Held — not on the leaderboard
 
@@ -16,6 +16,11 @@ table and re-run `python run.py --match` to let it back in.
 
 | Publication | Headline | Why held |
 |---|---|---|
+| The Wee Review | [Playlunch](https://theweereview.com/review/playlunch/) | This is just a name or title with no indication it reviews a specific Edinburgh festival show. |
+| Everything Theatre | [SUGA](https://everything-theatre.co.uk/2026/09/review-suga-brixton-house/) | The headline is too vague and minimal to identify whether it reviews a specific named show at an Edinburgh festival. |
+| The Stage | [Holy Fool at Park Theatre, London: requires some advanced knowledge](https://www.thestage.co.uk/reviews/holy-fool-review-park-theatre-london) | This reviews a show at Park Theatre in London, not at an Edinburgh festival. |
+| The Stage | [The Story review at the National Theatre:](https://www.thestage.co.uk/reviews/the-story-review-olivier-theatre-national-theatre-london-clint-dyer-letitia-wright) | This reviews a show at the National Theatre in London, not at an Edinburgh festival. |
+| Bouquets & Brickbats | [The Death of Robin Hood](https://bouquetsbrickbatsreviews.com/2026/09/04/the-death-of-robin-hood/) | This appears to be a title of a work rather than a review headline, lacking clear review language or attribution to an Edinburgh festival production. |
 | The List | [Dexys Midnight Runners: Love album review – A life in song](https://list.co.uk/news/dexys-midnight-runners-love-album-review-a-life-in-song-49163) | This is a music album review, not a review of a performance or show at an Edinburgh festival. |
 | The List | [Mirko Ilić: Nightmares And Daydreams – AC 2020](https://list.co.uk/news/mirko-ilic-nightmares-and-daydreams-ac-2020-book-review-lockdowns-darkest-dreams-49166) | This appears to be an artwork or exhibition title with a date code, not a review headline indicating coverage of a specific Edinburgh festival show. |
 | The List | [Phoebe Bridgers: Lost Weekend album review – Death becomes her](https://list.co.uk/news/phoebe-bridgers-lost-weekend-album-review-death-becomes-her-49167) | This is a music album review, not a review of a live show or performance at an Edinburgh festival. |
@@ -211,8 +216,3 @@ table and re-run `python run.py --match` to let it back in.
 | EdFringeReview | [The Durham Revue Presents: Raiders of the Lost Laughs](https://www.edfringereview.com/review/r/yi2mdgWFjD04DgwbZ9sh) | This appears to be a revue/sketch show which could be at Edinburgh, but lacks confirmation of Edinburgh festival venue, date, or review context in the headline alone. |
 | EdFringeReview | [BeetleMania The Musical](https://www.edfringereview.com/review/r/GUrneOfT2iKQwPR2cpXI) | This appears to be a show title without review content, context, or location information indicating it is being reviewed at an Edinburgh festival. |
 | Musical Theatre Review | [Remember That Time? A Musical](https://musicaltheatrereview.com/remember-that-time-a-musical-edinburgh-festival-fringe/) | The headline lacks any context indicating this is a review of a specific show at an Edinburgh festival, and appears to be just a show title without location or festival attribution. |
-| Musical Theatre Review | [Sense: A New Musical About Dementia](https://musicaltheatrereview.com/sense-a-new-musical-about-dementia-edinburgh-festival-fringe/) | This headline lacks any indication it reviews a specific performance at an Edinburgh festival, with no location specified and no performance details provided. |
-| Musical Theatre Review | [Vagabond Skies: The Van Gogh Musical](https://musicaltheatrereview.com/vagabond-skies-the-van-gogh-musical-edinburgh-festival-fringe/) | This appears to be a show title without any indication it is being reviewed or that it is at an Edinburgh festival. |
-| Musical Theatre Review | [1457, The Boy at Rest](https://musicaltheatrereview.com/1457-the-boy-at-rest-edinburgh-festival-fringe/) | This appears to be a title or work rather than a review headline, lacking review language or attribution to a specific Edinburgh festival show. |
-| Musical Theatre Review | [A Stan is Born!](https://musicaltheatrereview.com/a-stan-is-born-edinburgh-festival-fringe/) | The headline lacks any indication of a named show, performer, or Edinburgh festival context, appearing to be a generic or unclear title without sufficient identifying information. |
-| Musical Theatre Review | [0G Crush](https://musicaltheatrereview.com/0g-crush-edinburgh-festival-fringe/) | This appears to be a show title only, without any indication that it is a review of a performance at an Edinburgh festival. |
