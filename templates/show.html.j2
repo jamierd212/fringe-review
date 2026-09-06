@@ -112,6 +112,11 @@
   .pub a:hover { text-decoration: underline; text-decoration-color: var(--ink); }
   a:hover { text-decoration-color: var(--ink); }
   footer { margin-top: 2rem; color: var(--muted); font-size: .8rem; }
+  /* Footer links carry the page's pale underline colour, which against muted
+     grey text reads as no underline at all. In the footer the link is the whole
+     point of the sentence, so it takes the ink colour and an underline to
+     match. */
+  footer a { color: var(--ink); text-decoration-color: currentColor; }
 </style>
 <script type="application/ld+json">
 {{ jsonld }}
@@ -180,11 +185,11 @@
   <p>
     Star ratings are the publications&rsquo; own; this page collates and links to
     them. Ratings published on other scales are converted, rounded down and
-    labelled. Spotted a mistake?
-    <a href="{{ contact_url }}" rel="noopener">{{ contact_label }}</a>.
-    {#- Said next to the correction address because most of what arrives there
-        is a review we would have found anyway, a day later. -#}
-    Please allow 24 hours for new reviews to be collected from the web.
+    labelled. Please see our
+    <a href="{{ contact_url }}" rel="noopener">editorial policy</a> for
+    corrections.
+    {#- The 24-hour note that used to sit here has moved to that page, with
+        everything else a company writing in needs to know. -#}
   </p>
 </footer>
 

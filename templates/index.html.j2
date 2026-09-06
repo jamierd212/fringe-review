@@ -368,6 +368,11 @@
   .rest div { break-inside: avoid; margin-bottom: .4rem; }
   footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule);
            color: var(--muted); font-size: .8rem; }
+  /* Footer links carry the page's pale underline colour, which against muted
+     grey text reads as no underline at all. In the footer the link is the whole
+     point of the sentence, so it takes the ink colour and an underline to
+     match. */
+  footer a { color: var(--ink); text-decoration-color: currentColor; }
   @media (max-width: 560px) { .rest { columns: 1; } }
 </style>
 </head>
@@ -586,24 +591,18 @@
     <strong>Sources:</strong> {{ publications|join(", ") }}.
   </p>{% endif %}
   <p>
-    Ratings are collated automatically from publicly available reviews and link
-    back to the publication. Ratings given on other scales are converted to
-    stars, rounded down, and labelled. Star ratings are the publications&rsquo;
-    own; this page only counts them.
+    Star ratings are the publications&rsquo; own; this page collates and links to
+    them. Ratings published on other scales are converted, rounded down and
+    labelled. Please see our
+    <a href="{{ contact_url }}" rel="noopener">editorial policy</a> for
+    corrections.
   </p>
+  {#- The greylist, the 24-hour note and what publications can ask for have all
+      moved to that page. They were three paragraphs of small print under a
+      leaderboard; they are the substance of the policy page. -#}
   {% if greylist %}<p>
-    <strong>Shown but not counted:</strong> {{ greylist|join(", ") }}. We hold too
-    few ratings from these to know what their stars mean, so they appear on a
-    show&rsquo;s page &mdash; credited and linked &mdash; without moving its
-    position. This is about how much we know, not about the writing, and it is
-    reviewed each year.
+    <strong>Shown but not counted:</strong> {{ greylist|join(", ") }}.
   </p>{% endif %}
-  <p>
-    Spotted a mistake? <a href="{{ contact_url }}" rel="noopener">{{ contact_label }}</a>.
-    Please allow 24 hours for new reviews to be collected from the web
-    and we&rsquo;ll fix it. Publications wanting a rating amended or removed:
-    same route &mdash; it will be actioned.
-  </p>
 </footer>
 
 </div>
