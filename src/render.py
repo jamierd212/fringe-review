@@ -283,6 +283,10 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
     for this_year in available:
         ranked, rest = rank.leaderboard(conn, this_year)
 
+        # A publication whose ratings are held back is not a source of this
+        # board, and listing it here would name the very thing we have decided
+        # not to publish.
+        held = rank.withheld(conn)
         publications = sorted({
             r["publication"]
             for r in conn.execute(
@@ -291,7 +295,7 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                     WHERE s.year = ? AND r.stars IS NOT NULL""",
                 (this_year,),
             )
-        })
+        } - held)
         _show_total, rated = rank.totals(conn, this_year)
 
         # Only the current festival has a live programme, so past years have no
@@ -323,7 +327,6 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 nav=[dict(n, current=(n["year"] == this_year)) for n in nav],
                 updated=now.strftime("%-d %B %Y, %H:%M %Z"),
                 rated=rated,
-                greylist=sorted(rank.greylist()),
                 show_count=_show_total,
                 publications=publications,
                 contact_url=POLICY_PAGE,
@@ -416,7 +419,6 @@ def _write_policy_page(conn: sqlite3.Connection) -> None:
         env.get_template("policy.html.j2").render(
             site_url=SITE_URL,
             contact_email=CONTACT_EMAIL,
-            greylist=sorted(rank.greylist()),
         ),
         encoding="utf-8")
 

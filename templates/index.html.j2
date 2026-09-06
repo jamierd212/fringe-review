@@ -597,12 +597,9 @@
     <a href="{{ contact_url }}" rel="noopener">editorial policy</a> for
     corrections.
   </p>
-  {#- The greylist, the 24-hour note and what publications can ask for have all
-      moved to that page. They were three paragraphs of small print under a
-      leaderboard; they are the substance of the policy page. -#}
-  {% if greylist %}<p>
-    <strong>Shown but not counted:</strong> {{ greylist|join(", ") }}.
-  </p>{% endif %}
+  {#- No list of held-back publications here or anywhere else. Naming them reads
+      as a blacklist, which is not what it is: it is a statement that we have too
+      little of their work to read their ratings yet, and it resolves itself. -#}
 </footer>
 
 </div>

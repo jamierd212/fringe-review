@@ -70,22 +70,29 @@ def selectivity(conn: sqlite3.Connection, year: int | None = None) -> dict[tuple
     return out
 
 
-GREYLIST_FILE = Path(__file__).resolve().parent.parent / "data" / "greylist.json"
-
-
-def greylist() -> dict[str, str]:
+def withheld(conn: sqlite3.Connection) -> set[str]:
     """
-    Publications shown but not counted, and why. See data/greylist.json.
+    Publications whose every rating on record is five stars.
 
-    Read fresh rather than cached at import: it is a list a person edits between
-    festivals, and the next run should honour the edit without anyone
-    remembering to restart something.
+    Held back entirely — not shown, not counted — until they publish something
+    else. A publication we have only ever seen award five stars has told us
+    nothing that separates one show from another, and printing it anyway invites
+    the obvious: a new outlet, a single notice, and a show lifted up the board on
+    a rating with no scale behind it.
+
+    Not a judgement on the writing, and not permanent. It is decided from the
+    record every run, so the day a publication files anything other than a five
+    its reviews appear, retrospectively and without anyone deciding.
+
+    Deliberately measured across every year we hold, not the current one: the
+    question is what we know about the publication, and last year's ratings are
+    evidence about that too.
     """
-    try:
-        return {k: v for k, v in json.loads(GREYLIST_FILE.read_text()).items()
-                if not k.startswith("_")}
-    except (OSError, ValueError):
-        return {}
+    return {row[0] for row in conn.execute(
+        """SELECT publication FROM reviews
+            WHERE stars IS NOT NULL
+            GROUP BY publication
+           HAVING COUNT(*) = SUM(stars = 5)""")}
 
 
 @dataclass
@@ -96,7 +103,6 @@ class ReviewRef:
     original: str
     converted: bool
     rounded: bool
-    counted: bool = True        # False for greylisted publications
 
     @property
     def note(self) -> str:
@@ -140,17 +146,9 @@ class Show:
 
     @property
     def counts(self) -> dict[int, int]:
-        """
-        The stars the ranking works from — greylisted publications excluded.
-
-        Everything the site says about a show's standing runs through here:
-        score, mean, whether it is ranked at all. The reviews themselves stay in
-        `reviews`, so the page can still show and credit them.
-        """
         out = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0}
         for r in self.reviews:
-            if r.counted:
-                out[r.stars] += 1
+            out[r.stars] += 1
         return out
 
     def at(self, stars: int) -> list[ReviewRef]:
@@ -271,11 +269,14 @@ def totals(conn: sqlite3.Connection, year: int) -> tuple[int, int]:
     the foot of the page; the cards were quietly claiming the smaller number,
     and two figures for the same thing is one too many.
     """
+    held = withheld(conn)
+    marks = ",".join("?" * len(held)) or "NULL"
     row = conn.execute(
-        """SELECT COUNT(DISTINCT s.id), COUNT(*)
-             FROM reviews r JOIN shows s ON s.id = r.show_id
-            WHERE s.year = ? AND r.stars IS NOT NULL""",
-        (year,),
+        f"""SELECT COUNT(DISTINCT s.id), COUNT(*)
+              FROM reviews r JOIN shows s ON s.id = r.show_id
+             WHERE s.year = ? AND r.stars IS NOT NULL
+               AND r.publication NOT IN ({marks})""",
+        (year, *held),
     ).fetchone()
     return row[0], row[1]
 
@@ -348,7 +349,7 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
     # its rating together. Two critics disagree about at least one of those; a
     # syndicated copy matches on all four. That separates 65 genuine second
     # opinions from 23 duplicates in this year's data.
-    grey = greylist()
+    grey = withheld(conn)
     rows = conn.execute(
         """SELECT show_id, publication, url, stars, original, converted, rounded,
                   headline, published, reviewer
@@ -370,6 +371,13 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
     headlines: dict[tuple, list[str]] = {}
     for r in rows:
         if r["show_id"] not in shows:
+            continue
+        # A publication we have only ever seen give five stars is held back
+        # entirely, rather than shown without counting. Shown-but-uncounted was
+        # the wrong answer: a reader adds the stars up themselves and gets a
+        # different total from ours, and the show still gets the credit of
+        # appearing to hold another five-star review.
+        if r["publication"] in grey:
             continue
         # Where the source names the writer, that settles it outright: the same
         # person cannot review the same show twice, and two different people
@@ -407,7 +415,6 @@ def load(conn: sqlite3.Connection, year: int | None = None) -> list[Show]:
                 original=r["original"] or "",
                 converted=bool(r["converted"]),
                 rounded=bool(r["rounded"]),
-                counted=r["publication"] not in grey,
             )
         )
 
