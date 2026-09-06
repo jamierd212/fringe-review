@@ -144,9 +144,15 @@
     background: var(--card); cursor: pointer;
   }
   nav.years .filter-toggle:hover { border-color: var(--ink); color: var(--ink); }
-  nav.years .filter-toggle[aria-expanded="true"] {
+  nav.years .filter-toggle[aria-expanded="true"],
+  nav.years .filter-toggle[aria-pressed="true"] {
     background: var(--ink); border-color: var(--ink); color: var(--bg);
   }
+  /* Minimised: the ratings go, the ranking stays. Titles and genre are what a
+     reader scans by once they know what they are looking for, and twenty shows
+     carrying twenty reviews each is most of a phone screen per show. */
+  body.compact .show .reviews { display: none; }
+  body.compact .show { padding-top: .3rem; padding-bottom: .3rem; }
   nav.years .search { margin-left: .4rem; }
   .filters {
     display: flex; flex-wrap: wrap; gap: .45rem .8rem; align-items: start;
@@ -386,7 +392,8 @@
     
     <button type="button" class="filter-toggle" id="filter-toggle" aria-expanded="false"
             aria-controls="filters" hidden>Filter</button>
-    
+    <button type="button" class="filter-toggle" id="compact-toggle"
+            aria-pressed="false" hidden>Minimise</button>
     <label class="search" hidden>
       <span class="visually-hidden">Search shows</span>
       <input type="search" id="q" placeholder="Search shows&hellip;"
@@ -517,7 +524,7 @@
 
 
 <p class="meta">
-  Updated 6 September 2026, 09:54 BST &middot;
+  Updated 6 September 2026, 09:59 BST &middot;
   6478 rated reviews across 2002 shows
 </p>
 
@@ -88033,6 +88040,39 @@
   // last in the file, behind the pickers, the chips, the URL state and the
   // sticky bar. Mobile Chrome showed the search box and no Filter button, which
   // is exactly that shape of failure.
+  var compactToggle = document.getElementById('compact-toggle');
+  if (compactToggle) {
+    compactToggle.hidden = false;
+    compactToggle.addEventListener('click', function () {
+      // Keep the reader where they were. Collapsing twenty rows above the fold
+      // moves everything below it up by hundreds of pixels, so expanding again
+      // after scrolling would otherwise land somewhere else entirely. Measure
+      // the first row still on screen, toggle, then put that row back where it
+      // was — the page changes shape around the reader rather than under them.
+      // The row to hold still is the first one that STARTS on screen, not the
+      // first one merely touching the top of it. Those differ, and the
+      // difference matters: a row part-scrolled off the top is usually the
+      // tallest on the page — twenty reviews is why it is tall — so it is the
+      // row that shrinks most, and pinning its top drags everything else up.
+      var rows = document.querySelectorAll('article.show');
+      var anchor = null, before = 0, fallback = null, fallbackTop = 0;
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].hidden) continue;
+        var box = rows[i].getBoundingClientRect();
+        if (box.bottom > 0 && !fallback) { fallback = rows[i]; fallbackTop = box.top; }
+        if (box.top >= 0) { anchor = rows[i]; before = box.top; break; }
+      }
+      if (!anchor) { anchor = fallback; before = fallbackTop; }
+      var on = compactToggle.getAttribute('aria-pressed') === 'true';
+      compactToggle.setAttribute('aria-pressed', String(!on));
+      compactToggle.textContent = on ? 'Minimise' : 'Expand';
+      document.body.classList.toggle('compact', !on);
+      if (anchor) {
+        window.scrollBy(0, anchor.getBoundingClientRect().top - before);
+      }
+    });
+  }
+
   var filterToggle = document.getElementById('filter-toggle');
   var filterPanel = document.getElementById('filters');
   if (filterToggle && filterPanel) {
