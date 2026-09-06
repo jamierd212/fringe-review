@@ -33,7 +33,40 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Out of season the board does not change much, but a page that stops updating
+  # looks abandoned, and the sweep is what keeps the availability, the links and
+  # the health checks honest. So it keeps running — once a week, on a Sunday,
+  # until the 2027 festival is close enough to matter.
+  #
+  # The cron above still fires twice a day, because GitHub cron cannot express
+  # "weekly until a date, then daily". This gate decides whether the run does
+  # anything, which keeps one schedule to read rather than two to keep in step.
+  # From 20 July 2027 it stops gating and the festival cadence resumes on its
+  # own, with nothing to remember.
+  decide:
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.gate.outputs.run }}
+    steps:
+      - id: gate
+        run: |
+          today=$(date -u +%Y%m%d)        # compared as a number, not a string
+          weekday=$(date -u +%u)          # 7 = Sunday
+          hour=$(date -u +%H)
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "run=yes" >> "$GITHUB_OUTPUT"          # asked for by hand
+          elif [ "$today" -ge 20270720 ]; then
+            echo "run=yes" >> "$GITHUB_OUTPUT"          # festival cadence
+          elif [ "$weekday" = "7" ] && [ "$hour" = "07" ]; then
+            echo "run=yes" >> "$GITHUB_OUTPUT"          # the weekly run
+          else
+            echo "run=no"  >> "$GITHUB_OUTPUT"
+            echo "Out of season: the sweep runs on Sunday mornings until 20 July 2027."
+          fi
+
   sweep:
+    needs: decide
+    if: needs.decide.outputs.run == 'yes'
     runs-on: ubuntu-latest
     # A daily run takes a few minutes. A month backfill is a different job: it
     # fetches a page per review at one request a second, and every show it finds
