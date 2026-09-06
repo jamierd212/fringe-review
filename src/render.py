@@ -30,6 +30,13 @@ OUTPUT_DIR = ROOT / "docs"
 # whatever the site is really doing.
 SITE_URL = "https://www.fringestars.com"
 
+# The correction address appears on exactly one page. Everything else links to
+# that page instead. An address repeated across three thousand pages is three
+# thousand places for a scraper to find it, and one place to change it is worth
+# more than the click it saves a reader.
+CONTACT_EMAIL = "corrections@fringestars.com"
+POLICY_PAGE = "policy.html"
+
 # Venue -> geographic group, built from the festivals' own venue pages by
 # tools/venue_groups.py. Kept as data rather than derived at render time: it
 # needs 300 requests to rebuild and changes once a year, not once a day.
@@ -319,11 +326,9 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 greylist=sorted(rank.greylist()),
                 show_count=_show_total,
                 publications=publications,
-                contact_url=defaults.get(
-                    "contact_url",
-                    "mailto:corrections@fringestars.com",
-                ),
-                contact_label=defaults.get("contact_label", "let us know"),
+                contact_url=POLICY_PAGE,
+                contact_label=defaults.get("contact_label",
+                                           "editorial policy &amp; corrections"),
                 analytics_token=defaults.get("analytics_token", ""),
                 venues=venues,
                 venue_groups=groups,
@@ -370,10 +375,9 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 # from, and the page reads it.
                 site_url=SITE_URL, back_href="../../" + page_name(landing),
                 jsonld=show_jsonld(show, this_year, festival_name),
-                contact_url=defaults.get(
-                    "contact_url",
-                    "mailto:corrections@fringestars.com"),
-                contact_label=defaults.get("contact_label", "let us know"),
+                contact_url="../../" + POLICY_PAGE,
+                contact_label=defaults.get("contact_label",
+                                           "editorial policy &amp; corrections"),
                 analytics_token=defaults.get("analytics_token", ""),
             )
             out = OUTPUT_DIR / show.page / "index.html"
@@ -393,8 +397,28 @@ def run(conn: sqlite3.Connection, year: int | None = None) -> list[Path]:
                 shutil.rmtree(stale)
 
     _write_bot_page(defaults)
+    _write_policy_page(conn)
+    sitemap.append(f"{SITE_URL}/{POLICY_PAGE}")
     _write_sitemap(sitemap, now)
     return written
+
+
+def _write_policy_page(conn: sqlite3.Connection) -> None:
+    """
+    The one page that carries the correction address.
+
+    Everything else links here. The greylist is passed in rather than typed out,
+    so the page cannot claim a publication is uncounted after it has been let
+    back in, or stay silent about one just added.
+    """
+    env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=False)
+    (OUTPUT_DIR / POLICY_PAGE).write_text(
+        env.get_template("policy.html.j2").render(
+            site_url=SITE_URL,
+            contact_email=CONTACT_EMAIL,
+            greylist=sorted(rank.greylist()),
+        ),
+        encoding="utf-8")
 
 
 def _write_bot_page(defaults: dict) -> None:
@@ -406,7 +430,8 @@ def _write_bot_page(defaults: dict) -> None:
     has - who is this, how hard are they hitting me, and how do I stop them.
     """
     agent = defaults.get("user_agent", "FringeLeaderboardBot/0.1")
-    contact = defaults.get("contact_url", "mailto:corrections@fringestars.com")
+    # The bot page keeps a route to a human without printing the address again.
+    contact = f"{SITE_URL}/{POLICY_PAGE}"
     label = defaults.get("contact_label", "get in touch")
     (OUTPUT_DIR / "bot.html").write_text(f"""<!DOCTYPE html>
 <html lang="en-GB">

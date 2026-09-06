@@ -9,11 +9,12 @@
 # against real Fringe data out of season.
 
 defaults:
-  # Where corrections go. Shown in the page footer and used as the contact point
-  # for publications. A forwarding address on our own domain: it keeps the
-  # personal inbox private and does not point readers at the source repository.
-  contact_url: "mailto:corrections@fringestars.com"
-  contact_label: "email corrections@fringestars.com"
+  # How the footers offer to be contacted. The address itself is NOT here any
+  # more: it lives once, in render.py, and is printed on one page — the editorial
+  # policy — which every other page links to instead. A correction address
+  # repeated across three and a half thousand pages is three and a half thousand
+  # places for a scraper to find it, and one place to change it when it changes.
+  contact_label: "editorial policy &amp; corrections"
 
   # The +URL in a User-Agent exists so anyone seeing us in their logs can find
   # out who we are and how to stop us. It points at a page written for exactly
