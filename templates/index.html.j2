@@ -139,7 +139,7 @@
   }
 
   nav.years .filter-toggle {
-    margin-left: auto; padding: .3rem .85rem; border: 1px solid var(--rule);
+    padding: .3rem .85rem; border: 1px solid var(--rule);
     border-radius: 999px; font: inherit; font-size: .9rem; color: var(--muted);
     background: var(--card); cursor: pointer;
   }
@@ -152,8 +152,16 @@
      reader scans by once they know what they are looking for, and twenty shows
      carrying twenty reviews each is most of a phone screen per show. */
   body.compact .show .reviews { display: none; }
-  body.compact .show { padding-top: .3rem; padding-bottom: .3rem; }
+  body.compact .show { padding-top: .3rem; padding-bottom: .3rem; cursor: pointer; }
+  /* One row opened out of a minimised list. The title stays a link, so the tap
+     that opens a row is any tap that is not on one. */
+  body.compact .show.open .reviews { display: block; }
+  body.compact .show.open { cursor: default; }
   nav.years .search { margin-left: .4rem; }
+  /* One auto margin, on the first of the group. Two of them split the free space
+     between the buttons instead of gathering them, which left Minimise stranded
+     mid-row with Filter and Search away to the right. */
+  nav.years #compact-toggle { margin-left: auto; }
   .filters {
     display: flex; flex-wrap: wrap; gap: .45rem .8rem; align-items: start;
     background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
@@ -305,8 +313,20 @@
   .filters .chosen button::after { content: "×"; opacity: .7; flex: none; }
   .filters .chosen button:hover { opacity: .82; }
   @media (max-width: 560px) {
-    nav.years .search { margin-left: 0; }
-    nav.years input[type="search"] { width: 100%; }
+    /* One line on a small phone — an iPhone 13 mini is 375px wide, and the row
+       is years, Minimise, Filter, Search. Nothing wraps: the pills tighten, and
+       the search field takes whatever is left rather than claiming a width of
+       its own and pushing itself onto a second row. */
+    nav.years { flex-wrap: nowrap; gap: .25rem; }
+    nav.years a,
+    nav.years .filter-toggle { padding: .3rem .55rem; font-size: .82rem; }
+    /* flex-basis 0 rather than a width of its own: the field takes what is
+       left after the pills, however little that is, instead of asking for a
+       size and pushing the row past the screen edge. */
+    nav.years .search { margin-left: .25rem; flex: 1 1 0; min-width: 0; }
+    /* More specific than the base rule below, which sets a fixed 8.5rem and,
+       coming later in the sheet, otherwise wins and pushes the row off screen. */
+    nav.years .search input[type="search"] { width: 100%; min-width: 0; }
     /* Two to a row on a phone. The controls are a fixed 15rem so they line up
        on a wide screen, but two of those are wider than the phone, so Location
        and Genre each took a row of their own and the panel ran down the page.
@@ -402,15 +422,16 @@
     {#- No programme, no filter. Past years lose their venues and times when the
         festival takes its pages down, so offering the control there would open
         an empty panel. -#}
+    {#- Minimise, Filter, Search, in that order. Minimise leads because it is the
+        one that changes the whole page at a stroke; search sits nearest the list
+        it narrows. The first of these carries the auto margin that pushes the
+        group to the right, so the order here is also the order on the page. -#}
+    <button type="button" class="filter-toggle" id="compact-toggle"
+            aria-pressed="false" hidden>Minimise</button>
     {% if venues %}
     <button type="button" class="filter-toggle" id="filter-toggle" aria-expanded="false"
             aria-controls="filters" hidden>Filter</button>
     {% endif %}
-    {#- Hides the review lists so the board reads as a plain ranked list of names.
-        Useful once someone knows what they are looking for, and on a phone, where
-        twenty shows with twenty reviews each is a very long scroll. -#}
-    <button type="button" class="filter-toggle" id="compact-toggle"
-            aria-pressed="false" hidden>Minimise</button>
     <label class="search" hidden>
       <span class="visually-hidden">Search shows</span>
       <input type="search" id="q" placeholder="Search shows&hellip;"
@@ -651,11 +672,27 @@
       compactToggle.setAttribute('aria-pressed', String(!on));
       compactToggle.textContent = on ? 'Minimise' : 'Expand';
       document.body.classList.toggle('compact', !on);
+      // Rows opened individually are forgotten on the way out, so expanding and
+      // minimising again starts from a clean list rather than from whatever was
+      // left open several minutes ago.
+      var opened = document.querySelectorAll('article.show.open');
+      for (var k = 0; k < opened.length; k++) opened[k].classList.remove('open');
       if (anchor) {
         window.scrollBy(0, anchor.getBoundingClientRect().top - before);
       }
     });
   }
+
+  // Opening one row while the list is minimised. Delegated from the document so
+  // it costs nothing on a page of two thousand shows, and ignores clicks on
+  // links: the title still goes to the show's own page, which is the one thing
+  // someone is likelier to want than the ratings.
+  document.addEventListener('click', function (e) {
+    if (!document.body.classList.contains('compact')) return;
+    if (e.target.closest('a, button, input, select, label')) return;
+    var row = e.target.closest('article.show');
+    if (row) row.classList.toggle('open');
+  });
 
   var filterToggle = document.getElementById('filter-toggle');
   var filterPanel = document.getElementById('filters');
